@@ -20,7 +20,6 @@ import once from 'lodash/once';
 import {
 	isNotFoundResponse,
 	onlyIf,
-	treatAsMissingApplication,
 	mergePineOptionsTyped,
 	type ExtendedPineTypedResult,
 } from '../util';
@@ -38,6 +37,7 @@ import type {
 	PineTypedResult,
 } from '..';
 import { getAuthDependentMemoize } from '../util/cache';
+import { BalenaReleaseNotFound } from 'balena-errors';
 
 const RELEASE_POLICY_TAG_NAME = 'release-policy';
 const ESR_NEXT_TAG_NAME = 'esr-next';
@@ -76,8 +76,6 @@ export interface OsVersion
 	basedOnVersion?: string;
 	osType: string;
 	line?: OsLines;
-	/** @deprecated */
-	isRecommended?: boolean;
 }
 
 export interface ImgConfigOptions {
@@ -325,22 +323,6 @@ const getOsModel = function (
 		// transform version sets
 		Object.keys(osVersionsByDeviceType).forEach((deviceType) => {
 			osVersionsByDeviceType[deviceType].sort(sortVersions);
-
-			// TODO: Drop in next major
-			// Note: the recommended version settings might come from the server in the future, for now we just set it to the latest version for each os type.
-			const recommendedPerOsType: Dictionary<boolean> = {};
-			osVersionsByDeviceType[deviceType].forEach((version) => {
-				if (!recommendedPerOsType[version.osType]) {
-					if (
-						version.variant !== 'dev' &&
-						!version.known_issue_list &&
-						!bSemver.prerelease(version.raw_version)
-					) {
-						version.isRecommended = true;
-						recommendedPerOsType[version.osType] = true;
-					}
-				}
-			});
 		});
 
 		return osVersionsByDeviceType;
@@ -544,19 +526,14 @@ const getOsModel = function (
 	 */
 	const _getMaxSatisfyingVersion = function (
 		versionOrRange: string,
-		osVersions: Array<Pick<OsVersion, 'raw_version' | 'isRecommended'>>,
+		osVersions: Array<Pick<OsVersion, 'raw_version'>>,
 	) {
-		if (versionOrRange === 'recommended') {
-			return osVersions.find((v) => v.isRecommended)?.raw_version;
-		}
-
 		if (versionOrRange === 'latest') {
 			return osVersions[0]?.raw_version;
 		}
 
 		if (versionOrRange === 'default') {
-			return (osVersions.find((v) => v.isRecommended) ?? osVersions[0])
-				?.raw_version;
+			return osVersions[0]?.raw_version;
 		}
 
 		const versions = osVersions.map((v) => v.raw_version);
@@ -644,56 +621,6 @@ const getOsModel = function (
 	};
 
 	/**
-	 * @summary Get the OS image last modified date
-	 * @name getLastModified
-	 * @public
-	 * @function
-	 * @memberof balena.models.os
-	 *
-	 * @param {String} deviceType - device type slug
-	 * @param {String} [version] - semver-compatible version or 'latest', defaults to 'latest'.
-	 * Unsupported (unpublished) version will result in rejection.
-	 * The version **must** be the exact version number.
-	 * To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`.
-	 * @fulfil {Date} - last modified date
-	 * @returns {Promise}
-	 *
-	 * @example
-	 * balena.models.os.getLastModified('raspberry-pi').then(function(date) {
-	 * 	console.log('The raspberry-pi image was last modified in ' + date);
-	 * });
-	 *
-	 * balena.models.os.getLastModified('raspberrypi3', '2.0.0').then(function(date) {
-	 * 	console.log('The raspberry-pi image was last modified in ' + date);
-	 * });
-	 */
-	const getLastModified = async function (
-		deviceType: string,
-		version = 'latest',
-	): Promise<Date> {
-		try {
-			deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
-			version = normalizeVersion(version);
-			const response = await request.send({
-				method: 'HEAD',
-				url: '/download',
-				qs: {
-					deviceType,
-					version,
-				},
-				baseUrl: apiUrl,
-			});
-			// TODO: Drop the ! on the next major
-			return new Date(response.headers.get('last-modified')!);
-		} catch (err) {
-			if (isNotFoundResponse(err)) {
-				throw new Error('No such version for the device type');
-			}
-			throw err;
-		}
-	};
-
-	/**
 	 * @summary Download an OS image
 	 * @name download
 	 * @public
@@ -729,11 +656,15 @@ const getOsModel = function (
 		try {
 			const slug = await _getNormalizedDeviceTypeSlug(deviceType);
 			if (version === 'latest') {
-				const versions = (await getAvailableOsVersions(slug)).filter(
+				const foundVersion = (await getAvailableOsVersions(slug)).find(
 					(v) => v.osType === OsTypes.DEFAULT,
 				);
-				version = (versions.find((v) => v.isRecommended) ?? versions[0])
-					?.raw_version;
+				if (!foundVersion) {
+					throw new BalenaReleaseNotFound(
+						'No version available for this device type',
+					);
+				}
+				version = foundVersion.raw_version;
 			} else {
 				version = normalizeVersion(version);
 			}
@@ -809,26 +740,22 @@ const getOsModel = function (
 
 		options.network = options.network ?? 'ethernet';
 
-		try {
-			const applicationId =
-				await sdkInstance.models.application._getId(slugOrUuidOrId);
+		const applicationId = (
+			await sdkInstance.models.application.get(slugOrUuidOrId, {
+				$select: 'id',
+			})
+		).id;
 
-			const { body } = await request.send({
-				method: 'POST',
-				url: '/download-config',
-				baseUrl: apiUrl,
-				body: {
-					...options,
-					appId: applicationId,
-				},
-			});
-			return body;
-		} catch (err) {
-			if (isNotFoundResponse(err)) {
-				treatAsMissingApplication(slugOrUuidOrId, err);
-			}
-			throw err;
-		}
+		const { body } = await request.send({
+			method: 'POST',
+			url: '/download-config',
+			baseUrl: apiUrl,
+			body: {
+				...options,
+				appId: applicationId,
+			},
+		});
+		return body;
 	};
 
 	/**
@@ -1125,7 +1052,6 @@ const getOsModel = function (
 		getAvailableOsVersions,
 		getMaxSatisfyingVersion,
 		getDownloadSize,
-		getLastModified,
 		download,
 		getConfig,
 		isSupportedOsUpdate,
