@@ -242,15 +242,17 @@ describe('API Key model', function () {
 				).to.be.rejected;
 			});
 
+			const updatedApiKeyName = `${TEST_KEY_NAME_PREFIX}_updatedApiKeyName`;
+
 			it('should be able to update the name of an api key', async function () {
 				await balena.models.apiKey.update(ctx.namedUserApiKey!.id, {
-					name: 'updatedApiKeyName',
+					name: updatedApiKeyName,
 				});
 				const [apiKey] = await balena.models.apiKey.getAll({
 					$filter: { id: ctx.namedUserApiKey!.id },
 				});
 				expect(apiKey).to.deep.match({
-					name: 'updatedApiKeyName',
+					name: updatedApiKeyName,
 					description: 'apiKeyDescriptionToBeUpdated',
 				});
 			});
@@ -263,7 +265,7 @@ describe('API Key model', function () {
 					$filter: { id: ctx.namedUserApiKey!.id },
 				});
 				expect(apiKey).to.deep.match({
-					name: 'updatedApiKeyName',
+					name: updatedApiKeyName,
 					description: 'updatedApiKeyDescription',
 				});
 			});
@@ -276,7 +278,7 @@ describe('API Key model', function () {
 					$filter: { id: ctx.namedUserApiKey!.id },
 				});
 				expect(apiKey).to.deep.match({
-					name: 'updatedApiKeyName',
+					name: updatedApiKeyName,
 					description: '',
 				});
 			});
@@ -289,7 +291,7 @@ describe('API Key model', function () {
 					$filter: { id: ctx.namedUserApiKey!.id },
 				});
 				expect(apiKey).to.deep.match({
-					name: 'updatedApiKeyName',
+					name: updatedApiKeyName,
 					description: null,
 				});
 			});
@@ -312,7 +314,7 @@ describe('API Key model', function () {
 					$filter: { id: ctx.namedUserApiKey!.id },
 				});
 				expect(apiKey).to.deep.match({
-					name: 'updatedApiKeyName',
+					name: updatedApiKeyName,
 					expiry_date: validDate,
 				});
 			});
@@ -325,15 +327,16 @@ describe('API Key model', function () {
 					$filter: { id: ctx.namedUserApiKey!.id },
 				});
 				expect(apiKey).to.deep.match({
-					name: 'updatedApiKeyName',
+					name: updatedApiKeyName,
 					expiry_date: null,
 				});
 			});
 
 			testSet.forEach(([title, ctxPropName]) => {
+				const newllyUpdatedApiKeyName = `${TEST_KEY_NAME_PREFIX}_newllyUpdatedApiKeyName_${title}`;
 				it(`should be able to update the name & description of a(n) ${title} api key`, async function () {
 					await balena.models.apiKey.update(ctx[ctxPropName]!.id, {
-						name: 'newllyUpdatedApiKeyName' + title,
+						name: newllyUpdatedApiKeyName,
 						description: 'newllyUpdatedApiKeyDescription' + title,
 					});
 					const apiKey = await balena.pine.get({
@@ -342,7 +345,7 @@ describe('API Key model', function () {
 					});
 					expect(apiKey).to.be.an('object');
 					expect(apiKey).to.deep.match({
-						name: 'newllyUpdatedApiKeyName' + title,
+						name: newllyUpdatedApiKeyName,
 						description: 'newllyUpdatedApiKeyDescription' + title,
 					});
 				});
