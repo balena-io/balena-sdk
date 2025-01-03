@@ -1382,29 +1382,25 @@ const getDeviceModel = function (
 				$expand: { is_for__device_type: deviceTypeOptions },
 			} as const;
 
-			const [{ id: userId }, apiKey, application, deviceType] =
-				await Promise.all([
-					sdkInstance.auth.getUserInfo(),
-					sdkInstance.models.application.generateProvisioningKey(
-						applicationSlugOrUuidOrId,
-					),
-					sdkInstance.models.application.get(
-						applicationSlugOrUuidOrId,
-						applicationOptions,
-					) as Promise<PineTypedResult<Application, typeof applicationOptions>>,
-					typeof deviceTypeSlug === 'string'
-						? (sdkInstance.models.deviceType.get(deviceTypeSlug, {
-								$select: 'slug',
-								$expand: {
-									is_of__cpu_architecture: {
-										$select: 'slug',
-									},
+			const [{ id: userId }, application, deviceType] = await Promise.all([
+				sdkInstance.auth.getUserInfo(),
+				sdkInstance.models.application.get(
+					applicationSlugOrUuidOrId,
+					applicationOptions,
+				) as Promise<PineTypedResult<Application, typeof applicationOptions>>,
+				typeof deviceTypeSlug === 'string'
+					? (sdkInstance.models.deviceType.get(deviceTypeSlug, {
+							$select: 'slug',
+							$expand: {
+								is_of__cpu_architecture: {
+									$select: 'slug',
 								},
-							}) as Promise<
-								PineTypedResult<DeviceType, typeof deviceTypeOptions>
-							>)
-						: null,
-				]);
+							},
+						}) as Promise<
+							PineTypedResult<DeviceType, typeof deviceTypeOptions>
+						>)
+					: null,
+			]);
 			if (deviceType != null) {
 				const isCompatibleParameter =
 					sdkInstance.models.os.isArchitectureCompatibleWith(
@@ -1423,7 +1419,9 @@ const getDeviceModel = function (
 				applicationId: application.id,
 				uuid,
 				deviceType: (deviceType ?? application.is_for__device_type[0]).slug,
-				provisioningApiKey: apiKey,
+				// This just needs to be auth that can create the device, so using user auth is just fine and avoids
+				// creating an api key unnecessarily
+				provisioningApiKey: await sdkInstance.auth.getToken(),
 				apiEndpoint: apiUrl,
 			});
 		},
