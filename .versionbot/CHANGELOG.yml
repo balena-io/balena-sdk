@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Append instructions partial to externalFlash"
+      hash: 52260d1edcf783f608b3d46020aa111612fd1478
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 20.8.3
+  title: ""
+  date: 2025-01-03T13:44:20.667Z
+- commits:
     - subject: "tests: Add a prefix to the name used in the api key update tests"
       hash: 1a57b06e09653fcd20adfc7b05a8196b9f7a13a6
       body: ""
