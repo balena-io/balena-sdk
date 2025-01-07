@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency mocha to v11
+      hash: 271182cc6bfb250611ae19f1779d8fa2a3954d2b
+      body: |
+        Update mocha from 10.8.2 to 11.0.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 20.8.4
+  title: ""
+  date: 2025-01-07T17:05:56.792Z
+- commits:
     - subject: "patch: Append instructions partial to externalFlash"
       hash: 52260d1edcf783f608b3d46020aa111612fd1478
       body: ""
