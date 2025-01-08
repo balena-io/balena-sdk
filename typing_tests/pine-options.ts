@@ -619,6 +619,7 @@ type UserExpandablePropsExpectation =
 	| 'user_profile'
 	| 'team_membership'
 	| 'has_direct_access_to__application'
+	| 'owns__social_service_account'
 	| 'owns__saml_account';
 
 export const userExpandablePropsTest: Equals<

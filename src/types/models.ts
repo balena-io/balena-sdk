@@ -146,6 +146,7 @@ export interface User {
 	team_membership?: ReverseNavigationResource<TeamMembership>;
 	has_direct_access_to__application?: ReverseNavigationResource<Application>;
 	user_profile?: ReverseNavigationResource<UserProfile>;
+	owns__social_service_account?: ReverseNavigationResource<SocialServiceAccount>;
 	owns__saml_account?: ReverseNavigationResource<SamlAccount>;
 }
 
