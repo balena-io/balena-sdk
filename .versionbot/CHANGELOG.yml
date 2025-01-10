@@ -1,4 +1,26 @@
 - commits:
+    - subject: "tests: Update test repo for release.createFromUrl to avoid redirects"
+      hash: a587d333a81268d30025af86e420f2433321e824
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://github.com/balena-io/balena-builder/pull/1306
+        see: https://github.com/balena-io/balena-builder/pull/1306
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "typings: Add the missing User.owns__social_service_account property"
+      hash: 6336cdc4abb3475aab0dcfee68e164c47e723a42
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 20.9.0
+  title: ""
+  date: 2025-01-10T18:01:28.620Z
+- commits:
     - subject: Update dependency mocha to v11
       hash: 271182cc6bfb250611ae19f1779d8fa2a3954d2b
       body: |
