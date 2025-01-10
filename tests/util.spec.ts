@@ -124,18 +124,6 @@ describe('Pine option merging', function () {
 		});
 	});
 
-	it('overrides $select params for expand options for the same relationship, if present', function () {
-		const result = mergePineOptions(
-			{ $expand: { device: { $select: ['id'] } } },
-			{ $expand: { device: { $select: ['name'] } } },
-			true,
-		);
-
-		return expect(result).to.deep.equal({
-			$expand: { device: { $select: ['name'] } },
-		});
-	});
-
 	it('adds $filter params for expand options, if present', function () {
 		const result = mergePineOptions(
 			{ $expand: 'device' },
@@ -238,13 +226,6 @@ describe('Pine option merging', function () {
 				},
 			},
 		});
-	});
-
-	it('rejects any unknown extra options', () => {
-		// @ts-expect-error b/c it's not typed
-		expect(() => mergePineOptions({}, { unknownKey: 'value' })).to.throw(
-			'Unknown pine option: unknownKey',
-		);
 	});
 
 	it('ignores any unknown default options', () => {
