@@ -120,8 +120,9 @@ describe('Release Model', function () {
 
 			const releaseIds: number[] = [];
 
-			const TEST_SOURCE_URL =
-				'https://github.com/balena-io-examples/balena-node-hello-world/archive/v1.0.0.tar.gz';
+			const TEST_SOURCE_BASE_REPO_URL =
+				'https://codeload.github.com/balena-io-examples/balena-nodejs-hello-world';
+			const TEST_SOURCE_URL = `${TEST_SOURCE_BASE_REPO_URL}/tar.gz/refs/tags/v1.0.0`;
 			const TEST_SOURCE_CONTAINER_COUNT = 1;
 
 			const waitForImagesToBeCreated = async (appId, releaseCount) => {
@@ -207,7 +208,7 @@ describe('Release Model', function () {
 					const promise = balena.models.release.createFromUrl(
 						ctx.application.id,
 						{
-							url: 'https://github.com/balena-io-projects/simple-server-node/archive/v0.0.0.tar.gz',
+							url: `${TEST_SOURCE_BASE_REPO_URL}/tar.gz/refs/tags/v0.0.0`,
 						},
 					);
 					const error = await expect(promise).to.be.rejected;
@@ -221,7 +222,9 @@ describe('Release Model', function () {
 				it('should be rejected when the provided url is not a tarball', async () => {
 					const promise = balena.models.release.createFromUrl(
 						ctx.application.id,
-						{ url: 'https://github.com/balena-io-projects/simple-server-node' },
+						{
+							url: 'https://github.com/balena-io-examples/balena-nodejs-hello-world',
+						},
 					);
 					const error = await expect(promise).to.be.rejected;
 					expect(error).to.have.property('code', 'BalenaRequestError');
