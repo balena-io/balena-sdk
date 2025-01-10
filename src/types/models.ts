@@ -469,6 +469,32 @@ export interface Device {
 	image_install?: ReverseNavigationResource<ImageInstall>;
 }
 
+export interface IdentityProvider {
+	id: number;
+	company_name: string;
+	entry_point: string;
+	issuer: string;
+	certificate: string;
+	requires_signed_authn_response: boolean;
+	manages__saml_account: ReverseNavigationResource<SamlAccount>;
+	identity_provider_membership: ReverseNavigationResource<IdentityProviderMembership>;
+}
+
+export interface SamlAccount {
+	id: number;
+	belongs_to__user: NavigationResource<User>;
+	was_generated_by__identity_provider: NavigationResource<IdentityProvider>;
+	remote_id: string;
+	display_name: string | null;
+}
+
+export interface IdentityProviderMembership {
+	is_authorized_by__identity_provider: NavigationResource<IdentityProvider>;
+	id: number;
+	grants_access_to__team: OptionalNavigationResource<Team>;
+	authorizes__organization: NavigationResource<Organization>;
+}
+
 export interface CpuArchitecture {
 	id: number;
 	slug: string;
