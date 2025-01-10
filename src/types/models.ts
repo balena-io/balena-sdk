@@ -1,3 +1,5 @@
+import type * as Model from './v7-model';
+
 import type { DeviceOverallStatus } from './device-overall-status';
 export type { DeviceOverallStatus } from './device-overall-status';
 import type { Contract } from './contract';
@@ -6,9 +8,15 @@ import type {
 	OptionalNavigationResource,
 	ReverseNavigationResource,
 	ConceptTypeNavigationResource,
-	WebResource,
 } from '../../typings/pinejs-client-core';
 import type { AnyObject } from '../../typings/utils';
+
+type KeysIncludingArray<T> = {
+	[P in keyof T]-?: Extract<T[P], any[]> extends never ? P : never;
+}[keyof T];
+type OmitNav<T> = {
+	[P in KeysIncludingArray<T>]: T[P];
+};
 
 type JsonType = AnyObject;
 
@@ -77,15 +85,8 @@ export interface ResourceTypeMap {
 	user_application_membership: ApplicationMembership;
 }
 
-export interface Organization {
-	id: number;
-	created_at: string;
-	name: string;
-	handle: string;
-	has_past_due_invoice_since__date: string | null;
-	is_frozen: boolean;
+export interface Organization extends OmitNav<Model.Organization['Read']> {
 	is_using__billing_version: 'v1' | 'v2';
-	logo_image: WebResource;
 
 	application?: ReverseNavigationResource<Application>;
 	/** includes__organization_membership */
@@ -97,19 +98,13 @@ export interface Organization {
 	identity_provider_membership?: ReverseNavigationResource<IdentityProviderMembership>;
 }
 
-export interface OrganizationCreditNotification {
-	id: number;
-	created_at: string;
-	is_sent_when_below__threshold: number;
+export interface OrganizationCreditNotification
+	extends OmitNav<Model.OrganizationCreditNotification['Read']> {
 	organization: NavigationResource<Organization>;
 	owns_credit_notification_for__feature: NavigationResource<Feature>;
 }
 
-export interface Team {
-	id: number;
-	created_at: string;
-	name: string;
-
+export interface Team extends OmitNav<Model.Team['Read']> {
 	belongs_to__organization: NavigationResource<Organization>;
 
 	/** includes__user */
@@ -118,16 +113,12 @@ export interface Team {
 	team_application_access?: ReverseNavigationResource<TeamApplicationAccess>;
 }
 
-export interface RecoveryTwoFactor {
-	id: number;
-	used_timestamp: string | null;
-
+export interface RecoveryTwoFactor
+	extends OmitNav<Model.RecoveryTwoFactor['Read']> {
 	belongs_to__user: NavigationResource<User>;
 }
 
-export interface Actor {
-	id: number;
-
+export interface Actor extends OmitNav<Model.Actor['Read']> {
 	is_of__user?: OptionalNavigationResource<User>;
 	is_of__application?: OptionalNavigationResource<Application>;
 	is_of__device?: OptionalNavigationResource<Device>;
@@ -135,11 +126,8 @@ export interface Actor {
 	api_key?: OptionalNavigationResource<ApiKey>;
 }
 
-export interface User {
-	id: number;
+export interface User extends OmitNav<Model.User['Read']> {
 	actor: ConceptTypeNavigationResource<Actor>;
-	created_at: string;
-	username: string;
 
 	organization_membership?: ReverseNavigationResource<OrganizationMembership>;
 	user_application_membership?: ReverseNavigationResource<ApplicationMembership>;
@@ -150,75 +138,39 @@ export interface User {
 	owns__saml_account?: ReverseNavigationResource<SamlAccount>;
 }
 
-export interface UserProfile {
-	id: number;
-	email: string | null;
-	first_name: string | null;
-	last_name: string | null;
-	company: string;
-	account_type: string | null;
-	has_disabled_newsletter: boolean;
-	has_password_set: boolean;
-	must_be_verified: boolean;
-	is_verified: boolean;
-
+export interface UserProfile extends OmitNav<Model.UserProfile['Read']> {
 	is_of__user: NavigationResource<User>;
 }
 
 export type OrganizationMembershipRoles = 'administrator' | 'member';
 
-export interface OrganizationMembershipRole {
-	id: number;
+export interface OrganizationMembershipRole
+	extends OmitNav<Model.OrganizationMembershipRole['Read']> {
 	name: OrganizationMembershipRoles;
 }
 
-export interface OrganizationMembership {
-	id: number;
-	created_at: string;
-
+export interface OrganizationMembership
+	extends OmitNav<Model.OrganizationMembership['Read']> {
 	user: NavigationResource<User>;
 	/** organization */
 	is_member_of__organization: NavigationResource<Organization>;
 	organization_membership_role: NavigationResource<OrganizationMembershipRole>;
-	effective_seat_role: string;
 
 	organization_membership_tag?: ReverseNavigationResource<OrganizationMembershipTag>;
 }
 
-export interface TeamMembership {
-	id: number;
-	created_at: string;
-
+export interface TeamMembership extends OmitNav<Model.TeamMembership['Read']> {
 	user: NavigationResource<User>;
 	/** team */
 	is_member_of__team: NavigationResource<Team>;
 }
 
-export interface ApiKey {
-	id: number;
-	created_at: string;
-	name: string;
-	description: string | null;
-	expiry_date: string | null;
-
+export interface ApiKey extends OmitNav<Model.ApiKey['Read']> {
 	is_of__actor: NavigationResource<Actor>;
 }
 
-export interface Application {
-	id: number;
-	created_at: string;
-	app_name: string;
+export interface Application extends OmitNav<Model.Application['Read']> {
 	actor: ConceptTypeNavigationResource<Actor>;
-	slug: string;
-	uuid: string;
-	is_accessible_by_support_until__date: string;
-	is_host: boolean;
-	should_track_latest_release: boolean;
-	is_public: boolean;
-	is_of__class: 'fleet' | 'block' | 'app';
-	is_archived: boolean;
-	is_discoverable: boolean;
-	is_stored_at__repository_url: string | null;
 	public_organization: OptionalNavigationResource<PublicOrganization>;
 	application_type: NavigationResource<ApplicationType>;
 	is_for__device_type: NavigationResource<DeviceType>;
@@ -241,82 +193,60 @@ export interface Application {
 	can_use__application_as_host?: ReverseNavigationResource<ApplicationHostedOnApplication>;
 }
 
-export interface UserHasDirectAccessToApplication {
+export interface UserHasDirectAccessToApplication
+	extends OmitNav<Model.UserHasDirectAccessToApplication['Read']> {
 	user: NavigationResource<User>;
 	has_direct_access_to__application: NavigationResource<Application>;
 }
 
-export interface PublicOrganization {
-	name: string;
-	handle: string;
-}
+export type PublicOrganization = OmitNav<Model.PublicOrganization['Read']>;
 
-export interface PublicDevice {
-	latitude: string;
-	longitude: string;
+export interface PublicDevice extends OmitNav<Model.PublicDevice['Read']> {
 	belongs_to__application: NavigationResource<Application>;
 	is_of__device_type: NavigationResource<DeviceType>;
-	was_recently_online: boolean;
 }
 
-export interface Invitee {
-	id: number;
-	email: string;
-}
+export type Invitee = OmitNav<Model.Invitee['Read']>;
 
-export interface ApplicationInvite {
-	id: number;
-	message: string | null;
+export interface ApplicationInvite
+	extends OmitNav<Model.InviteeIsInvitedToApplication['Read']> {
 	application_membership_role: NavigationResource<ApplicationMembershipRole>;
 	invitee: NavigationResource<Invitee>;
 	is_invited_to__application: NavigationResource<Application>;
 }
 
-export interface OrganizationInvite {
-	id: number;
-	message: string | null;
+export interface OrganizationInvite
+	extends OmitNav<Model.InviteeIsInvitedToOrganization['Read']> {
 	organization_membership_role: NavigationResource<OrganizationMembershipRole>;
 	invitee: NavigationResource<Invitee>;
 	is_invited_to__organization: NavigationResource<Organization>;
 }
 
-export interface ApplicationType {
-	id: number;
-	name: string;
-	slug: string;
-	description: string | null;
-	/** @deprecated */
-	supports_gateway_mode: boolean;
-	supports_multicontainer: boolean;
-	supports_web_url: boolean;
-	is_legacy: boolean;
-	requires_payment: boolean;
-	needs__os_version_range: string | null;
-	maximum_device_count: number | null;
-}
+export type ApplicationType = OmitNav<Model.ApplicationType['Read']>;
 
-export interface ApplicationHostedOnApplication {
+export interface ApplicationHostedOnApplication
+	extends OmitNav<Model.ApplicationCanUseApplicationAsHost['Read']> {
 	application: NavigationResource<Application>;
 	can_use__application_as_host: NavigationResource<Application>;
 }
 
 export type ApplicationMembershipRoles = 'developer' | 'operator' | 'observer';
 
-export interface ApplicationMembershipRole {
-	id: number;
+export interface ApplicationMembershipRole
+	extends OmitNav<Model.ApplicationMembershipRole['Read']> {
 	name: ApplicationMembershipRoles;
 }
 
-export interface ApplicationMembership {
-	id: number;
+export interface ApplicationMembership
+	extends OmitNav<Model.UserIsMemberOfApplication['Read']> {
 	user: NavigationResource<User>;
 	/** application */
 	is_member_of__application: NavigationResource<Application>;
 	application_membership_role: NavigationResource<ApplicationMembershipRole>;
 }
 
-export interface TeamApplicationAccess {
-	id: number;
+export interface TeamApplicationAccess
+	extends OmitNav<Model.TeamApplicationAccess['Read']> {
 	team: NavigationResource<Team>;
 	/** application */
 	grants_access_to__application: NavigationResource<Application>;
@@ -343,39 +273,12 @@ export interface ReleaseVersion {
 	prerelease: ReadonlyArray<string | number>;
 }
 
-export interface Release {
-	id: number;
-	created_at: string;
-	commit: string;
+export interface Release extends OmitNav<Model.Release['Read']> {
 	composition: JsonType | null;
 	contract: JsonType | null;
 	status: ReleaseStatus;
-	source: string;
-	build_log: string | null;
-	is_invalidated: boolean;
-	start_timestamp: string;
-	update_timestamp: string;
-	end_timestamp: string | null;
-	phase: 'next' | 'current' | 'sunset' | 'end-of-life' | null;
-	/** @deprecated */
-	release_version: string | null;
-	semver: string;
-	semver_major: number;
-	semver_minor: number;
-	semver_patch: number;
-	semver_prerelease: string;
-	semver_build: string;
-	variant: string;
-	revision: number | null;
-	known_issue_list: string | null;
-	/** This is a computed term */
-	raw_version: string;
 	/** This is a computed term */
 	version: ReleaseVersion;
-	is_final: boolean;
-	is_finalized_at__date: string | null;
-	note: string | null;
-	invalidation_reason: string | null;
 
 	is_created_by__user: OptionalNavigationResource<User>;
 	belongs_to__application: NavigationResource<Application>;
@@ -391,63 +294,10 @@ export interface Release {
 	release_tag?: ReverseNavigationResource<ReleaseTag>;
 }
 
-export interface Device {
-	id: number;
+export interface Device extends OmitNav<Model.Device['Read']> {
 	actor: ConceptTypeNavigationResource<Actor>;
-	created_at: string;
-	modified_at: string;
-	custom_latitude: string | null;
-	custom_longitude: string | null;
-	device_name: string;
-	download_progress: number | null;
-	ip_address: string | null;
-	public_address: string | null;
-	mac_address: string | null;
-	is_accessible_by_support_until__date: string | null;
-	is_connected_to_vpn: boolean;
-	is_locked_until__date: string;
-	update_status:
-		| 'rejected'
-		| 'downloading'
-		| 'downloaded'
-		| 'applying changes'
-		| 'aborted'
-		| 'done'
-		| null;
-	last_update_status_event: string | null;
-	is_web_accessible: boolean;
-	is_active: boolean;
-	/** This is a computed term */
-	is_frozen: boolean;
-	is_online: boolean;
-	last_connectivity_event: string | null;
-	last_vpn_event: string;
-	latitude: string | null;
-	local_id: string | null;
-	location: string | null;
-	longitude: string | null;
-	note: string;
-	os_variant: string | null;
-	os_version: string | null;
-	provisioning_progress: number | null;
-	provisioning_state: string;
-	status: string;
-	supervisor_version: string;
-	uuid: string;
-	api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
-	memory_usage: number | null;
-	memory_total: number | null;
-	storage_block_device: string | null;
-	storage_usage: number | null;
-	storage_total: number | null;
-	cpu_usage: number | null;
-	cpu_temp: number | null;
-	cpu_id: string | null;
-	is_undervolted: boolean;
 	/** This is a computed term */
 	overall_status: DeviceOverallStatus;
-	/** This is a computed term */
-	overall_progress: number | null;
 
 	is_of__device_type: NavigationResource<DeviceType>;
 	// the schema has this as a nullable, but for simplicity we have it as non-optional
@@ -469,19 +319,12 @@ export interface Device {
 	image_install?: ReverseNavigationResource<ImageInstall>;
 }
 
-export interface CpuArchitecture {
-	id: number;
-	slug: string;
-
+export interface CpuArchitecture
+	extends OmitNav<Model.CpuArchitecture['Read']> {
 	is_supported_by__device_type?: ReverseNavigationResource<CpuArchitecture>;
 }
 
-export interface DeviceType {
-	id: number;
-	slug: string;
-	name: string;
-	is_private: boolean;
-	logo: string | null;
+export interface DeviceType extends OmitNav<Model.DeviceType['Read']> {
 	contract: Contract | null;
 	belongs_to__device_family: OptionalNavigationResource<DeviceFamily>;
 	is_default_for__application?: ReverseNavigationResource<Application>;
@@ -491,119 +334,72 @@ export interface DeviceType {
 	device_type_alias?: ReverseNavigationResource<DeviceTypeAlias>;
 }
 
-export interface DeviceTypeAlias {
-	id: number;
-	is_referenced_by__alias: string;
+export interface DeviceTypeAlias
+	extends OmitNav<Model.DeviceTypeAlias['Read']> {
 	references__device_type: NavigationResource<DeviceType>;
 }
 
-export interface DeviceFamily {
-	id: number;
-	slug: string;
-	name: string;
+export interface DeviceFamily extends OmitNav<Model.DeviceFamily['Read']> {
 	is_manufactured_by__device_manufacturer: OptionalNavigationResource<DeviceManufacturer>;
 }
 
-export interface DeviceManufacturer {
-	id: number;
-	slug: string;
-	name: string;
-}
+export type DeviceManufacturer = OmitNav<Model.DeviceManufacturer['Read']>;
 
-export interface OrganizationPrivateDeviceTypeAccess {
-	id: number;
+export interface OrganizationPrivateDeviceTypeAccess
+	extends OmitNav<Model.OrganizationHasPrivateAccessToDeviceType['Read']> {
 	organization: NavigationResource<Organization>;
 	has_private_access_to__device_type: NavigationResource<DeviceType>;
 }
 
-export interface ServiceInstance {
-	id: number;
-	ip_address: string;
-}
+export type ServiceInstance = OmitNav<Model.ServiceInstance['Read']>;
 
-export interface Service {
-	id: number;
-	created_at: string;
-	service_name: string;
+export interface Service extends OmitNav<Model.Service['Read']> {
 	application: NavigationResource<Application>;
 	is_built_by__image?: ReverseNavigationResource<Image>;
 	service_environment_variable?: ReverseNavigationResource<ServiceEnvironmentVariable>;
 	device_service_environment_variable?: ReverseNavigationResource<DeviceServiceEnvironmentVariable>;
 }
 
-export interface IdentityProvider {
-	id: number;
-	sso_identifier: string;
-	entry_point: string;
-	issuer: string;
-	certificate: string;
-	requires_signed_authn_response: boolean;
+export interface IdentityProvider
+	extends OmitNav<Model.IdentityProvider['Read']> {
 	manages__saml_account?: ReverseNavigationResource<SamlAccount>;
 	identity_provider_membership?: ReverseNavigationResource<IdentityProviderMembership>;
 }
 
-export interface SamlAccount {
-	id: number;
+export interface SamlAccount extends OmitNav<Model.SamlAccount['Read']> {
 	belongs_to__user: NavigationResource<User>;
 	was_generated_by__identity_provider: NavigationResource<IdentityProvider>;
-	remote_id: string;
-	display_name: string | null;
 }
 
-export interface IdentityProviderMembership {
+export interface IdentityProviderMembership
+	extends OmitNav<Model.IdentityProviderMembership['Read']> {
 	is_authorized_by__identity_provider: NavigationResource<IdentityProvider>;
-	id: number;
 	grants_access_to__team: OptionalNavigationResource<Team>;
 	authorizes__organization: NavigationResource<Organization>;
 }
 
-export interface Image {
-	id: number;
-	created_at: string;
-	build_log: string | null;
+export interface Image extends OmitNav<Model.Image['Read']> {
 	contract: Contract | null;
-	content_hash: string | null;
-	project_type: string | null;
-	status: string;
-	is_stored_at__image_location: string;
-	start_timestamp: string;
-	end_timestamp: string | null;
-	push_timestamp: string | null;
-	image_size: string | null;
-	dockerfile: string;
-	error_message: string | null;
 	is_a_build_of__service: NavigationResource<Service>;
 	release_image?: ReverseNavigationResource<ReleaseImage>;
 }
 
-export interface ReleaseImage {
-	id: number;
-	created_at: string;
+export interface ReleaseImage
+	extends OmitNav<Model.ImageIsPartOfRelease['Read']> {
 	image: NavigationResource<Image>;
 	is_part_of__release: NavigationResource<Release>;
 }
 
-export interface SSHKey {
-	title: string;
-	public_key: string;
-	id: number;
-	created_at: string;
-
+export interface SSHKey extends OmitNav<Model.UserHasPublicKey['Read']> {
 	user: NavigationResource<User>;
 }
 
-export interface SocialServiceAccount {
+export interface SocialServiceAccount
+	extends OmitNav<Model.SocialServiceAccount['Read']> {
 	belongs_to__user: NavigationResource<User>;
-	display_name: string | null;
-	provider: string;
 }
 
-export interface ImageInstall {
-	id: number;
-	download_progress: number | null;
-	status: string;
-	install_date: string;
-
+export interface ImageInstall extends OmitNav<Model.ImageInstall['Read']> {
 	/** @deprecated Use `installs__image` instead. */
 	image: NavigationResource<Image>;
 	installs__image: NavigationResource<Image>;
@@ -611,8 +407,7 @@ export interface ImageInstall {
 	is_provided_by__release: NavigationResource<Release>;
 }
 
-export interface ServiceInstall {
-	id: number;
+export interface ServiceInstall extends OmitNav<Model.ServiceInstall['Read']> {
 	device: NavigationResource<Device>;
 	/** service */
 	installs__service: NavigationResource<Service>;
@@ -621,133 +416,100 @@ export interface ServiceInstall {
 	device_service_environment_variable?: ReverseNavigationResource<DeviceServiceEnvironmentVariable>;
 }
 
-export interface EnvironmentVariableBase {
-	id: number;
-	name: string;
-	value: string;
-}
+export type EnvironmentVariableBase = Pick<
+	Model.DeviceServiceEnvironmentVariable['Read'] &
+		Model.ServiceEnvironmentVariable['Read'] &
+		Model.DeviceEnvironmentVariable['Read'] &
+		Model.ApplicationEnvironmentVariable['Read'] &
+		Model.BuildEnvironmentVariable['Read'],
+	'id' | 'name' | 'value'
+>;
 
 export interface DeviceServiceEnvironmentVariable
-	extends EnvironmentVariableBase {
+	extends OmitNav<Model.DeviceServiceEnvironmentVariable['Read']> {
 	service_install: NavigationResource<ServiceInstall>;
 }
 
-export interface ServiceEnvironmentVariable extends EnvironmentVariableBase {
+export interface ServiceEnvironmentVariable
+	extends OmitNav<Model.ServiceEnvironmentVariable['Read']> {
 	service: NavigationResource<Service>;
 }
 
-export interface DeviceVariable extends EnvironmentVariableBase {
+export interface DeviceVariable
+	extends OmitNav<Model.DeviceEnvironmentVariable['Read']> {
 	device: NavigationResource<Device>;
 }
 
-export interface ApplicationVariable extends EnvironmentVariableBase {
+export interface ApplicationVariable
+	extends OmitNav<Model.ApplicationEnvironmentVariable['Read']> {
 	application: NavigationResource<Application>;
 }
 
-export interface BuildVariable extends EnvironmentVariableBase {
+export interface BuildVariable
+	extends OmitNav<Model.BuildEnvironmentVariable['Read']> {
 	application: NavigationResource<Application>;
 }
 
-export interface ResourceTagBase {
-	id: number;
-	tag_key: string;
-	value: string;
-}
+export type ResourceTagBase = Pick<
+	Model.ApplicationTag['Read'] &
+		Model.DeviceTag['Read'] &
+		Model.OrganizationMembershipTag['Read'] &
+		Model.ReleaseTag['Read'],
+	'id' | 'tag_key' | 'value'
+>;
 
-export interface ApplicationTag extends ResourceTagBase {
+export interface ApplicationTag extends OmitNav<Model.ApplicationTag['Read']> {
 	application: NavigationResource<Application>;
 }
 
-export interface DeviceTag extends ResourceTagBase {
+export interface DeviceTag extends OmitNav<Model.DeviceTag['Read']> {
 	device: NavigationResource<Device>;
 }
 
-export interface OrganizationMembershipTag extends ResourceTagBase {
+export interface OrganizationMembershipTag
+	extends OmitNav<Model.OrganizationMembershipTag['Read']> {
 	organization_membership: NavigationResource<OrganizationMembership>;
 }
 
-export interface ReleaseTag extends ResourceTagBase {
+export interface ReleaseTag extends OmitNav<Model.ReleaseTag['Read']> {
 	release: NavigationResource<Release>;
 }
 
-export interface CreditBundle {
-	id: number;
-	created_at: string;
+export interface CreditBundle extends OmitNav<Model.CreditBundle['Read']> {
 	is_created_by__user: OptionalNavigationResource<User>;
-	original_quantity: number;
-	total_balance: number;
-	total_cost: number;
-	payment_status:
-		| 'processing'
-		| 'paid'
-		| 'failed'
-		| 'complimentary'
-		| 'cancelled'
-		| 'refunded';
 	belongs_to__organization: NavigationResource<Organization>;
 	is_for__feature: NavigationResource<Feature>;
-	is_associated_with__invoice_id: string | null;
-	error_message: string | null;
 }
 
 // Billing model
 
-export interface Feature {
-	id: number;
-	title: string;
-	slug: string;
-	billing_code: string | null;
+export interface Feature extends OmitNav<Model.Feature['Read']> {
 	organization_credit_notification?: ReverseNavigationResource<OrganizationCreditNotification>;
 }
 
-export interface SupportFeature {
-	id: number;
+export interface SupportFeature extends OmitNav<Model.SupportFeature['Read']> {
 	feature: ConceptTypeNavigationResource<Feature>;
 	support_tier: NavigationResource<SupportTier>;
 }
 
-export interface SupportTier {
-	id: number;
-	title: string;
-	slug: string;
-	includes_private_support: boolean;
-	includes__SLA: string | null;
-}
+export type SupportTier = OmitNav<Model.SupportTier['Read']>;
 
-export interface Plan {
-	id: number;
-	title: string;
-	billing_code: string | null;
-	monthly_price: number;
-	annual_price: number;
-	can_self_serve: boolean;
-	is_legacy: boolean;
-	is_valid_from__date: string | null;
-	is_valid_until__date: string | null;
-
+export interface Plan extends OmitNav<Model.Plan['Read']> {
 	plan_feature?: ReverseNavigationResource<PlanFeature>;
 	offers__plan_addon?: ReverseNavigationResource<PlanAddon>;
 	plan__has__discount_code?: ReverseNavigationResource<PlanDiscountCode>;
 }
 
-export interface PlanAddon {
-	id: number;
-	base_price: number;
-	can_self_serve: boolean;
-	bills_dynamically: boolean;
-
+export interface PlanAddon extends OmitNav<Model.PlanAddon['Read']> {
 	offers__feature: NavigationResource<Feature>;
 }
 
-export interface PlanDiscountCode {
-	id: number;
-	discount_code: string;
+export interface PlanDiscountCode
+	extends OmitNav<Model.PlanHasDiscountCode['Read']> {
 	plan: NavigationResource<Plan>;
 }
 
-export interface PlanFeature {
-	id: number;
-	quantity: number;
+export interface PlanFeature extends OmitNav<Model.PlanFeature['Read']> {
 	provides__feature: NavigationResource<Feature>;
 }
 
@@ -761,14 +523,8 @@ export type SubscriptionBillingCycle =
 	| 'quadrennial'
 	| 'quinquennial';
 
-export interface Subscription {
-	id: number;
-	starts_on__date: string;
-	ends_on__date: string | null;
-	discount_percentage: number;
+export interface Subscription extends OmitNav<Model.Subscription['Read']> {
 	billing_cycle: SubscriptionBillingCycle;
-	origin: string;
-	is_active: boolean;
 
 	is_for__organization: NavigationResource<Organization>;
 	is_for__plan: NavigationResource<Plan>;
@@ -776,39 +532,25 @@ export interface Subscription {
 	subscription_prepaid_addon?: ReverseNavigationResource<SubscriptionPrepaidAddon>;
 }
 
-export interface SubscriptionPrepaidAddon {
-	id: number;
-	discount_percentage: number;
-	quantity: number;
-	starts_on__date: string;
-	expires_on__date: string | null;
-
+export interface SubscriptionPrepaidAddon
+	extends OmitNav<Model.SubscriptionPrepaidAddon['Read']> {
 	is_for__plan_addon: NavigationResource<PlanAddon>;
 	is_for__subscription: NavigationResource<Subscription>;
 }
 
-export interface SubscriptionAddonDiscount {
-	id: number;
-	discount_percentage: number;
+export interface SubscriptionAddonDiscount
+	extends OmitNav<Model.SubscriptionDiscountsPlanAddon['Read']> {
 	discounts__plan_addon: NavigationResource<PlanAddon>;
 }
 
-export interface DeviceHistory {
-	created_at: string;
-	id: number;
-	end_timestamp: string | null;
+export interface DeviceHistory extends OmitNav<Model.DeviceHistory['Read']> {
 	is_created_by__actor: OptionalNavigationResource<Actor>;
 	is_ended_by__actor: OptionalNavigationResource<Actor>;
 	tracks__device: NavigationResource<Device>;
 	tracks__actor: OptionalNavigationResource<Actor>;
-	uuid: string | null;
 	belongs_to__application: NavigationResource<Application>;
-	is_active: boolean;
 	is_running__release: OptionalNavigationResource<Release>;
 	should_be_running__release: OptionalNavigationResource<Release>;
-	os_version: string | null;
-	os_variant: string | null;
-	supervisor_version: string | null;
 	is_of__device_type: OptionalNavigationResource<DeviceType>;
 	should_be_managed_by__release: OptionalNavigationResource<Release>;
 }
