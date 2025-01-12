@@ -251,6 +251,8 @@ export const TEST_APPLICATION_NAME_PREFIX =
 	'balena_sdk_created_test_application_that_will_be_deleted';
 export const TEST_ORGANIZATION_NAME =
 	'balena-sdk created test organization that will be deleted';
+export const TEST_TEAM_NAME =
+	'balena-sdk created test team that will be deleted';
 export const TEST_KEY_NAME_PREFIX =
 	'balena_sdk_created_test_key_that_will_be_deleted';
 
@@ -304,6 +306,26 @@ export function givenAnOrganization(beforeFn: Mocha.HookFunction) {
 			resource: 'organization',
 			id: orgId,
 		});
+	});
+}
+
+export function givenATeam(beforeFn: Mocha.HookFunction) {
+	givenInitialOrganization(beforeFn);
+	let teamId;
+	beforeFn(async function () {
+		// We know that the initial organization has no teams as
+		// givenInitialOrganization already make sure that we start with a clean state
+		const team = await balena.models.team.create(
+			this.initialOrg.id,
+			TEST_TEAM_NAME,
+		);
+		this.team = team;
+		teamId = team.id;
+	});
+
+	const afterFn = beforeFn === beforeEach ? afterEach : after;
+	afterFn(async () => {
+		await balena.models.team.remove(teamId);
 	});
 }
 
