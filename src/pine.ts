@@ -1,17 +1,22 @@
 import * as url from 'url';
 import * as errors from 'balena-errors';
-import type { AnyObject, Params } from 'pinejs-client-core';
+import type { Params } from 'pinejs-client-core';
 import { PinejsClientCore } from 'pinejs-client-core';
 import type * as PineClient from '../typings/pinejs-client-core';
 import type { ResourceTypeMap } from './types/models';
+import type BalenaRequest from 'balena-request';
+import type { BalenaRequestOptions } from 'balena-request';
+
+type BalenaRequestSend = ReturnType<
+	(typeof BalenaRequest)['getRequest']
+>['send'];
 
 interface BackendParams {
 	apiUrl: string;
 	apiVersion: string;
 	apiKey?: string;
 	request: {
-		// TODO: Should be the type of balena-request
-		send: (options: AnyObject & { url: string }) => Promise<{ body: any }>;
+		send: BalenaRequestSend;
 	};
 	auth: import('balena-auth').default;
 }
@@ -51,16 +56,12 @@ class PinejsClient extends PinejsClientCore<PinejsClient> {
 	 * @private
 	 *
 	 * @param {Object} options - request options
-	 * @returns {Promise<*>} response body
+	 * @returns {Promise<any>} response body
 	 *
 	 * @todo Implement caching support.
 	 */
 	public async _request(
-		options: {
-			method: string;
-			url: string;
-			body?: AnyObject;
-		} & AnyObject,
+		options: BalenaRequestOptions & { method: string; anonymous?: unknown },
 	) {
 		const { apiKey, apiUrl, auth, request } = this.backendParams;
 
