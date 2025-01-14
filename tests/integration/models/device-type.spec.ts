@@ -105,7 +105,7 @@ describe('Device Type model', function () {
 					RPI2_DEVICE_TYPE_SLUG,
 					[
 						'Insert the SD card to the host machine.',
-						'Write the balenaOS file you downloaded to the SD card. We recommend using <a href="https://etcher.balena.io/">Etcher</a>.',
+						'Write the balenaOS file you downloaded to the SD card. We recommend using [Etcher](https://etcher.balena.io/).',
 						'Wait for writing of balenaOS to complete.',
 						'Remove the SD card from the host machine.',
 						'Insert the freshly flashed SD card into the Raspberry Pi 2.',
@@ -115,10 +115,10 @@ describe('Device Type model', function () {
 				[
 					RADXA_ZERO_DEVICE_TYPE_SLUG,
 					[
-						'Use the <a href="https://wiki.radxa.com/Zero/dev/maskrom#Enable_maskrom">maskrom mode</a> instructions provided by the vendor and make sure the board\'s USB2 port is used for provisioning.',
-						'Install on your PC the <a href=https://wiki.radxa.com/Zero/dev/maskrom#Install_required_tools>tools</a> required for flashing.',
-						'Clear eMMC and set it in UMS mode. Make sure to use <a href=https://dl.radxa.com/zero/images/loader/radxa-zero-erase-emmc.bin>this loader</a> when following the <a href=https://wiki.radxa.com/Zero/dev/maskrom#Side_loading_binaries>sideloading instructions</a>.',
-						'Write the OS to the internal eMMC storage device. We recommend using <a href="http://www.etcher.io">Etcher</a>.',
+						"Use the [maskrom mode](https://wiki.radxa.com/Zero/dev/maskrom#Enable_maskrom) instructions provided by the vendor and make sure the board's USB2 port is used for provisioning.",
+						'Install on your PC the [tools](https://wiki.radxa.com/Zero/dev/maskrom#Install_required_tools) required for flashing.',
+						'Clear eMMC and set it in UMS mode. Make sure to use [this loader](https://dl.radxa.com/zero/images/loader/radxa-zero-erase-emmc.bin) when following the [sideloading instructions](https://wiki.radxa.com/Zero/dev/maskrom#Side_loading_binaries).',
+						'Write the OS to the internal eMMC storage device. We recommend using [Etcher](http://www.etcher.io).',
 						'Once the OS has been written to the eMMC you need to repower your board.',
 					],
 				],
@@ -126,7 +126,7 @@ describe('Device Type model', function () {
 					'intel-nuc',
 					[
 						'Insert the USB key to the host machine.',
-						'Write the balenaOS file you downloaded to the USB key. We recommend using <a href="https://etcher.balena.io/">Etcher</a>.',
+						'Write the balenaOS file you downloaded to the USB key. We recommend using [Etcher](https://etcher.balena.io/).',
 						'Wait for writing of balenaOS to complete.',
 						'Remove the USB key from the host machine.',
 						'Insert the freshly flashed USB key into the Intel NUC.',
@@ -140,7 +140,7 @@ describe('Device Type model', function () {
 				[
 					'jetson-nano',
 					[
-						'To provision Nvidia Jetson Nano SD-CARD, follow the instructions using our <a href="https://github.com/balena-os/jetson-flash/blob/master/docs/jetson-nano.md">Jetson Flash tool</a> to make the process more streamlined.',
+						'To provision Nvidia Jetson Nano SD-CARD, follow the instructions using our [Jetson Flash tool](https://github.com/balena-os/jetson-flash/blob/master/docs/jetson-nano.md) to make the process more streamlined.',
 					],
 				],
 			] as const
