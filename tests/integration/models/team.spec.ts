@@ -14,13 +14,11 @@ describe('Team model', function () {
 	givenLoggedInUser(before);
 	givenInitialOrganization(before);
 
-	let ctx: Mocha.Context;
-
-	before(function () {
-		ctx = this;
-	});
-
 	describe('given an organization without teams', function () {
+		let ctx: Mocha.Context;
+		before(function () {
+			ctx = this;
+		});
 		describe('[read operations]', function () {
 			parallel('balena.models.team.getAllByOrganization()', function () {
 				it('should return empty array of teams', async function () {
@@ -80,6 +78,10 @@ describe('Team model', function () {
 	});
 	describe('given an organization with teams', function () {
 		givenATeam(before);
+		let ctx: Mocha.Context;
+		before(function () {
+			ctx = this;
+		});
 		describe('[read operations]', function () {
 			parallel('balena.models.team.getAllByOrganization()', function () {
 				it('should return an array containing 3 teams', async function () {
