@@ -53,24 +53,10 @@ describe('Config Model', function () {
 				});
 			});
 
-			it('should include the deviceTypes', async function () {
-				const { deviceTypes } = await balena.models.config.getAll();
-				if (deviceTypes == null) {
-					this.skip();
-					return;
-				}
-				expectDeviceTypeArray(deviceTypes);
+			it('should not include the deviceTypes', async function () {
+				const config = await balena.models.config.getAll();
+				expect(config).to.not.have.property('deviceTypes');
 			});
-		});
-
-		describe('device type normalization', function () {
-			before(function () {
-				return balena.models.config.getAll().then(({ deviceTypes }) => {
-					this.deviceTypes = deviceTypes;
-				});
-			});
-
-			itNormalizesDeviceTypes();
 		});
 	});
 

@@ -31,8 +31,6 @@ export interface Config {
 	recurlyPublicKey?: string;
 	stripePublicKey?: string;
 	freezeBillingVersions?: string[];
-	/** @deprecated Will be removed in a future API version. */
-	deviceTypes?: DeviceTypeJson.DeviceType[];
 	DEVICE_ONLINE_ICON: string;
 	DEVICE_OFFLINE_ICON: string;
 	signupCodeRequired: boolean;
@@ -107,7 +105,9 @@ const getConfigModel = function (
 				baseUrl: apiUrl,
 				sendToken: false,
 			});
-			body.deviceTypes = normalizeDeviceTypes(body.deviceTypes);
+			if ('deviceTypes' in body) {
+				delete body.deviceTypes;
+			}
 			return body;
 		},
 
