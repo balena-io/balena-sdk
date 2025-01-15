@@ -1,4 +1,262 @@
 - commits:
+    - subject: "PineJsClient: Use stricter typings for `backendParams`"
+      hash: 01d0d42de1bd58e30ead1d20558191bea45a7b46
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: myarmolinsky
+      nested: []
+    - subject: "`application-membership.create`: Update description to reflect that
+        the user must already be a member of the organization"
+      hash: 5f8de11add09b9f7bab614e5b03ad7117b5bc5d0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: myarmolinsky
+      nested: []
+    - subject: Drop deprecated method `organization-membership.create` in favor of
+        `organization.invite.create`
+      hash: e24e959df1c140e812662fc1db805b92f114e34d
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop `os.getLastModified` as it has not worked for a while and is unused
+      hash: 5235e38e5f51a77b88338c4cbee246eb7841014a
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: "`application.generateProvisioningKey`: Switch to v2 endpoint"
+      hash: 7c987e786160e65fa14508c51b03046990dae465
+      body: Requires open-balena-api 34.1.0
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: "`application.generateProvisioningKey`: Change parameters to an object
+        and require `keyExpiryDate`"
+      hash: 79133eca60573c4495a872f80460bf733ecd1c55
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Stop silencing Not Found errors for devices, applications, and
+        organizations
+      hash: fd8aa4da3b61d2227e9807faee91bca9ed007155
+      body: ""
+      footer:
+        Resolves: "#649"
+        resolves: "#649"
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: "`apiKey.create`: Change parameters to an object and require
+        `expiryDate`"
+      hash: 3d210dba40471aa3ae7c3b69ec103a16ffd3cc54
+      body: ""
+      footer:
+        See: https://balena.fibery.io/Work/Project/Default-API-key-expiry-860
+        see: https://balena.fibery.io/Work/Project/Default-API-key-expiry-860
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Update minimum required node version to 20.12.0
+      hash: 933b475c777159b2fb5d038c6eecb561426511a2
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: "`ConfigVarSchema`: Update typing to use `JSONSchema7` instead of
+        `JSONSchema6`"
+      hash: 5f5899079aa27f241197148f956791deed65c23c
+      body: ""
+      footer:
+        Resolves: "#1465"
+        resolves: "#1465"
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: "`startOsUpdate`: Set `runDetached` to `true` by default"
+      hash: caf0bd4ff953f2c41ec0c9385786e06ec0bf1be3
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: "`mergePineOptions`: Drop `replace$select` parameter"
+      hash: c6153e6bbe8a5643becfbf5f9dd1b6f1d54260fe
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: "`image.get`: No longer pass base options"
+      hash: 82dee7f7bae9cf03290f3e7be880de3bd9583120
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop `Unknown pine option` errors in favor of TS and pinejs-client
+        throwing
+      hash: c06e72afbffddadaf8ce73ee36cb92c705d13e86
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop support for OS versions <= 2.14.0
+      hash: 6e284001e5a06cf71d8456837a7f6ab8681d0d5b
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop deprecated property `image` from `ImageInstall`
+      hash: c49a1f16eb392a76faef1318da24a427971cce2f
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop deprecated method `device.stopApplication`
+      hash: 1cb1d4d11a37cd04498943c8eb6b137c8b395e62
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop deprecated method `device.startApplication`
+      hash: 55e6c422062dbd8aec3d187d12263b7250844016
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop deprecated property `contains__image` from `Release`
+      hash: 62ff5fd475679e005be91f50fa8145e0721fb3aa
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop deprecated property `release_version` from `Release`
+      hash: 066af00065aaf492c27350d846df2981b6b2cc9f
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop deprecated property `supports_gateway_mode` from `ApplicationType`
+      hash: f7e97fa3abf4a8f3be42121d39704dcb65a18df4
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop all deprecated properties from `JWTUser`
+      hash: c5bd9575d8726f41a20b4953026f469692b6ce1a
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop deprecated property `logo_url` from `DeviceType`
+      hash: 02bf313f1d598d511dbbe6a0b2dd70c6e3ccf54e
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop deprecated property `isRecommended` from `OsVersion`
+      hash: e766bc92f4879756a9988bd1d8ed06788546e310
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop deprecated method `device.getOsUpdateStatus`
+      hash: 445ec1fb66b9e56d2d93f657ab7c7e5f0f04c47a
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop deprecated method `device.getApplicationInfo`
+      hash: 64de74e3fb25668772a713e3adba9ac390c60b33
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop deprecated property `supports_blink` from `DeviceType`
+      hash: 9d41b36018912d44575a8501dcc5c6ad2189822d
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop deprecated property `instructions` from `DeviceType`
+      hash: 07a585bd50aa971cfb83397ef89626315f183f76
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop deprecated property `pubnub` from `Config`
+      hash: 6e54a2bfbc1cc7757f313b3701ab4c3ffe2a26d5
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+    - subject: Drop deprecated method `application.generateApiKey` necessary to
+        provision <2.7.8
+      hash: 4cc441bfcf7468a427e4fdaf3058eecfe34f2112
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: myarmolinsky
+      nested: []
+  version: 21.0.0
+  title: ""
+  date: 2025-01-15T17:28:31.035Z
+- commits:
     - subject: "models/balenaos-contract: Switch to using markdown for links"
       hash: 461dca2b974e6a8ecadaef2add9484f774209bf1
       body: |
