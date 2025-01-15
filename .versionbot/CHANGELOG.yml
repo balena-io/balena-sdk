@@ -1,4 +1,24 @@
 - commits:
+    - subject: "models/balenaos-contract: Switch to using markdown for links"
+      hash: 461dca2b974e6a8ecadaef2add9484f774209bf1
+      body: |
+        ... because HTML links are no longer displayed in the dashboard
+        image download modal.
+
+        We also adapt the tests to these changes.
+
+        See internal thread: https://balena.zulipchat.com/#narrow/channel/350505-aspect.2Fgrowth/topic/Improving.20Jetson-flash.20documentation/near/493450821
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 20.9.1
+  title: ""
+  date: 2025-01-15T13:24:17.772Z
+- commits:
     - subject: "tests: Update test repo for release.createFromUrl to avoid redirects"
       hash: a587d333a81268d30025af86e420f2433321e824
       body: ""
