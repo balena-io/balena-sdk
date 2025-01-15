@@ -5345,7 +5345,7 @@ or a dictionary of OsVersion objects by device type slug when an array of device
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | deviceTypes | <code>String</code> \| <code>Array.&lt;String&gt;</code> |  | device type slug or array of slugs |
-| [options] | <code>Object</code> |  | Extra options to filter the OS releases by |
+| [options] | <code>Object</code> |  | Extra pine options & draft filter to use |
 | [options.includeDraft] | <code>Boolean</code> | <code>false</code> | Whether pre-releases should be included in the results |
 
 **Example**  

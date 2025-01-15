@@ -254,6 +254,70 @@ describe('OS model', function () {
 				}
 			});
 
+			it('should cache the results when providing the includeDraft option', async () => {
+				let firstRes = await balena.models.os.getAvailableOsVersions(
+					['raspberrypi3'],
+					{ includeDraft: true },
+				);
+				let secondRes = await balena.models.os.getAvailableOsVersions(
+					['raspberrypi3'],
+					{ includeDraft: true },
+				);
+				expect(firstRes).to.equal(secondRes);
+
+				firstRes = await balena.models.os.getAvailableOsVersions(
+					['raspberrypi3'],
+					{ includeDraft: true },
+				);
+				secondRes = await balena.models.os.getAvailableOsVersions(
+					['raspberrypi3'],
+					{ includeDraft: true },
+				);
+				expect(firstRes).to.equal(secondRes);
+			});
+
+			it('should cache the results when providing an empty options object', async () => {
+				const firstRes = await balena.models.os.getAvailableOsVersions(
+					['raspberrypi3'],
+					{},
+				);
+				const secondRes = await balena.models.os.getAvailableOsVersions(
+					['raspberrypi3'],
+					{},
+				);
+				expect(firstRes).to.equal(secondRes);
+			});
+
+			it('should not cache the results when providing extra pine options', async () => {
+				const firstRes = await balena.models.os.getAvailableOsVersions(
+					['fincm3'],
+					{ $filter: { raw_version: '2.29.0+rev1' } },
+				);
+				const secondRes = await balena.models.os.getAvailableOsVersions(
+					['fincm3'],
+					{ $filter: { raw_version: '2.29.0+rev1' } },
+				);
+				expect(firstRes).to.not.equal(secondRes);
+			});
+
+			it('should not cache the results when providing the includeDraft option & extra pine options', async () => {
+				const firstRes = await balena.models.os.getAvailableOsVersions(
+					['fincm3'],
+					{
+						includeDraft: true,
+						$filter: { raw_version: '2.29.0-123456789+rev1' },
+					},
+				);
+				const secondRes = await balena.models.os.getAvailableOsVersions(
+					['fincm3'],
+					{
+						includeDraft: true,
+						$filter: { raw_version: '2.29.0-123456789+rev1' },
+					},
+				);
+				expect(firstRes).to.not.equal(secondRes);
+			});
+
 			it('should return an empty object for non-existent DTs', async () => {
 				const res = await balena.models.os.getAllOsVersions(['blahbleh']);
 
@@ -334,6 +398,62 @@ describe('OS model', function () {
 					(v) => bSemver.parse(v.raw_version)?.prerelease.length ?? 0 > 0,
 				);
 				expect(draftVersions).to.have.length.greaterThan(0);
+			});
+
+			it('should be able to provide additional pine options [string device type argument]', async () => {
+				const versionInfos = await balena.models.os.getAvailableOsVersions(
+					'raspberrypi3',
+					{
+						$expand: { belongs_to__application: { $select: 'id' } },
+						$filter: { raw_version: '5.1.20+rev1' },
+					},
+				);
+				expect(versionInfos).to.be.an('array');
+				expect(versionInfos).to.have.lengthOf(1);
+				expect(versionInfos[0]).to.have.property('raw_version', '5.1.20+rev1');
+				// Testing the values separatelly as well so that the correctness of the return type is also tested
+				expect(versionInfos[0].raw_version).to.equal('5.1.20+rev1');
+				expect(versionInfos[0]).to.have.nested.property(
+					'belongs_to__application[0].id',
+				);
+				expect(versionInfos[0].belongs_to__application[0].id).to.be.a('number');
+			});
+
+			it('should be able to provide the includeDraft option & extra pine options [string device type argument]', async () => {
+				const finalizedVersionInfos =
+					await balena.models.os.getAvailableOsVersions('raspberrypi3', {
+						includeDraft: false,
+						$filter: { raw_version: '5.1.10-1706616336246+rev2' },
+					});
+				expect(finalizedVersionInfos).to.be.an('array');
+				expect(finalizedVersionInfos.map((v) => v.raw_version)).to.deep.equal(
+					[],
+				);
+
+				const draftVersionInfos = await balena.models.os.getAllOsVersions(
+					'raspberrypi3',
+					{
+						includeDraft: true,
+						$expand: { belongs_to__application: { $select: 'id' } },
+						$filter: { raw_version: '5.1.10-1706616336246+rev2' },
+					},
+				);
+				expect(draftVersionInfos).to.be.an('array');
+				expect(draftVersionInfos).to.have.lengthOf(1);
+				expect(draftVersionInfos[0]).to.have.property(
+					'raw_version',
+					'5.1.10-1706616336246+rev2',
+				);
+				// Testing the values separatelly as well so that the correctness of the return type is also tested
+				expect(draftVersionInfos[0].raw_version).to.equal(
+					'5.1.10-1706616336246+rev2',
+				);
+				expect(draftVersionInfos[0]).to.have.nested.property(
+					'belongs_to__application[0].id',
+				);
+				expect(draftVersionInfos[0].belongs_to__application[0].id).to.be.a(
+					'number',
+				);
 			});
 
 			it('should contain both balenaOS and balenaOS ESR OS types [array of single device type]', async () => {
