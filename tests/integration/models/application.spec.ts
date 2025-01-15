@@ -593,35 +593,6 @@ describe('Application Model', function () {
 				});
 			});
 
-			describe('balena.models.application.generateApiKey()', function () {
-				applicationRetrievalFields.forEach((prop) => {
-					it(`should be able to generate an API key by ${prop}`, async function () {
-						const apiKey = await balena.models.application.generateApiKey(
-							this.application[prop],
-						);
-
-						expect(apiKey).to.be.a('string');
-						expect(apiKey).to.have.length(32);
-					});
-				});
-
-				it('should be rejected if the application slug does not exist', function () {
-					const promise = balena.models.application.generateApiKey(
-						`${this.initialOrg.handle}/helloworldapp`,
-					);
-					return expect(promise).to.be.rejectedWith(
-						`Application not found: ${this.initialOrg.handle}/helloworldapp`,
-					);
-				});
-
-				it('should be rejected if the application id does not exist', function () {
-					const promise = balena.models.application.generateApiKey(999999);
-					return expect(promise).to.be.rejectedWith(
-						'Application not found: 999999',
-					);
-				});
-			});
-
 			describe('balena.models.application.generateProvisioningKey()', function () {
 				const getProvisioningKeys = async function (appNameOrSlug, options?) {
 					const provisioningKeys =
@@ -638,7 +609,12 @@ describe('Application Model', function () {
 				applicationRetrievalFields.forEach((prop) => {
 					it(`should be able to generate a provisioning key by ${prop}`, function () {
 						return balena.models.application
-							.generateProvisioningKey(this.application[prop])
+							.generateProvisioningKey({
+								slugOrUuidOrId: this.application[prop],
+								keyExpiryDate: new Date(
+									Date.now() + 1000 * 60 * 60,
+								).toISOString(),
+							})
 							.then(function (key) {
 								expect(_.isString(key)).to.be.true;
 								return expect(key).to.have.length(32);
@@ -653,8 +629,13 @@ describe('Application Model', function () {
 						);
 
 						const key = await balena.models.application.generateProvisioningKey(
-							this.application[prop],
-							`key_${prop}`,
+							{
+								slugOrUuidOrId: this.application[prop],
+								keyExpiryDate: new Date(
+									Date.now() + 1000 * 60 * 60,
+								).toISOString(),
+								keyName: `key_${prop}`,
+							},
 						);
 
 						expect(key).to.be.a('string');
@@ -682,9 +663,14 @@ describe('Application Model', function () {
 						);
 
 						const key = await balena.models.application.generateProvisioningKey(
-							this.application[prop],
-							`key_${prop}`,
-							`Provisioning key generated with name key_${prop}`,
+							{
+								slugOrUuidOrId: this.application[prop],
+								keyExpiryDate: new Date(
+									Date.now() + 1000 * 60 * 60,
+								).toISOString(),
+								keyName: `key_${prop}`,
+								keyDescription: `Provisioning key generated with name key_${prop}`,
+							},
 						);
 
 						expect(key).to.be.a('string');
@@ -711,11 +697,16 @@ describe('Application Model', function () {
 							this.application[prop],
 						);
 
+						const oneHourDate = new Date(
+							Date.now() + 1000 * 60 * 60,
+						).toISOString();
 						const key = await balena.models.application.generateProvisioningKey(
-							this.application[prop],
-							`key_${prop}`,
-							`Provisioning key generated with name key_${prop}`,
-							'2030-01-01',
+							{
+								slugOrUuidOrId: this.application[prop],
+								keyExpiryDate: oneHourDate,
+								keyName: `key_${prop}`,
+								keyDescription: `Provisioning key generated with name key_${prop}`,
+							},
 						);
 
 						expect(key).to.be.a('string');
@@ -734,22 +725,25 @@ describe('Application Model', function () {
 						expect(provisionKeys[0]).to.have.property('expiry_date');
 						expect(provisionKeys[0])
 							.to.have.property('expiry_date')
-							.to.be.equal('2030-01-01T00:00:00.000Z');
+							.to.be.equal(oneHourDate);
 					});
 				});
 
 				it('should be rejected if the application slug does not exist', function () {
-					const promise = balena.models.application.generateProvisioningKey(
-						`${this.initialOrg.handle}/helloworldapp`,
-					);
+					const promise = balena.models.application.generateProvisioningKey({
+						slugOrUuidOrId: `${this.initialOrg.handle}/helloworldapp`,
+						keyExpiryDate: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+					});
 					return expect(promise).to.be.rejectedWith(
 						`Application not found: ${this.initialOrg.handle}/helloworldapp`,
 					);
 				});
 
 				it('should be rejected if the application id does not exist', function () {
-					const promise =
-						balena.models.application.generateProvisioningKey(999999);
+					const promise = balena.models.application.generateProvisioningKey({
+						slugOrUuidOrId: 999999,
+						keyExpiryDate: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+					});
 					return expect(promise).to.be.rejectedWith(
 						'Application not found: 999999',
 					);
@@ -1536,7 +1530,6 @@ describe('Application Model', function () {
 				expect(imageInstall)
 					.to.have.property('download_progress')
 					.that.is.oneOf([50, null]);
-				expect(imageInstall).to.have.property('image').that.has.length(1);
 				if (expectCommit) {
 					expect(imageInstall)
 						.to.have.property('is_provided_by__release')

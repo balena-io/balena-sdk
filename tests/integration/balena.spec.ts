@@ -162,7 +162,9 @@ describe('Balena SDK', function () {
 					},
 				});
 
-				const promise = balena.models.device.reboot(999999);
+				const promise = balena.request.send({
+					url: 'example.com',
+				});
 
 				return expect(promise).to.be.rejected.then(() =>
 					expect(called).to.equal(
@@ -370,10 +372,11 @@ describe('Balena SDK', function () {
 			givenLoggedInUser(before);
 
 			before(async function () {
-				const testApiKey = await balena.models.apiKey.create(
-					`${TEST_KEY_NAME_PREFIX}_apiKey`,
-					'apiKeyDescription',
-				);
+				const testApiKey = await balena.models.apiKey.create({
+					name: `${TEST_KEY_NAME_PREFIX}_apiKey`,
+					expiryDate: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+					description: 'apiKeyDescription',
+				});
 				this.testApiKey = testApiKey;
 				expect(this.testApiKey).to.be.a('string');
 				await balena.auth.logout();

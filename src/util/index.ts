@@ -52,38 +52,6 @@ export const isUnauthorizedResponse = (err: Error) =>
 export const isNotFoundResponse = (err: Error) =>
 	isBalenaRequestErrorResponseWithCode(err, 404);
 
-export const isNoDeviceForKeyResponse = (err: Error) =>
-	isBalenaRequestErrorResponseWithCode(err, 500) &&
-	err.body === 'No device found to associate with the api key';
-
-export const isNoApplicationForKeyResponse = (err: Error) =>
-	isBalenaRequestErrorResponseWithCode(err, 500) &&
-	err.body === 'No application found to associate with the api key';
-
-export const treatAsMissingOrganization = (
-	handleOrId: string | number,
-	err: Error,
-) => {
-	const replacementErr = new errors.BalenaOrganizationNotFound(handleOrId);
-	replacementErr.stack = err.stack ?? '';
-	throw replacementErr;
-};
-
-export const treatAsMissingApplication = (
-	slugOrUuidOrId: string | number,
-	err: Error,
-) => {
-	const replacementErr = new errors.BalenaApplicationNotFound(slugOrUuidOrId);
-	replacementErr.stack = err.stack ?? '';
-	throw replacementErr;
-};
-
-export const treatAsMissingDevice = (uuidOrId: string | number, err: Error) => {
-	const replacementErr = new errors.BalenaDeviceNotFound(uuidOrId);
-	replacementErr.stack = err.stack ?? '';
-	throw replacementErr;
-};
-
 // TODO: Make it so that it also infers the extras param
 export function mergePineOptionsTyped<
 	R extends object,
@@ -99,15 +67,6 @@ export type ExtendedPineTypedResult<
 > = TBaseResult &
 	IfDefined<ExtraPineOptions, Pine.TypedResult<T, ExtraPineOptions>>;
 
-const knownPineOptionKeys = new Set([
-	'$top',
-	'$skip',
-	'$select',
-	'$expand',
-	'$filter',
-	'$orderby',
-]);
-
 const passthroughPineOptionKeys = ['$top', '$skip', '$orderby'] as const;
 
 // Merging two sets of pine options sensibly is more complicated than it sounds.
@@ -122,31 +81,17 @@ const passthroughPineOptionKeys = ['$top', '$skip', '$orderby'] as const;
 export function mergePineOptions<
 	R extends object,
 	TDefault extends Pine.ODataOptions<R>,
->(
-	defaults: TDefault,
-	extras: Pine.ODataOptions<R> | undefined,
-	replace$selects?: boolean,
-): TDefault;
+>(defaults: TDefault, extras: Pine.ODataOptions<R> | undefined): TDefault;
 export function mergePineOptions<R extends object>(
 	defaults: Pine.ODataOptions<R>,
 	extras: Pine.ODataOptions<R> | undefined,
-	replace$selects?: boolean,
 ): Pine.ODataOptions<R>;
 export function mergePineOptions<R extends object>(
 	defaults: Pine.ODataOptions<R>,
 	extras: Pine.ODataOptions<R> | undefined,
-	replace$selects?: boolean,
 ): Pine.ODataOptions<R> {
 	if (!extras) {
 		return defaults;
-	}
-
-	// TOOD: Consider dropping in the next major
-	const unknownPineOption = Object.keys(extras).find(
-		(key) => !knownPineOptionKeys.has(key),
-	);
-	if (unknownPineOption != null) {
-		throw new Error(`Unknown pine option: ${unknownPineOption}`);
 	}
 
 	const result = { ...defaults };
@@ -160,9 +105,7 @@ export function mergePineOptions<R extends object>(
 					(extras.$select as '*')
 				: [extras.$select];
 
-		if (replace$selects) {
-			result.$select = extraSelect;
-		} else if (extraSelect === '*') {
+		if (extraSelect === '*') {
 			result.$select = '*';
 		} else {
 			result.$select = [
@@ -193,11 +136,7 @@ export function mergePineOptions<R extends object>(
 	}
 
 	if (extras.$expand != null) {
-		result.$expand = mergeExpandOptions(
-			defaults.$expand,
-			extras.$expand,
-			replace$selects,
-		);
+		result.$expand = mergeExpandOptions(defaults.$expand, extras.$expand);
 	}
 
 	return result;
@@ -206,7 +145,6 @@ export function mergePineOptions<R extends object>(
 const mergeExpandOptions = <T>(
 	defaultExpand: Pine.Expand<T> | undefined,
 	extraExpand: Pine.Expand<T> | undefined,
-	replace$selects?: boolean,
 ): Pine.Expand<T> | undefined => {
 	if (defaultExpand == null) {
 		return extraExpand;
@@ -222,7 +160,6 @@ const mergeExpandOptions = <T>(
 		$defaultExpand[expandKey] = mergePineOptions(
 			$defaultExpand[expandKey] ?? {},
 			$extraExpand[expandKey],
-			replace$selects,
 		);
 	}
 
@@ -255,21 +192,6 @@ const convertExpandToObject = <T extends object>(
 				),
 			{},
 		);
-	}
-
-	// Check the options in this object are the ones we know how to merge
-	for (const expandKey of Object.keys(expandOption) as Array<
-		keyof typeof expandOption
-	>) {
-		const expandRelationshipOptions = expandOption[expandKey];
-
-		// TOOD: Consider dropping in the next major
-		const unknownPineOption = Object.keys(expandRelationshipOptions ?? {}).find(
-			(key) => !knownPineOptionKeys.has(key),
-		);
-		if (unknownPineOption != null) {
-			throw new Error(`Unknown pine expand options: ${unknownPineOption}`);
-		}
 	}
 
 	if (cloneIfNeeded) {

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import * as errors from 'balena-errors';
-import type { JSONSchema6 } from 'json-schema';
+import type { JSONSchema7 } from 'json-schema';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import type * as DeviceTypeJson from '../types/device-type-json';
 
@@ -25,11 +25,6 @@ export interface Config {
 	deviceUrlsBase: string;
 	adminUrl: string;
 	gitServerUrl: string;
-	/** @deprecated */
-	pubnub?: {
-		subscribe_key: string;
-		publish_key: string;
-	};
 	ga?: GaConfig;
 	mixpanelToken?: string;
 	intercomAppId?: string;
@@ -44,7 +39,7 @@ export interface Config {
 	supportedSocialProviders: string[];
 }
 
-export type ConfigVarSchema = JSONSchema6 & {
+export type ConfigVarSchema = JSONSchema7 & {
 	will_reboot?: boolean;
 	warning?: string;
 };
@@ -74,8 +69,13 @@ const getConfigModel = function (
 	const { request } = deps;
 	const { apiUrl } = opts;
 
+	// TODO: Drop when `instructions` is no longer returned by the `/config` and `/device-types/v1` endpoints
 	const normalizeDeviceTypes = (
-		deviceTypes: DeviceTypeJson.DeviceType[],
+		deviceTypes: Array<
+			DeviceTypeJson.DeviceType & {
+				instructions?: string[] | DeviceTypeJson.DeviceTypeInstructions;
+			}
+		>,
 	): DeviceTypeJson.DeviceType[] =>
 		deviceTypes.map(function (deviceType) {
 			// Remove the device-type.json instructions to enforce

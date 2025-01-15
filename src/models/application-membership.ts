@@ -24,6 +24,7 @@ import type {
 	PineSubmitBody,
 	InjectedDependenciesParam,
 	PinePostResult,
+	PineTypedResult,
 } from '..';
 import { mergePineOptions } from '../util';
 
@@ -225,7 +226,7 @@ const getApplicationMembershipModel = function (
 		 * @function
 		 * @memberof balena.models.application.membership
 		 *
-		 * @description This method adds a user to an application by their username.
+		 * @description This method adds a user to an application by their username if they are a member of the organization.
 		 *
 		 * @param {Object} options - membership creation parameters
 		 * @param {String|Number} options.application - application handle (string), or id (number)
@@ -247,10 +248,34 @@ const getApplicationMembershipModel = function (
 		}: ApplicationMembershipCreationOptions): Promise<
 			PinePostResult<ApplicationMembership>
 		> {
-			const [{ id }, roleId] = await Promise.all([
-				getApplication(application, { $select: 'id' }),
+			const appOptions = {
+				$select: 'id',
+				$expand: {
+					organization: {
+						$select: 'id',
+						$expand: {
+							organization_membership: {
+								$select: 'id',
+								$filter: {
+									user: { username },
+								},
+							},
+						},
+					},
+				},
+			} satisfies PineOptions<Application>;
+			const [{ id, organization }, roleId] = await Promise.all([
+				getApplication(application, appOptions) as Promise<
+					PineTypedResult<Application, typeof appOptions>
+				>,
 				roleName ? getRoleId(roleName) : undefined,
 			]);
+			// If the user does not have an organization membership, they cannot be added to an application
+			if (organization[0].organization_membership.length === 0) {
+				throw new Error(
+					'It is necessary that each user (Auth) that is member of an application that has an organization, is member of the organization',
+				);
+			}
 			type ApplicationMembershipBase = Omit<ApplicationMembership, 'user'>;
 			type ApplicationMembershipPostBody = ApplicationMembershipBase & {
 				username: string;

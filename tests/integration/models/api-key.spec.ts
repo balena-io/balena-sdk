@@ -18,39 +18,33 @@ describe('API Key model', function () {
 
 		parallel('', function () {
 			it('should be able to create a new api key', async function () {
-				const key = await balena.models.apiKey.create(
-					`${TEST_KEY_NAME_PREFIX}_apiKey`,
-				);
+				const tomorrowDate = new Date(
+					Date.now() + 1000 * 60 * 60 * 24,
+				).toISOString();
+				const key = await balena.models.apiKey.create({
+					name: `${TEST_KEY_NAME_PREFIX}_apiKey`,
+					expiryDate: tomorrowDate,
+				});
 				expect(key).to.be.a('string');
-			});
-
-			it('should be able to create a new api key with description', async function () {
-				const key = await balena.models.apiKey.create(
-					`${TEST_KEY_NAME_PREFIX}_apiKey2`,
-					'apiKeyDescription',
-				);
-				expect(key).to.be.a('string');
-			});
-
-			it('should be able to create a new api key with expiry-date', async function () {
-				const tomorrowDate = new Date(Date.now() + 86400000).toISOString(); // one day in future
-				const key = await balena.models.apiKey.create(
-					`${TEST_KEY_NAME_PREFIX}_apiKeyWithExpiry`,
-					'apiKeyDescription',
-					tomorrowDate,
-				);
-				expect(key).to.be.a('string');
-
 				const userKeys = await balena.models.apiKey.getAllNamedUserApiKeys();
 
 				expect(userKeys).to.be.an('array');
 				const userKeyWithExpiry = userKeys.filter(
-					(elem) => elem.name === `${TEST_KEY_NAME_PREFIX}_apiKeyWithExpiry`,
+					(elem) => elem.name === `${TEST_KEY_NAME_PREFIX}_apiKey`,
 				);
 				expect(userKeyWithExpiry).to.not.be.empty;
 				expect(userKeyWithExpiry[0])
 					.to.have.property('expiry_date')
 					.to.be.equal(tomorrowDate);
+			});
+
+			it('should be able to create a new api key with description', async function () {
+				const key = await balena.models.apiKey.create({
+					name: `${TEST_KEY_NAME_PREFIX}_apiKey2`,
+					expiryDate: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+					description: 'apiKeyDescription',
+				});
+				expect(key).to.be.a('string');
 			});
 		});
 	});
@@ -74,11 +68,15 @@ describe('API Key model', function () {
 		describe('given two named api keys', function () {
 			before(() =>
 				Promise.all([
-					balena.models.apiKey.create(`${TEST_KEY_NAME_PREFIX}_apiKey1`),
-					balena.models.apiKey.create(
-						`${TEST_KEY_NAME_PREFIX}_apiKey2`,
-						'apiKey2Description',
-					),
+					balena.models.apiKey.create({
+						name: `${TEST_KEY_NAME_PREFIX}_apiKey1`,
+						expiryDate: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+					}),
+					balena.models.apiKey.create({
+						name: `${TEST_KEY_NAME_PREFIX}_apiKey2`,
+						expiryDate: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+						description: 'apiKey2Description',
+					}),
 				]),
 			);
 
@@ -122,11 +120,15 @@ describe('API Key model', function () {
 		describe('given two named api keys', function () {
 			before(() =>
 				Promise.all([
-					balena.models.apiKey.create(`${TEST_KEY_NAME_PREFIX}_apiKey1`),
-					balena.models.apiKey.create(
-						`${TEST_KEY_NAME_PREFIX}_apiKey2`,
-						'apiKey2Description',
-					),
+					balena.models.apiKey.create({
+						name: `${TEST_KEY_NAME_PREFIX}_apiKey1`,
+						expiryDate: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+					}),
+					balena.models.apiKey.create({
+						name: `${TEST_KEY_NAME_PREFIX}_apiKey2`,
+						expiryDate: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+						description: 'apiKey2Description',
+					}),
 				]),
 			);
 
@@ -169,18 +171,20 @@ describe('API Key model', function () {
 		] as const;
 
 		before(async function () {
-			await balena.models.apiKey.create(
-				`${TEST_KEY_NAME_PREFIX}_apiKeyToBeUpdated`,
-				'apiKeyDescriptionToBeUpdated',
-			);
+			await balena.models.apiKey.create({
+				name: `${TEST_KEY_NAME_PREFIX}_apiKeyToBeUpdated`,
+				expiryDate: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+				description: 'apiKeyDescriptionToBeUpdated',
+			});
 			const [apiKey] = await balena.models.apiKey.getAll({
 				$filter: { name: `${TEST_KEY_NAME_PREFIX}_apiKeyToBeUpdated` },
 			});
 			ctx.namedUserApiKey = apiKey;
 
-			await balena.models.application.generateProvisioningKey(
-				this.application.id,
-			);
+			await balena.models.application.generateProvisioningKey({
+				slugOrUuidOrId: this.application.id,
+				keyExpiryDate: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+			});
 
 			await balena.models.device.generateDeviceKey(this.device.id);
 		});

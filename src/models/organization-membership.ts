@@ -22,9 +22,7 @@ import type {
 	OrganizationMembershipRoles,
 	OrganizationMembershipTag,
 	PineOptions,
-	PineSubmitBody,
 	InjectedDependenciesParam,
-	PinePostResult,
 } from '..';
 import { mergePineOptions } from '../util';
 
@@ -239,58 +237,6 @@ const getOrganizationMembershipModel = function (
 					options,
 				),
 			});
-		},
-
-		/**
-		 * @summary Creates a new membership for an organization
-		 * @name create
-		 * @public
-		 * @function
-		 * @memberof balena.models.organization.membership
-		 *
-		 * @deprecated use balena.models.organization.invite.create instead
-		 * @description This method adds a user to an organization by their usename.
-		 * WARNING: This method is deprecated, use balena.models.organization.invite.create instead.
-		 *
-		 * @param {Object} options - membership creation parameters
-		 * @param {String|Number} options.organization - organization handle (string), or id (number)
-		 * @param {String} options.username - the username of the balena user that will become a member
-		 * @param {String} [options.roleName="member"] - the role name to be granted to the membership
-		 *
-		 * @fulfil {Object} - organization membership
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.organization.membership.create({ organization: "myorg", username: "user123", roleName: "member" }).then(function(membership) {
-		 * 	console.log(membership);
-		 * });
-		 */
-		async create({
-			organization,
-			username,
-			roleName,
-		}: OrganizationMembershipCreationOptions): Promise<
-			PinePostResult<OrganizationMembership>
-		> {
-			const [{ id }, roleId] = await Promise.all([
-				getOrganization(organization, { $select: 'id' }),
-				roleName ? getRoleId(roleName) : undefined,
-			]);
-			type OrganizationMembershipBase = Omit<OrganizationMembership, 'user'>;
-			type OrganizationMembershipPostBody = OrganizationMembershipBase & {
-				username: string;
-			};
-			const body: PineSubmitBody<OrganizationMembershipPostBody> = {
-				username,
-				is_member_of__organization: id,
-			};
-			if (roleName) {
-				body.organization_membership_role = roleId;
-			}
-			return (await pine.post<OrganizationMembershipBase>({
-				resource: RESOURCE,
-				body,
-			})) as PinePostResult<OrganizationMembership>;
 		},
 
 		/**

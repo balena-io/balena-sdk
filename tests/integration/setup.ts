@@ -213,13 +213,25 @@ export async function loginPaidUser() {
 }
 
 async function resetInitialOrganization() {
-	const { id: userId } = await balena.auth.getUserInfo();
 	const initialOrg = await getInitialOrganization();
 	await balena.pine.delete({
 		resource: 'organization_membership',
 		options: {
 			$filter: {
-				user: { $ne: userId },
+				$not: {
+					user: {
+						$any: {
+							$alias: 'u',
+							$expr: {
+								u: {
+									username: {
+										$in: [credentials.username, credentials.member.username],
+									},
+								},
+							},
+						},
+					},
+				},
 				is_member_of__organization: initialOrg.id,
 			},
 		},
@@ -361,9 +373,10 @@ export function givenLoggedInWithAnApplicationApiKey(
 	givenAnApplication(beforeFn);
 
 	beforeFn(async function () {
-		const key = await balena.models.application.generateProvisioningKey(
-			this.application.slug,
-		);
+		const key = await balena.models.application.generateProvisioningKey({
+			slugOrUuidOrId: this.application.slug,
+			keyExpiryDate: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+		});
 		await balena.auth.logout();
 		await balena.auth.loginWithToken(key);
 	});

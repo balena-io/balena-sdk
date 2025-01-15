@@ -14,8 +14,6 @@ export interface DeviceType {
 
 	isDependent?: boolean;
 	imageDownloadAlerts?: DeviceTypeDownloadAlert[];
-	/** @deprecated Use the balena.models.deviceType.getInstructions() */
-	instructions?: string[] | DeviceTypeInstructions;
 	gettingStartedLink?: string | DeviceTypeGettingStartedLink;
 	stateInstructions?: { [key: string]: string[] };
 	options?: DeviceTypeOptions[];
@@ -25,8 +23,6 @@ export interface DeviceType {
 			command: string;
 		}>;
 	};
-	/** @deprecated Use the DeviceType.contract.data.led */
-	supportsBlink?: boolean;
 	yocto: {
 		fstype?: string;
 		deployArtifact: string;
@@ -40,8 +36,6 @@ export interface DeviceType {
 	};
 	/** Holds the latest balenaOS version */
 	buildId?: string;
-	/** @deprecated Use the logo field from the models.deviceType.get() method. */
-	logoUrl?: string;
 }
 
 export interface DeviceTypeDownloadAlert {

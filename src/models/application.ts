@@ -37,14 +37,7 @@ import * as url from 'url';
 import once from 'lodash/once';
 import * as errors from 'balena-errors';
 
-import {
-	isId,
-	isNoApplicationForKeyResponse,
-	isNotFoundResponse,
-	mergePineOptions,
-	treatAsMissingApplication,
-	withSupervisorLockedError,
-} from '../util';
+import { isId, mergePineOptions, withSupervisorLockedError } from '../util';
 
 import {
 	getCurrentServiceDetailsPineExpand,
@@ -732,18 +725,15 @@ const getApplicationModel = function (
 			slugOrUuidOrIdOrIds: string | number | number[],
 		): Promise<void> => {
 			if (typeof slugOrUuidOrIdOrIds === 'string') {
-				try {
-					const applicationId = await getId(slugOrUuidOrIdOrIds);
-					await pine.delete({
-						resource: 'application',
-						id: applicationId,
-					});
-				} catch (err) {
-					if (isNotFoundResponse(err)) {
-						treatAsMissingApplication(slugOrUuidOrIdOrIds, err);
-					}
-					throw err;
-				}
+				const applicationId = (
+					await sdkInstance.models.application.get(slugOrUuidOrIdOrIds, {
+						$select: 'id',
+					})
+				).id;
+				await pine.delete({
+					resource: 'application',
+					id: applicationId,
+				});
 				return;
 			}
 			await batchApplicationOperation()({
@@ -783,21 +773,18 @@ const getApplicationModel = function (
 			slugOrUuidOrId: string | number,
 			newAppName: string,
 		): Promise<void> => {
-			try {
-				const applicationId = await getId(slugOrUuidOrId);
-				await pine.patch({
-					resource: 'application',
-					id: applicationId,
-					body: {
-						app_name: newAppName,
-					},
-				});
-			} catch (err) {
-				if (isNotFoundResponse(err)) {
-					treatAsMissingApplication(slugOrUuidOrId, err);
-				}
-				throw err;
-			}
+			const applicationId = (
+				await sdkInstance.models.application.get(slugOrUuidOrId, {
+					$select: 'id',
+				})
+			).id;
+			await pine.patch({
+				resource: 'application',
+				id: applicationId,
+				body: {
+					app_name: newAppName,
+				},
+			});
 		},
 
 		/**
@@ -818,61 +805,18 @@ const getApplicationModel = function (
 		 */
 		restart: (slugOrUuidOrId: string | number): Promise<void> =>
 			withSupervisorLockedError(async () => {
-				try {
-					const applicationId = await getId(slugOrUuidOrId);
+				const applicationId = (
+					await sdkInstance.models.application.get(slugOrUuidOrId, {
+						$select: 'id',
+					})
+				).id;
 
-					await request.send({
-						method: 'POST',
-						url: `/application/${applicationId}/restart`,
-						baseUrl: apiUrl,
-					});
-				} catch (err) {
-					if (isNotFoundResponse(err)) {
-						treatAsMissingApplication(slugOrUuidOrId, err);
-					}
-					throw err;
-				}
+				await request.send({
+					method: 'POST',
+					url: `/application/${applicationId}/restart`,
+					baseUrl: apiUrl,
+				});
 			}),
-
-		/**
-		 * @summary Generate an API key for a specific application
-		 * @name generateApiKey
-		 * @public
-		 * @function
-		 * @memberof balena.models.application
-		 * @deprecated
-		 * @description
-		 * Generally you shouldn't use this method: if you're provisioning a recent BalenaOS
-		 * version (2.4.0+) then generateProvisioningKey should work just as well, but
-		 * be more secure.
-		 *
-		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
-		 * @fulfil {String} - api key
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.application.generateApiKey('myorganization/myapp').then(function(apiKey) {
-		 * 	console.log(apiKey);
-		 * });
-		 *
-		 * @example
-		 * balena.models.application.generateApiKey(123).then(function(apiKey) {
-		 * 	console.log(apiKey);
-		 * });
-		 */
-		generateApiKey: async (
-			slugOrUuidOrId: string | number,
-		): Promise<string> => {
-			// Do a full get, not just getId, because the actual api endpoint doesn't fail if the id
-			// doesn't exist. TODO: Can use getId once https://github.com/balena-io/balena-api/issues/110 is resolved
-			const { id } = await exports.get(slugOrUuidOrId, { $select: 'id' });
-			const { body } = await request.send({
-				method: 'POST',
-				url: `/application/${id}/generate-api-key`,
-				baseUrl: apiUrl,
-			});
-			return body;
-		},
 
 		/**
 		 * @summary Generate a device provisioning key for a specific application
@@ -881,56 +825,59 @@ const getApplicationModel = function (
 		 * @function
 		 * @memberof balena.models.application
 		 *
-		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
-		 * @param {String} [keyName] - Provisioning key name
-		 * @param {String} [keyDescription] - Description for provisioning key
-		 * @param {String} [keyExpiryDate] - Expiry Date for provisioning key
+		 * @param {Object} generateProvisioningKeyParams - an object containing the parameters for the provisioning key generation
+		 * @param {String|Number} generateProvisioningKeyParams.slugOrUuidOrId - application slug (string), uuid (string) or id (number)
+		 * @param {String} generateProvisioningKeyParams.keyExpiryDate - Expiry Date for provisioning key
+		 * @param {String} [generateProvisioningKeyParams.keyName] - Provisioning key name
+		 * @param {String} [generateProvisioningKeyParams.keyDescription] - Description for provisioning key
 		 * @fulfil {String} - device provisioning key
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.application.generateProvisioningKey('myorganization/myapp').then(function(key) {
+		 * balena.models.application.generateProvisioningKey({slugOrUuidOrId: 'myorganization/myapp', keyExpiryDate: '2030-10-12'}).then(function(key) {
 		 * 	console.log(key);
 		 * });
 		 *
 		 * @example
-		 * balena.models.application.generateProvisioningKey(123).then(function(key) {
+		 * balena.models.application.generateProvisioningKey({slugOrUuidOrId: 123, keyExpiryDate: '2030-10-12'}).then(function(key) {
 		 * 	console.log(key);
 		 * });
 		 *
 		 * @example
-		 * balena.models.application.generateProvisioningKey(123, 'api key name', 'api key long description', '2030-01-01T00:00:00Z').then(function(key) {
+		 * balena.models.application.generateProvisioningKey({slugOrUuidOrId: 123, keyExpiryDate: '2030-10-12', keyName: 'api key name', keyDescription: 'api key long description'}).then(function(key) {
 		 * 	console.log(key);
 		 * });
 		 */
-		generateProvisioningKey: async (
-			slugOrUuidOrId: string | number,
-			keyName?: string,
-			keyDescription?: string,
-			keyExpiryDate?: string,
-		): Promise<string> => {
-			try {
-				const applicationId = await getId(slugOrUuidOrId);
-				const { body } = await request.send({
-					method: 'POST',
-					url: '/api-key/v1/',
-					baseUrl: apiUrl,
-					body: {
-						actorType: 'application',
-						actorTypeId: applicationId,
-						roles: ['provisioning-api-key'],
-						name: keyName,
-						description: keyDescription,
-						expiryDate: keyExpiryDate,
-					},
-				});
-				return body;
-			} catch (err) {
-				if (isNoApplicationForKeyResponse(err)) {
-					treatAsMissingApplication(slugOrUuidOrId, err);
-				}
-				throw err;
-			}
+		generateProvisioningKey: async ({
+			slugOrUuidOrId,
+			keyExpiryDate,
+			keyName,
+			keyDescription,
+		}: {
+			slugOrUuidOrId: string | number;
+			keyExpiryDate: string | null;
+			keyName?: string;
+			keyDescription?: string;
+		}): Promise<string> => {
+			const applicationId = (
+				await sdkInstance.models.application.get(slugOrUuidOrId, {
+					$select: 'id',
+				})
+			).id;
+			const { body } = await request.send({
+				method: 'POST',
+				url: '/api-key/v2/',
+				baseUrl: apiUrl,
+				body: {
+					actorType: 'application',
+					actorTypeId: applicationId,
+					roles: ['provisioning-api-key'],
+					name: keyName,
+					description: keyDescription,
+					expiryDate: keyExpiryDate,
+				},
+			});
+			return body;
 		},
 
 		/**
@@ -1358,19 +1305,16 @@ const getApplicationModel = function (
 				);
 			}
 
-			try {
-				const applicationId = await getId(slugOrUuidOrId);
-				await pine.patch({
-					resource: 'application',
-					id: applicationId,
-					body: { is_accessible_by_support_until__date: expiryTimestamp },
-				});
-			} catch (err) {
-				if (isNotFoundResponse(err)) {
-					treatAsMissingApplication(slugOrUuidOrId, err);
-				}
-				throw err;
-			}
+			const applicationId = (
+				await sdkInstance.models.application.get(slugOrUuidOrId, {
+					$select: 'id',
+				})
+			).id;
+			await pine.patch({
+				resource: 'application',
+				id: applicationId,
+				body: { is_accessible_by_support_until__date: expiryTimestamp },
+			});
 		},
 
 		/**
@@ -1392,19 +1336,16 @@ const getApplicationModel = function (
 		revokeSupportAccess: async (
 			slugOrUuidOrId: string | number,
 		): Promise<void> => {
-			try {
-				const applicationId = await getId(slugOrUuidOrId);
-				await pine.patch({
-					resource: 'application',
-					id: applicationId,
-					body: { is_accessible_by_support_until__date: null },
-				});
-			} catch (err) {
-				if (isNotFoundResponse(err)) {
-					treatAsMissingApplication(slugOrUuidOrId, err);
-				}
-				throw err;
-			}
+			const applicationId = (
+				await sdkInstance.models.application.get(slugOrUuidOrId, {
+					$select: 'id',
+				})
+			).id;
+			await pine.patch({
+				resource: 'application',
+				id: applicationId,
+				body: { is_accessible_by_support_until__date: null },
+			});
 		},
 
 		/**

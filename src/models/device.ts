@@ -46,10 +46,8 @@ import memoizee from 'memoizee';
 
 import {
 	isId,
-	isNoDeviceForKeyResponse,
 	isFullUuid,
 	mergePineOptions,
-	treatAsMissingDevice,
 	limitedMap,
 	groupByMap,
 } from '../util';
@@ -222,17 +220,6 @@ const getDeviceModel = function (
 		return (await sdkInstance.models.config.getAll()).deviceUrlsBase;
 	});
 
-	// Internal method for uuid/id disambiguation
-	// Note that this throws an exception for missing uuids, but not missing ids
-	const getId = async (uuidOrId: string | number) => {
-		if (isId(uuidOrId)) {
-			return uuidOrId;
-		} else {
-			const { id } = await exports.get(uuidOrId, { $select: 'id' });
-			return id;
-		}
-	};
-
 	const getAppliedConfigVariableValue = async (
 		uuidOrId: string | number,
 		name: string,
@@ -345,7 +332,7 @@ const getDeviceModel = function (
 	async function startOsUpdate(
 		uuidOrUuids: string | string[],
 		targetOsVersion: string,
-		options: { runDetached?: boolean } = { runDetached: false },
+		options: { runDetached?: boolean } = { runDetached: true },
 	): Promise<OsUpdateActionResult | Dictionary<OsUpdateActionResult>> {
 		if (!targetOsVersion) {
 			throw new errors.BalenaInvalidParameterError(
@@ -433,7 +420,6 @@ const getDeviceModel = function (
 	}
 
 	const exports = {
-		_getId: getId,
 		OverallStatus,
 		/**
 		 * @summary Get Dashboard URL for a specific device
@@ -1385,9 +1371,12 @@ const getDeviceModel = function (
 			const [{ id: userId }, apiKey, application, deviceType] =
 				await Promise.all([
 					sdkInstance.auth.getUserInfo(),
-					sdkInstance.models.application.generateProvisioningKey(
-						applicationSlugOrUuidOrId,
-					),
+					sdkInstance.models.application.generateProvisioningKey({
+						slugOrUuidOrId: applicationSlugOrUuidOrId,
+						// Use 10 minute expiry date as we will immediately use the provisioning key to create a device and then not need it
+						keyExpiryDate: new Date(Date.now() + 1000 * 60 * 10).toISOString(),
+						keyDescription: 'Created by SDK to register a device',
+					}),
 					sdkInstance.models.application.get(
 						applicationSlugOrUuidOrId,
 						applicationOptions,
@@ -1456,25 +1445,20 @@ const getDeviceModel = function (
 			keyDescription?: string,
 			keyExpiryDate?: string,
 		): Promise<string> => {
-			try {
-				const deviceId = await getId(uuidOrId);
-				const { body } = await request.send({
-					method: 'POST',
-					url: `/api-key/device/${deviceId}/device-key`,
-					baseUrl: apiUrl,
-					body: {
-						name: keyName,
-						description: keyDescription,
-						expiryDate: keyExpiryDate,
-					},
-				});
-				return body;
-			} catch (err) {
-				if (isNoDeviceForKeyResponse(err)) {
-					treatAsMissingDevice(uuidOrId, err);
-				}
-				throw err;
-			}
+			const deviceId = (
+				await sdkInstance.models.device.get(uuidOrId, { $select: 'id' })
+			).id;
+			const { body } = await request.send({
+				method: 'POST',
+				url: `/api-key/device/${deviceId}/device-key`,
+				baseUrl: apiUrl,
+				body: {
+					name: keyName,
+					description: keyDescription,
+					expiryDate: keyExpiryDate,
+				},
+			});
+			return body;
 		},
 
 		/**
@@ -2271,9 +2255,7 @@ const getDeviceModel = function (
 		 * The version **must** be the exact version number, a "prod" variant and greater than the one running on the device.
 		 * To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`.
 		 * @param {Object} [options] - options
-		 * @param {Boolean} [options.runDetached] - run the update in detached mode.
-		 * Default behaviour is runDetached=false but is DEPRECATED and will be removed in a future release. Use runDetached=true
-		 * for more reliable updates.
+		 * @param {Boolean} [options.runDetached] - run the update in detached mode. True by default
 		 * @fulfil {Object} - action response
 		 * @returns {Promise}
 		 *
@@ -2283,41 +2265,6 @@ const getDeviceModel = function (
 		 * });
 		 */
 		startOsUpdate,
-
-		/**
-		 * @deprecated
-		 * @summary Get the OS update status of a device. This will no longer return a useful status for runDetached=true updates.
-		 * @name getOsUpdateStatus
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @param {String} uuid - full device uuid
-		 * @fulfil {Object} - action response
-		 * @returns {Promise}
-		 *
-		 * @example
-		 * balena.models.device.getOsUpdateStatus('7cf02a687b74206f92cb455969cf8e98').then(function(status) {
-		 * 	console.log(result.status);
-		 * });
-		 */
-		getOsUpdateStatus: async (uuid: string): Promise<OsUpdateActionResult> => {
-			try {
-				const osUpdateHelper = await getOsUpdateHelper();
-				return await osUpdateHelper.getOsUpdateStatus(uuid);
-			} catch (err) {
-				if (err.statusCode !== 400) {
-					throw err;
-				}
-
-				// as an attempt to reduce the requests for this method
-				// check whether the device exists only when the request rejects
-				// so that it's rejected with the appropriate BalenaDeviceNotFound error
-				await exports.get(uuid, { $select: 'id' });
-				// if the device exists, then re-throw the original error
-				throw err;
-			}
-		},
 
 		/**
 		 * @namespace balena.models.device.tags
