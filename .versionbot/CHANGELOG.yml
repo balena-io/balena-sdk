@@ -1,4 +1,17 @@
 - commits:
+    - subject: "BREAKING config.getAll: Remove the missed deprecated deviceTypes
+        property"
+      hash: 886bf9d0a4bb3d3e9ae08f89f857fdf18a05a91d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 21.0.1
+  title: ""
+  date: 2025-01-16T12:49:13.077Z
+- commits:
     - subject: "PineJsClient: Use stricter typings for `backendParams`"
       hash: 01d0d42de1bd58e30ead1d20558191bea45a7b46
       body: ""
