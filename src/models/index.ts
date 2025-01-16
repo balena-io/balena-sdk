@@ -58,6 +58,12 @@ const modelsTemplate = {
 		(require('./organization') as typeof import('./organization')).default,
 
 	/**
+	 * @namespace team
+	 * @memberof balena.models
+	 */
+	team: () => (require('./team') as typeof import('./team')).default,
+
+	/**
 	 * @namespace os
 	 * @memberof balena.models
 	 */
