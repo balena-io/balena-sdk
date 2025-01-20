@@ -22,6 +22,11 @@ import { isId, mergePineOptions } from '../util';
 const getTeamModel = function (deps: InjectedDependenciesParam) {
 	const { pine, sdkInstance } = deps;
 
+	/* eslint-disable @typescript-eslint/no-require-imports */
+	const applicationAccessModel = (
+		require('./team-application-access') as typeof import('./team-application-access')
+	).default(deps);
+
 	/**
 	 * @summary Creates a new Team
 	 * @name create
@@ -250,6 +255,11 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 		get,
 		rename,
 		remove,
+		/**
+		 * @namespace balena.models.team.applicationAccess
+		 * @memberof balena.models.team
+		 */
+		applicationAccess: applicationAccessModel,
 	};
 };
 
