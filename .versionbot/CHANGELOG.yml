@@ -1,4 +1,24 @@
 - commits:
+    - subject: Add methods for the team application access model
+      hash: 8e1e3cbcf80fbeb11165f000881b4ecbf9ec6343
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Andrea Rosci
+      nested: []
+    - subject: Add methods for the team model
+      hash: 24cd4628b7b5a1597bcb21da3480417dcdec1471
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Andrea Rosci
+      nested: []
+  version: 21.1.0
+  title: ""
+  date: 2025-01-21T18:47:00.694Z
+- commits:
     - subject: "BREAKING config.getAll: Remove the missed deprecated deviceTypes
         property"
       hash: 886bf9d0a4bb3d3e9ae08f89f857fdf18a05a91d
