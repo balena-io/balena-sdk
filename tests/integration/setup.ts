@@ -236,6 +236,14 @@ async function resetInitialOrganization() {
 			},
 		},
 	});
+	await balena.pine.delete({
+		resource: 'team',
+		options: {
+			$filter: {
+				belongs_to__organization: initialOrg.id,
+			},
+		},
+	});
 }
 
 export function givenInitialOrganization(beforeFn: Mocha.HookFunction) {
@@ -263,6 +271,8 @@ export const TEST_APPLICATION_NAME_PREFIX =
 	'balena_sdk_created_test_application_that_will_be_deleted';
 export const TEST_ORGANIZATION_NAME =
 	'balena-sdk created test organization that will be deleted';
+export const TEST_TEAM_NAME =
+	'balena-sdk created test team that will be deleted';
 export const TEST_KEY_NAME_PREFIX =
 	'balena_sdk_created_test_key_that_will_be_deleted';
 
