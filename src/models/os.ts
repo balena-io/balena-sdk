@@ -20,6 +20,7 @@ import once from 'lodash/once';
 import {
 	isNotFoundResponse,
 	onlyIf,
+	mergePineOptions,
 	mergePineOptionsTyped,
 	type ExtendedPineTypedResult,
 } from '../util';
@@ -330,29 +331,35 @@ const getOsModel = function (
 
 	const _getAllOsVersions = async (
 		deviceTypes: string[],
-		options?: PineOptions<Release>,
+		options: PineOptions<Release> | undefined,
+		convenienceFilter: 'supported' | 'include_draft' | 'all',
 	): Promise<Dictionary<OsVersion[]>> => {
-		const hostapps = await _getOsVersions(deviceTypes, options);
+		const extraFilterOptions =
+			convenienceFilter === 'supported' || convenienceFilter === 'include_draft'
+				? ({
+						$filter: {
+							...(convenienceFilter === 'supported' && { is_final: true }),
+							is_invalidated: false,
+							status: 'success',
+						},
+					} satisfies PineOptions<Release>)
+				: undefined;
+
+		const finalOptions =
+			options != null
+				? mergePineOptions(options, extraFilterOptions)
+				: extraFilterOptions;
+
+		const hostapps = await _getOsVersions(deviceTypes, finalOptions);
 		return _transformHostApps(hostapps);
 	};
 
 	const _memoizedGetAllOsVersions = authDependentMemoizer(
 		async (
 			deviceTypes: string[],
-			filterOptions: 'supported' | 'include_draft' | 'all',
+			convenienceFilter: 'supported' | 'include_draft' | 'all',
 		) => {
-			return await _getAllOsVersions(
-				deviceTypes,
-				filterOptions === 'all'
-					? undefined
-					: {
-							$filter: {
-								...(filterOptions === 'supported' && { is_final: true }),
-								is_invalidated: false,
-								status: 'success',
-							},
-						},
-			);
+			return await _getAllOsVersions(deviceTypes, undefined, convenienceFilter);
 		},
 	);
 
@@ -364,6 +371,18 @@ const getOsModel = function (
 		deviceTypes: string[],
 		options?: { includeDraft?: boolean },
 	): Promise<Dictionary<OsVersion[]>>;
+	// We define the includeDraft-only overloads separately in order to avoid,
+	// "Expression produces a union type that is too complex to represent." errors.
+	async function getAvailableOsVersions<TP extends PineOptions<Release>>(
+		deviceType: string,
+		options: TP & { includeDraft?: boolean },
+	): Promise<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>;
+	async function getAvailableOsVersions<TP extends PineOptions<Release>>(
+		deviceTypes: string[],
+		options: TP & { includeDraft?: boolean },
+	): Promise<
+		Dictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>
+	>;
 	/**
 	 * @summary Get the supported OS versions for the provided device type(s)
 	 * @name getAvailableOsVersions
@@ -372,7 +391,7 @@ const getOsModel = function (
 	 * @memberof balena.models.os
 	 *
 	 * @param {String|String[]} deviceTypes - device type slug or array of slugs
-	 * @param {Object} [options] - Extra options to filter the OS releases by
+	 * @param {Object} [options] - Extra pine options & draft filter to use
 	 * @param {Boolean} [options.includeDraft=false] - Whether pre-releases should be included in the results
 	 * @fulfil {Object[]|Object} - An array of OsVersion objects when a single device type slug is provided,
 	 * or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.
@@ -384,17 +403,38 @@ const getOsModel = function (
 	 * @example
 	 * balena.models.os.getAvailableOsVersions(['fincm3', 'raspberrypi3']);
 	 */
-	async function getAvailableOsVersions(
+	async function getAvailableOsVersions<
+		TP extends PineOptions<Release> | undefined,
+	>(
 		deviceTypes: string[] | string,
-		options?: { includeDraft?: boolean },
-	): Promise<TypeOrDictionary<OsVersion[]>> {
+		// TODO: Consider providing a different way to for specifying includeDraft in the next major
+		// eg: make a methods that returns the complex filter
+		options?: TP & { includeDraft?: boolean },
+	): Promise<
+		TypeOrDictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>
+	> {
+		const pineOptionEntries =
+			options != null
+				? Object.entries(options).filter(([key]) => key.startsWith('$'))
+				: undefined;
+		const pineOptions =
+			pineOptionEntries != null && pineOptionEntries.length > 0
+				? (Object.fromEntries(pineOptionEntries) as TP)
+				: undefined;
+
 		const singleDeviceTypeArg =
 			typeof deviceTypes === 'string' ? deviceTypes : false;
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
-		const versionsByDt = await _memoizedGetAllOsVersions(
-			deviceTypes.slice().sort(),
-			options?.includeDraft === true ? 'include_draft' : 'supported',
-		);
+		const convenienceFilter =
+			options?.includeDraft === true ? 'include_draft' : 'supported';
+		const versionsByDt = (
+			pineOptions == null
+				? await _memoizedGetAllOsVersions(
+						deviceTypes.slice().sort(),
+						convenienceFilter,
+					)
+				: await _getAllOsVersions(deviceTypes, pineOptions, convenienceFilter)
+		) as Dictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>;
 		return singleDeviceTypeArg
 			? (versionsByDt[singleDeviceTypeArg] ?? [])
 			: versionsByDt;
@@ -444,7 +484,7 @@ const getOsModel = function (
 		const versionsByDt = (
 			options == null
 				? await _memoizedGetAllOsVersions(deviceTypes.slice().sort(), 'all')
-				: await _getAllOsVersions(deviceTypes, options)
+				: await _getAllOsVersions(deviceTypes, options, 'all')
 		) as Dictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>;
 		return singleDeviceTypeArg
 			? (versionsByDt[singleDeviceTypeArg] ?? [])
