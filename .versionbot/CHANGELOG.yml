@@ -1,4 +1,17 @@
 - commits:
+    - subject: "os.getAvailableOsVersions: Add support for providing additional pine
+        options"
+      hash: b8e1aae9f0f54852cb58c1f9cd3a95533308bdc5
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 21.2.0
+  title: ""
+  date: 2025-03-02T22:33:49.059Z
+- commits:
     - subject: Add methods for the team application access model
       hash: 8e1e3cbcf80fbeb11165f000881b4ecbf9ec6343
       body: ""
