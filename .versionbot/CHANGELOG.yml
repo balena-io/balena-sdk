@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update TypeScript to 5.8.2
+      hash: 3e4f26b9f2ba8827c5edaa78a6ddc150433a1704
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 21.2.1
+  title: ""
+  date: 2025-03-03T13:55:47.757Z
+- commits:
     - subject: "os.getAvailableOsVersions: Add support for providing additional pine
         options"
       hash: b8e1aae9f0f54852cb58c1f9cd3a95533308bdc5
