@@ -429,6 +429,7 @@ export interface Device {
 	supervisor_version: string;
 	uuid: string;
 	api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
+	changed_api_heartbeat_state_on__date: string | null;
 	memory_usage: number | null;
 	memory_total: number | null;
 	storage_block_device: string | null;
