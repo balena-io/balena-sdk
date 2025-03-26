@@ -308,9 +308,7 @@ const getDeviceModel = function (
 	};
 
 	async function getAll(options?: PineOptions<Device>): Promise<Device[]> {
-		if (options == null) {
-			options = {};
-		}
+		options ??= {};
 
 		const devices = await pine.get({
 			resource: 'device',
@@ -481,9 +479,7 @@ const getDeviceModel = function (
 			slugOrUuidOrId: string | number,
 			options?: PineOptions<Device>,
 		): Promise<Device[]> {
-			if (options == null) {
-				options = {};
-			}
+			options ??= {};
 
 			const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 				$select: 'id',
@@ -532,9 +528,7 @@ const getDeviceModel = function (
 			handleOrId: string | number,
 			options?: PineOptions<Device>,
 		): Promise<Device[]> {
-			if (options == null) {
-				options = {};
-			}
+			options ??= {};
 
 			const { id } = await sdkInstance.models.organization.get(handleOrId, {
 				$select: 'id',
@@ -599,9 +593,7 @@ const getDeviceModel = function (
 			uuidOrId: string | number,
 			options?: PineOptions<Device>,
 		): Promise<Device> {
-			if (options == null) {
-				options = {};
-			}
+			options ??= {};
 
 			if (uuidOrId == null) {
 				throw new errors.BalenaDeviceNotFound(uuidOrId);
@@ -674,9 +666,7 @@ const getDeviceModel = function (
 			uuidOrId: string | number,
 			options?: PineOptions<Device>,
 		): Promise<DeviceWithServiceDetails<CurrentServiceWithCommit>> {
-			if (options == null) {
-				options = {};
-			}
+			options ??= {};
 
 			const device = await exports.get(
 				uuidOrId,
@@ -708,9 +698,7 @@ const getDeviceModel = function (
 			name: string,
 			options?: PineOptions<Device>,
 		): Promise<Device[]> {
-			if (options == null) {
-				options = {};
-			}
+			options ??= {};
 
 			const devices = await getAll(
 				mergePineOptions({ $filter: { device_name: name } }, options),
@@ -2297,9 +2285,7 @@ const getDeviceModel = function (
 				slugOrUuidOrId: string | number,
 				options?: PineOptions<DeviceTag>,
 			): Promise<DeviceTag[]> {
-				if (options == null) {
-					options = {};
-				}
+				options ??= {};
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -2440,9 +2426,7 @@ const getDeviceModel = function (
 				slugOrUuidOrId: string | number,
 				options?: PineOptions<DeviceVariable>,
 			): Promise<DeviceVariable[]> {
-				if (options == null) {
-					options = {};
-				}
+				options ??= {};
 
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
@@ -2599,9 +2583,7 @@ const getDeviceModel = function (
 				slugOrUuidOrId: string | number,
 				options?: PineOptions<DeviceVariable>,
 			): Promise<DeviceVariable[]> {
-				if (options == null) {
-					options = {};
-				}
+				options ??= {};
 
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
@@ -2734,9 +2716,7 @@ const getDeviceModel = function (
 				uuidOrId: string | number,
 				options?: PineOptions<DeviceServiceEnvironmentVariable>,
 			): Promise<DeviceServiceEnvironmentVariable[]> {
-				if (options == null) {
-					options = {};
-				}
+				options ??= {};
 
 				const { id: deviceId } = await exports.get(uuidOrId, { $select: 'id' });
 				return await pine.get({
@@ -2783,9 +2763,7 @@ const getDeviceModel = function (
 				slugOrUuidOrId: string | number,
 				options?: PineOptions<DeviceServiceEnvironmentVariable>,
 			): Promise<DeviceServiceEnvironmentVariable[]> {
-				if (options == null) {
-					options = {};
-				}
+				options ??= {};
 
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,

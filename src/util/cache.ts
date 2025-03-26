@@ -13,7 +13,9 @@ export const getAuthDependentMemoize = (
 			promise: true,
 		});
 
-		pubsub.subscribe('auth.keyChange', () => memoizedFn.clear());
+		pubsub.subscribe('auth.keyChange', () => {
+			memoizedFn.clear();
+		});
 
 		return memoizedFn;
 	};

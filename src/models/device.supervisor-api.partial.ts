@@ -208,9 +208,7 @@ export const getSupervisorApiHelper = function (
 			options?: { force?: boolean },
 		): Promise<void> =>
 			withSupervisorLockedError(async () => {
-				if (options == null) {
-					options = {};
-				}
+				options ??= {};
 
 				const deviceId = (
 					await sdkInstance.models.device.get(uuidOrId, { $select: 'id' })
@@ -252,9 +250,7 @@ export const getSupervisorApiHelper = function (
 			options: { force?: boolean },
 		): Promise<void> =>
 			withSupervisorLockedError(async () => {
-				if (options == null) {
-					options = {};
-				}
+				options ??= {};
 
 				const deviceOptions = {
 					$select: 'id',
@@ -348,9 +344,7 @@ export const getSupervisorApiHelper = function (
 			uuidOrId: string | number,
 			options: { force?: boolean },
 		): Promise<void> {
-			if (options == null) {
-				options = {};
-			}
+			options ??= {};
 
 			const deviceOptions = {
 				$select: 'id',

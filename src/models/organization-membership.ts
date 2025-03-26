@@ -334,9 +334,7 @@ const getOrganizationMembershipModel = function (
 				handleOrId: string | number,
 				options?: PineOptions<OrganizationMembershipTag>,
 			): Promise<OrganizationMembershipTag[]> {
-				if (options == null) {
-					options = {};
-				}
+				options ??= {};
 				const { id } = await getOrganization(handleOrId, {
 					$select: 'id',
 				});

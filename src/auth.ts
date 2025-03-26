@@ -83,7 +83,7 @@ const getAuth = function (
 
 	const getActorDetails = async (noCache = false) => {
 		if (noCache) {
-			await memoizedActorWhoami.clear();
+			memoizedActorWhoami.clear();
 		}
 		try {
 			return await memoizedActorWhoami();
@@ -198,7 +198,7 @@ const getAuth = function (
 		email: string;
 		password: string;
 	}): Promise<void> {
-		await memoizedActorWhoami.clear();
+		memoizedActorWhoami.clear();
 		const token = await authenticate(credentials);
 		await auth.setKey(token);
 	}
@@ -219,7 +219,7 @@ const getAuth = function (
 	 * balena.auth.loginWithToken(authToken);
 	 */
 	async function loginWithToken(authToken: string): Promise<void> {
-		await memoizedActorWhoami.clear();
+		memoizedActorWhoami.clear();
 		return auth.setKey(authToken);
 	}
 
@@ -347,7 +347,7 @@ const getAuth = function (
 	 * balena.auth.logout();
 	 */
 	async function logout(): Promise<void> {
-		await memoizedActorWhoami.clear();
+		memoizedActorWhoami.clear();
 		return auth.removeKey();
 	}
 
