@@ -1,4 +1,16 @@
 - commits:
+    - subject: "device: add `changed_api_heartbeat_state_on__date` to typings"
+      hash: bfa52cf58c7d06859a1b5c6f62ff7c71324d3d20
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Otavio Jacobi
+      nested: []
+  version: 21.3.0
+  title: ""
+  date: 2025-03-26T19:54:35.558Z
+- commits:
     - subject: fix  linting
       hash: 13320aad81ba3dfc4950b9960f015b058222c4be
       body: ""
