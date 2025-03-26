@@ -1,4 +1,16 @@
 - commits:
+    - subject: fix  linting
+      hash: 13320aad81ba3dfc4950b9960f015b058222c4be
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Otavio Jacobi
+      nested: []
+  version: 21.2.2
+  title: ""
+  date: 2025-03-26T18:55:53.610Z
+- commits:
     - subject: Update TypeScript to 5.8.2
       hash: 3e4f26b9f2ba8827c5edaa78a6ddc150433a1704
       body: ""
