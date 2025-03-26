@@ -46,10 +46,7 @@ export function buildDependentResource<T extends DependentResource>(
 ) {
 	const exports = {
 		getAll(options?: PineOptions<T>): Promise<T[]> {
-			if (options == null) {
-				options = {};
-			}
-
+			options ??= {};
 			return pine.get<T>({
 				resource: resourceName,
 				options: mergePineOptions(
@@ -67,10 +64,7 @@ export function buildDependentResource<T extends DependentResource>(
 			parentParam: string | number | Dictionary<unknown>,
 			options?: PineOptions<T>,
 		): Promise<T[]> {
-			if (options == null) {
-				options = {};
-			}
-
+			options ??= {};
 			const id = await getResourceId(parentParam);
 			return await exports.getAll(
 				mergePineOptions(

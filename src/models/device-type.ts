@@ -150,9 +150,7 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 			idOrSlug: number | string,
 			options?: PineOptions<DeviceType>,
 		): Promise<DeviceType> {
-			if (options == null) {
-				options = {};
-			}
+			options ??= {};
 
 			if (idOrSlug == null) {
 				throw new errors.BalenaInvalidDeviceType(idOrSlug);
@@ -221,10 +219,7 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * })
 		 */
 		async getAll(options?: PineOptions<DeviceType>): Promise<DeviceType[]> {
-			if (options == null) {
-				options = {};
-			}
-
+			options ??= {};
 			const deviceTypes = await pine.get({
 				resource: 'device_type',
 				options: mergePineOptions({ $orderby: 'name asc' }, options),
@@ -260,10 +255,7 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		async getAllSupported(
 			options?: PineOptions<DeviceType>,
 		): Promise<DeviceType[]> {
-			if (options == null) {
-				options = {};
-			}
-
+			options ??= {};
 			const deviceTypes = await exports.getAll(
 				mergePineOptions(
 					{
@@ -320,9 +312,7 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 			slugOrName: string,
 			options?: PineOptions<DeviceType>,
 		): Promise<DeviceType> => {
-			if (options == null) {
-				options = {};
-			}
+			options ??= {};
 			const [deviceType] = await exports.getAll(
 				mergePineOptions(
 					{

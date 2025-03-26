@@ -1459,9 +1459,7 @@ describe('Application Model', function () {
 			expectCommit,
 		) {
 			// Commit is empty on newly created application, so ignoring it
-			if (expectCommit == null) {
-				expectCommit = false;
-			}
+			expectCommit ??= false;
 			const omittedFields = ['owns__device', 'should_be_running__release'];
 
 			expect(_.omit(application, omittedFields)).to.deep.equal(

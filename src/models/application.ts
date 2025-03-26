@@ -463,10 +463,7 @@ const getApplicationModel = function (
 				owns__device: Array<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
 			}
 		> {
-			if (options == null) {
-				options = {};
-			}
-
+			options ??= {};
 			const serviceOptions = mergePineOptions(
 				{
 					$expand: [
@@ -517,9 +514,7 @@ const getApplicationModel = function (
 			options?: PineOptions<Application>,
 			context?: 'directly_accessible',
 		): Promise<Application> {
-			if (options == null) {
-				options = {};
-			}
+			options ??= {};
 
 			const accessFilter =
 				context === 'directly_accessible'
@@ -925,9 +920,7 @@ const getApplicationModel = function (
 		 */
 		shutdown: (appId: number, options?: { force?: boolean }): Promise<void> =>
 			withSupervisorLockedError(async () => {
-				if (options == null) {
-					options = {};
-				}
+				options ??= {};
 
 				await request.send({
 					method: 'POST',
@@ -959,9 +952,7 @@ const getApplicationModel = function (
 		 */
 		reboot: (appId: number, options?: { force?: boolean }): Promise<void> =>
 			withSupervisorLockedError(async () => {
-				if (options == null) {
-					options = {};
-				}
+				options ??= {};
 
 				await request.send({
 					method: 'POST',
