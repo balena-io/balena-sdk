@@ -126,7 +126,7 @@
     "balena-hup-action-utils": "~6.2.0",
     "balena-register-device": "^9.0.4",
     "balena-request": "^14.0.0",
-    "balena-semver": "^2.3.0",
+    "balena-semver": "^3.0.0",
     "balena-settings-client": "^5.0.0",
     "date-fns": "^3.0.5",
     "handlebars": "^4.7.7",
