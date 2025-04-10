@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency balena-semver to v3
+      hash: 113c8f1f9c355d22159050a6f69a91475def193b
+      body: |
+        Update balena-semver from 2.3.5 to 3.0.3
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 21.3.1
+  title: ""
+  date: 2025-04-10T15:45:44.494Z
+- commits:
     - subject: "device: add `changed_api_heartbeat_state_on__date` to typings"
       hash: bfa52cf58c7d06859a1b5c6f62ff7c71324d3d20
       body: ""
