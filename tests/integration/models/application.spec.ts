@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import type * as BalenaSdk from '../../..';
-import { timeSuite } from '../../util';
+import { expectError, timeSuite } from '../../util';
 import type * as tagsHelper from './tags';
 
 import {
@@ -76,18 +76,23 @@ describe('Application Model', function () {
 
 			parallel('balena.models.application.getAppByName()', function () {
 				it('should eventually reject', async function () {
-					const promise = balena.models.application.getAppByName('testapp');
-					await expect(promise).to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaApplicationNotFound',
+					await expectError(
+						async () => {
+							await balena.models.application.getAppByName('testapp');
+						},
+						(error) => {
+							expect(error).to.have.property(
+								'code',
+								'BalenaApplicationNotFound',
+							);
+						},
 					);
 				});
 			});
 
 			describe('balena.models.application.hasAny()', function () {
-				it('should eventually be false', function () {
-					const promise = balena.models.application.hasAny();
-					return expect(promise).to.eventually.be.false;
+				it('should eventually be false', async function () {
+					expect(await balena.models.application.hasAny()).to.be.false;
 				});
 			});
 		});
@@ -100,68 +105,67 @@ describe('Application Model', function () {
 			});
 
 			parallel('[read operations]', function () {
-				it('should be rejected if the device type is invalid', function () {
-					const promise = balena.models.application.create({
-						name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
-						deviceType: 'foobarbaz',
-						organization: ctx.initialOrg.id,
-					});
-					return expect(promise).to.be.rejectedWith(
-						'Invalid device type: foobarbaz',
+				it('should be rejected if the device type is invalid', async function () {
+					await expectError(async () => {
+						await balena.models.application.create({
+							name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
+							deviceType: 'foobarbaz',
+							organization: ctx.initialOrg.id,
+						});
+					}, 'Invalid device type: foobarbaz');
+				});
+
+				it('should be rejected if the name has less than four characters', async function () {
+					await expectError(
+						async () => {
+							await balena.models.application.create({
+								name: 'Foo',
+								deviceType: 'raspberry-pi',
+								organization: ctx.initialOrg.id,
+							});
+						},
+						(error) => {
+							expect(error).to.have.property('code', 'BalenaRequestError');
+							expect(error).to.have.property('statusCode', 400);
+							expect(error)
+								.to.have.property('message')
+								.that.contains(
+									'It is necessary that each application has an app name that has a Length (Type) that is greater than or equal to 4 and is less than or equal to 100',
+								);
+						},
 					);
 				});
 
-				it('should be rejected if the name has less than four characters', function () {
-					const promise = balena.models.application.create({
-						name: 'Foo',
-						deviceType: 'raspberry-pi',
-						organization: ctx.initialOrg.id,
-					});
-					return expect(promise).to.be.rejected.then(function (error) {
-						expect(error).to.have.property('code', 'BalenaRequestError');
-						expect(error).to.have.property('statusCode', 400);
-						return expect(error)
-							.to.have.property('message')
-							.that.contains(
-								'It is necessary that each application has an app name that has a Length (Type) that is greater than or equal to 4 and is less than or equal to 100',
-							);
-					});
-				});
-
-				it('should be rejected if the user did not provide an organization parameter', () => {
-					return expect(
+				it('should be rejected if the user did not provide an organization parameter', async () => {
+					await expectError(async () => {
 						// @ts-expect-error missing parameter
-						balena.models.application.create({
+						await balena.models.application.create({
 							name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
 							deviceType: 'raspberry-pi',
-						}),
-					).to.be.rejectedWith(
-						"undefined is not a valid value for parameter 'organization'",
-					);
+						});
+					}, "undefined is not a valid value for parameter 'organization'");
 				});
 
-				it('should be rejected if the user does not have access to find the organization by handle', function () {
-					const promise = balena.models.application.create({
-						name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
-						deviceType: 'raspberry-pi',
-						// add some extra invalid characters to the organization's handle just to be sure
-						organization: 'balena-test-non-existing-organization-handle-!@#',
-					});
-					return expect(promise).to.be.rejectedWith(
-						'Organization not found: balena-test-non-existing-organization-handle-!@#',
-					);
+				it('should be rejected if the user does not have access to find the organization by handle', async function () {
+					await expectError(async () => {
+						await balena.models.application.create({
+							name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
+							deviceType: 'raspberry-pi',
+							// add some extra invalid characters to the organization's handle just to be sure
+							organization: 'balena-test-non-existing-organization-handle-!@#',
+						});
+					}, 'Organization not found: balena-test-non-existing-organization-handle-!@#');
 				});
 
-				it('should be rejected if the user does not have access to find the organization by id', function () {
-					const promise = balena.models.application.create({
-						name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
-						deviceType: 'raspberry-pi',
-						// This test will fail if org 1 adds the SDK's test user as a member...
-						organization: 1,
-					});
-					return expect(promise).to.be.rejectedWith(
-						'Organization not found: 1',
-					);
+				it('should be rejected if the user does not have access to find the organization by id', async function () {
+					await expectError(async () => {
+						await balena.models.application.create({
+							name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
+							deviceType: 'raspberry-pi',
+							// This test will fail if org 1 adds the SDK's test user as a member...
+							organization: 1,
+						});
+					}, 'Organization not found: 1');
 				});
 			});
 
@@ -212,12 +216,13 @@ describe('Application Model', function () {
 							deviceType: 'raspberry-pi',
 							organization: this.initialOrg.id,
 						})
-						.then(function () {
-							const promise = balena.models.application.getAll(
-								{},
-								'directly_accessible',
-							);
-							return expect(promise).to.eventually.have.length(appCount);
+						.then(async function () {
+							expect(
+								await balena.models.application.getAll(
+									{},
+									'directly_accessible',
+								),
+							).to.have.length(appCount);
 						});
 				});
 
@@ -280,20 +285,17 @@ describe('Application Model', function () {
 						organization: this.initialOrg.id,
 					});
 
-					const promise = balena.models.application.getAll(
-						{},
-						'directly_accessible',
-					);
-					await expect(promise).to.eventually.have.length(appCount);
+					expect(
+						await balena.models.application.getAll({}, 'directly_accessible'),
+					).to.have.length(appCount);
 				});
 
-				it('should succeed even if the device type is discontinued', function () {
-					const promise = balena.models.application.create({
+				it('should succeed even if the device type is discontinued', async function () {
+					await balena.models.application.create({
 						name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
 						deviceType: 'edge',
 						organization: ctx.initialOrg.id,
 					});
-					return expect(promise).to.be.fulfilled;
 				});
 			});
 		});
@@ -301,39 +303,34 @@ describe('Application Model', function () {
 
 	describe('given a single application', function () {
 		describe('balena.models.application.remove()', function () {
-			it('should be rejected if the application slug does not exist', function () {
-				const promise = balena.models.application.remove(
-					`${this.initialOrg.handle}/${TEST_APPLICATION_NAME_PREFIX}_helloworldapp`,
-				);
-				return expect(promise).to.be.rejectedWith(
-					`Application not found: ${this.initialOrg.handle}/${TEST_APPLICATION_NAME_PREFIX}_helloworldapp`,
-				);
+			it('should be rejected if the application slug does not exist', async function () {
+				await expectError(async () => {
+					await balena.models.application.remove(
+						`${this.initialOrg.handle}/${TEST_APPLICATION_NAME_PREFIX}_helloworldapp`,
+					);
+				}, `Application not found: ${this.initialOrg.handle}/${TEST_APPLICATION_NAME_PREFIX}_helloworldapp`);
 			});
 
-			it('should be rejected if the application id does not exist', function () {
-				const promise = balena.models.application.remove(999999);
-				return expect(promise).to.be.rejectedWith(
-					'Application not found: 999999',
-				);
+			it('should be rejected if the application id does not exist', async function () {
+				await expectError(async () => {
+					await balena.models.application.remove(999999);
+				}, 'Application not found: 999999');
 			});
 
 			describe('[mutating operations]', function () {
 				givenAnApplication(beforeEach);
 				it('should be rejected when an empty string is provided', async function () {
-					const promise = balena.models.application.remove('');
-					await expect(promise).to.be.rejectedWith(`Application not found: `);
+					await expectError(async () => {
+						await balena.models.application.remove('');
+					}, `Application not found: `);
 				});
 				applicationRetrievalFields.forEach((prop) => {
-					it(`should be able to remove an existing application by ${prop}`, function () {
-						return balena.models.application
-							.remove(this.application[prop])
-							.then(function () {
-								const promise = balena.models.application.getAll(
-									{},
-									'directly_accessible',
-								);
-								return expect(promise).to.eventually.have.length(0);
-							});
+					it(`should be able to remove an existing application by ${prop}`, async function () {
+						await balena.models.application.remove(this.application[prop]);
+
+						expect(
+							await balena.models.application.getAll({}, 'directly_accessible'),
+						).to.deep.equal([]);
 					});
 				});
 			});
@@ -350,35 +347,37 @@ describe('Application Model', function () {
 				});
 
 				describe('balena.models.application.hasAny()', function () {
-					it('should eventually be true', function () {
-						const promise = balena.models.application.hasAny();
-						return expect(promise).to.eventually.be.true;
+					it('should eventually be true', async function () {
+						expect(await balena.models.application.hasAny()).to.be.true;
 					});
 				});
 
 				describe('balena.models.application.create()', function () {
-					it('should reject if trying to create an app with the same name', function () {
-						const promise = balena.models.application.create({
-							name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
-							deviceType: 'beaglebone-black',
-							organization: this.initialOrg.id,
-						});
-						return expect(promise).to.be.rejected.then(function (error) {
-							expect(error).to.have.property('code', 'BalenaRequestError');
-							expect(error).to.have.property('statusCode', 409);
-							return expect(error)
-								.to.have.property('message')
-								.that.matches(/\bunique\b/i);
-						});
+					it('should reject if trying to create an app with the same name', async function () {
+						await expectError(
+							async () => {
+								await balena.models.application.create({
+									name: `${TEST_APPLICATION_NAME_PREFIX}_FooBar`,
+									deviceType: 'beaglebone-black',
+									organization: this.initialOrg.id,
+								});
+							},
+							(error) => {
+								expect(error).to.have.property('code', 'BalenaRequestError');
+								expect(error).to.have.property('statusCode', 409);
+								expect(error)
+									.to.have.property('message')
+									.that.matches(/\bunique\b/i);
+							},
+						);
 					});
 				});
 				// TODO: re-enable once the API regression gets fixed
 				// expect(error).to.have.property('message').that.contains('Application name must be unique')
 
 				describe('balena.models.application.hasAny()', function () {
-					it('should eventually be true', function () {
-						const promise = balena.models.application.hasAny();
-						return expect(promise).to.eventually.be.true;
+					it('should eventually be true', async function () {
+						expect(await balena.models.application.hasAny()).to.be.true;
 					});
 				});
 
@@ -456,15 +455,14 @@ describe('Application Model', function () {
 
 				parallel('balena.models.application.get()', function () {
 					applicationRetrievalFields.forEach((prop) => {
-						it(`should be able to get an application by ${prop}`, function () {
-							const promise = balena.models.application.get(
-								ctx.application[prop],
-							);
-							return expect(promise).to.become(ctx.application);
+						it(`should be able to get an application by ${prop}`, async function () {
+							expect(
+								await balena.models.application.get(ctx.application[prop]),
+							).to.deep.equal(ctx.application);
 						});
 					});
 
-					it('should be able to get an application by slug regardless of casing', function () {
+					it('should be able to get an application by slug regardless of casing', async function () {
 						if (
 							ctx.application.app_name === ctx.application.slug.toUpperCase()
 						) {
@@ -473,26 +471,25 @@ describe('Application Model', function () {
 							);
 						}
 
-						const promise = balena.models.application.get(
-							ctx.application.slug.toUpperCase(),
-						);
-						return expect(promise).to.become(ctx.application);
+						expect(
+							await balena.models.application.get(
+								ctx.application.slug.toUpperCase(),
+							),
+						).to.deep.equal(ctx.application);
 					});
 
-					it('should be rejected if the application slug does not exist', function () {
-						const promise = balena.models.application.get(
-							`${ctx.initialOrg.handle}/helloworldapp`,
-						);
-						return expect(promise).to.be.rejectedWith(
-							`Application not found: ${ctx.initialOrg.handle}/helloworldapp`,
-						);
+					it('should be rejected if the application slug does not exist', async function () {
+						await expectError(async () => {
+							await balena.models.application.get(
+								`${ctx.initialOrg.handle}/helloworldapp`,
+							);
+						}, `Application not found: ${ctx.initialOrg.handle}/helloworldapp`);
 					});
 
-					it('should be rejected if the application id does not exist', function () {
-						const promise = balena.models.application.get(999999);
-						return expect(promise).to.be.rejectedWith(
-							'Application not found: 999999',
-						);
+					it('should be rejected if the application id does not exist', async function () {
+						await expectError(async () => {
+							await balena.models.application.get(999999);
+						}, 'Application not found: 999999');
 					});
 
 					it('should support arbitrary pinejs options', function () {
@@ -512,11 +509,12 @@ describe('Application Model', function () {
 					'balena.models.application.getDirectlyAccessible()',
 					function () {
 						applicationRetrievalFields.forEach((prop) => {
-							it(`should be able to get an application by ${prop}`, function () {
-								const promise = balena.models.application.getDirectlyAccessible(
-									ctx.application[prop],
-								);
-								return expect(promise).to.become(ctx.application);
+							it(`should be able to get an application by ${prop}`, async function () {
+								expect(
+									await balena.models.application.getDirectlyAccessible(
+										ctx.application[prop],
+									),
+								).to.deep.equal(ctx.application);
 							});
 						});
 					},
@@ -524,43 +522,39 @@ describe('Application Model', function () {
 
 				parallel('balena.models.application.has()', function () {
 					applicationRetrievalFields.forEach((prop) => {
-						it(`should eventually be true if the application ${prop} exists`, function () {
-							const promise = balena.models.application.has(
-								ctx.application[prop],
-							);
-							return expect(promise).to.eventually.be.true;
+						it(`should eventually be true if the application ${prop} exists`, async function () {
+							expect(await balena.models.application.has(ctx.application[prop]))
+								.to.be.true;
 						});
 					});
 
-					it('should return false if the application id is undefined', function () {
+					it('should return false if the application id is undefined', async function () {
 						// @ts-expect-error invalid value
-						const promise = balena.models.application.has(undefined);
-						return expect(promise).to.eventually.be.false;
+						expect(await balena.models.application.has(undefined)).to.be.false;
 					});
 
-					it('should eventually be false if the application slug does not exist', function () {
-						const promise = balena.models.application.has(
-							`${ctx.initialOrg.handle}/helloworldapp`,
-						);
-						return expect(promise).to.eventually.be.false;
+					it('should eventually be false if the application slug does not exist', async function () {
+						expect(
+							await balena.models.application.has(
+								`${ctx.initialOrg.handle}/helloworldapp`,
+							),
+						).to.be.false;
 					});
 
-					it('should eventually be false if the application id does not exist', function () {
-						const promise = balena.models.application.has(999999);
-						return expect(promise).to.eventually.be.false;
+					it('should eventually be false if the application id does not exist', async function () {
+						expect(await balena.models.application.has(999999)).to.be.false;
 					});
 				});
 			});
 
 			describe('balena.models.application.rename()', function () {
-				it('should be rejected if the application slug does not exist', function () {
-					const promise = balena.models.application.rename(
-						`${this.initialOrg.handle}/helloworldapp`,
-						`${TEST_APPLICATION_NAME_PREFIX}_newAppName`,
-					);
-					return expect(promise).to.be.rejectedWith(
-						`Application not found: ${this.initialOrg.handle}/helloworldapp`,
-					);
+				it('should be rejected if the application slug does not exist', async function () {
+					await expectError(async () => {
+						await balena.models.application.rename(
+							`${this.initialOrg.handle}/helloworldapp`,
+							`${TEST_APPLICATION_NAME_PREFIX}_newAppName`,
+						);
+					}, `Application not found: ${this.initialOrg.handle}/helloworldapp`);
 				});
 
 				describe('[mutating operations]', function () {
@@ -729,60 +723,63 @@ describe('Application Model', function () {
 					});
 				});
 
-				it('should be rejected if the application slug does not exist', function () {
-					const promise = balena.models.application.generateProvisioningKey({
-						slugOrUuidOrId: `${this.initialOrg.handle}/helloworldapp`,
-						keyExpiryDate: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
-					});
-					return expect(promise).to.be.rejectedWith(
-						`Application not found: ${this.initialOrg.handle}/helloworldapp`,
-					);
+				it('should be rejected if the application slug does not exist', async function () {
+					await expectError(async () => {
+						await balena.models.application.generateProvisioningKey({
+							slugOrUuidOrId: `${this.initialOrg.handle}/helloworldapp`,
+							keyExpiryDate: new Date(
+								Date.now() + 1000 * 60 * 60,
+							).toISOString(),
+						});
+					}, `Application not found: ${this.initialOrg.handle}/helloworldapp`);
 				});
 
-				it('should be rejected if the application id does not exist', function () {
-					const promise = balena.models.application.generateProvisioningKey({
-						slugOrUuidOrId: 999999,
-						keyExpiryDate: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
-					});
-					return expect(promise).to.be.rejectedWith(
-						'Application not found: 999999',
-					);
+				it('should be rejected if the application id does not exist', async function () {
+					await expectError(async () => {
+						await balena.models.application.generateProvisioningKey({
+							slugOrUuidOrId: 999999,
+							keyExpiryDate: new Date(
+								Date.now() + 1000 * 60 * 60,
+							).toISOString(),
+						});
+					}, 'Application not found: 999999');
 				});
 			});
 
 			describe('balena.models.application.grantSupportAccess()', function () {
-				it('should throw an error if the expiry time stamp is in the past', function () {
+				it('should throw an error if the expiry time stamp is in the past', async function () {
 					const expiryTimestamp = Date.now() - 3600 * 1000;
 
-					return expect(
-						balena.models.application.grantSupportAccess(
+					await expectError(async () => {
+						await balena.models.application.grantSupportAccess(
 							this.application.id,
 							expiryTimestamp,
-						),
-					).to.be.rejected;
-				});
-
-				it('should throw an error if the expiry time stamp is undefined', function () {
-					return expect(
-						// @ts-expect-error missing parameter
-						balena.models.application.grantSupportAccess(this.application.id),
-					).to.be.rejected;
-				});
-
-				it('should grant support access until the specified time', function () {
-					const expiryTime = Date.now() + 3600 * 1000;
-					const promise = balena.models.application
-						.grantSupportAccess(this.application.id, expiryTime)
-						.then(() => {
-							return balena.models.application.get(this.application.id, {
-								$select: 'is_accessible_by_support_until__date',
-							});
-						})
-						.then((app) =>
-							Date.parse(app.is_accessible_by_support_until__date),
 						);
+					});
+				});
 
-					return expect(promise).to.eventually.equal(expiryTime);
+				it('should throw an error if the expiry time stamp is undefined', async function () {
+					await expectError(async () => {
+						// @ts-expect-error missing parameter
+						await balena.models.application.grantSupportAccess(
+							this.application.id,
+						);
+					});
+				});
+
+				it('should grant support access until the specified time', async function () {
+					const expiryTime = Date.now() + 3600 * 1000;
+					await balena.models.application.grantSupportAccess(
+						this.application.id,
+						expiryTime,
+					);
+
+					const app = await balena.models.application.get(this.application.id, {
+						$select: 'is_accessible_by_support_until__date',
+					});
+					expect(Date.parse(app.is_accessible_by_support_until__date)).to.equal(
+						expiryTime,
+					);
 				});
 			});
 
@@ -831,13 +828,12 @@ describe('Application Model', function () {
 				applicationRetrievalFields.forEach(function (appParam) {
 					const appParamUpper = appParam.toUpperCase();
 
-					it(`can create a variable by ${appParam}`, function () {
-						const promise = configVarModel.set(
+					it(`can create a variable by ${appParam}`, async function () {
+						await configVarModel.set(
 							this.application[appParam],
 							`BALENA_EDITOR_${appParamUpper}`,
 							'vim',
 						);
-						return expect(promise).to.not.be.rejected;
 					});
 
 					it(`...can retrieve a created variable by ${appParam}`, function () {
@@ -925,13 +921,12 @@ describe('Application Model', function () {
 				const envVarModel = balena.models.application.envVar;
 
 				applicationRetrievalFields.forEach(function (appParam) {
-					it(`can create a variable by ${appParam}`, function () {
-						const promise = envVarModel.set(
+					it(`can create a variable by ${appParam}`, async function () {
+						await envVarModel.set(
 							this.application[appParam],
 							`EDITOR_BY_${appParam}`,
 							'vim',
 						);
-						return expect(promise).to.not.be.rejected;
 					});
 
 					it(`...can retrieve a created variable by ${appParam}`, function () {
@@ -1010,13 +1005,12 @@ describe('Application Model', function () {
 				const envVarModel = balena.models.application.buildVar;
 
 				applicationRetrievalFields.forEach(function (appParam) {
-					it(`can create a variable by ${appParam}`, function () {
-						const promise = envVarModel.set(
+					it(`can create a variable by ${appParam}`, async function () {
+						await envVarModel.set(
 							this.application[appParam],
 							`EDITOR_BY_${appParam}`,
 							'vim',
 						);
-						return expect(promise).to.not.be.rejected;
 					});
 
 					it(`...can retrieve a created variable by ${appParam}`, function () {
@@ -1095,31 +1089,23 @@ describe('Application Model', function () {
 				givenADevice(before);
 
 				describe('balena.models.application.enableDeviceUrls()', () => {
-					it("should enable the device url for the application's devices", function () {
-						const promise = balena.models.application
-							.enableDeviceUrls(this.application.id)
-							.then(() => {
-								return balena.models.device.hasDeviceUrl(this.device.uuid);
-							});
-
-						return expect(promise).to.eventually.be.true;
+					it("should enable the device url for the application's devices", async function () {
+						await balena.models.application.enableDeviceUrls(
+							this.application.id,
+						);
+						expect(await balena.models.device.hasDeviceUrl(this.device.uuid)).to
+							.be.true;
 					});
 				});
 
 				describe('balena.models.application.disableDeviceUrls()', () => {
-					it("...should disable the device url for the application's devices", function () {
-						const promise = balena.models.device
-							.enableDeviceUrl(this.device.uuid)
-							.then(() => {
-								return balena.models.application.disableDeviceUrls(
-									this.application.id,
-								);
-							})
-							.then(() => {
-								return balena.models.device.hasDeviceUrl(this.device.uuid);
-							});
-
-						return expect(promise).to.eventually.be.false;
+					it("...should disable the device url for the application's devices", async function () {
+						await balena.models.device.enableDeviceUrl(this.device.uuid);
+						await balena.models.application.disableDeviceUrls(
+							this.application.id,
+						);
+						expect(await balena.models.device.hasDeviceUrl(this.device.uuid)).to
+							.be.false;
 					});
 				});
 
@@ -1278,41 +1264,36 @@ describe('Application Model', function () {
 					});
 
 					describe('balena.models.application.getTargetReleaseHash()', () => {
-						it('should retrieve the commit hash of the current release', function () {
-							const promise = balena.models.application.getTargetReleaseHash(
-								this.application.id,
-							);
-							return expect(promise).to.eventually.equal('new-release-commit');
+						it('should retrieve the commit hash of the current release', async function () {
+							expect(
+								await balena.models.application.getTargetReleaseHash(
+									this.application.id,
+								),
+							).to.equal('new-release-commit');
 						});
 					});
 
 					describe('balena.models.application.pinToRelease()', () => {
-						it('should set the application to specific release & disable latest release tracking', function () {
-							return balena.models.application
-								.pinToRelease(this.application.id, 'old-release-commit')
-								.then(() => {
-									const promise =
-										balena.models.application.getTargetReleaseHash(
-											this.application.id,
-										);
-									return expect(promise).to.eventually.equal(
-										'old-release-commit',
-									);
-								})
-								.then(() => {
-									const promise =
-										balena.models.application.willTrackNewReleases(
-											this.application.id,
-										);
-									return expect(promise).to.eventually.be.false;
-								})
-								.then(() => {
-									const promise =
-										balena.models.application.isTrackingLatestRelease(
-											this.application.id,
-										);
-									return expect(promise).to.eventually.be.false;
-								});
+						it('should set the application to specific release & disable latest release tracking', async function () {
+							await balena.models.application.pinToRelease(
+								this.application.id,
+								'old-release-commit',
+							);
+							expect(
+								await balena.models.application.getTargetReleaseHash(
+									this.application.id,
+								),
+							).to.equal('old-release-commit');
+							expect(
+								await balena.models.application.willTrackNewReleases(
+									this.application.id,
+								),
+							).to.be.false;
+							expect(
+								await balena.models.application.isTrackingLatestRelease(
+									this.application.id,
+								),
+							).to.be.false;
 						});
 					});
 
@@ -1456,10 +1437,9 @@ describe('Application Model', function () {
 
 		const itShouldBeAnApplicationWithDeviceServiceDetails = function (
 			application,
-			expectCommit,
+			expectCommit = false,
 		) {
 			// Commit is empty on newly created application, so ignoring it
-			expectCommit ??= false;
 			const omittedFields = ['owns__device', 'should_be_running__release'];
 
 			expect(_.omit(application, omittedFields)).to.deep.equal(
@@ -1667,14 +1647,13 @@ describe('Application Model', function () {
 						$it(
 							`should not return the public application by ${prop}`,
 							async function () {
-								const promise = balena.models.application.get(
-									publicApp[prop],
-									{},
-									'directly_accessible',
-								);
-								await expect(promise).to.eventually.be.rejectedWith(
-									`Application not found: ${publicApp[prop]}`,
-								);
+								await expectError(async () => {
+									await balena.models.application.get(
+										publicApp[prop],
+										{},
+										'directly_accessible',
+									);
+								}, `Application not found: ${publicApp[prop]}`);
 							},
 						);
 					});
@@ -1688,12 +1667,11 @@ describe('Application Model', function () {
 						$it(
 							`should not return the public application by ${prop}`,
 							async function () {
-								const promise = balena.models.application.getDirectlyAccessible(
-									publicApp[prop],
-								);
-								await expect(promise).to.eventually.be.rejectedWith(
-									`Application not found: ${publicApp[prop]}`,
-								);
+								await expectError(async () => {
+									await balena.models.application.getDirectlyAccessible(
+										publicApp[prop],
+									);
+								}, `Application not found: ${publicApp[prop]}`);
 							},
 						);
 					});
@@ -1711,14 +1689,13 @@ describe('Application Model', function () {
 
 			describe('balena.models.application.getAppByName() [directly_accessible]', function () {
 				$it(`should not return the public application`, async function () {
-					const promise = balena.models.application.getAppByName(
-						publicApp.app_name,
-						{},
-						'directly_accessible',
-					);
-					await expect(promise).to.eventually.be.rejectedWith(
-						`Application not found: ${publicApp.app_name}`,
-					);
+					await expectError(async () => {
+						await balena.models.application.getAppByName(
+							publicApp.app_name,
+							{},
+							'directly_accessible',
+						);
+					}, `Application not found: ${publicApp.app_name}`);
 				});
 			});
 

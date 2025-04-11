@@ -11,7 +11,7 @@ import {
 	sdkOpts,
 	TEST_KEY_NAME_PREFIX,
 } from '../setup';
-import { timeSuite } from '../../util';
+import { expectError, timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 import type { Resolvable } from '../../../typings/utils';
 
@@ -787,11 +787,10 @@ describe('OS model', function () {
 		});
 
 		describe('given an invalid device slug', () => {
-			it('should be rejected with an error message', function () {
-				const promise = balena.models.os.getDownloadSize('foo-bar-baz');
-				return expect(promise).to.be.rejectedWith(
-					'Invalid device type: foo-bar-baz',
-				);
+			it('should be rejected with an error message', async function () {
+				await expectError(async () => {
+					await balena.models.os.getDownloadSize('foo-bar-baz');
+				}, 'Invalid device type: foo-bar-baz');
 			});
 		});
 	});
@@ -866,77 +865,75 @@ describe('OS model', function () {
 		});
 
 		describe('given an invalid device slug', () => {
-			it('should be rejected with an error message', function () {
-				const promise = balena.models.os.download({
-					deviceType: 'foo-bar-baz',
-				});
-				return expect(promise).to.be.rejectedWith(
-					'Invalid device type: foo-bar-baz',
-				);
+			it('should be rejected with an error message', async function () {
+				await expectError(async () => {
+					await balena.models.os.download({
+						deviceType: 'foo-bar-baz',
+					});
+				}, 'Invalid device type: foo-bar-baz');
 			});
 		});
 	});
 
 	describe('balena.models.os.isSupportedOsUpdate()', function () {
 		describe('given an invalid device slug', () => {
-			it('should be rejected with an error message', function () {
-				const promise = balena.models.os.isSupportedOsUpdate(
-					'foo-bar-baz',
-					'2.0.0+rev1.prod',
-					'2.29.2+rev1.prod',
-				);
-				return expect(promise).to.be.rejectedWith(
-					'Invalid device type: foo-bar-baz',
-				);
+			it('should be rejected with an error message', async function () {
+				await expectError(async () => {
+					await balena.models.os.isSupportedOsUpdate(
+						'foo-bar-baz',
+						'2.0.0+rev1.prod',
+						'2.29.2+rev1.prod',
+					);
+				}, 'Invalid device type: foo-bar-baz');
 			});
 		});
 
 		describe('given a valid device slug', function () {
 			describe('given a unsupported low starting version number', () => {
-				it('should return false', () => {
-					return expect(
-						balena.models.os.isSupportedOsUpdate(
+				it('should return false', async () => {
+					expect(
+						await balena.models.os.isSupportedOsUpdate(
 							'raspberrypi3',
 							'2.0.0+rev0.prod',
 							'2.2.0+rev2.prod',
 						),
-					).to.eventually.equal(false);
+					).to.equal(false);
 				});
 			});
 
 			describe('given a unsupported low target version number', () => {
-				it('should return false', () => {
-					return expect(
-						balena.models.os.isSupportedOsUpdate(
+				it('should return false', async () => {
+					expect(
+						await balena.models.os.isSupportedOsUpdate(
 							'raspberrypi3',
 							'2.0.0+rev1.prod',
 							'2.1.0+rev1.prod',
 						),
-					).to.eventually.equal(false);
+					).to.equal(false);
 				});
 			});
 
 			describe('given a dev starting version number', () => {
-				it('should return false', () => {
-					return expect(
-						balena.models.os.isSupportedOsUpdate(
+				it('should return false', async () => {
+					expect(
+						await balena.models.os.isSupportedOsUpdate(
 							'raspberrypi3',
 							'2.0.0+rev1.dev',
 							'2.2.0+rev2.prod',
 						),
-					).to.eventually.equal(false);
+					).to.equal(false);
 				});
 			});
 
 			describe('given a dev target version number', () => {
-				it('should return false', () => {
-					return expect(
-						balena.models.os.isSupportedOsUpdate(
+				it('should return false', async () => {
+					expect(
+						await balena.models.os.isSupportedOsUpdate(
 							'raspberrypi3',
 							'2.0.0+rev1.prod',
 							'2.1.0+rev1.dev',
 						),
-					).to.eventually.equal(false);
+					).to.equal(false);
 				});
 			});
 
@@ -963,14 +960,13 @@ describe('OS model', function () {
 
 	describe('balena.models.os.getSupportedOsUpdateVersions()', function () {
 		describe('given an invalid device slug', () => {
-			it('should be rejected with an error message', function () {
-				const promise = balena.models.os.getSupportedOsUpdateVersions(
-					'foo-bar-baz',
-					'2.9.6+rev1.prod',
-				);
-				return expect(promise).to.be.rejectedWith(
-					'Invalid device type: foo-bar-baz',
-				);
+			it('should be rejected with an error message', async function () {
+				await expectError(async () => {
+					await balena.models.os.getSupportedOsUpdateVersions(
+						'foo-bar-baz',
+						'2.9.6+rev1.prod',
+					);
+				}, 'Invalid device type: foo-bar-baz');
 			});
 		});
 
@@ -1046,12 +1042,10 @@ describe('OS model', function () {
 		parallel('balena.models.os.getConfig()', function () {
 			const DEFAULT_OS_VERSION = '2.12.7+rev1.prod';
 
-			it('should fail if no version option is provided', function () {
-				return expect(
-					(balena.models.os.getConfig as any)(ctx.application.id),
-				).to.be.rejectedWith(
-					'An OS version is required when calling os.getConfig',
-				);
+			it('should fail if no version option is provided', async function () {
+				await expectError(async () => {
+					await (balena.models.os.getConfig as any)(ctx.application.id);
+				}, 'An OS version is required when calling os.getConfig');
 			});
 
 			applicationRetrievalFields.forEach((prop) => {
@@ -1074,32 +1068,40 @@ describe('OS model', function () {
 				});
 			});
 
-			it('should be rejected if the version is invalid', function () {
-				const promise = balena.models.os.getConfig(ctx.application.id, {
-					version: 'v1+foo',
-					// Use a name prefix to make cleaning up the api key easier
-					provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-download-config-rejected-lte-1-2-0`,
-				});
-				return expect(promise).to.be.rejected.then((error) => {
-					expect(error).to.have.property('message');
-					expect(error.message.replace('&lt;', '<')).to.contain(
-						'balenaOS versions <= 1.2.0 are no longer supported, please update',
-					);
-				});
+			it('should be rejected if the version is invalid', async function () {
+				await expectError(
+					async () => {
+						await balena.models.os.getConfig(ctx.application.id, {
+							version: 'v1+foo',
+							// Use a name prefix to make cleaning up the api key easier
+							provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-download-config-rejected-lte-1-2-0`,
+						});
+					},
+					(error) => {
+						expect(error).to.have.property('message');
+						expect(error.message.replace('&lt;', '<')).to.contain(
+							'balenaOS versions <= 1.2.0 are no longer supported, please update',
+						);
+					},
+				);
 			});
 
-			it('should be rejected if the version is <= 1.2.0', function () {
-				const promise = balena.models.os.getConfig(ctx.application.id, {
-					version: '1.2.0',
-					// Use a name prefix to make cleaning up the api key easier
-					provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-download-config-rejected-lte-1-2-0`,
-				});
-				return expect(promise).to.be.rejected.then((error) => {
-					expect(error).to.have.property('message');
-					expect(error.message.replace('&lt;', '<')).to.contain(
-						'balenaOS versions <= 1.2.0 are no longer supported, please update',
-					);
-				});
+			it('should be rejected if the version is <= 1.2.0', async function () {
+				await expectError(
+					async () => {
+						await balena.models.os.getConfig(ctx.application.id, {
+							version: '1.2.0',
+							// Use a name prefix to make cleaning up the api key easier
+							provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-download-config-rejected-lte-1-2-0`,
+						});
+					},
+					(error) => {
+						expect(error).to.have.property('message');
+						expect(error.message.replace('&lt;', '<')).to.contain(
+							'balenaOS versions <= 1.2.0 are no longer supported, please update',
+						);
+					},
+				);
 			});
 
 			it('should be able to configure v1 image parameters', function () {
@@ -1226,24 +1228,22 @@ describe('OS model', function () {
 					.to.be.equal(provisioningKeyExpiryDate);
 			});
 
-			it('should be rejected if the application id does not exist', function () {
-				const promise = balena.models.os.getConfig(999999, {
-					version: DEFAULT_OS_VERSION,
-					provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-download-config-application-id-not-exists`,
-				});
-				return expect(promise).to.be.rejectedWith(
-					'Application not found: 999999',
-				);
+			it('should be rejected if the application id does not exist', async function () {
+				await expectError(async () => {
+					await balena.models.os.getConfig(999999, {
+						version: DEFAULT_OS_VERSION,
+						provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-download-config-application-id-not-exists`,
+					});
+				}, 'Application not found: 999999');
 			});
 
-			it('should be rejected if the application name does not exist', function () {
-				const promise = balena.models.os.getConfig('foobarbaz', {
-					version: DEFAULT_OS_VERSION,
-					provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-download-config-application-name-not-exists`,
-				});
-				return expect(promise).to.be.rejectedWith(
-					'Application not found: foobarbaz',
-				);
+			it('should be rejected if the application name does not exist', async function () {
+				await expectError(async () => {
+					await balena.models.os.getConfig('foobarbaz', {
+						version: DEFAULT_OS_VERSION,
+						provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-download-config-application-name-not-exists`,
+					});
+				}, 'Application not found: foobarbaz');
 			});
 		});
 	});

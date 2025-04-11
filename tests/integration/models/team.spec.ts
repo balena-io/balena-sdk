@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
-import { timeSuite } from '../../util';
+import { expectError, timeSuite } from '../../util';
 import {
 	balena,
 	givenInitialOrganization,
@@ -33,11 +33,17 @@ describe('Team model', function () {
 					);
 					expect(teams).to.deep.equal([]);
 				});
-				it('should be rejected if the organization does not exist', function () {
-					const promise = balena.models.team.getAllByOrganization(999999);
-					expect(promise).to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaOrganizationNotFound',
+				it('should be rejected if the organization does not exist', async function () {
+					await expectError(
+						async () => {
+							await balena.models.team.getAllByOrganization(999999);
+						},
+						(error) => {
+							expect(error).to.have.property(
+								'code',
+								'BalenaOrganizationNotFound',
+							);
+						},
 					);
 				});
 			});
@@ -57,12 +63,13 @@ describe('Team model', function () {
 				}
 			});
 			describe('balena.models.team.rename()', function () {
-				it('should be rejected if the team does not exists', function () {
-					const promise = balena.models.team.rename(
-						999999,
-						`${TEST_TEAM_NAME}_new_rename`,
-					);
-					expect(promise).to.be.rejectedWith(`Team not found: 999999`);
+				it('should be rejected if the team does not exists', async function () {
+					await expectError(async () => {
+						await balena.models.team.rename(
+							999999,
+							`${TEST_TEAM_NAME}_new_rename`,
+						);
+					}, `Team not found: 999999`);
 				});
 			});
 		});
@@ -116,14 +123,10 @@ describe('Team model', function () {
 					const team = await balena.models.team.get(ctx.newTeam1.id);
 					expect(team.name).to.equal(newName);
 				});
-				it('should reject if another team has the same name', function () {
-					const promise = balena.models.team.rename(
-						ctx.newTeam1.id,
-						ctx.newTeam2.name,
-					);
-					expect(promise).to.be.rejectedWith(
-						`A team with this name already exists in the organization. Organization: ${ctx.initialOrganization.id}, Name: ${ctx.newTeam2.name}`,
-					);
+				it('should reject if another team has the same name', async function () {
+					await expectError(async () => {
+						await balena.models.team.rename(ctx.newTeam1.id, ctx.newTeam2.name);
+					}, `A team with this name already exists in the organization. Organization: ${ctx.initialOrganization.id}, Name: ${ctx.newTeam2.name}`);
 				});
 			});
 			parallel('balena.models.team.remove()', function () {

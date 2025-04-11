@@ -10,7 +10,7 @@ import {
 	applicationRetrievalFields,
 } from '../setup';
 import type * as BalenaSdk from '../../..';
-import { assertDeepMatchAndLength, timeSuite } from '../../util';
+import { assertDeepMatchAndLength, expectError, timeSuite } from '../../util';
 
 const keyAlternatives = [
 	['id', (member: BalenaSdk.ApplicationMembership) => member.id],
@@ -61,15 +61,21 @@ describe('Application Membership Model', function () {
 
 		parallel('[read operations]', function () {
 			it(`should not be able to add a new member to the application using a wrong role name`, async function () {
-				const promise = balena.models.application.membership.create({
-					application: ctx.application.id,
-					username: credentials.member.username,
-					// @ts-expect-error we are passing an invalid value
-					roleName: 'unknown role',
-				});
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaApplicationMembershipRoleNotFound',
+				await expectError(
+					async () => {
+						await balena.models.application.membership.create({
+							application: ctx.application.id,
+							username: credentials.member.username,
+							// @ts-expect-error we are passing an invalid value
+							roleName: 'unknown role',
+						});
+					},
+					(error) => {
+						expect(error).to.have.property(
+							'code',
+							'BalenaApplicationMembershipRoleNotFound',
+						);
+					},
 				);
 			});
 
@@ -83,14 +89,20 @@ describe('Application Membership Model', function () {
 
 			applicationRetrievalFields.forEach((field) => {
 				it(`should not be able to add a new member when using an not existing application ${field}`, async function () {
-					const promise = balena.models.application.membership.create({
-						application: randomOrdInfo[field],
-						username: credentials.member.username,
-						roleName: 'developer',
-					});
-					await expect(promise).to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaApplicationNotFound',
+					await expectError(
+						async () => {
+							await balena.models.application.membership.create({
+								application: randomOrdInfo[field],
+								username: credentials.member.username,
+								roleName: 'developer',
+							});
+						},
+						(error) => {
+							expect(error).to.have.property(
+								'code',
+								'BalenaApplicationNotFound',
+							);
+						},
 					);
 				});
 			});
@@ -159,12 +171,9 @@ describe('Application Membership Model', function () {
 					const key = keyGetter(membership!);
 					await balena.models.application.membership.remove(key);
 
-					const promise = balena.models.application.membership.get(
-						membership!.id,
-					);
-					await expect(promise).to.be.rejectedWith(
-						'Application Membership not found',
-					);
+					await expectError(async () => {
+						await balena.models.application.membership.get(membership!.id);
+					}, 'Application Membership not found');
 				});
 			});
 		});
@@ -185,13 +194,19 @@ describe('Application Membership Model', function () {
 
 		describe('balena.models.application.membership.changeRole()', function () {
 			it(`should not be able to change an application membership to an unknown role`, async function () {
-				const promise = balena.models.application.membership.changeRole(
-					membership!.id,
-					'unknown role',
-				);
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaApplicationMembershipRoleNotFound',
+				await expectError(
+					async () => {
+						await balena.models.application.membership.changeRole(
+							membership!.id,
+							'unknown role',
+						);
+					},
+					(error) => {
+						expect(error).to.have.property(
+							'code',
+							'BalenaApplicationMembershipRoleNotFound',
+						);
+					},
 				);
 			});
 
@@ -246,13 +261,9 @@ describe('Application Membership Model', function () {
 			it(`should be able to remove a developer`, async function () {
 				await balena.models.application.membership.remove(membership!.id);
 
-				const promise = balena.models.application.membership.get(
-					membership!.id,
-				);
-
-				await expect(promise).to.be.rejectedWith(
-					'Application Membership not found',
-				);
+				await expectError(async () => {
+					await balena.models.application.membership.get(membership!.id);
+				}, 'Application Membership not found');
 			});
 		});
 	});
@@ -319,13 +330,11 @@ describe('Application Membership Model', function () {
 
 		parallel('balena.models.application.membership.get()', function () {
 			it(`should reject when the application membership is not found`, async function () {
-				const promise = balena.models.application.membership.get(
-					Math.floor(Date.now() / 1000),
-				);
-
-				await expect(promise).to.be.rejectedWith(
-					'Application Membership not found',
-				);
+				await expectError(async () => {
+					await balena.models.application.membership.get(
+						Math.floor(Date.now() / 1000),
+					);
+				}, 'Application Membership not found');
 			});
 
 			keyAlternatives.forEach(([title, keyGetter]) => {

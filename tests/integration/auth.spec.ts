@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { timeSuite } from '../util';
+import { expectError, timeSuite } from '../util';
 import { authenticator } from 'otplib';
 
 import {
@@ -38,8 +38,7 @@ describe('SDK authentication', function () {
 
 		describe('balena.auth.logout()', () => {
 			it('should not be rejected', async function () {
-				const promise = balena.auth.logout();
-				await expect(promise).to.not.be.rejected;
+				await balena.auth.logout();
 			});
 		});
 
@@ -50,24 +49,32 @@ describe('SDK authentication', function () {
 			});
 
 			it('should be rejected given invalid credentials', async function () {
-				const promise = balena.auth.authenticate({
-					email: credentials.username,
-					password: 'NOT-THE-CORRECT-PASSWORD',
-				});
-
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaInvalidLoginCredentials',
+				await expectError(
+					async () => {
+						await balena.auth.authenticate({
+							email: credentials.username,
+							password: 'NOT-THE-CORRECT-PASSWORD',
+						});
+					},
+					(error) => {
+						expect(error).to.have.property(
+							'code',
+							'BalenaInvalidLoginCredentials',
+						);
+					},
 				);
 			});
 		});
 
 		describe('balena.auth.getToken()', () => {
 			it('should be rejected', async function () {
-				const promise = balena.auth.getToken();
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaNotLoggedIn',
+				await expectError(
+					async () => {
+						await balena.auth.getToken();
+					},
+					(error) => {
+						expect(error).to.have.property('code', 'BalenaNotLoggedIn');
+					},
 				);
 			});
 		});
@@ -95,20 +102,26 @@ describe('SDK authentication', function () {
 
 		describe('balena.auth.getUserInfo()', () => {
 			it('should be rejected with an error', async function () {
-				const promise = balena.auth.getUserInfo();
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaNotLoggedIn',
+				await expectError(
+					async () => {
+						await balena.auth.getUserInfo();
+					},
+					(error) => {
+						expect(error).to.have.property('code', 'BalenaNotLoggedIn');
+					},
 				);
 			});
 		});
 
 		describe('balena.auth.getActorId()', () => {
 			it('should be rejected with an error', async function () {
-				const promise = balena.auth.getActorId();
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaNotLoggedIn',
+				await expectError(
+					async () => {
+						await balena.auth.getActorId();
+					},
+					(error) => {
+						expect(error).to.have.property('code', 'BalenaNotLoggedIn');
+					},
 				);
 			});
 		});
@@ -151,21 +164,21 @@ describe('SDK authentication', function () {
 			});
 
 			it('should be rejected if the email is invalid', async function () {
-				const promise = balena.auth.register({
-					email: 'foobarbaz',
-					password: credentials.register.password,
-				});
-
-				await expect(promise).to.be.rejectedWith('Invalid email');
+				await expectError(async () => {
+					await balena.auth.register({
+						email: 'foobarbaz',
+						password: credentials.register.password,
+					});
+				}, 'Invalid email');
 			});
 
 			it('should be rejected if the email is taken', async function () {
-				const promise = balena.auth.register({
-					email: credentials.email,
-					password: credentials.register.password,
-				});
-
-				await expect(promise).to.be.rejectedWith('This email is already taken');
+				await expectError(async () => {
+					await balena.auth.register({
+						email: credentials.email,
+						password: credentials.register.password,
+					});
+				}, 'This email is already taken');
 			});
 		});
 
@@ -201,20 +214,26 @@ describe('SDK authentication', function () {
 
 		describe('balena.auth.getUserInfo()', () => {
 			it('should be rejected with an error', async function () {
-				const promise = balena.auth.getUserInfo();
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaNotLoggedIn',
+				await expectError(
+					async () => {
+						await balena.auth.getUserInfo();
+					},
+					(error) => {
+						expect(error).to.be.have.property('code', 'BalenaNotLoggedIn');
+					},
 				);
 			});
 		});
 
 		describe('balena.auth.getActorId()', () => {
 			it('should be rejected with an error', async function () {
-				const promise = balena.auth.getActorId();
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaNotLoggedIn',
+				await expectError(
+					async () => {
+						await balena.auth.getActorId();
+					},
+					(error) => {
+						expect(error).to.be.have.property('code', 'BalenaNotLoggedIn');
+					},
 				);
 			});
 		});
@@ -295,10 +314,16 @@ describe('SDK authentication', function () {
 
 		describe('balena.auth.getUserInfo()', () => {
 			it('should be rejected with an error', async function () {
-				const promise = balena.auth.getUserInfo();
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'message',
-					'The authentication credentials in use are not of a user',
+				await expectError(
+					async () => {
+						await balena.auth.getUserInfo();
+					},
+					(error) => {
+						expect(error).to.have.property(
+							'message',
+							'The authentication credentials in use are not of a user',
+						);
+					},
 				);
 			});
 		});
@@ -318,10 +343,13 @@ describe('SDK authentication', function () {
 			});
 
 			it('...should reset the token on logout', async () => {
-				const promise = balena.auth.getToken();
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaNotLoggedIn',
+				await expectError(
+					async () => {
+						await balena.auth.getToken();
+					},
+					(error) => {
+						expect(error).to.have.property('code', 'BalenaNotLoggedIn');
+					},
 				);
 			});
 		});
@@ -351,10 +379,16 @@ describe('SDK authentication', function () {
 
 		describe('balena.auth.getUserInfo()', () => {
 			it('should be rejected with an error', async function () {
-				const promise = balena.auth.getUserInfo();
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'message',
-					'The authentication credentials in use are not of a user',
+				await expectError(
+					async () => {
+						await balena.auth.getUserInfo();
+					},
+					(error) => {
+						expect(error).to.have.property(
+							'message',
+							'The authentication credentials in use are not of a user',
+						);
+					},
 				);
 			});
 		});
@@ -374,10 +408,13 @@ describe('SDK authentication', function () {
 			});
 
 			it('...should reset the token on logout', async () => {
-				const promise = balena.auth.getToken();
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaNotLoggedIn',
+				await expectError(
+					async () => {
+						await balena.auth.getToken();
+					},
+					(error) => {
+						expect(error).to.have.property('code', 'BalenaNotLoggedIn');
+					},
 				);
 			});
 		});
@@ -432,10 +469,13 @@ describe('SDK authentication', function () {
 			});
 
 			it('...should reset the token on logout', async () => {
-				const promise = balena.auth.getToken();
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaNotLoggedIn',
+				await expectError(
+					async () => {
+						await balena.auth.getToken();
+					},
+					(error) => {
+						expect(error).to.have.property('code', 'BalenaNotLoggedIn');
+					},
 				);
 			});
 		});

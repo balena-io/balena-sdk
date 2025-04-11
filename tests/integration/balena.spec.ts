@@ -12,7 +12,7 @@ import {
 	TEST_KEY_NAME_PREFIX,
 	apiVersion,
 } from './setup';
-import { timeSuite } from '../util';
+import { expectError, timeSuite } from '../util';
 
 const DIFFERENT_TEST_SERVER_URL = 'https://www.non-balena-api-domain.com/';
 
@@ -115,7 +115,7 @@ describe('Balena SDK', function () {
 		});
 
 		describe('for requestError', () => {
-			it('should intercept request errors from other interceptors', function () {
+			it('should intercept request errors from other interceptors', async function () {
 				const requestInterceptor = sinon.mock().throws(new Error('rejected'));
 				const requestErrorInterceptor = sinon
 					.mock()
@@ -124,16 +124,14 @@ describe('Balena SDK', function () {
 				balena.interceptors.push({ request: requestInterceptor });
 				balena.interceptors.push({ requestError: requestErrorInterceptor });
 
-				const promise = balena.models.application.getAll({ $top: 1 });
+				await expectError(async () => {
+					await balena.models.application.getAll({ $top: 1 });
+				}, 'replacement error');
 
-				return expect(promise)
-					.to.be.rejectedWith('replacement error')
-					.then(() =>
-						expect(requestErrorInterceptor.called).to.equal(
-							true,
-							'Interceptor requestError hook should be called',
-						),
-					);
+				expect(requestErrorInterceptor.called).to.equal(
+					true,
+					'Interceptor requestError hook should be called',
+				);
 			});
 		});
 
@@ -153,7 +151,7 @@ describe('Balena SDK', function () {
 		});
 
 		describe('for responseError', () => {
-			it('should be able to intercept error responses', function () {
+			it('should be able to intercept error responses', async function () {
 				let called = false;
 				balena.interceptors.push({
 					responseError(err) {
@@ -162,15 +160,14 @@ describe('Balena SDK', function () {
 					},
 				});
 
-				const promise = balena.request.send({
-					url: 'example.com',
+				await expectError(async () => {
+					await balena.request.send({
+						url: 'example.com',
+					});
 				});
-
-				return expect(promise).to.be.rejected.then(() =>
-					expect(called).to.equal(
-						true,
-						'responseError should be called when request fails',
-					),
+				expect(called).to.equal(
+					true,
+					'responseError should be called when request fails',
 				);
 			});
 		});
@@ -241,21 +238,20 @@ describe('Balena SDK', function () {
 
 			describe('plain requests', function () {
 				describe('with a relative url & without a baseUrl', () => {
-					it('should not include the version header', function () {
+					it('should not include the version header', async function () {
 						const responseInterceptor =
 							getVersionHeaderResponseErrorInterceptor();
 						balena.interceptors.push({ responseError: responseInterceptor });
 
-						const promise = balena.request.send({
-							method: 'GET',
-							url: `/${apiVersion}/application`,
+						await expectError(async () => {
+							await balena.request.send({
+								method: 'GET',
+								url: `/${apiVersion}/application`,
+							});
 						});
-
-						return expect(promise).to.be.rejected.then(() =>
-							expect(responseInterceptor.callCount).to.equal(
-								1,
-								'Interceptor response hook should be called',
-							),
+						expect(responseInterceptor.callCount).to.equal(
+							1,
+							'Interceptor response hook should be called',
 						);
 					});
 				});
@@ -282,22 +278,21 @@ describe('Balena SDK', function () {
 					});
 
 					describe('to a different server', () => {
-						it('should not include the version header', function () {
+						it('should not include the version header', async function () {
 							const responseInterceptor =
 								getVersionHeaderResponseErrorInterceptor();
 							balena.interceptors.push({ responseError: responseInterceptor });
 
-							const promise = balena.request.send({
-								method: 'GET',
-								url: `/${apiVersion}/application`,
-								baseUrl: DIFFERENT_TEST_SERVER_URL,
+							await expectError(async () => {
+								await balena.request.send({
+									method: 'GET',
+									url: `/${apiVersion}/application`,
+									baseUrl: DIFFERENT_TEST_SERVER_URL,
+								});
 							});
-
-							return expect(promise).to.be.rejected.then(() =>
-								expect(responseInterceptor.callCount).to.equal(
-									1,
-									'Interceptor response hook should be called',
-								),
+							expect(responseInterceptor.callCount).to.equal(
+								1,
+								'Interceptor response hook should be called',
 							);
 						});
 					});
@@ -324,21 +319,20 @@ describe('Balena SDK', function () {
 					});
 
 					describe('to a different server', () => {
-						it('should not include the version header', function () {
+						it('should not include the version header', async function () {
 							const responseInterceptor =
 								getVersionHeaderResponseErrorInterceptor();
 							balena.interceptors.push({ responseError: responseInterceptor });
 
-							const promise = balena.request.send({
-								method: 'GET',
-								url: `${DIFFERENT_TEST_SERVER_URL}/${apiVersion}/application`,
+							await expectError(async () => {
+								await balena.request.send({
+									method: 'GET',
+									url: `${DIFFERENT_TEST_SERVER_URL}/${apiVersion}/application`,
+								});
 							});
-
-							return expect(promise).to.be.rejected.then(() =>
-								expect(responseInterceptor.callCount).to.equal(
-									1,
-									'Interceptor response hook should be called',
-								),
+							expect(responseInterceptor.callCount).to.equal(
+								1,
+								'Interceptor response hook should be called',
 							);
 						});
 					});
@@ -389,10 +383,13 @@ describe('Balena SDK', function () {
 					apiKey: this.testApiKey,
 				};
 				const testSdk = getSdk(testSdkOpts);
-				const promise = testSdk.models.apiKey.getAll({ $top: 1 });
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaNotLoggedIn',
+				await expectError(
+					async () => {
+						await testSdk.models.apiKey.getAll({ $top: 1 });
+					},
+					(error) => {
+						expect(error).to.have.property('code', 'BalenaNotLoggedIn');
+					},
 				);
 			});
 		});
@@ -479,19 +476,21 @@ describe('Balena SDK', function () {
 
 				describe('pine queries', () => {
 					it('should be unauthenticated and not be able to retrieve any user', async function () {
-						await expect(
-							testSdk.pine.get({
-								resource: 'user',
-								options: {
-									$select: 'username',
-									$filter: {
-										username: credentials.username,
+						await expectError(
+							async () => {
+								await testSdk.pine.get({
+									resource: 'user',
+									options: {
+										$select: 'username',
+										$filter: {
+											username: credentials.username,
+										},
 									},
-								},
-							}),
-						).to.be.rejected.and.eventually.have.property(
-							'code',
-							'BalenaNotLoggedIn',
+								});
+							},
+							(error) => {
+								expect(error).to.have.property('code', 'BalenaNotLoggedIn');
+							},
 						);
 					});
 
@@ -511,13 +510,18 @@ describe('Balena SDK', function () {
 
 				describe('models.application.get', () => {
 					it('should be able to retrieve the application created by the first instance', async function () {
-						await expect(
-							testSdk.models.application.get(this.application.id, {
-								$select: 'id',
-							}),
-						).to.be.rejected.and.eventually.have.property(
-							'code',
-							'BalenaApplicationNotFound',
+						await expectError(
+							async () => {
+								await testSdk.models.application.get(this.application.id, {
+									$select: 'id',
+								});
+							},
+							(error) => {
+								expect(error).to.have.property(
+									'code',
+									'BalenaApplicationNotFound',
+								);
+							},
 						);
 					});
 				});
@@ -530,11 +534,13 @@ describe('Balena SDK', function () {
 
 				describe('balena.auth.getToken()', () => {
 					it('should return no key', async function () {
-						await expect(
-							testSdk.auth.getToken(),
-						).to.be.rejected.and.eventually.have.property(
-							'code',
-							'BalenaNotLoggedIn',
+						await expectError(
+							async () => {
+								await testSdk.auth.getToken();
+							},
+							(error) => {
+								expect(error).to.have.property('code', 'BalenaNotLoggedIn');
+							},
 						);
 					});
 				});

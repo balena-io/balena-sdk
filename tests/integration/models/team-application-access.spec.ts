@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { timeSuite } from '../../util';
+import { expectError, timeSuite } from '../../util';
 import {
 	balena,
 	givenInitialOrganization,
@@ -60,9 +60,10 @@ describe('Team Application Access Model', function () {
 				);
 				expect(accesses).to.deep.equal(ctx.teamApplicationAccessRead);
 			});
-			it('should be rejected if the team application access does not exist', function () {
-				const promise = balena.models.team.applicationAccess.get(999999);
-				expect(promise).to.be.rejectedWith('Team application access not found');
+			it('should be rejected if the team application access does not exist', async function () {
+				await expectError(async () => {
+					await balena.models.team.applicationAccess.get(999999);
+				}, 'Team application access not found');
 			});
 		});
 		describe('balena.models.team.applicationAccess.getAllByTeam()', function () {
@@ -76,10 +77,10 @@ describe('Team Application Access Model', function () {
 					await balena.models.team.applicationAccess.getAllByTeam(ctx.team.id);
 				expect(accesses).to.deep.equal([ctx.teamApplicationAccessRead]);
 			});
-			it('should be rejected if the team does not exist', function () {
-				const promise =
-					balena.models.team.applicationAccess.getAllByTeam(999999);
-				expect(promise).to.be.rejectedWith('Team not found: 999999');
+			it('should be rejected if the team does not exist', async function () {
+				await expectError(async () => {
+					await balena.models.team.applicationAccess.getAllByTeam(999999);
+				}, 'Team not found: 999999');
 			});
 		});
 	});
@@ -104,31 +105,38 @@ describe('Team Application Access Model', function () {
 					.to.have.property('grants_access_to__application')
 					.that.deep.equals({ __id: ctx.application2.id });
 			});
-			it('should be rejected if the application does not exist', function () {
+			it('should be rejected if the application does not exist', async function () {
 				const roleName = 'developer';
-				const promise = balena.models.team.applicationAccess.add(
-					ctx.team.id,
-					999999,
-					roleName,
-				);
-
-				expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaApplicationNotFound',
+				await expectError(
+					async () => {
+						await balena.models.team.applicationAccess.add(
+							ctx.team.id,
+							999999,
+							roleName,
+						);
+					},
+					(error) => {
+						expect(error).to.have.property('code', 'BalenaApplicationNotFound');
+					},
 				);
 			});
-			it('should be rejected if the role name does not exist', function () {
+			it('should be rejected if the role name does not exist', async function () {
 				const roleName = 'randomName';
-				const promise = balena.models.team.applicationAccess.add(
-					ctx.team.id,
-					ctx.application2.id,
-					// @ts-expect-error -- we are testing a failing case
-					roleName,
-				);
-
-				expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaApplicationMembershipRoleNotFound',
+				await expectError(
+					async () => {
+						await balena.models.team.applicationAccess.add(
+							ctx.team.id,
+							ctx.application2.id,
+							// @ts-expect-error -- we are testing a failing case
+							roleName,
+						);
+					},
+					(error) => {
+						expect(error).to.have.property(
+							'code',
+							'BalenaApplicationMembershipRoleNotFound',
+						);
+					},
 				);
 			});
 		});
@@ -160,17 +168,22 @@ describe('Team Application Access Model', function () {
 					.to.have.property('application_membership_role')
 					.that.deep.equals({ __id: roleId });
 			});
-			it('should be rejected if the role name does not exist', function () {
+			it('should be rejected if the role name does not exist', async function () {
 				const roleName = 'randomName';
-				const promise = balena.models.team.applicationAccess.update(
-					ctx.teamApplicationAccessWrite.id,
-					// @ts-expect-error -- we are testing a failing case
-					roleName,
-				);
-
-				expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaApplicationMembershipRoleNotFound',
+				await expectError(
+					async () => {
+						await balena.models.team.applicationAccess.update(
+							ctx.teamApplicationAccessWrite.id,
+							// @ts-expect-error -- we are testing a failing case
+							roleName,
+						);
+					},
+					(error) => {
+						expect(error).to.have.property(
+							'code',
+							'BalenaApplicationMembershipRoleNotFound',
+						);
+					},
 				);
 			});
 		});
@@ -183,10 +196,9 @@ describe('Team Application Access Model', function () {
 					),
 				);
 
-				const promise = balena.models.team.applicationAccess.getAllByTeam(
-					ctx.team.id,
-				);
-				expect(promise).to.become([]);
+				expect(
+					await balena.models.team.applicationAccess.getAllByTeam(ctx.team.id),
+				).to.deep.equal([]);
 			});
 		});
 	});
