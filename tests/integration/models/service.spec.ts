@@ -9,7 +9,7 @@ import {
 	givenMulticontainerApplication,
 	applicationRetrievalFields,
 } from '../setup';
-import { timeSuite } from '../../util';
+import { expectError, timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 
 describe('Service Model', function () {
@@ -34,19 +34,16 @@ describe('Service Model', function () {
 				});
 			});
 
-			it('should be rejected if the application name does not exist', function () {
-				const promise =
-					balena.models.service.getAllByApplication('HelloWorldApp');
-				return expect(promise).to.be.rejectedWith(
-					'Application not found: HelloWorldApp',
-				);
+			it('should be rejected if the application name does not exist', async function () {
+				await expectError(async () => {
+					await balena.models.service.getAllByApplication('HelloWorldApp');
+				}, 'Application not found: HelloWorldApp');
 			});
 
-			it('should be rejected if the application id does not exist', function () {
-				const promise = balena.models.service.getAllByApplication(999999);
-				return expect(promise).to.be.rejectedWith(
-					'Application not found: 999999',
-				);
+			it('should be rejected if the application id does not exist', async function () {
+				await expectError(async () => {
+					await balena.models.service.getAllByApplication(999999);
+				}, 'Application not found: 999999');
 			});
 		});
 	});

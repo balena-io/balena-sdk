@@ -7,7 +7,7 @@ import {
 	givenLoggedInUser,
 	organizationRetrievalFields,
 } from '../setup';
-import { timeSuite } from '../../util';
+import { expectError, timeSuite } from '../../util';
 
 describe('Organization model', function () {
 	timeSuite(before);
@@ -33,19 +33,17 @@ describe('Organization model', function () {
 		});
 
 		parallel('balena.models.organization.get()', function () {
-			it('should be rejected if the organization handle does not exist', function () {
+			it('should be rejected if the organization handle does not exist', async function () {
 				const randomTestOrgHandle = `testOrgRandom_${Date.now()}`;
-				const promise = balena.models.organization.get(randomTestOrgHandle);
-				return expect(promise).to.be.rejectedWith(
-					`Organization not found: ${randomTestOrgHandle}`,
-				);
+				await expectError(async () => {
+					await balena.models.organization.get(randomTestOrgHandle);
+				}, `Organization not found: ${randomTestOrgHandle}`);
 			});
 
-			it('should be rejected if the organization id does not exist', function () {
-				const promise = balena.models.organization.get(999999);
-				return expect(promise).to.be.rejectedWith(
-					`Organization not found: 999999`,
-				);
+			it('should be rejected if the organization id does not exist', async function () {
+				await expectError(async () => {
+					await balena.models.organization.get(999999);
+				}, `Organization not found: 999999`);
 			});
 
 			it(`should retrieve the initial organization of the user's username`, async function () {
@@ -62,19 +60,17 @@ describe('Organization model', function () {
 		});
 
 		describe('balena.models.organization.remove()', function () {
-			it('should be rejected if the organization handle does not exist', function () {
+			it('should be rejected if the organization handle does not exist', async function () {
 				const randomTestOrgHandle = `testOrgRandom_${Date.now()}`;
-				const promise = balena.models.organization.get(randomTestOrgHandle);
-				return expect(promise).to.be.rejectedWith(
-					`Organization not found: ${randomTestOrgHandle}`,
-				);
+				await expectError(async () => {
+					await balena.models.organization.get(randomTestOrgHandle);
+				}, `Organization not found: ${randomTestOrgHandle}`);
 			});
 
-			it('should be rejected if the organization id does not exist', function () {
-				const promise = balena.models.organization.get(999999);
-				return expect(promise).to.be.rejectedWith(
-					`Organization not found: 999999`,
-				);
+			it('should be rejected if the organization id does not exist', async function () {
+				await expectError(async () => {
+					await balena.models.organization.get(999999);
+				}, `Organization not found: 999999`);
 			});
 		});
 
@@ -159,10 +155,9 @@ describe('Organization model', function () {
 				it(`should remove an organization by ${prop}`, async function () {
 					const org = getOrg();
 					await balena.models.organization.remove(org[prop]);
-					const promise = balena.models.organization.remove(org[prop]);
-					return expect(promise).to.be.rejectedWith(
-						`Organization not found: ${org[prop]}`,
-					);
+					await expectError(async () => {
+						await balena.models.organization.remove(org[prop]);
+					}, `Organization not found: ${org[prop]}`);
 				});
 			});
 		});

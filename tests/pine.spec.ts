@@ -5,6 +5,7 @@ import { expect } from 'chai';
 import { IS_BROWSER, apiVersion } from './integration/setup';
 import tokens from './data/tokens';
 import { createPinejsClient } from '../src/pine';
+import { expectError } from './util';
 
 const mockServer = mockttp.getLocal();
 
@@ -87,33 +88,36 @@ describe('Pine', function () {
 
 						describe('given there is no api key', function () {
 							it('should be successful', async function () {
-								const promise = this.pine._request({
-									baseUrl: this.pine.API_URL,
-									method: 'GET',
-									url: '/public_resource',
-								});
-								await expect(promise).to.become({ hello: 'public world' });
+								expect(
+									await this.pine._request({
+										baseUrl: this.pine.API_URL,
+										method: 'GET',
+										url: '/public_resource',
+									}),
+								).to.deep.equal({ hello: 'public world' });
 							});
 
 							it('should be successful, if sent anonymously', async function () {
-								const promise = this.pine._request({
-									baseUrl: this.pine.API_URL,
-									method: 'GET',
-									url: '/public_resource',
-									anonymous: true,
-								});
-								await expect(promise).to.become({ hello: 'public world' });
+								expect(
+									await this.pine._request({
+										baseUrl: this.pine.API_URL,
+										method: 'GET',
+										url: '/public_resource',
+										anonymous: true,
+									}),
+								).to.deep.equal({ hello: 'public world' });
 							});
 						});
 
 						describe('given there is an api key', () => {
 							it('should make the request successfully', async function () {
-								const promise = this.pine._request({
-									baseUrl: this.pine.API_URL,
-									method: 'GET',
-									url: '/public_resource',
-								});
-								await expect(promise).to.become({ hello: 'public world' });
+								expect(
+									await this.pine._request({
+										baseUrl: this.pine.API_URL,
+										method: 'GET',
+										url: '/public_resource',
+									}),
+								).to.deep.equal({ hello: 'public world' });
 							});
 						});
 					});
@@ -125,24 +129,33 @@ describe('Pine', function () {
 							});
 
 							it('should be rejected with an authentication error message', async function () {
-								const promise = this.pine._request({
-									baseUrl: this.pine.API_URL,
-									method: 'GET',
-									url: '/foo',
-								});
-								await expect(promise).to.be.rejectedWith('You have to log in');
+								await expectError(async () => {
+									await this.pine._request({
+										baseUrl: this.pine.API_URL,
+										method: 'GET',
+										url: '/foo',
+									});
+								}, 'You have to log in');
 							});
 
 							it('should be rejected with an unauthorized error, if sent anonymously', async function () {
-								const promise = this.pine._request({
-									baseUrl: this.pine.API_URL,
-									method: 'GET',
-									url: '/foo',
-									anonymous: true,
-								});
-								await expect(promise)
-									.to.be.rejectedWith('Unauthorized')
-									.then((res) => expect(res.statusCode).to.equal(401));
+								await expectError(
+									async () => {
+										await this.pine._request({
+											baseUrl: this.pine.API_URL,
+											method: 'GET',
+											url: '/foo',
+											anonymous: true,
+										});
+									},
+									(error) => {
+										expect(error).to.have.property(
+											'message',
+											'Request error: Unauthorized',
+										);
+										expect(error).to.have.property('statusCode', 401);
+									},
+								);
 							});
 						});
 
@@ -154,22 +167,24 @@ describe('Pine', function () {
 							});
 
 							it('should make the request successfully', async function () {
-								const promise = this.pine._request({
-									baseUrl: this.pine.API_URL,
-									method: 'GET',
-									url: '/foo',
-								});
-								await expect(promise).to.become({ hello: 'world' });
+								expect(
+									await this.pine._request({
+										baseUrl: this.pine.API_URL,
+										method: 'GET',
+										url: '/foo',
+									}),
+								).to.deep.equal({ hello: 'world' });
 							});
 
 							it('should make the request successfully, if sent anonymously', async function () {
-								const promise = this.pine._request({
-									baseUrl: this.pine.API_URL,
-									method: 'GET',
-									url: '/foo',
-									anonymous: true,
-								});
-								await expect(promise).to.become({ hello: 'world' });
+								expect(
+									await this.pine._request({
+										baseUrl: this.pine.API_URL,
+										method: 'GET',
+										url: '/foo',
+										anonymous: true,
+									}),
+								).to.deep.equal({ hello: 'world' });
 							});
 						});
 					});
@@ -191,22 +206,24 @@ describe('Pine', function () {
 						});
 
 						it('should be successful', async function () {
-							const promise = this.pine._request({
-								baseUrl: this.pine.API_URL,
-								method: 'GET',
-								url: '/public_resource',
-							});
-							await expect(promise).to.become({ hello: 'public world' });
+							expect(
+								await this.pine._request({
+									baseUrl: this.pine.API_URL,
+									method: 'GET',
+									url: '/public_resource',
+								}),
+							).to.deep.equal({ hello: 'public world' });
 						});
 
 						it('should be successful, if sent anonymously', async function () {
-							const promise = this.pine._request({
-								baseUrl: this.pine.API_URL,
-								method: 'GET',
-								url: '/public_resource',
-								anonymous: true,
-							});
-							await expect(promise).to.become({ hello: 'public world' });
+							expect(
+								await this.pine._request({
+									baseUrl: this.pine.API_URL,
+									method: 'GET',
+									url: '/public_resource',
+									anonymous: true,
+								}),
+							).to.deep.equal({ hello: 'public world' });
 						});
 					});
 
@@ -216,24 +233,24 @@ describe('Pine', function () {
 						});
 
 						it('should eventually become the response body', async function () {
-							const promise = this.pine._request({
-								baseUrl: this.pine.API_URL,
-								method: 'GET',
-								url: '/foo',
-							});
-							await expect(promise).to.eventually.become({ hello: 'world' });
+							expect(
+								await this.pine._request({
+									baseUrl: this.pine.API_URL,
+									method: 'GET',
+									url: '/foo',
+								}),
+							).to.deep.equal({ hello: 'world' });
 						});
 
 						it('should not send the auth token, if using an anonymous flag', async function () {
-							const promise = this.pine._request({
-								baseUrl: this.pine.API_URL,
-								method: 'GET',
-								url: '/foo',
-								anonymous: true,
-							});
-							await expect(promise).to.be.rejectedWith(
-								'Request error: Unauthorized',
-							);
+							await expectError(async () => {
+								await this.pine._request({
+									baseUrl: this.pine.API_URL,
+									method: 'GET',
+									url: '/foo',
+									anonymous: true,
+								});
+							}, 'Request error: Unauthorized');
 						});
 					});
 				});
@@ -248,15 +265,16 @@ describe('Pine', function () {
 					});
 
 					it('should eventually become the body', async function () {
-						const promise = this.pine._request({
-							baseUrl: this.pine.API_URL,
-							method: 'POST',
-							url: '/foo',
-							body: {
-								foo: 'bar',
-							},
-						});
-						await expect(promise).to.eventually.become({ foo: 'bar' });
+						expect(
+							await this.pine._request({
+								baseUrl: this.pine.API_URL,
+								method: 'POST',
+								url: '/foo',
+								body: {
+									foo: 'bar',
+								},
+							}),
+						).to.deep.equal({ foo: 'bar' });
 					});
 				});
 
@@ -279,13 +297,14 @@ describe('Pine', function () {
 						});
 
 						it('should make the correct request', async function () {
-							const promise = this.pine.get({
-								resource: 'application',
-								options: {
-									$orderby: 'app_name asc',
-								},
-							});
-							await expect(promise).to.eventually.become(this.applications.d);
+							expect(
+								await this.pine.get({
+									resource: 'application',
+									options: {
+										$orderby: 'app_name asc',
+									},
+								}),
+							).to.deep.equal(this.applications.d);
 						});
 					});
 
@@ -298,11 +317,11 @@ describe('Pine', function () {
 						});
 
 						it('should reject the promise with an error message', async function () {
-							const promise = this.pine.get({
-								resource: 'application',
-							});
-
-							await expect(promise).to.be.rejectedWith('Internal Server Error');
+							await expectError(async () => {
+								await this.pine.get({
+									resource: 'application',
+								});
+							}, 'Internal Server Error');
 						});
 					});
 				});
@@ -321,15 +340,15 @@ describe('Pine', function () {
 						});
 
 						it('should get back the body', async function () {
-							const promise = this.pine.post({
-								resource: 'application',
-								body: {
-									app_name: 'App1',
-									device_type: 'raspberry-pi',
-								},
-							});
-
-							await expect(promise).to.eventually.become({
+							expect(
+								await this.pine.post({
+									resource: 'application',
+									body: {
+										app_name: 'App1',
+										device_type: 'raspberry-pi',
+									},
+								}),
+							).to.deep.equal({
 								app_name: 'App1',
 								device_type: 'raspberry-pi',
 							});
@@ -345,16 +364,14 @@ describe('Pine', function () {
 						});
 
 						it('should reject the promise with an error message', async function () {
-							const promise = this.pine.post({
-								resource: 'application',
-								body: {
-									app_name: 'App1',
-								},
-							});
-
-							await expect(promise).to.be.rejectedWith(
-								'Unsupported device type',
-							);
+							await expectError(async () => {
+								await this.pine.post({
+									resource: 'application',
+									body: {
+										app_name: 'App1',
+									},
+								});
+							}, 'Unsupported device type');
 						});
 					});
 				});

@@ -9,7 +9,7 @@ import {
 	givenLoggedInUser,
 } from '../setup';
 import type * as BalenaSdk from '../../..';
-import { assertDeepMatchAndLength, timeSuite } from '../../util';
+import { assertDeepMatchAndLength, expectError, timeSuite } from '../../util';
 import {
 	itShouldSetGetAndRemoveTags,
 	itShouldGetAllTagsByResource,
@@ -110,13 +110,11 @@ describe('Organization Membership Model', function () {
 
 		parallel('balena.models.organization.membership.get()', function () {
 			it(`should reject when the organization membership is not found`, async function () {
-				const promise = balena.models.organization.membership.get(
-					Math.floor(Date.now() / 1000),
-				);
-
-				await expect(promise).to.be.rejectedWith(
-					'Organization Membership not found',
-				);
+				await expectError(async () => {
+					await balena.models.organization.membership.get(
+						Math.floor(Date.now() / 1000),
+					);
+				}, 'Organization Membership not found');
 			});
 
 			keyAlternatives.forEach(([title, keyGetter]) => {
@@ -210,12 +208,9 @@ describe('Organization Membership Model', function () {
 						const key = keyGetter(membership!);
 						await balena.models.organization.membership.remove(key);
 
-						const promise = balena.models.organization.membership.get(
-							membership!.id,
-						);
-						await expect(promise).to.be.rejectedWith(
-							'Organization Membership not found',
-						);
+						await expectError(async () => {
+							await balena.models.organization.membership.get(membership!.id);
+						}, 'Organization Membership not found');
 					});
 				});
 			});
@@ -247,13 +242,19 @@ describe('Organization Membership Model', function () {
 
 			describe('balena.models.organization.membership.changeRole()', function () {
 				it(`should not be able to change an organization membership to an unknown role`, async function () {
-					const promise = balena.models.organization.membership.changeRole(
-						memberMembership!.id,
-						'unknown role',
-					);
-					await expect(promise).to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaOrganizationMembershipRoleNotFound',
+					await expectError(
+						async () => {
+							await balena.models.organization.membership.changeRole(
+								memberMembership!.id,
+								'unknown role',
+							);
+						},
+						(error) => {
+							expect(error).to.have.property(
+								'code',
+								'BalenaOrganizationMembershipRoleNotFound',
+							);
+						},
 					);
 				});
 
@@ -313,13 +314,11 @@ describe('Organization Membership Model', function () {
 						memberMembership!.id,
 					);
 
-					const promise = balena.models.organization.membership.get(
-						memberMembership!.id,
-					);
-
-					await expect(promise).to.be.rejectedWith(
-						'Organization Membership not found',
-					);
+					await expectError(async () => {
+						await balena.models.organization.membership.get(
+							memberMembership!.id,
+						);
+					}, 'Organization Membership not found');
 				});
 
 				describe('given an organization with a single administrator organization membership [contained scenario]', function () {
@@ -375,12 +374,11 @@ describe('Organization Membership Model', function () {
 							.to.have.property('id')
 							.that.is.a('number');
 
-						const promise = balena.models.organization.membership.remove(
-							lastAdminMembership.id,
-						);
-						await expect(promise).to.be.rejectedWith(
-							`It is necessary that each organization that is active, includes at least one organization membership that has an organization membership role that has a name (Auth) that is equal to "administrator"`,
-						);
+						await expectError(async () => {
+							await balena.models.organization.membership.remove(
+								lastAdminMembership.id,
+							);
+						}, `It is necessary that each organization that is active, includes at least one organization membership that has an organization membership role that has a name (Auth) that is equal to "administrator"`);
 					});
 				});
 			});

@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import { balena } from '../setup';
-import { timeSuite } from '../../util';
+import { expectError, timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 
 const expectDeviceTypeArray = function (
@@ -88,10 +88,10 @@ describe('Config Model', function () {
 			return expect(manifest.options).to.exist;
 		});
 
-		it('should be rejected if the device slug is invalid', function () {
-			const promise =
-				balena.models.config.getDeviceTypeManifestBySlug('foobar');
-			return expect(promise).to.be.rejectedWith('Invalid device type: foobar');
+		it('should be rejected if the device slug is invalid', async function () {
+			await expectError(async () => {
+				await balena.models.config.getDeviceTypeManifestBySlug('foobar');
+			}, 'Invalid device type: foobar');
 		});
 
 		it('should become the manifest given a device type alias', async () => {
@@ -160,11 +160,10 @@ describe('Config Model', function () {
 				.then((options) => expect(Array.isArray(options)).to.be.true);
 		});
 
-		it('should reject if device type is invalid', function () {
-			const promise = balena.models.config.getDeviceOptions('foobarbaz');
-			return expect(promise).to.be.rejectedWith(
-				'Invalid device type: foobarbaz',
-			);
+		it('should reject if device type is invalid', async function () {
+			await expectError(async () => {
+				await balena.models.config.getDeviceOptions('foobarbaz');
+			}, 'Invalid device type: foobarbaz');
 		});
 	});
 });

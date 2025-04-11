@@ -7,7 +7,7 @@ import {
 	givenLoggedInUser,
 	TEST_KEY_NAME_PREFIX,
 } from '../setup';
-import { assertDeepMatchAndLength, timeSuite } from '../../util';
+import { assertDeepMatchAndLength, expectError, timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 
 describe('API Key model', function () {
@@ -191,12 +191,16 @@ describe('API Key model', function () {
 
 		describe('balena.models.apiKey.getProvisioningApiKeysByApplication', function () {
 			it('should fail when the application does not exist', async function () {
-				const error = await expect(
-					balena.models.apiKey.getProvisioningApiKeysByApplication(
-						'nonExistentOrganization/nonExistentApp',
-					),
-				).to.be.rejected;
-				expect(error).to.have.property('code', 'BalenaApplicationNotFound');
+				await expectError(
+					async () => {
+						await balena.models.apiKey.getProvisioningApiKeysByApplication(
+							'nonExistentOrganization/nonExistentApp',
+						);
+					},
+					(error) => {
+						expect(error).to.have.property('code', 'BalenaApplicationNotFound');
+					},
+				);
 			});
 
 			it('should be able to retrieve the provisioning api keys of an application', async function () {
@@ -214,10 +218,16 @@ describe('API Key model', function () {
 
 		describe('balena.models.apiKey.getDeviceApiKeysByDevice', function () {
 			it('should fail when the device does not exist', async function () {
-				const error = await expect(
-					balena.models.apiKey.getDeviceApiKeysByDevice('nonexistentuuid'),
-				).to.be.rejected;
-				expect(error).to.have.property('code', 'BalenaDeviceNotFound');
+				await expectError(
+					async () => {
+						await balena.models.apiKey.getDeviceApiKeysByDevice(
+							'nonexistentuuid',
+						);
+					},
+					(error) => {
+						expect(error).to.have.property('code', 'BalenaDeviceNotFound');
+					},
+				);
 			});
 
 			it('should be able to retrieve the api keys of a device', async function () {
@@ -233,17 +243,19 @@ describe('API Key model', function () {
 
 		describe('balena.models.apiKey.update()', () => {
 			it('should not be able to update the name of an api key to null', async function () {
-				await expect(
-					balena.models.apiKey.update(ctx.namedUserApiKey!.id, {
+				await expectError(async () => {
+					await balena.models.apiKey.update(ctx.namedUserApiKey!.id, {
 						name: null as any,
-					}),
-				).to.be.rejected;
+					});
+				});
 			});
 
 			it('should not be able to update the name of an api key to an empty string', async function () {
-				await expect(
-					balena.models.apiKey.update(ctx.namedUserApiKey!.id, { name: '' }),
-				).to.be.rejected;
+				await expectError(async () => {
+					await balena.models.apiKey.update(ctx.namedUserApiKey!.id, {
+						name: '',
+					});
+				});
 			});
 
 			const updatedApiKeyName = `${TEST_KEY_NAME_PREFIX}_updatedApiKeyName`;
@@ -301,11 +313,11 @@ describe('API Key model', function () {
 			});
 
 			it('should not be able to update the expiryDate of an api key to a in-valid date string', async function () {
-				await expect(
-					balena.models.apiKey.update(ctx.namedUserApiKey!.id, {
+				await expectError(async () => {
+					await balena.models.apiKey.update(ctx.namedUserApiKey!.id, {
 						expiryDate: 'in-valid date',
-					}),
-				).to.be.rejected;
+					});
+				});
 			});
 
 			it('should be able to update the expiryDate of an api key to a valid date string', async function () {

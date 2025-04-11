@@ -3,7 +3,7 @@ import parallel from 'mocha.parallel';
 // eslint-disable-next-line no-restricted-imports
 import * as _ from 'lodash';
 import type * as BalenaSdk from '../../..';
-import { delay, timeSuite } from '../../util';
+import { delay, expectError, timeSuite } from '../../util';
 import { getFieldLabel, getParam } from '../utils';
 
 import {
@@ -44,45 +44,47 @@ describe('Release Model', function () {
 
 		parallel('balena.models.release.get()', function () {
 			it('should be rejected if the release id does not exist by id', async () => {
-				const promise = balena.models.release.get(123);
-				await expect(promise).to.be.rejectedWith('Release not found: 123');
+				await expectError(async () => {
+					await balena.models.release.get(123);
+				}, 'Release not found: 123');
 			});
 
 			it('should be rejected if the release id does not exist by commit', async () => {
-				const promise = balena.models.release.get('7cf02a6');
-				await expect(promise).to.be.rejectedWith('Release not found: 7cf02a6');
+				await expectError(async () => {
+					await balena.models.release.get('7cf02a6');
+				}, 'Release not found: 7cf02a6');
 			});
 
 			it('should be rejected if the release id does not exist by raw_version', async () => {
-				const promise = balena.models.release.get({
-					application: ctx.application.id,
-					rawVersion: '10.0.0',
-				});
-				await expect(promise).to.be.rejectedWith(
-					`Release not found: unique pair application & rawVersion: ${ctx.application.id} & 10.0.0`,
-				);
+				await expectError(async () => {
+					await balena.models.release.get({
+						application: ctx.application.id,
+						rawVersion: '10.0.0',
+					});
+				}, `Release not found: unique pair application & rawVersion: ${ctx.application.id} & 10.0.0`);
 			});
 		});
 
 		parallel('balena.models.release.getWithImageDetails()', function () {
 			it('should be rejected if the release id does not exist by id', async () => {
-				const promise = balena.models.release.getWithImageDetails(123);
-				await expect(promise).to.be.rejectedWith('Release not found: 123');
+				await expectError(async () => {
+					await balena.models.release.getWithImageDetails(123);
+				}, 'Release not found: 123');
 			});
 
 			it('should be rejected if the release id does not exist by commit', async () => {
-				const promise = balena.models.release.getWithImageDetails('7cf02a6');
-				await expect(promise).to.be.rejectedWith('Release not found: 7cf02a6');
+				await expectError(async () => {
+					await balena.models.release.getWithImageDetails('7cf02a6');
+				}, 'Release not found: 7cf02a6');
 			});
 
 			it('should be rejected if the release id does not exist by raw_version', async () => {
-				const promise = balena.models.release.getWithImageDetails({
-					application: ctx.application.id,
-					rawVersion: '10.0.0',
-				});
-				await expect(promise).to.be.rejectedWith(
-					`Release not found: unique pair application & rawVersion: ${ctx.application.id} & 10.0.0`,
-				);
+				await expectError(async () => {
+					await balena.models.release.getWithImageDetails({
+						application: ctx.application.id,
+						rawVersion: '10.0.0',
+					});
+				}, `Release not found: unique pair application & rawVersion: ${ctx.application.id} & 10.0.0`);
 			});
 		});
 
@@ -97,18 +99,15 @@ describe('Release Model', function () {
 			});
 
 			it('should be rejected if the application name does not exist', async () => {
-				const promise =
-					balena.models.release.getAllByApplication('HelloWorldApp');
-				await expect(promise).to.be.rejectedWith(
-					'Application not found: HelloWorldApp',
-				);
+				await expectError(async () => {
+					await balena.models.release.getAllByApplication('HelloWorldApp');
+				}, 'Application not found: HelloWorldApp');
 			});
 
 			it('should be rejected if the application id does not exist', async () => {
-				const promise = balena.models.release.getAllByApplication(999999);
-				await expect(promise).to.be.rejectedWith(
-					'Application not found: 999999',
-				);
+				await expectError(async () => {
+					await balena.models.release.getAllByApplication(999999);
+				}, 'Application not found: 999999');
 			});
 		});
 
@@ -187,53 +186,55 @@ describe('Release Model', function () {
 
 			parallel('[read operations]', function () {
 				it('should be rejected if the application name does not exist', async () => {
-					const promise = balena.models.release.createFromUrl('HelloWorldApp', {
-						url: TEST_SOURCE_URL,
-					});
-					await expect(promise).to.be.rejectedWith(
-						'Application not found: HelloWorldApp',
-					);
+					await expectError(async () => {
+						await balena.models.release.createFromUrl('HelloWorldApp', {
+							url: TEST_SOURCE_URL,
+						});
+					}, 'Application not found: HelloWorldApp');
 				});
 
 				it('should be rejected if the application id does not exist', async () => {
-					const promise = balena.models.release.createFromUrl(999999, {
-						url: TEST_SOURCE_URL,
-					});
-					await expect(promise).to.be.rejectedWith(
-						'Application not found: 999999',
-					);
+					await expectError(async () => {
+						await balena.models.release.createFromUrl(999999, {
+							url: TEST_SOURCE_URL,
+						});
+					}, 'Application not found: 999999');
 				});
 
 				it('should be rejected when the provided tarball url is not found', async () => {
-					const promise = balena.models.release.createFromUrl(
-						ctx.application.id,
-						{
-							url: `${TEST_SOURCE_BASE_REPO_URL}/tar.gz/refs/tags/v0.0.0`,
+					await expectError(
+						async () => {
+							await balena.models.release.createFromUrl(ctx.application.id, {
+								url: `${TEST_SOURCE_BASE_REPO_URL}/tar.gz/refs/tags/v0.0.0`,
+							});
+						},
+						(error) => {
+							expect(error).to.have.property('code', 'BalenaRequestError');
+							expect(error).to.have.property('statusCode', 404);
+							expect(error)
+								.to.have.property('message')
+								.that.contains('Failed to fetch tarball from passed URL');
 						},
 					);
-					const error = await expect(promise).to.be.rejected;
-					expect(error).to.have.property('code', 'BalenaRequestError');
-					expect(error).to.have.property('statusCode', 404);
-					expect(error)
-						.to.have.property('message')
-						.that.contains('Failed to fetch tarball from passed URL');
 				});
 
 				it('should be rejected when the provided url is not a tarball', async () => {
-					const promise = balena.models.release.createFromUrl(
-						ctx.application.id,
-						{
-							url: 'https://github.com/balena-io-examples/balena-nodejs-hello-world',
+					await expectError(
+						async () => {
+							await balena.models.release.createFromUrl(ctx.application.id, {
+								url: 'https://github.com/balena-io-examples/balena-nodejs-hello-world',
+							});
+						},
+						(error) => {
+							expect(error).to.have.property('code', 'BalenaRequestError');
+							expect(error).to.have.property('statusCode', 502);
+							expect(error)
+								.to.have.property('message')
+								.that.contains(
+									'Invalid tar header. Maybe the tar is corrupted or it needs to be gunzipped?',
+								);
 						},
 					);
-					const error = await expect(promise).to.be.rejected;
-					expect(error).to.have.property('code', 'BalenaRequestError');
-					expect(error).to.have.property('statusCode', 502);
-					expect(error)
-						.to.have.property('message')
-						.that.contains(
-							'Invalid tar header. Maybe the tar is corrupted or it needs to be gunzipped?',
-						);
 				});
 			});
 
@@ -409,10 +410,9 @@ describe('Release Model', function () {
 			});
 
 			it('should be rejected when an empty string is provided', async function () {
-				const promise = balena.models.release.get('');
-				await expect(promise).to.be.rejectedWith(
-					`Invalid parameter:  is not a valid value for parameter 'commitOrIdOrRawVersion'`,
-				);
+				await expectError(async () => {
+					await balena.models.release.get('');
+				}, `Invalid parameter:  is not a valid value for parameter 'commitOrIdOrRawVersion'`);
 			});
 
 			it('should get the requested release by shorter commit', async () => {
@@ -730,10 +730,13 @@ describe('Release Model', function () {
 
 			parallel('balena.models.release.get()', function () {
 				it('should be rejected with an error if there is an ambiguation between shorter commits', async () => {
-					const promise = balena.models.release.get('feb23612');
-					await expect(promise).to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaAmbiguousRelease',
+					await expectError(
+						async () => {
+							await balena.models.release.get('feb23612');
+						},
+						(error) => {
+							expect(error).to.have.property('code', 'BalenaAmbiguousRelease');
+						},
 					);
 				});
 
@@ -751,10 +754,13 @@ describe('Release Model', function () {
 
 			parallel('balena.models.release.getWithImageDetails()', function () {
 				it('should be rejected with an error if there is an ambiguation between shorter commits', async () => {
-					const promise = balena.models.release.getWithImageDetails('feb23612');
-					await expect(promise).to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaAmbiguousRelease',
+					await expectError(
+						async () => {
+							await balena.models.release.getWithImageDetails('feb23612');
+						},
+						(error) => {
+							expect(error).to.have.property('code', 'BalenaAmbiguousRelease');
+						},
 					);
 				});
 

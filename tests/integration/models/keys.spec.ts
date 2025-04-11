@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import PUBLIC_KEY from '../../data/public-key';
 import { TEST_KEY_NAME_PREFIX, balena, givenLoggedInUser } from '../setup';
-import { timeSuite } from '../../util';
+import { expectError, timeSuite } from '../../util';
 
 describe('Key Model', function () {
 	timeSuite(before);
@@ -87,18 +87,17 @@ describe('Key Model', function () {
 				});
 			});
 
-			it('should be rejected if the key id is invalid', function () {
-				const promise = balena.models.key.get(99999999999);
-				return expect(promise).to.be.rejectedWith('Request error');
+			it('should be rejected if the key id is invalid', async function () {
+				await expectError(async () => {
+					await balena.models.key.get(99999999999);
+				}, 'Request error');
 			});
 		});
 
 		describe('balena.models.key.remove()', () => {
-			it('should be able to remove the key', function () {
-				return balena.models.key.remove(this.key.id).then(function () {
-					const promise = balena.models.key.getAll();
-					return expect(promise).to.eventually.have.length(0);
-				});
+			it('should be able to remove the key', async function () {
+				await balena.models.key.remove(this.key.id);
+				expect(await balena.models.key.getAll()).to.deep.equal([]);
 			});
 		});
 	});
