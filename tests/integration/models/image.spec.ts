@@ -5,7 +5,7 @@ import {
 	givenLoggedInUser,
 	givenMulticontainerApplication,
 } from '../setup';
-import { timeSuite } from '../../util';
+import { expectError, timeSuite } from '../../util';
 
 describe('Image Model', function () {
 	timeSuite(before);
@@ -15,16 +15,18 @@ describe('Image Model', function () {
 		givenAnApplication(before);
 
 		describe('balena.models.image.get()', function () {
-			it('should be rejected if the image id does not exist', function () {
-				const promise = balena.models.image.get(123);
-				return expect(promise).to.be.rejectedWith('Image not found: 123');
+			it('should be rejected if the image id does not exist', async function () {
+				await expectError(async () => {
+					await balena.models.image.get(123);
+				}, 'Image not found: 123');
 			});
 		});
 
 		describe('balena.models.image.getLogs()', function () {
-			it('should be rejected if the image id does not exist', function () {
-				const promise = balena.models.image.getLogs(123);
-				return expect(promise).to.be.rejectedWith('Image not found: 123');
+			it('should be rejected if the image id does not exist', async function () {
+				await expectError(async () => {
+					await balena.models.image.getLogs(123);
+				}, 'Image not found: 123');
 			});
 		});
 	});

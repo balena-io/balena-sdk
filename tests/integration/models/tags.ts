@@ -5,6 +5,7 @@ import parallel from 'mocha.parallel';
 import type * as BalenaSdk from '../../..';
 import type { Dictionary } from '../../../typings/utils';
 import { getFieldLabel, getParam } from '../utils';
+import { expectError } from '../../util';
 
 const getAllByResourcePropNameProvider = (resourceName: string) =>
 	`getAllBy${_.upperFirst(_.camelCase(resourceName))}`;
@@ -72,16 +73,18 @@ export const itShouldGetAllTagsByResource = function (opts: Options) {
 			expect(result).to.deep.equal([]);
 		});
 
-		it(`should be rejected if the ${resourceName} id does not exist`, function () {
-			const promise = getAllByResource(999999);
-			return expect(promise).to.be.rejectedWith(
+		it(`should be rejected if the ${resourceName} id does not exist`, async function () {
+			await expectError(
+				async () => {
+					await getAllByResource(999999);
+				},
 				`${_.startCase(resourceName)} not found: 999999`,
 			);
 		});
 
 		uniquePropertyNames.forEach((uniquePropertyName) => {
 			const uniquePropertyNameLabel = getFieldLabel(uniquePropertyName);
-			it(`should be rejected if the ${resourceName} ${uniquePropertyNameLabel} does not exist`, function () {
+			it(`should be rejected if the ${resourceName} ${uniquePropertyNameLabel} does not exist`, async function () {
 				let getAllByResourceParam;
 				if (uniquePropertyName === 'id') {
 					getAllByResourceParam = 123456789;
@@ -103,8 +106,10 @@ export const itShouldGetAllTagsByResource = function (opts: Options) {
 				} else {
 					getAllByResourceParam = '123456789';
 				}
-				const promise = getAllByResource(getAllByResourceParam);
-				return expect(promise).to.be.rejectedWith(
+				await expectError(
+					async () => {
+						await getAllByResource(getAllByResourceParam);
+					},
 					`${_.startCase(resourceName)} not found: ${
 						typeof getAllByResourceParam === 'object'
 							? `unique pair ${Object.keys(getAllByResourceParam).join(
@@ -166,9 +171,11 @@ export const itShouldSetGetAndRemoveTags = function (opts: Options) {
 			const $it = param ? it : it.skip;
 			$it(
 				`should be rejected if the ${resourceName} id does not exist`,
-				function () {
-					const promise = model.set(999999, 'EDITOR', 'vim');
-					return expect(promise).to.be.rejectedWith(
+				async function () {
+					await expectError(
+						async () => {
+							await model.set(999999, 'EDITOR', 'vim');
+						},
 						`${_.startCase(resourceName)} not found: `,
 					);
 				},
@@ -180,15 +187,14 @@ export const itShouldSetGetAndRemoveTags = function (opts: Options) {
 				return expect(tags).to.have.length(0);
 			});
 
-			$it('...should be able to create a tag', function () {
+			$it('...should be able to create a tag', async function () {
 				const setParam = getParam(param, this.resource);
 				const tagKeyPart = getTagKey(param);
-				const promise = model.set(
+				await model.set(
 					setParam,
 					`EDITOR_BY_${resourceName}_${tagKeyPart}`,
 					'vim',
 				);
-				return expect(promise).to.not.be.rejected;
 			});
 
 			$it(
@@ -237,35 +243,34 @@ export const itShouldSetGetAndRemoveTags = function (opts: Options) {
 	});
 
 	describe(`${modelNamespace}.set()`, function () {
-		it('should not allow creating a resin tag', function () {
-			const promise = model.set(this.resource.id, 'io.resin.test', 'secret');
-			return expect(promise).to.be.rejectedWith(
-				'Tag keys beginning with io.resin. are reserved.',
-			);
+		it('should not allow creating a resin tag', async function () {
+			await expectError(async () => {
+				await model.set(this.resource.id, 'io.resin.test', 'secret');
+			}, 'Tag keys beginning with io.resin. are reserved.');
 		});
 
-		it('should not allow creating a balena tag', function () {
-			const promise = model.set(this.resource.id, 'io.balena.test', 'secret');
-			return expect(promise).to.be.rejectedWith(
-				'Tag keys beginning with io.balena. are reserved.',
-			);
+		it('should not allow creating a balena tag', async function () {
+			await expectError(async () => {
+				await model.set(this.resource.id, 'io.balena.test', 'secret');
+			}, 'Tag keys beginning with io.balena. are reserved.');
 		});
 
-		it('should not allow creating a tag with a name containing a whitespace', function () {
-			const promise = model.set(this.resource.id, 'EDITOR 1', 'vim');
-			return expect(promise).to.be.rejectedWith(
-				/Request error: Tag keys cannot contain whitespace./,
-			);
+		it('should not allow creating a tag with a name containing a whitespace', async function () {
+			await expectError(async () => {
+				await model.set(this.resource.id, 'EDITOR 1', 'vim');
+			}, /Request error: Tag keys cannot contain whitespace./);
 		});
 
-		it('should be rejected if the tag_key is undefined', function () {
-			const promise = model.set(this.resource.id, undefined as any, 'vim');
-			return expect(promise).to.be.rejected;
+		it('should be rejected if the tag_key is undefined', async function () {
+			await expectError(async () => {
+				await model.set(this.resource.id, undefined as any, 'vim');
+			});
 		});
 
-		it('should be rejected if the tag_key is null', function () {
-			const promise = model.set(this.resource.id, null as any, 'vim');
-			return expect(promise).to.be.rejected;
+		it('should be rejected if the tag_key is null', async function () {
+			await expectError(async () => {
+				await model.set(this.resource.id, null as any, 'vim');
+			});
 		});
 
 		it('should be able to create a numeric tag', async function () {

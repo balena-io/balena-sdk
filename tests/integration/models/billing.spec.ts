@@ -9,7 +9,7 @@ import {
 	IS_BROWSER,
 	loginPaidUser,
 } from '../setup';
-import { timeSuite } from '../../util';
+import { expectError, timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 
 describe('Billing Model', function () {
@@ -19,102 +19,119 @@ describe('Billing Model', function () {
 		givenInitialOrganization(before);
 
 		describe('balena.models.billing.getAccount()', function () {
-			it('should not return a billing account info object', function () {
-				const promise = balena.models.billing.getAccount(this.initialOrg.id);
-				return expect(promise).to.be.rejected.then(function (error) {
-					expect(error).to.have.property('code', 'BalenaRequestError');
-					expect(error).to.have.property('statusCode', 404);
-					expect(error)
-						.to.have.property('message')
-						.that.contains('Billing Account was not found.');
-				});
+			it('should not return a billing account info object', async function () {
+				await expectError(
+					async () => {
+						await balena.models.billing.getAccount(this.initialOrg.id);
+					},
+					(error) => {
+						expect(error).to.have.property('code', 'BalenaRequestError');
+						expect(error).to.have.property('statusCode', 404);
+						expect(error)
+							.to.have.property('message')
+							.that.contains('Billing Account was not found.');
+					},
+				);
 			});
 		});
 
 		describe('balena.models.billing.getPlan()', function () {
-			it('should return a free tier billing plan object', function () {
-				return balena.models.billing.getPlan(this.initialOrg.id).then((plan) =>
-					expect(plan).to.deep.match({
-						title: 'Free',
-						name: 'Free plan',
-						code: 'free',
-						tier: 'free',
-						addOns: [],
-						billing: {
-							currency: 'USD',
-							charges: [
-								{
-									itemType: 'plan',
-									name: 'Free plan',
-									code: 'free',
-									unitCostCents: '0',
-									quantity: '1',
-								},
-								{
-									itemType: 'support',
-									name: 'Community support',
-									code: 'community',
-									unitCostCents: '0',
-									quantity: '1',
-								},
-							],
-							totalCostCents: '0',
-						},
-						support: {
-							title: 'Community',
-							name: 'Community support',
-						},
-					}),
-				);
+			it('should return a free tier billing plan object', async function () {
+				const plan = await balena.models.billing.getPlan(this.initialOrg.id);
+				expect(plan).to.deep.match({
+					title: 'Free',
+					name: 'Free plan',
+					code: 'free',
+					tier: 'free',
+					addOns: [],
+					billing: {
+						currency: 'USD',
+						charges: [
+							{
+								itemType: 'plan',
+								name: 'Free plan',
+								code: 'free',
+								unitCostCents: '0',
+								quantity: '1',
+							},
+							{
+								itemType: 'support',
+								name: 'Community support',
+								code: 'community',
+								unitCostCents: '0',
+								quantity: '1',
+							},
+						],
+						totalCostCents: '0',
+					},
+					support: {
+						title: 'Community',
+						name: 'Community support',
+					},
+				});
 			});
 		});
 
 		describe('balena.models.billing.getBillingInfo()', function () {
-			it('should return a free tier billing info object', function () {
-				const promise = balena.models.billing.getBillingInfo(
-					this.initialOrg.id,
-				);
-				return expect(promise).to.become({});
+			it('should return a free tier billing info object', async function () {
+				expect(
+					await balena.models.billing.getBillingInfo(this.initialOrg.id),
+				).to.deep.equal({});
 			});
 		});
 
 		describe('balena.models.billing.updateBillingInfo()', function () {
-			it('should throw when no parameters are provided', function () {
-				const promise = (balena.models.billing.updateBillingInfo as any)();
-				return expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaInvalidParameterError',
-				);
-			});
-
-			it('should throw when no billing info parameter is provided', function () {
-				const promise = (balena.models.billing.updateBillingInfo as any)(
-					this.initialOrg.id,
-				);
-				return expect(promise).to.be.rejected.then((error) =>
-					expect(error).to.have.property('statusCode', 400),
-				);
-			});
-
-			it('should throw when an empty parameter object is provided', function () {
-				const promise = balena.models.billing.updateBillingInfo(
-					this.initialOrg.id,
-					{} as any,
-				);
-				return expect(promise).to.be.rejected.then((error) =>
-					expect(error).to.have.property('statusCode', 400),
-				);
-			});
-
-			it('should throw when the token_id is empty', function () {
-				const promise = balena.models.billing.updateBillingInfo(
-					this.initialOrg.id,
-					{
-						token_id: '',
+			it('should throw when no parameters are provided', async function () {
+				await expectError(
+					async () => {
+						await (balena.models.billing.updateBillingInfo as any)();
+					},
+					(error) => {
+						expect(error).to.have.property(
+							'code',
+							'BalenaInvalidParameterError',
+						);
 					},
 				);
-				return expect(promise).to.be.rejected.then((error) =>
-					expect(error).to.have.property('statusCode', 400),
+			});
+
+			it('should throw when no billing info parameter is provided', async function () {
+				await expectError(
+					async () => {
+						await (balena.models.billing.updateBillingInfo as any)(
+							this.initialOrg.id,
+						);
+					},
+					(error) => {
+						expect(error).to.have.property('statusCode', 400);
+					},
+				);
+			});
+
+			it('should throw when an empty parameter object is provided', async function () {
+				await expectError(
+					async () => {
+						await balena.models.billing.updateBillingInfo(
+							this.initialOrg.id,
+							{} as any,
+						);
+					},
+					(error) => {
+						expect(error).to.have.property('statusCode', 400);
+					},
+				);
+			});
+
+			it('should throw when the token_id is empty', async function () {
+				await expectError(
+					async () => {
+						await balena.models.billing.updateBillingInfo(this.initialOrg.id, {
+							token_id: '',
+						});
+					},
+					(error) => {
+						expect(error).to.have.property('statusCode', 400);
+					},
 				);
 			});
 		});
@@ -138,42 +155,44 @@ describe('Billing Model', function () {
 					.catch(_.noop);
 			});
 
-			it('should not be able to download any invoice', function () {
+			it('should not be able to download any invoice', async function () {
 				expect(this.firstInvoiceNumber).to.be.a('undefined');
-				const promise = balena.models.billing.downloadInvoice(
-					this.initialOrg.id,
-					'anyinvoicenumber',
-				);
-				return expect(promise).to.be.rejected;
+				await expectError(async () => {
+					await balena.models.billing.downloadInvoice(
+						this.initialOrg.id,
+						'anyinvoicenumber',
+					);
+				});
 			});
 
-			it('should throw when an invoice number is not provided', function () {
-				const promise = (balena.models.billing.downloadInvoice as any)();
-				return expect(promise).to.be.rejected;
+			it('should throw when an invoice number is not provided', async function () {
+				await expectError(async () => {
+					await (balena.models.billing.downloadInvoice as any)();
+				});
 			});
 
-			it('should throw when an empty string invoice number is provided', function () {
-				const promise = balena.models.billing.downloadInvoice(
-					this.initialOrg.id,
-					'',
-				);
-				return expect(promise).to.be.rejected;
+			it('should throw when an empty string invoice number is provided', async function () {
+				await expectError(async () => {
+					await balena.models.billing.downloadInvoice(this.initialOrg.id, '');
+				});
 			});
 
-			it('should throw when trying to retrieve an non-existing invoice', function () {
-				const promise = balena.models.billing.downloadInvoice(
-					this.initialOrg.id,
-					'notfound',
-				);
-				return expect(promise).to.be.rejected;
+			it('should throw when trying to retrieve an non-existing invoice', async function () {
+				await expectError(async () => {
+					await balena.models.billing.downloadInvoice(
+						this.initialOrg.id,
+						'notfound',
+					);
+				});
 			});
 
-			it('should not return an invoice of a different user', function () {
-				const promise = balena.models.billing.downloadInvoice(
-					this.initialOrg.id,
-					'1000',
-				);
-				return expect(promise).to.be.rejected;
+			it('should not return an invoice of a different user', async function () {
+				await expectError(async () => {
+					await balena.models.billing.downloadInvoice(
+						this.initialOrg.id,
+						'1000',
+					);
+				});
 			});
 		});
 	});
@@ -205,9 +224,10 @@ describe('Billing Model', function () {
 		describe('balena.models.billing.getAccount()', function () {
 			givenABillingAccountIt(
 				'should return a paid tier billing account info object',
-				function () {
-					const promise = balena.models.billing.getAccount(this.initialOrg.id);
-					return expect(promise).to.become({
+				async function () {
+					expect(
+						await balena.models.billing.getAccount(this.initialOrg.id),
+					).to.deep.equal({
 						account_state: 'active',
 						address: {
 							address1: 'One London Wall',
@@ -231,38 +251,52 @@ describe('Billing Model', function () {
 		describe('balena.models.billing.updateAccountInfo()', function () {
 			givenABillingAccountIt(
 				'should throw when no parameters are provided',
-				function () {
-					const promise = (balena.models.billing.updateAccountInfo as any)();
-					return expect(promise).to.be.rejected.and.eventually.have.property(
-						'code',
-						'BalenaInvalidParameterError',
+				async function () {
+					await expectError(
+						async () => {
+							await (balena.models.billing.updateAccountInfo as any)();
+						},
+						(error) => {
+							expect(error).to.have.property(
+								'code',
+								'BalenaInvalidParameterError',
+							);
+						},
 					);
 				},
 			);
 
 			givenABillingAccountIt(
 				'should throw when no billing account info parameter is provided',
-				function () {
-					const promise = (balena.models.billing.updateAccountInfo as any)(
-						this.initialOrg.id,
-					);
-					return expect(promise).to.be.rejected.then((error) =>
-						expect(error).to.have.property('statusCode', 400),
+				async function () {
+					await expectError(
+						async () => {
+							await (balena.models.billing.updateAccountInfo as any)(
+								this.initialOrg.id,
+							);
+						},
+						(error) => {
+							expect(error).to.have.property('statusCode', 400);
+						},
 					);
 				},
 			);
 
 			givenABillingAccountIt(
 				'should throw when the email in the billing account info parameter is not a valid email',
-				function () {
-					const promise = balena.models.billing.updateAccountInfo(
-						this.initialOrg.id,
-						{
-							email: '',
+				async function () {
+					await expectError(
+						async () => {
+							await balena.models.billing.updateAccountInfo(
+								this.initialOrg.id,
+								{
+									email: '',
+								},
+							);
 						},
-					);
-					return expect(promise).to.be.rejected.then((error) =>
-						expect(error).to.have.property('statusCode', 400),
+						(error) => {
+							expect(error).to.have.property('statusCode', 400);
+						},
 					);
 				},
 			);
@@ -271,19 +305,13 @@ describe('Billing Model', function () {
 				'should successfully update billing email',
 				async function () {
 					const email = 'hello@balena.io';
-					const promise = balena.models.billing.updateAccountInfo(
-						this.initialOrg.id,
-						{
-							email,
-						},
-					);
-					await expect(promise).to.be.fulfilled;
-					const updatedAccountInfo = balena.models.billing.getAccount(
+					await balena.models.billing.updateAccountInfo(this.initialOrg.id, {
+						email,
+					});
+					const updatedAccountInfo = await balena.models.billing.getAccount(
 						this.initialOrg.id,
 					);
-					await expect(updatedAccountInfo)
-						.to.eventually.have.property('email')
-						.that.equals(email);
+					expect(updatedAccountInfo).to.have.property('email', email);
 				},
 			);
 		});
