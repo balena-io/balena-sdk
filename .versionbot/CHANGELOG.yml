@@ -1,4 +1,16 @@
 - commits:
+    - subject: Remove chai-as-promised from tests
+      hash: b3348cdcfc404bf651750ecf28595714d8122847
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 21.3.2
+  title: ""
+  date: 2025-04-15T00:48:22.205Z
+- commits:
     - subject: Update dependency balena-semver to v3
       hash: 113c8f1f9c355d22159050a6f69a91475def193b
       body: |
