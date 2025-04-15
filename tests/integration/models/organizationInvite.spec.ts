@@ -7,7 +7,7 @@ import {
 	credentials,
 	organizationRetrievalFields,
 } from '../setup';
-import { timeSuite, assertDeepMatchAndLength } from '../../util';
+import { timeSuite, assertDeepMatchAndLength, expectError } from '../../util';
 import type * as BalenaSdk from '../../..';
 // eslint-disable-next-line no-restricted-imports
 import * as _ from 'lodash';
@@ -33,11 +33,13 @@ describe('Organization Invite Model', function () {
 		before(() => balena.auth.logout());
 		describe('balena.models.organization.invite.getAllByOrganization()', function () {
 			it('should be rejected with an unauthorized error', async () => {
-				const promise =
-					balena.models.organization.invite.getAllByOrganization(1);
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					'BalenaNotLoggedIn',
+				await expectError(
+					async () => {
+						await balena.models.organization.invite.getAllByOrganization(1);
+					},
+					(error) => {
+						expect(error).to.have.property('code', 'BalenaNotLoggedIn');
+					},
 				);
 			});
 		});
@@ -106,25 +108,29 @@ describe('Organization Invite Model', function () {
 					});
 
 					it('should throw an error when role is not found', async function () {
-						const promise = balena.models.organization.invite.create(
-							this.organization.id,
-							{
-								invitee: TEST_EMAIL,
-								// @ts-expect-error invalid value
-								roleName: UNKNOWN_ROLE,
+						await expectError(
+							async () => {
+								await balena.models.organization.invite.create(
+									this.organization.id,
+									{
+										invitee: TEST_EMAIL,
+										// @ts-expect-error invalid value
+										roleName: UNKNOWN_ROLE,
+									},
+								);
+							},
+							(error) => {
+								expect(error).to.have.property(
+									'code',
+									'BalenaOrganizationMembershipRoleNotFound',
+								);
+								expect(error)
+									.to.have.property('message')
+									.that.contains(
+										`Organization membership role not found: ${UNKNOWN_ROLE}`,
+									);
 							},
 						);
-						await expect(promise).to.be.rejected.then((error) => {
-							expect(error).to.have.property(
-								'code',
-								'BalenaOrganizationMembershipRoleNotFound',
-							);
-							expect(error)
-								.to.have.property('message')
-								.that.contains(
-									`Organization membership role not found: ${UNKNOWN_ROLE}`,
-								);
-						});
 					});
 				});
 
@@ -136,16 +142,22 @@ describe('Organization Invite Model', function () {
 
 					for (const field of organizationRetrievalFields) {
 						it(`should not be able to invite a new member when using an not existing organization ${field}`, async function () {
-							const promise = balena.models.organization.invite.create(
-								randomOrdInfo[field],
-								{
-									invitee: credentials.member.email,
-									roleName: 'member',
+							await expectError(
+								async () => {
+									await balena.models.organization.invite.create(
+										randomOrdInfo[field],
+										{
+											invitee: credentials.member.email,
+											roleName: 'member',
+										},
+									);
 								},
-							);
-							await expect(promise).to.be.rejected.and.eventually.have.property(
-								'code',
-								'BalenaOrganizationNotFound',
+								(error) => {
+									expect(error).to.have.property(
+										'code',
+										'BalenaOrganizationNotFound',
+									);
+								},
 							);
 						});
 					}
@@ -259,18 +271,23 @@ describe('Organization Invite Model', function () {
 							]);
 						});
 
-						it('should be rejected if the organization is inaccessible', function () {
-							const promise =
-								balena.models.organization.invite.getAllByOrganization(9999);
-							return expect(promise).to.be.rejected.then((error) => {
-								expect(error).to.have.property(
-									'code',
-									'BalenaOrganizationNotFound',
-								);
-								expect(error)
-									.to.have.property('message')
-									.that.contains('Organization not found: 9999');
-							});
+						it('should be rejected if the organization is inaccessible', async function () {
+							await expectError(
+								async () => {
+									await balena.models.organization.invite.getAllByOrganization(
+										9999,
+									);
+								},
+								(error) => {
+									expect(error).to.have.property(
+										'code',
+										'BalenaOrganizationNotFound',
+									);
+									expect(error)
+										.to.have.property('message')
+										.that.contains('Organization not found: 9999');
+								},
+							);
 						});
 					},
 				);
@@ -280,11 +297,11 @@ describe('Organization Invite Model', function () {
 						await balena.models.organization.invite.revoke(
 							this.organizationInvite.id,
 						);
-						const promise =
-							balena.models.organization.invite.getAllByOrganization(
+						expect(
+							await balena.models.organization.invite.getAllByOrganization(
 								this.organization.id,
-							);
-						return expect(promise).to.eventually.have.length(0);
+							),
+						).to.deep.equal([]);
 					});
 				});
 

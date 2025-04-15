@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import { balena, givenAnApplication, givenLoggedInUser } from '../setup';
-import { timeSuite } from '../../util';
+import { expectError, timeSuite } from '../../util';
 import { assertDeepMatchAndLength } from '../../util';
 const TEST_EMAIL = 'user.test@example.org';
 const TEST_MESSAGE = 'Hey!, Join my app on balenaCloud';
@@ -24,12 +24,18 @@ describe('Application Invite Model', function () {
 					},
 				});
 
-				const promise = balena.models.application.invite.getAllByApplication(
-					publicApp?.id ?? 1,
-				);
-				await expect(promise).to.be.rejected.and.eventually.have.property(
-					'code',
-					publicApp ? 'BalenaNotLoggedIn' : 'BalenaApplicationNotFound',
+				await expectError(
+					async () => {
+						await balena.models.application.invite.getAllByApplication(
+							publicApp?.id ?? 1,
+						);
+					},
+					(error) => {
+						expect(error).to.have.property(
+							'code',
+							publicApp ? 'BalenaNotLoggedIn' : 'BalenaApplicationNotFound',
+						);
+					},
 				);
 			});
 		});
@@ -101,25 +107,29 @@ describe('Application Invite Model', function () {
 					});
 
 					it('should throw an error when role is not found', async function () {
-						const promise = balena.models.application.invite.create(
-							this.application.id,
-							{
-								invitee: TEST_EMAIL,
-								// @ts-expect-error invalid role
-								roleName: UNKNOWN_ROLE,
+						await expectError(
+							async () => {
+								await balena.models.application.invite.create(
+									this.application.id,
+									{
+										invitee: TEST_EMAIL,
+										// @ts-expect-error invalid role
+										roleName: UNKNOWN_ROLE,
+									},
+								);
+							},
+							(error) => {
+								expect(error).to.have.property(
+									'code',
+									'BalenaApplicationMembershipRoleNotFound',
+								);
+								expect(error)
+									.to.have.property('message')
+									.that.contains(
+										`Application membership role not found: ${UNKNOWN_ROLE}`,
+									);
 							},
 						);
-						await expect(promise).to.be.rejected.then((error) => {
-							expect(error).to.have.property(
-								'code',
-								'BalenaApplicationMembershipRoleNotFound',
-							);
-							expect(error)
-								.to.have.property('message')
-								.that.contains(
-									`Application membership role not found: ${UNKNOWN_ROLE}`,
-								);
-						});
 					});
 				});
 			});
@@ -159,18 +169,23 @@ describe('Application Invite Model', function () {
 						]);
 					});
 
-					it('should be rejected if the application is inaccessible', function () {
-						const promise =
-							balena.models.application.invite.getAllByApplication(9999);
-						return expect(promise).to.be.rejected.then((error) => {
-							expect(error).to.have.property(
-								'code',
-								'BalenaApplicationNotFound',
-							);
-							expect(error)
-								.to.have.property('message')
-								.that.contains('Application not found: 9999');
-						});
+					it('should be rejected if the application is inaccessible', async function () {
+						await expectError(
+							async () => {
+								await balena.models.application.invite.getAllByApplication(
+									9999,
+								);
+							},
+							(error) => {
+								expect(error).to.have.property(
+									'code',
+									'BalenaApplicationNotFound',
+								);
+								expect(error)
+									.to.have.property('message')
+									.that.contains('Application not found: 9999');
+							},
+						);
 					});
 				});
 
@@ -179,11 +194,11 @@ describe('Application Invite Model', function () {
 						await balena.models.application.invite.revoke(
 							this.applicationInvite.id,
 						);
-						const promise =
-							balena.models.application.invite.getAllByApplication(
+						expect(
+							await balena.models.application.invite.getAllByApplication(
 								this.application.id,
-							);
-						return expect(promise).to.eventually.have.length(0);
+							),
+						).to.deep.equal([]);
 					});
 				});
 

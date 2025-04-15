@@ -8,6 +8,36 @@ export function assertExists(v: unknown): asserts v is NonNullable<typeof v> {
 	expect(v).to.exist;
 }
 
+function assertError(err: unknown): asserts err is Error {
+	expect(err, 'err was not an Error').to.be.an.instanceof(Error);
+}
+
+export async function expectError(
+	fn: () => Promise<void> | void,
+	extraErrorChecks?: string | RegExp | ((error: Error) => void),
+) {
+	let err: unknown;
+	let resolved = false;
+	try {
+		await fn();
+		resolved = true;
+	} catch ($err) {
+		err = $err;
+	}
+	expect(resolved).to.equal(
+		false,
+		'The function completed w/o error, while expecting one',
+	);
+	assertError(err);
+	if (typeof extraErrorChecks === 'function') {
+		extraErrorChecks(err);
+	} else if (typeof extraErrorChecks === 'string') {
+		expect(err).to.have.property('message').that.includes(extraErrorChecks);
+	} else if (extraErrorChecks != null && extraErrorChecks instanceof RegExp) {
+		expect(err).to.have.property('message').that.matches(extraErrorChecks);
+	}
+}
+
 export const assertDeepMatchAndLength = (a: unknown[], b: unknown[]) => {
 	[a, b].forEach((target) =>
 		expect(target).to.have.property('length').that.is.a('number'),
