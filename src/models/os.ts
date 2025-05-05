@@ -572,6 +572,7 @@ const getOsModel = function (
 			return osVersions[0]?.raw_version;
 		}
 
+		// TODO-next-major: Drop the `default` parameter value
 		if (versionOrRange === 'default') {
 			return osVersions[0]?.raw_version;
 		}
