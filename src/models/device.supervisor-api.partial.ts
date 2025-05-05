@@ -220,7 +220,7 @@ export const getSupervisorApiHelper = function (
 					body: {
 						deviceId,
 						data: {
-							force: Boolean(options?.force),
+							force: Boolean(options.force),
 						},
 					},
 				});
@@ -269,7 +269,7 @@ export const getSupervisorApiHelper = function (
 						deviceId: device.id,
 						appId: device.belongs_to__application[0].id,
 						data: {
-							force: Boolean(options?.force),
+							force: Boolean(options.force),
 						},
 					},
 				});
@@ -363,7 +363,7 @@ export const getSupervisorApiHelper = function (
 					deviceId: device.id,
 					appId: device.belongs_to__application[0].id,
 					data: {
-						force: Boolean(options?.force),
+						force: Boolean(options.force),
 					},
 				},
 			});

@@ -58,12 +58,10 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 		name: string,
 	): Promise<PinePostResult<Team>> {
 		const orgId = (
-			await sdkInstance.models.organization.get(organizationSlugOrId)
-		)?.id;
-
-		if (orgId == null) {
-			throw new errors.BalenaOrganizationNotFound(organizationSlugOrId);
-		}
+			await sdkInstance.models.organization.get(organizationSlugOrId, {
+				$select: 'id',
+			})
+		).id;
 
 		return pine.post({
 			resource: 'team',

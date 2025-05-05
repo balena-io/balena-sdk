@@ -92,7 +92,7 @@ describe('Device Type model', function () {
 			expect(partials)
 				.to.have.property('partials')
 				.to.have.property('bootDevice');
-			expect(partials?.partials?.bootDevice[0]).to.equal(
+			expect(partials.partials?.bootDevice[0]).to.equal(
 				'Connect power to the Raspberry Pi 2',
 			);
 		});

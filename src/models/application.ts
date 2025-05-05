@@ -483,7 +483,7 @@ const getApplicationModel = function (
 			)) as Application & {
 				owns__device: Array<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
 			};
-			if (app?.owns__device) {
+			if (app.owns__device) {
 				app.owns__device = app.owns__device.map((d) =>
 					generateCurrentServiceDetails<CurrentServiceWithCommit>(d),
 				);
