@@ -630,12 +630,7 @@ const getOsModel = function (
 	 * * a [semver](https://www.npmjs.com/package/semver)-compatible
 	 * range specification, in which case the most recent satisfying version is returned
 	 * if it exists, or `null` is returned,
-	 * * `'latest'` in which case the most recent version is returned, including pre-releases,
-	 * * `'recommended'` in which case the recommended version is returned, i.e. the most
-	 * recent version excluding pre-releases, which can be `null` if only pre-release versions
-	 * are available,
-	 * * `'default'` in which case the recommended version is returned if available,
-	 * or `latest` is returned otherwise.
+	 * * `'latest'/'default'` in which case the most recent version is returned, excluding pre-releases,
 	 * Defaults to `'latest'`.
 	 * @param {String} [osType] - can be one of 'default', 'esr' or null to include all types
 	 *
