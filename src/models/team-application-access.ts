@@ -149,11 +149,8 @@ const getTeamApplicationAccessModel = function (
 			await sdkInstance.models.application.get(applicationIdOrSlug, {
 				$select: 'id',
 			})
-		)?.id;
+		).id;
 
-		if (appId == null) {
-			throw new errors.BalenaApplicationNotFound(applicationIdOrSlug);
-		}
 		const roleId = await getRoleId(roleName);
 
 		return sdkInstance.pine.post({

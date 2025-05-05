@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { expectError, timeSuite } from '../util';
+import { assertExists, expectError, timeSuite } from '../util';
 import { authenticator } from 'otplib';
 
 import {
@@ -14,10 +14,31 @@ import {
 	TEST_KEY_NAME_PREFIX,
 } from './setup';
 import type {
+	WhoamiResult,
 	UserKeyWhoAmIResponse,
 	DeviceKeyWhoAmIResponse,
 	ApplicationKeyWhoAmIResponse,
 } from '../../src';
+
+function assertWhoAmIType(
+	whoamiResult: WhoamiResult | undefined,
+	type: 'user',
+): asserts whoamiResult is UserKeyWhoAmIResponse;
+function assertWhoAmIType(
+	whoamiResult: WhoamiResult | undefined,
+	type: 'application',
+): asserts whoamiResult is ApplicationKeyWhoAmIResponse;
+function assertWhoAmIType(
+	whoamiResult: WhoamiResult | undefined,
+	type: 'device',
+): asserts whoamiResult is DeviceKeyWhoAmIResponse;
+function assertWhoAmIType(
+	whoamiResult: WhoamiResult | undefined,
+	type: WhoamiResult['actorType'],
+) {
+	assertExists(whoamiResult);
+	expect(whoamiResult.actorType).to.equal(type);
+}
 
 describe('SDK authentication', function () {
 	timeSuite(before);
@@ -250,11 +271,10 @@ describe('SDK authentication', function () {
 
 		describe('balena.auth.whoami()', () => {
 			it('should eventually be the user whoami response', async function () {
-				const whoamiResult =
-					(await balena.auth.whoami()) as UserKeyWhoAmIResponse;
-				expect(whoamiResult?.actorType).to.equal('user');
-				expect(whoamiResult?.username).to.equal(credentials.username);
-				expect(whoamiResult?.email).to.equal(credentials.email);
+				const whoamiResult = await balena.auth.whoami();
+				assertWhoAmIType(whoamiResult, 'user');
+				expect(whoamiResult.username).to.equal(credentials.username);
+				expect(whoamiResult.email).to.equal(credentials.email);
 				expect(whoamiResult).to.have.property('id').that.is.a('number');
 				expect(whoamiResult)
 					.to.have.property('actorTypeId')
@@ -267,8 +287,9 @@ describe('SDK authentication', function () {
 				const userInfo = await balena.auth.getUserInfo();
 				expect(userInfo.email).to.equal(credentials.email);
 				expect(userInfo.username).to.equal(credentials.username);
-				const whoamiResult =
-					(await balena.auth.whoami()) as UserKeyWhoAmIResponse;
+				const whoamiResult = await balena.auth.whoami();
+				assertWhoAmIType(whoamiResult, 'user');
+
 				expect(userInfo).to.have.property('id', whoamiResult.actorTypeId);
 				expect(userInfo).to.have.property('actor', whoamiResult.id);
 			});
@@ -301,9 +322,9 @@ describe('SDK authentication', function () {
 
 		describe('balena.auth.whoami()', () => {
 			it('should eventually be the device whoami response', async function () {
-				const whoamiResult =
-					(await balena.auth.whoami()) as DeviceKeyWhoAmIResponse;
-				expect(whoamiResult?.actorType).to.equal('device');
+				const whoamiResult = await balena.auth.whoami();
+				assertWhoAmIType(whoamiResult, 'device');
+
 				expect(whoamiResult).to.have.property('uuid').that.is.a('string');
 				expect(whoamiResult).to.have.property('id').that.is.a('number');
 				expect(whoamiResult)
@@ -366,9 +387,8 @@ describe('SDK authentication', function () {
 
 		describe('balena.auth.whoami()', () => {
 			it('should eventually be the application whoami response', async function () {
-				const whoamiResult =
-					(await balena.auth.whoami()) as ApplicationKeyWhoAmIResponse;
-				expect(whoamiResult?.actorType).to.equal('application');
+				const whoamiResult = await balena.auth.whoami();
+				assertWhoAmIType(whoamiResult, 'application');
 				expect(whoamiResult).to.have.property('slug').that.is.a('string');
 				expect(whoamiResult).to.have.property('id').that.is.a('number');
 				expect(whoamiResult)
@@ -430,11 +450,10 @@ describe('SDK authentication', function () {
 
 		describe('balena.auth.whoami()', () => {
 			it('should eventually be the user whoami response', async function () {
-				const whoamiResult =
-					(await balena.auth.whoami()) as UserKeyWhoAmIResponse;
-				expect(whoamiResult?.actorType).to.equal('user');
-				expect(whoamiResult?.username).to.equal(credentials.username);
-				expect(whoamiResult?.email).to.equal(credentials.email);
+				const whoamiResult = await balena.auth.whoami();
+				assertWhoAmIType(whoamiResult, 'user');
+				expect(whoamiResult.username).to.equal(credentials.username);
+				expect(whoamiResult.email).to.equal(credentials.email);
 				expect(whoamiResult).to.have.property('id').that.is.a('number');
 				expect(whoamiResult)
 					.to.have.property('actorTypeId')
@@ -447,8 +466,8 @@ describe('SDK authentication', function () {
 				const userInfo = await balena.auth.getUserInfo();
 				expect(userInfo.email).to.equal(credentials.email);
 				expect(userInfo.username).to.equal(credentials.username);
-				const whoamiResult =
-					(await balena.auth.whoami()) as UserKeyWhoAmIResponse;
+				const whoamiResult = await balena.auth.whoami();
+				assertWhoAmIType(whoamiResult, 'user');
 				expect(userInfo).to.have.property('id', whoamiResult.actorTypeId);
 				expect(userInfo).to.have.property('actor', whoamiResult.id);
 			});

@@ -150,7 +150,7 @@ describe('Billing Model', function () {
 				return balena.models.billing
 					.getInvoices(this.initialOrg.id)
 					.then((invoices) => {
-						this.firstInvoiceNumber = invoices?.[0]?.invoice_number;
+						this.firstInvoiceNumber = invoices[0]?.invoice_number;
 					})
 					.catch(_.noop);
 			});
@@ -449,7 +449,7 @@ describe('Billing Model', function () {
 				return balena.models.billing
 					.getInvoices(this.initialOrg.id)
 					.then((invoices) => {
-						this.firstInvoiceNumber = invoices?.[0]?.invoice_number;
+						this.firstInvoiceNumber = invoices[0]?.invoice_number;
 					})
 					.catch(_.noop);
 			});
