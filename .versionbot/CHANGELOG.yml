@@ -1,4 +1,27 @@
 - commits:
+    - subject: "os.getMaxSatisfyingVersion: Deprecate the 'default' versionRange value"
+      hash: 517e74d0ec7cca88a555cbe28234237f95b4b098
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "os.getMaxSatisfyingVersion: Fix the docs referencing the old
+        recommended & default behavior"
+      hash: 14e7813d2a3f9c2d13563837351fae267c1882fd
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://github.com/balena-io/balena-sdk/commit/e766bc92f4879756a9988bd1d8ed06788546e310?diff=split
+        see: https://github.com/balena-io/balena-sdk/commit/e766bc92f4879756a9988bd1d8ed06788546e310?diff=split
+      author: Thodoris Greasidis
+      nested: []
+  version: 21.3.4
+  title: ""
+  date: 2025-05-05T17:13:06.123Z
+- commits:
     - subject: Remove unnecessary null checks
       hash: 4dafe329b4c07f76470f767e82bf6975cdf4eaea
       body: ""
