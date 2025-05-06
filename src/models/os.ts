@@ -134,7 +134,7 @@ const archCompatibilityMap: Partial<Dictionary<string[]>> = {
 const tagsToDictionary = (
 	tags: Array<Pick<ResourceTagBase, 'tag_key' | 'value'>>,
 ): Partial<Dictionary<string>> => {
-	const result: Dictionary<string> = {};
+	const result: Dictionary<string> = Object.create(null);
 	for (const { tag_key, value } of tags) {
 		result[tag_key] = value;
 	}
@@ -147,9 +147,9 @@ const getOsAppTags = (
 	const tagMap = tagsToDictionary(applicationTags);
 	return {
 		osType: tagMap[RELEASE_POLICY_TAG_NAME] ?? OsTypes.DEFAULT,
-		nextLineVersionRange: tagMap[ESR_NEXT_TAG_NAME] ?? '',
-		currentLineVersionRange: tagMap[ESR_CURRENT_TAG_NAME] ?? '',
-		sunsetLineVersionRange: tagMap[ESR_SUNSET_TAG_NAME] ?? '',
+		nextLineVersionRange: tagMap[ESR_NEXT_TAG_NAME],
+		currentLineVersionRange: tagMap[ESR_CURRENT_TAG_NAME],
+		sunsetLineVersionRange: tagMap[ESR_SUNSET_TAG_NAME],
 	};
 };
 
@@ -162,16 +162,25 @@ const getOsVersionReleaseLine = (
 ) => {
 	if (phase == null) {
 		// All patches belong to the same line.
-		if (bSemver.satisfies(version, `^${appTags.nextLineVersionRange}`)) {
+		if (
+			appTags.nextLineVersionRange &&
+			bSemver.satisfies(version, `^${appTags.nextLineVersionRange}`)
+		) {
 			return 'next';
 		}
-		if (bSemver.satisfies(version, `^${appTags.currentLineVersionRange}`)) {
+		if (
+			appTags.currentLineVersionRange &&
+			bSemver.satisfies(version, `^${appTags.currentLineVersionRange}`)
+		) {
 			return 'current';
 		}
-		if (bSemver.satisfies(version, `^${appTags.sunsetLineVersionRange}`)) {
+		if (
+			appTags.sunsetLineVersionRange &&
+			bSemver.satisfies(version, `^${appTags.sunsetLineVersionRange}`)
+		) {
 			return 'sunset';
 		}
-		if (appTags.osType?.toLowerCase() === OsTypes.ESR) {
+		if (appTags.osType.toLowerCase() === OsTypes.ESR) {
 			return 'outdated';
 		}
 	}
