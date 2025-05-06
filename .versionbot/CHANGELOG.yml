@@ -1,4 +1,16 @@
 - commits:
+    - subject: "os: Improve the checks against empty string release tag values"
+      hash: f313d75178de0fa98cf76bf1690f6d6fa2908220
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 21.3.5
+  title: ""
+  date: 2025-05-06T16:34:41.723Z
+- commits:
     - subject: "os.getMaxSatisfyingVersion: Deprecate the 'default' versionRange value"
       hash: 517e74d0ec7cca88a555cbe28234237f95b4b098
       body: ""
