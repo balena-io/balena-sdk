@@ -228,6 +228,7 @@ describe('Billing Model', function () {
 					expect(
 						await balena.models.billing.getAccount(this.initialOrg.id),
 					).to.deep.equal({
+						email: 'testdev@nomail.com',
 						account_state: 'active',
 						address: {
 							address1: 'One London Wall',
@@ -238,11 +239,11 @@ describe('Billing Model', function () {
 							state: 'Greater London',
 							zip: 'EC2Y 5EB',
 						},
-						cc_emails: 'testdev-cc@nomail.com',
 						company_name: 'Resin.io',
-						first_name: 'John',
-						last_name: 'Doe',
-						vat_number: '',
+						tax_id: {
+							type: 'al_tin',
+							value: 'J12345678N',
+						},
 					});
 				},
 			);
