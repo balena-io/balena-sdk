@@ -55,9 +55,9 @@ export type {
 export type { ApplicationMembershipCreationOptions } from './models/application-membership';
 export type { ApplicationInviteOptions } from './models/application-invite';
 export type {
+	AccountInfo,
 	BankAccountBillingInfo,
 	BillingAccountAddressInfo,
-	BillingAccountInfo,
 	BillingAddonPlanInfo,
 	BillingInfo,
 	BillingInfoType,
