@@ -26,16 +26,23 @@ export interface BillingAccountAddressInfo {
 	country: string;
 	phone: string;
 }
-
-export interface BillingAccountInfo {
+export interface AccountInfo {
+	email?: string;
 	account_state: string;
-	first_name: string;
-	last_name: string;
-	company_name: string;
-	email: string;
-	cc_emails: string;
-	vat_number: string;
-	address: BillingAccountAddressInfo;
+	company_name?: string;
+	address: {
+		address1?: string;
+		address2?: string;
+		city?: string;
+		state?: string;
+		zip?: string;
+		country?: string;
+		phone?: string;
+	};
+	tax_id?: {
+		type: string;
+		value: string;
+	} | null;
 }
 
 export type BillingInfoType =
@@ -85,6 +92,7 @@ export interface TokenBillingSubmitInfo {
 	token_id: string;
 	'g-recaptcha-response'?: string;
 	token_type?: 'payment_method' | 'setup_intent';
+	setAsCompanyAddress?: boolean;
 }
 
 export interface BillingPlanInfo {
@@ -197,9 +205,7 @@ const getBillingModel = function (
 		 * });
 		 */
 
-		getAccount: async (
-			organization: string | number,
-		): Promise<BillingAccountInfo> => {
+		getAccount: async (organization: string | number): Promise<AccountInfo> => {
 			const orgId = await getOrgId(organization);
 			const { body } = await request.send({
 				method: 'GET',
@@ -382,7 +388,7 @@ const getBillingModel = function (
 		 * @memberof balena.models.billing
 		 *
 		 * @param {(String|Number)} organization - handle (string) or id (number) of the target organization.
-		 * @param {Partial<Pick<BillingAccountInfo, 'email' | 'cc_emails'>>} accountInfo - an object containing billing account info
+		 * @param {AccountInfo} accountInfo - an object containing billing account info
 		 *
 		 * @example
 		 * balena.models.billing.updateAccountInfo(orgId, { email: 'hello@balena.io' })
@@ -392,7 +398,7 @@ const getBillingModel = function (
 		 */
 		updateAccountInfo: async (
 			organization: string | number,
-			accountInfo: Partial<Pick<BillingAccountInfo, 'email' | 'cc_emails'>>,
+			accountInfo: Partial<AccountInfo>,
 		): Promise<void> => {
 			const orgId = await getOrgId(organization);
 
