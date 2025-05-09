@@ -6549,7 +6549,7 @@ balena.models.billing.removeBillingInfo(orgId).then(function() {
 | Param | Type | Description |
 | --- | --- | --- |
 | organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the target organization. |
-| accountInfo | <code>Partial.&lt;Pick.&lt;BillingAccountInfo, (&#x27;email&#x27;\|&#x27;cc\_emails&#x27;)&gt;&gt;</code> | an object containing billing account info |
+| accountInfo | <code>AccountInfo</code> | an object containing billing account info |
 
 **Example**  
 ```js
