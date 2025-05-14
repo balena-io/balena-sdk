@@ -1,4 +1,22 @@
 - commits:
+    - subject: "logs: Add support for a start parameter when reading logs"
+      hash: ee4aec1eb083a3bb9b89693abd163cc6b3d1ab8c
+      body: |
+        The new parameter requires open-balena-api
+        v34.5.0.
+      footer:
+        Depends-on: https://github.com/balena-io/open-balena-api/pull/1957
+        depends-on: https://github.com/balena-io/open-balena-api/pull/1957
+        Change-type: minor
+        change-type: minor
+        See: https://balena.fibery.io/Work/Project/Device-logs-Allow-specifying-a-start-date-when-fetching-logs-1164
+        see: https://balena.fibery.io/Work/Project/Device-logs-Allow-specifying-a-start-date-when-fetching-logs-1164
+      author: Thodoris Greasidis
+      nested: []
+  version: 21.4.0
+  title: ""
+  date: 2025-05-14T20:16:06.344Z
+- commits:
     - subject: "os: Improve the checks against empty string release tag values"
       hash: f313d75178de0fa98cf76bf1690f6d6fa2908220
       body: ""
