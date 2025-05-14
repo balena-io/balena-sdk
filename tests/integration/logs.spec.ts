@@ -11,7 +11,14 @@ const delay = (ms) =>
 		setTimeout(resolve, ms);
 	});
 
-const sendLogMessages = (uuid, deviceApiKey, messages) =>
+const sendLogMessages = (
+	uuid: string,
+	deviceApiKey: string,
+	messages: Array<{
+		message: string;
+		timestamp?: number;
+	}>,
+) =>
 	balena.request.send({
 		method: 'POST',
 		url: `/device/v2/${uuid}/logs`,
@@ -78,6 +85,42 @@ describe('Logs', function () {
 				assertDeepMatchAndLength(lines, [
 					{
 						message: 'Second message',
+					},
+				]);
+			});
+
+			it('should limit logs by start', async function () {
+				await sendLogMessages(this.uuid, this.deviceApiKey, [
+					{
+						message: 'Old message',
+						timestamp: Date.now(),
+					},
+				]);
+				await delay(1000);
+				const pastTimeStamp = Date.now();
+				await delay(1000);
+				await sendLogMessages(this.uuid, this.deviceApiKey, [
+					{
+						message: `Newer message`,
+						timestamp: Date.now(),
+					},
+				]);
+				await delay(2000);
+				let lines = await balena.logs.history(this.uuid, {
+					start: pastTimeStamp,
+				});
+				assertDeepMatchAndLength(lines, [
+					{
+						message: 'Newer message',
+					},
+				]);
+
+				lines = await balena.logs.history(this.uuid, {
+					start: new Date(pastTimeStamp).toISOString(),
+				});
+				assertDeepMatchAndLength(lines, [
+					{
+						message: 'Newer message',
 					},
 				]);
 			});
@@ -155,6 +198,44 @@ describe('Logs', function () {
 				assertDeepMatchAndLength(await getLogLinesAndUnsubscribe(logs), [
 					{
 						message: 'Slightly newer message',
+					},
+				]);
+			});
+
+			it('should limit historical logs by start', async function () {
+				await sendLogMessages(this.uuid, this.deviceApiKey, [
+					{
+						message: 'Old message',
+						timestamp: Date.now(),
+					},
+				]);
+				await delay(1000);
+				const pastTimeStamp = Date.now();
+				await delay(1000);
+				await sendLogMessages(this.uuid, this.deviceApiKey, [
+					{
+						message: `Newer message`,
+						timestamp: Date.now(),
+					},
+				]);
+				await delay(2000);
+				let logs = await balena.logs.subscribe(this.uuid, {
+					start: pastTimeStamp,
+					count: 'all',
+				});
+				assertDeepMatchAndLength(await getLogLinesAndUnsubscribe(logs), [
+					{
+						message: 'Newer message',
+					},
+				]);
+
+				logs = await balena.logs.subscribe(this.uuid, {
+					start: new Date(pastTimeStamp).toISOString(),
+					count: 'all',
+				});
+				assertDeepMatchAndLength(await getLogLinesAndUnsubscribe(logs), [
+					{
+						message: 'Newer message',
 					},
 				]);
 			});

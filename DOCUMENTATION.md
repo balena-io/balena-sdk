@@ -7028,6 +7028,7 @@ can be used to listen for logs as they appear, line by line.
 | uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (string) or id (number) |
 | [options] | <code>Object</code> |  | options |
 | [options.count] | <code>Number</code> \| <code>&#x27;all&#x27;</code> | <code>0</code> | number of historical messages to include (or 'all') |
+| [options.start] | <code>Number</code> \| <code>String</code> |  | the timestamp or ISO Date string after which to retrieve historical messages. When specified, the count parameter needs to also be provided. |
 
 **Example**  
 ```js
@@ -7060,6 +7061,7 @@ Get an array of the latest log messages for a given device.
 | uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (string) or id (number) |
 | [options] | <code>Object</code> |  | options |
 | [options.count] | <code>Number</code> \| <code>&#x27;all&#x27;</code> | <code>1000</code> | number of log messages to return (or 'all') |
+| [options.start] | <code>Number</code> \| <code>String</code> |  | the timestamp or ISO Date string after which to retrieve historical messages |
 
 **Example**  
 ```js
