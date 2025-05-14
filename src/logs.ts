@@ -49,6 +49,7 @@ export interface LogsSubscription extends EventEmitter {
 }
 
 export interface LogsOptions {
+	start?: number | string;
 	count?: number | 'all';
 }
 
@@ -185,6 +186,7 @@ const getLogs = function (
 		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		 * @param {Object} [options] - options
 		 * @param {Number|'all'} [options.count=0] - number of historical messages to include (or 'all')
+		 * @param {Number|String} [options.start] - the timestamp or ISO Date string after which to retrieve historical messages. When specified, the count parameter needs to also be provided.
 		 * @fulfil {balena.logs.LogSubscription}
 		 * @returns {Promise<LogSubscription>}
 		 *
@@ -204,9 +206,19 @@ const getLogs = function (
 		 */
 		async subscribe(
 			uuidOrId: string | number,
-			options?: LogsOptions,
+			options?: Pick<LogsOptions, 'count'> | Required<LogsOptions>,
 		): Promise<LogsSubscription> {
 			// TODO: We should consider making this a readable stream.
+			if (
+				options != null &&
+				'start' in options &&
+				options.start != null &&
+				options.count == null
+			) {
+				throw new Error(
+					'The count parameter is required when specifying the start parameter',
+				);
+			}
 
 			const device = await sdkInstance.models.device.get(uuidOrId, {
 				$select: 'uuid',
@@ -227,6 +239,7 @@ const getLogs = function (
 		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
 		 * @param {Object} [options] - options
 		 * @param {Number|'all'} [options.count=1000] - number of log messages to return (or 'all')
+		 * @param {Number|String} [options.start] - the timestamp or ISO Date string after which to retrieve historical messages
 		 * @fulfil {Object[]} - history lines
 		 * @returns {Promise}
 		 *
