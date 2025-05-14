@@ -455,6 +455,7 @@ export function givenADevice(
 
 		const device = await balena.models.device.get(deviceInfo.uuid);
 		this.device = device;
+		this.deviceApiKey = deviceInfo.api_key;
 
 		if (!this.currentRelease?.commit) {
 			return;
