@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests/logs: Re-use the same test device across all test cases"
+      hash: 817047a3d504fc8f2cb62f949dba993c75fed293
+      body: |
+        Reduces the runtime of the logs tests from 2m
+        to 1m.
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 21.4.1
+  title: ""
+  date: 2025-05-15T13:15:31.631Z
+- commits:
     - subject: "logs: Add support for a start parameter when reading logs"
       hash: ee4aec1eb083a3bb9b89693abd163cc6b3d1ab8c
       body: |
