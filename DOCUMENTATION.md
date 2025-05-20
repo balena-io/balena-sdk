@@ -7079,6 +7079,24 @@ balena.logs.history(123).then(function(lines) {
 	});
 });
 ```
+**Example**  
+```js
+const oneDayAgoTimestamp = Date.now() - 24*60*60*1000;
+balena.logs.history('7cf02a6', { start: oneDayAgoTimestamp }).then(function(lines) {
+	lines.forEach(function(line) {
+		console.log(line);
+	});
+});
+```
+**Example**  
+```js
+const oneDayAgoIsoDateString = new Date(Date.now() - 24*60*60*1000).toISOString();
+balena.logs.history('7cf02a6', { start: oneDayAgoIsoDateString }).then(function(lines) {
+	lines.forEach(function(line) {
+		console.log(line);
+	});
+});
+```
 <a name="balena.logs.LogSubscription"></a>
 
 #### logs.LogSubscription : <code>EventEmitter</code>
