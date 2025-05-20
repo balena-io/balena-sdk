@@ -256,6 +256,22 @@ const getLogs = function (
 		 * 		console.log(line);
 		 * 	});
 		 * });
+		 *
+		 * @example
+		 * const oneDayAgoTimestamp = Date.now() - 24*60*60*1000;
+		 * balena.logs.history('7cf02a6', { start: oneDayAgoTimestamp }).then(function(lines) {
+		 * 	lines.forEach(function(line) {
+		 * 		console.log(line);
+		 * 	});
+		 * });
+		 *
+		 * @example
+		 * const oneDayAgoIsoDateString = new Date(Date.now() - 24*60*60*1000).toISOString();
+		 * balena.logs.history('7cf02a6', { start: oneDayAgoIsoDateString }).then(function(lines) {
+		 * 	lines.forEach(function(line) {
+		 * 		console.log(line);
+		 * 	});
+		 * });
 		 */
 		async history(
 			uuidOrId: string | number,
