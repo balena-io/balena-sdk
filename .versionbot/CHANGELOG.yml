@@ -1,4 +1,16 @@
 - commits:
+    - subject: "logs.history(): Add examples about using the start parameter"
+      hash: e9a9f1c4dc6c1d7aea4356fb640d076875adf781
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 21.4.2
+  title: ""
+  date: 2025-05-20T13:11:13.765Z
+- commits:
     - subject: "tests/logs: Re-use the same test device across all test cases"
       hash: 817047a3d504fc8f2cb62f949dba993c75fed293
       body: |
