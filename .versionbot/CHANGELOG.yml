@@ -1,4 +1,16 @@
 - commits:
+    - subject: "tests: Use a realistic length for the image content_hash"
+      hash: 90ad6a0f33801c94a52ceb18ed16e42a4315cfe0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 21.4.3
+  title: ""
+  date: 2025-05-22T07:56:35.834Z
+- commits:
     - subject: "logs.history(): Add examples about using the start parameter"
       hash: e9a9f1c4dc6c1d7aea4356fb640d076875adf781
       body: ""
