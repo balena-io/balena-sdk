@@ -611,7 +611,8 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 					body: {
 						is_a_build_of__service: webService.id,
 						project_type: 'dockerfile',
-						content_hash: 'abc',
+						content_hash:
+							'sha256:abc0000000000000000000000000000000000000000000000000000000000000',
 						build_log: 'old web log',
 						start_timestamp: oldDate,
 						push_timestamp: oldDate,
@@ -623,7 +624,8 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 					body: {
 						is_a_build_of__service: webService.id,
 						project_type: 'dockerfile',
-						content_hash: 'def',
+						content_hash:
+							'sha256:def0000000000000000000000000000000000000000000000000000000000000',
 						build_log: 'new web log',
 						start_timestamp: now,
 						push_timestamp: now,
@@ -635,7 +637,8 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 					body: {
 						is_a_build_of__service: dbService.id,
 						project_type: 'dockerfile',
-						content_hash: 'jkl',
+						content_hash:
+							'sha256:jkl0000000000000000000000000000000000000000000000000000000000000',
 						build_log: 'old db log',
 						start_timestamp: oldDate,
 						push_timestamp: oldDate,
@@ -647,7 +650,8 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 					body: {
 						is_a_build_of__service: dbService.id,
 						project_type: 'dockerfile',
-						content_hash: 'ghi',
+						content_hash:
+							'sha256:ghi0000000000000000000000000000000000000000000000000000000000000',
 						build_log: 'new db log',
 						start_timestamp: now,
 						push_timestamp: now,
