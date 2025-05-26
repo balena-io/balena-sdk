@@ -11,9 +11,9 @@ import {
 	sdkOpts,
 	TEST_KEY_NAME_PREFIX,
 } from '../setup';
-import { expectError, timeSuite } from '../../util';
+import { assertExists, expectError, timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
-import type { Resolvable } from '../../../typings/utils';
+import type { AnyObject, Resolvable } from '../../../typings/utils';
 
 const {
 	_getNormalizedDeviceTypeSlug,
@@ -836,31 +836,67 @@ describe('OS model', function () {
 		/* eslint-enable @typescript-eslint/no-require-imports */
 
 		describe('given a valid device slug', function () {
-			it('should contain a valid mime property', () => {
-				return balena.models.os
-					.download({ deviceType: 'raspberry-pi' })
-					.then((stream) =>
-						expect(stream.mime).to.equal('application/octet-stream'),
-					);
+			it('should contain a valid mime property', async () => {
+				const stream = await balena.models.os.download({
+					deviceType: 'raspberry-pi',
+				});
+				expect(stream.mime).to.equal('application/octet-stream');
 			});
 
-			it('should contain a valid mime property if passing a device type alias', () => {
-				return balena.models.os
-					.download({ deviceType: 'raspberrypi' })
-					.then((stream) =>
-						expect(stream.mime).to.equal('application/octet-stream'),
-					);
+			it('should contain a valid mime property if passing a device type alias', async () => {
+				const stream = await balena.models.os.download({
+					deviceType: 'raspberrypi',
+				});
+
+				expect(stream.mime).to.equal('application/octet-stream');
 			});
 
-			it('should be able to download the image', function () {
+			it('should be able to download the image and emit progress events', async function () {
 				const tmpFile = tmp.tmpNameSync();
-				return balena.models.os
-					.download({ deviceType: 'raspberry-pi' })
-					.then((stream) => stream.pipe(fs.createWriteStream(tmpFile)))
-					.then(rindle.wait)
-					.then(() => fs.promises.stat(tmpFile))
-					.then((stat) => expect(stat.size).to.not.equal(0))
-					.finally(() => fs.promises.unlink(tmpFile));
+				try {
+					const stream = await balena.models.os.download({
+						deviceType: 'raspberry-pi',
+					});
+
+					const streamEvents: Array<AnyObject | undefined> = [];
+					stream.on('progress', (state) => {
+						streamEvents.push(state);
+					});
+
+					await rindle.wait(stream.pipe(fs.createWriteStream(tmpFile)));
+					const stat = await fs.promises.stat(tmpFile);
+					expect(stat.size).to.be.greaterThan(400_000_000); // > 400MB
+
+					const lastEvent = streamEvents.pop();
+					assertExists(lastEvent);
+					expect(lastEvent)
+						.to.have.property('total')
+						.that.is.a('number')
+						.greaterThan(100_000_000); // > 100MB
+					expect(lastEvent).to.have.property('received', lastEvent.total);
+					expect(lastEvent).to.have.property('eta', 0);
+					expect(lastEvent).to.have.property('percentage', 100);
+
+					for (const event of streamEvents) {
+						expect(event).to.have.property('total', lastEvent.total);
+						expect(event)
+							.to.have.property('received')
+							.that.is.a('number')
+							.that.is.greaterThan(0)
+							.and.lessThan(lastEvent.total);
+						expect(event)
+							.to.have.property('eta')
+							.that.is.a('number')
+							.that.is.greaterThanOrEqual(0);
+						expect(event)
+							.to.have.property('percentage')
+							.that.is.a('number')
+							.that.is.greaterThanOrEqual(0)
+							.and.lessThan(100);
+					}
+				} finally {
+					await fs.promises.unlink(tmpFile);
+				}
 			});
 		});
 
