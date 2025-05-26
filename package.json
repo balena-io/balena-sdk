@@ -123,7 +123,7 @@
     "balena-errors": "^4.9.0",
     "balena-hup-action-utils": "~6.2.0",
     "balena-register-device": "^9.0.4",
-    "balena-request": "^14.0.0",
+    "balena-request": "^14.0.8",
     "balena-semver": "^3.0.0",
     "balena-settings-client": "^5.0.0",
     "date-fns": "^3.0.5",
