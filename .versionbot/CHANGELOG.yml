@@ -1,4 +1,20 @@
 - commits:
+    - subject: Update balena-request to use native fetch for non-streaming requests
+      hash: 57ebcd13262ef982e4db8f0976da7e2c389e3577
+      body: ""
+      footer:
+        Depends-on: https://github.com/balena-io-modules/balena-request/pull/185
+        depends-on: https://github.com/balena-io-modules/balena-request/pull/185
+        Change-type: patch
+        change-type: patch
+        See: https://balena.fibery.io/Work/Project/Reduce-the-polyfills-that-the-SDK-uses-1568
+        see: https://balena.fibery.io/Work/Project/Reduce-the-polyfills-that-the-SDK-uses-1568
+      author: Thodoris Greasidis
+      nested: []
+  version: 21.4.4
+  title: ""
+  date: 2025-05-26T17:18:44.089Z
+- commits:
     - subject: "tests: Use a realistic length for the image content_hash"
       hash: 90ad6a0f33801c94a52ceb18ed16e42a4315cfe0
       body: ""
