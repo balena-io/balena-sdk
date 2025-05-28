@@ -1,4 +1,24 @@
 - commits:
+    - subject: Fix log tests race condition
+      hash: 2a3228d4366406ec2c01a57fc004abe5041a6c7d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Simplify the log tests
+      hash: f200a44e782e7e24be72c7079cf2117634626a89
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 21.4.5
+  title: ""
+  date: 2025-05-28T14:12:43.988Z
+- commits:
     - subject: Update balena-request to use native fetch for non-streaming requests
       hash: 57ebcd13262ef982e4db8f0976da7e2c389e3577
       body: ""
