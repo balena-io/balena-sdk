@@ -5,12 +5,10 @@ import {
 	givenLoggedInUser,
 	sdkOpts,
 } from './setup';
-import { assertDeepMatchAndLength, timeSuite } from '../util';
+import { delay, timeSuite } from '../util';
+import { expect } from 'chai';
 
-const delay = (ms) =>
-	new Promise((resolve) => {
-		setTimeout(resolve, ms);
-	});
+type LogMessage = Awaited<ReturnType<typeof balena.logs.history>>[number];
 
 const sendLogMessages = (
 	uuid: string,
@@ -29,7 +27,10 @@ const sendLogMessages = (
 		body: messages,
 	});
 
+const LOG_PROPAGATION_TIMEOUT = 5000;
+
 describe('Logs', function () {
+	this.timeout(20_000);
 	timeSuite(before);
 	givenLoggedInUser(before);
 	givenAnApplication(before);
@@ -51,7 +52,7 @@ describe('Logs', function () {
 					timestamp: Date.now(),
 				},
 			]);
-			await delay(2000);
+			await delay(LOG_PROPAGATION_TIMEOUT);
 		});
 	}
 
@@ -62,60 +63,42 @@ describe('Logs', function () {
 		describe('balena.logs.history()', function () {
 			it('should successfully load historical logs', async function () {
 				const lines = await balena.logs.history(this.device.uuid);
-				assertDeepMatchAndLength(lines, [
-					{
-						message: 'Old message',
-					},
-					{
-						message: 'Newer message',
-					},
+				expect(lines.map((l) => l.message)).to.deep.equal([
+					'Old message',
+					'Newer message',
 				]);
 			});
 
 			it('should limit logs by count', async function () {
 				const lines = await balena.logs.history(this.device.uuid, { count: 1 });
-				assertDeepMatchAndLength(lines, [
-					{
-						message: 'Newer message',
-					},
-				]);
+				expect(lines.map((l) => l.message)).to.deep.equal(['Newer message']);
 			});
 
 			it('should limit logs by start using a timestamp', async function () {
 				const lines = await balena.logs.history(this.device.uuid, {
 					start: this.pastTimeStamp,
 				});
-				assertDeepMatchAndLength(lines, [
-					{
-						message: 'Newer message',
-					},
-				]);
+				expect(lines.map((l) => l.message)).to.deep.equal(['Newer message']);
 			});
 
 			it('should limit logs by start using an ISO date string', async function () {
 				const lines = await balena.logs.history(this.device.uuid, {
 					start: new Date(this.pastTimeStamp).toISOString(),
 				});
-				assertDeepMatchAndLength(lines, [
-					{
-						message: 'Newer message',
-					},
-				]);
+				expect(lines.map((l) => l.message)).to.deep.equal(['Newer message']);
 			});
 		});
 
 		describe('balena.logs.subscribe()', function () {
-			const LOG_SUBSCRIPTION_TIMEOUT = 5000;
-
 			async function getLogLinesAndUnsubscribe(logs) {
-				const lines: string[] = [];
+				const lines: LogMessage[] = [];
 				try {
 					// eslint-disable-next-line no-async-promise-executor
 					await new Promise(async function (resolve, reject) {
 						logs.on('line', (line) => lines.push(line));
 						logs.on('error', reject);
 
-						await delay(LOG_SUBSCRIPTION_TIMEOUT);
+						await delay(LOG_PROPAGATION_TIMEOUT);
 						resolve(null);
 					});
 				} finally {
@@ -126,32 +109,25 @@ describe('Logs', function () {
 
 			it('should not load historical logs by default', async function () {
 				const logs = await balena.logs.subscribe(this.device.uuid);
-				assertDeepMatchAndLength(await getLogLinesAndUnsubscribe(logs), []);
+				expect(await getLogLinesAndUnsubscribe(logs)).to.deep.equal([]);
 			});
 
 			it('should load historical logs if requested', async function () {
 				const logs = await balena.logs.subscribe(this.device.uuid, {
 					count: 'all',
 				});
-				assertDeepMatchAndLength(await getLogLinesAndUnsubscribe(logs), [
-					{
-						message: 'Old message',
-					},
-					{
-						message: 'Newer message',
-					},
-				]);
+				expect(
+					(await getLogLinesAndUnsubscribe(logs)).map((l) => l.message),
+				).to.deep.equal(['Old message', 'Newer message']);
 			});
 
 			it('should limit historical logs by count', async function () {
 				const logs = await balena.logs.subscribe(this.device.uuid, {
 					count: 1,
 				});
-				assertDeepMatchAndLength(await getLogLinesAndUnsubscribe(logs), [
-					{
-						message: 'Newer message',
-					},
-				]);
+				expect(
+					(await getLogLinesAndUnsubscribe(logs)).map((l) => l.message),
+				).to.deep.equal(['Newer message']);
 			});
 
 			it('should limit historical logs by start using a timestamp', async function () {
@@ -159,11 +135,9 @@ describe('Logs', function () {
 					start: this.pastTimeStamp,
 					count: 'all',
 				});
-				assertDeepMatchAndLength(await getLogLinesAndUnsubscribe(logs), [
-					{
-						message: 'Newer message',
-					},
-				]);
+				expect(
+					(await getLogLinesAndUnsubscribe(logs)).map((l) => l.message),
+				).to.deep.equal(['Newer message']);
 			});
 
 			it('should limit historical logs by start using an ISO date string', async function () {
@@ -171,11 +145,9 @@ describe('Logs', function () {
 					start: new Date(this.pastTimeStamp).toISOString(),
 					count: 'all',
 				});
-				assertDeepMatchAndLength(await getLogLinesAndUnsubscribe(logs), [
-					{
-						message: 'Newer message',
-					},
-				]);
+				expect(
+					(await getLogLinesAndUnsubscribe(logs)).map((l) => l.message),
+				).to.deep.equal(['Newer message']);
 			});
 
 			it('should stream new logs after historical logs', async function () {
@@ -183,42 +155,32 @@ describe('Logs', function () {
 					count: 100,
 				});
 
-				const lines: string[] = [];
+				const lines: LogMessage[] = [];
 				try {
 					await new Promise((resolve, reject) => {
-						logs.on('line', (line) => lines.push(line));
-						logs.on('error', reject);
-
-						// After we see the historical message, send a new one
-						logs.once('line', async () => {
-							try {
-								await sendLogMessages(this.device.uuid, this.deviceApiKey, [
-									{
-										message: 'Newest message',
-										timestamp: Date.now(),
-									},
-								]);
-								await delay(LOG_SUBSCRIPTION_TIMEOUT);
+						logs.on('line', (line) => {
+							lines.push(line);
+							if (lines.length === 2) {
 								resolve(null);
-							} catch (err) {
-								reject(err as Error);
 							}
 						});
+						logs.on('error', reject);
 					});
+					await sendLogMessages(this.device.uuid, this.deviceApiKey, [
+						{
+							message: 'Newest message',
+							timestamp: Date.now(),
+						},
+					]);
+					await delay(LOG_PROPAGATION_TIMEOUT);
 				} finally {
 					logs.unsubscribe();
 				}
 
-				assertDeepMatchAndLength(lines, [
-					{
-						message: 'Old message',
-					},
-					{
-						message: 'Newer message',
-					},
-					{
-						message: 'Newest message',
-					},
+				expect(lines.map((l) => l.message)).to.deep.equal([
+					'Old message',
+					'Newer message',
+					'Newest message',
 				]);
 			});
 
@@ -229,7 +191,7 @@ describe('Logs', function () {
 				// Unsubscribe before any messages are sent
 				logs.unsubscribe();
 
-				const lines: string[] = [];
+				const lines: LogMessage[] = [];
 				// eslint-disable-next-line no-async-promise-executor
 				await new Promise(async (resolve, reject) => {
 					logs.on('line', (line) => lines.push(line));
@@ -241,11 +203,11 @@ describe('Logs', function () {
 							timestamp: Date.now(),
 						},
 					]);
-					await delay(LOG_SUBSCRIPTION_TIMEOUT);
+					await delay(LOG_PROPAGATION_TIMEOUT);
 					resolve(null);
 				});
 
-				assertDeepMatchAndLength(lines, []);
+				expect(lines).to.deep.equal([]);
 			});
 		});
 	});
