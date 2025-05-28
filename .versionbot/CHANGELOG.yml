@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests/os.download(): Add test for the emitted stream progress events"
+      hash: d0d57498e729b9641af29e3d03f2eb1f77263271
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://balena.fibery.io/Work/Project/Reduce-the-polyfills-that-the-SDK-uses-1568
+        see: https://balena.fibery.io/Work/Project/Reduce-the-polyfills-that-the-SDK-uses-1568
+      author: Thodoris Greasidis
+      nested: []
+  version: 21.4.6
+  title: ""
+  date: 2025-05-28T14:50:55.165Z
+- commits:
     - subject: Fix log tests race condition
       hash: 2a3228d4366406ec2c01a57fc004abe5041a6c7d
       body: ""
