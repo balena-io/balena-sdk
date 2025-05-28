@@ -27,6 +27,8 @@ const sendLogMessages = (
 		body: messages,
 	});
 
+const LOG_PROPAGATION_TIMEOUT = 5000;
+
 describe('Logs', function () {
 	this.timeout(20_000);
 	timeSuite(before);
@@ -50,7 +52,7 @@ describe('Logs', function () {
 					timestamp: Date.now(),
 				},
 			]);
-			await delay(2000);
+			await delay(LOG_PROPAGATION_TIMEOUT);
 		});
 	}
 
@@ -88,8 +90,6 @@ describe('Logs', function () {
 		});
 
 		describe('balena.logs.subscribe()', function () {
-			const LOG_SUBSCRIPTION_TIMEOUT = 5000;
-
 			async function getLogLinesAndUnsubscribe(logs) {
 				const lines: LogMessage[] = [];
 				try {
@@ -98,7 +98,7 @@ describe('Logs', function () {
 						logs.on('line', (line) => lines.push(line));
 						logs.on('error', reject);
 
-						await delay(LOG_SUBSCRIPTION_TIMEOUT);
+						await delay(LOG_PROPAGATION_TIMEOUT);
 						resolve(null);
 					});
 				} finally {
@@ -158,25 +158,21 @@ describe('Logs', function () {
 				const lines: LogMessage[] = [];
 				try {
 					await new Promise((resolve, reject) => {
-						logs.on('line', (line) => lines.push(line));
-						logs.on('error', reject);
-
-						// After we see the historical message, send a new one
-						logs.once('line', async () => {
-							try {
-								await sendLogMessages(this.device.uuid, this.deviceApiKey, [
-									{
-										message: 'Newest message',
-										timestamp: Date.now(),
-									},
-								]);
-								await delay(LOG_SUBSCRIPTION_TIMEOUT);
+						logs.on('line', (line) => {
+							lines.push(line);
+							if (lines.length === 2) {
 								resolve(null);
-							} catch (err) {
-								reject(err as Error);
 							}
 						});
+						logs.on('error', reject);
 					});
+					await sendLogMessages(this.device.uuid, this.deviceApiKey, [
+						{
+							message: 'Newest message',
+							timestamp: Date.now(),
+						},
+					]);
+					await delay(LOG_PROPAGATION_TIMEOUT);
 				} finally {
 					logs.unsubscribe();
 				}
@@ -207,7 +203,7 @@ describe('Logs', function () {
 							timestamp: Date.now(),
 						},
 					]);
-					await delay(LOG_SUBSCRIPTION_TIMEOUT);
+					await delay(LOG_PROPAGATION_TIMEOUT);
 					resolve(null);
 				});
 
