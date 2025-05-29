@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency lint-staged to v16
+      hash: 9ea3d70aa3e82c2cd26b287cb2200912ed188ad5
+      body: |
+        Update lint-staged from 15.5.2 to 16.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 21.4.7
+  title: ""
+  date: 2025-05-29T18:49:38.826Z
+- commits:
     - subject: "tests/os.download(): Add test for the emitted stream progress events"
       hash: d0d57498e729b9641af29e3d03f2eb1f77263271
       body: ""
