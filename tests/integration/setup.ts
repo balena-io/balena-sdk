@@ -411,6 +411,7 @@ export function givenADevice(
 ) {
 	beforeFn(async function () {
 		const uuid = balena.models.device.generateUniqueKey();
+		console.error('=== device uuid:', uuid);
 		const deviceInfo = await balena.models.device.register(
 			this.application.slug,
 			uuid,
