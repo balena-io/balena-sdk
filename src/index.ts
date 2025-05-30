@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { Pine } from './pine';
 import type {
 	BalenaRequest,
 	BalenaRequestOptions,
@@ -22,9 +21,6 @@ import type {
 } from 'balena-request';
 import { globalEnv } from './util/global-env';
 
-export type { Pine, PineStrict } from './pine';
-
-export * from './types/models';
 export * from './types/jwt';
 export * from './types/contract';
 export * from './types/user-invite';
@@ -106,6 +102,7 @@ export type {
 	LogsSubscription,
 	LogsOptions,
 } from './logs';
+import type { PinejsClient } from './pine';
 
 export interface InjectedDependenciesParam {
 	// Do not destructure sub-modules, to allow lazy loading only when needed.
@@ -116,7 +113,7 @@ export interface InjectedDependenciesParam {
 	};
 	request: BalenaRequest;
 	auth: import('balena-auth').default;
-	pine: Pine;
+	pine: PinejsClient;
 	pubsub: import('./util/pubsub').PubSub;
 }
 
@@ -178,7 +175,7 @@ export type BalenaSDK = {
 } & {
 	interceptors: Interceptor[];
 	request: BalenaRequest;
-	pine: Pine;
+	pine: PinejsClient;
 	utils: import('./util').BalenaUtils;
 	errors: typeof import('balena-errors');
 	version: string;
@@ -283,7 +280,6 @@ export const getSdk = function ($opts?: SdkOptions) {
 			strict: true,
 		})(request.send);
 	}
-	/* eslint-enable @typescript-eslint/no-require-imports */
 	const pine = createPinejsClient({}, { ...opts, auth, request });
 	const pubsub = new PubSub();
 

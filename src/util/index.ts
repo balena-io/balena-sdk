@@ -1,8 +1,7 @@
 import * as errors from 'balena-errors';
-import type * as Pine from '../../typings/pinejs-client-core';
-import type { IfDefined } from '../../typings/utils';
 import type { WebResourceFile } from 'balena-request';
 import * as mime from 'mime';
+import type { Expand, ODataOptions, ResourceExpand } from 'pinejs-client-core';
 
 export interface BalenaUtils {
 	mergePineOptions: typeof mergePineOptions;
@@ -52,22 +51,44 @@ export const isUnauthorizedResponse = (err: Error) =>
 export const isNotFoundResponse = (err: Error) =>
 	isBalenaRequestErrorResponseWithCode(err, 404);
 
-// TODO: Make it so that it also infers the extras param
-export function mergePineOptionsTyped<
-	R extends object,
-	P extends Pine.ODataOptionsStrict<R>,
->(defaults: P, extras: Pine.ODataOptions<R> | undefined): P {
-	return mergePineOptions(defaults, extras);
-}
-
-export type ExtendedPineTypedResult<
-	T,
-	TBaseResult,
-	ExtraPineOptions extends Pine.ODataOptions<T> | undefined,
-> = TBaseResult &
-	IfDefined<ExtraPineOptions, Pine.TypedResult<T, ExtraPineOptions>>;
-
 const passthroughPineOptionKeys = ['$top', '$skip', '$orderby'] as const;
+
+type MergeFilter<DFilter, EFilter> = DFilter extends undefined
+	? EFilter
+	: EFilter extends undefined
+		? DFilter
+		: {
+				$and: [DFilter, EFilter];
+			};
+
+// Override logic: $select from extras wins, else fallback to default
+type OverrideProp<D, E> = E extends undefined ? D : E;
+type SafeKeyOf<T, K> = K extends keyof T ? T[K] : undefined;
+
+// Merge two OData option sets, key-by-key
+type MergedInnerOptions<
+	D extends Readonly<ODataOptions>,
+	E extends Readonly<ODataOptions>,
+	AllKeys extends keyof D | keyof E = keyof D | keyof E,
+> = {
+	[K in AllKeys]: K extends '$select' | '$orderby' | '$skip' | '$top' // * select, orderby, top and skip override (select this, instead of the default)
+		? OverrideProp<SafeKeyOf<D, K>, SafeKeyOf<E, K>>
+		: K extends '$filter'
+			? // * filters are combined (i.e. both filters must match)
+				MergeFilter<SafeKeyOf<D, K>, SafeKeyOf<E, K>>
+			: K extends '$expand'
+				? // * expands are combined (include both expansions), and this recurses down.
+					//   * That means $expands within expands are combined
+					MergeExpand<SafeKeyOf<D, K>, SafeKeyOf<E, K>>
+				: undefined;
+};
+
+export type MergedOptions<
+	D extends Readonly<ODataOptions>,
+	E extends Readonly<ODataOptions> | undefined,
+> = E extends undefined
+	? Readonly<D>
+	: Readonly<MergedInnerOptions<D, NonNullable<E>>>;
 
 // Merging two sets of pine options sensibly is more complicated than it sounds.
 //
@@ -79,38 +100,33 @@ const passthroughPineOptionKeys = ['$top', '$skip', '$orderby'] as const;
 //   * And $selects within expands override
 // * Any unknown 'extra' options throw an error. Unknown 'default' options are ignored.
 export function mergePineOptions<
-	R extends object,
-	TDefault extends Pine.ODataOptions<R>,
->(defaults: TDefault, extras: Pine.ODataOptions<R> | undefined): TDefault;
-export function mergePineOptions<R extends object>(
-	defaults: Pine.ODataOptions<R>,
-	extras: Pine.ODataOptions<R> | undefined,
-): Pine.ODataOptions<R>;
-export function mergePineOptions<R extends object>(
-	defaults: Pine.ODataOptions<R>,
-	extras: Pine.ODataOptions<R> | undefined,
-): Pine.ODataOptions<R> {
+	D extends Readonly<ODataOptions>,
+	E extends Readonly<ODataOptions> | undefined = undefined,
+>(defaults: D, extras?: E): MergedOptions<D, E> {
 	if (!extras) {
-		return defaults;
+		return defaults as MergedOptions<D, E>;
 	}
 
-	const result = { ...defaults };
+	const result = { ...defaults } as ODataOptions;
 
 	if (extras.$select != null) {
 		const extraSelect =
 			extras.$select == null ||
 			Array.isArray(extras.$select) ||
+			// @ts-expect-error - '*' is not recognized by pinejs-client-core
 			extras.$select === '*'
 				? // TS should be able to infer this
+					// @ts-expect-error -'*' is not recognized by pinejs-client-core
 					(extras.$select as '*')
 				: [extras.$select];
 
 		if (extraSelect === '*') {
+			// @ts-expect-error - '*' is not recognized by pinejs-client-core
 			result.$select = '*';
 		} else {
 			result.$select = [
 				...(typeof result.$select === 'string'
-					? [result.$select as Pine.SelectableProps<R>]
+					? [result.$select]
 					: Array.isArray(result.$select)
 						? result.$select
 						: []),
@@ -139,47 +155,100 @@ export function mergePineOptions<R extends object>(
 		result.$expand = mergeExpandOptions(defaults.$expand, extras.$expand);
 	}
 
-	return result;
+	return result as MergedOptions<D, E>;
 }
 
-const mergeExpandOptions = <T>(
-	defaultExpand: Pine.Expand<T> | undefined,
-	extraExpand: Pine.Expand<T> | undefined,
-): Pine.Expand<T> | undefined => {
+type EnsureODataOptions<T> = T extends Readonly<ODataOptions> ? T : never;
+
+type MergeExpandObjects<
+	DExpand extends ResourceExpand,
+	EExpand extends ResourceExpand,
+	AllKeys extends keyof DExpand | keyof EExpand = keyof DExpand | keyof EExpand,
+> = {
+	[K in AllKeys]: K extends keyof DExpand
+		? K extends keyof EExpand
+			? // If the key exists in both, merge the options
+				MergedInnerOptions<
+					EnsureODataOptions<DExpand[K]>,
+					EnsureODataOptions<EExpand[K]>
+				>
+			: DExpand[K]
+		: K extends keyof EExpand
+			? EExpand[K]
+			: // We can infer never here because the case where either or both of the expands were
+				// undefined are resolved in MergeExpand
+				never;
+};
+
+// // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+// For now this works so I am commenting the comment for disable-next-line
+// but we might need to fallback to {}
+type EmptyObject = Record<string, never>;
+
+type MergeExpand<
+	DExpand extends Expand | undefined,
+	EExpand extends Expand | undefined,
+> = DExpand extends undefined
+	? EExpand
+	: EExpand extends undefined
+		? DExpand
+		: MergeExpandObjects<ToResourceExpand<EExpand>, ToResourceExpand<DExpand>>;
+
+function mergeExpandOptions<
+	DExpand extends Expand | undefined,
+	EExpand extends Expand | undefined,
+>(defaultExpand: DExpand, extraExpand: EExpand): MergeExpand<DExpand, EExpand> {
 	if (defaultExpand == null) {
-		return extraExpand;
+		return extraExpand as MergeExpand<DExpand, EExpand>;
 	}
 
 	// We only need to clone the defaultExpand as it's the only one we mutate
-	const $defaultExpand = convertExpandToObject(defaultExpand, true);
-	const $extraExpand = convertExpandToObject(extraExpand);
+	const $defaultExpand = convertExpandToObject(defaultExpand, true) as Record<
+		string,
+		EmptyObject | ODataOptions | undefined
+	>;
+	const $extraExpand = convertExpandToObject(extraExpand) as Record<
+		string,
+		EmptyObject | ODataOptions | undefined
+	>;
 
-	for (const expandKey of Object.keys($extraExpand || {}) as Array<
-		keyof typeof extraExpand
-	>) {
+	for (const expandKey of Object.keys($extraExpand || {})) {
 		$defaultExpand[expandKey] = mergePineOptions(
 			$defaultExpand[expandKey] ?? {},
 			$extraExpand[expandKey],
 		);
 	}
 
-	return $defaultExpand;
-};
+	return $defaultExpand as unknown as MergeExpand<DExpand, EExpand>;
+}
+
+type ToResourceExpand<T extends Expand | undefined> = T extends ResourceExpand
+	? T
+	: T extends undefined
+		? EmptyObject
+		: T extends string
+			? { [K in T]: EmptyObject }
+			: T extends Array<infer U>
+				? {
+						// TODO: the code handles it, but can you have expand with an array of something that is not a string?
+						[K in U extends string ? U : never]: EmptyObject;
+					}
+				: never;
 
 // Converts a valid expand object in any format into a new object
 // containing (at most) $expand, $filter and $select keys
-const convertExpandToObject = <T extends object>(
-	expandOption: Pine.Expand<T> | undefined,
+function convertExpandToObject<E extends Expand>(
+	expandOption: E | undefined,
 	cloneIfNeeded = false,
-): Pine.ResourceExpand<T> => {
+): ToResourceExpand<E> {
 	if (expandOption == null) {
-		return {};
+		return {} as ToResourceExpand<E>;
 	}
 
 	if (typeof expandOption === 'string') {
 		return {
 			[expandOption]: {},
-		} as Pine.ResourceExpand<T>;
+		} as ToResourceExpand<E>;
 	}
 
 	if (Array.isArray(expandOption)) {
@@ -195,11 +264,11 @@ const convertExpandToObject = <T extends object>(
 	}
 
 	if (cloneIfNeeded) {
-		return { ...expandOption };
+		return { ...expandOption } as unknown as ToResourceExpand<E>;
 	}
 
-	return expandOption;
-};
+	return expandOption as ToResourceExpand<E>;
+}
 
 /**
  * Useful when you want to avoid having to manually parse the key
