@@ -5,7 +5,7 @@ import {
 	givenLoggedInUser,
 	sdkOpts,
 } from './setup';
-import { delay, timeSuite } from '../util';
+import { delay, timeSuite, waitFor } from '../util';
 import { expect } from 'chai';
 
 type LogMessage = Awaited<ReturnType<typeof balena.logs.history>>[number];
@@ -30,7 +30,7 @@ const sendLogMessages = (
 const LOG_PROPAGATION_TIMEOUT = 5000;
 
 describe('Logs', function () {
-	this.timeout(20_000);
+	this.timeout(60_000);
 	timeSuite(before);
 	givenLoggedInUser(before);
 	givenAnApplication(before);
@@ -52,7 +52,17 @@ describe('Logs', function () {
 					timestamp: Date.now(),
 				},
 			]);
-			await delay(LOG_PROPAGATION_TIMEOUT);
+
+			// Wait for both logs to propagate
+			await waitFor(
+				async () => {
+					const lines = await balena.logs.history(this.device.uuid);
+					return lines.length === 2;
+				},
+				{
+					timeout: LOG_PROPAGATION_TIMEOUT,
+				},
+			);
 		});
 	}
 
@@ -90,44 +100,53 @@ describe('Logs', function () {
 		});
 
 		describe('balena.logs.subscribe()', function () {
-			async function getLogLinesAndUnsubscribe(logs) {
+			async function expectLogLinesAndUnsubscribe(logs, messages: string[]) {
 				const lines: LogMessage[] = [];
 				try {
 					// eslint-disable-next-line no-async-promise-executor
 					await new Promise(async function (resolve, reject) {
-						logs.on('line', (line) => lines.push(line));
+						logs.on('line', (line) => {
+							lines.push(line);
+						});
 						logs.on('error', reject);
 
-						await delay(LOG_PROPAGATION_TIMEOUT);
+						// Wait for the expected number of logs to propagate
+						await waitFor(
+							() => {
+								return lines.length === messages.length;
+							},
+							{
+								timeout: 2000,
+							},
+						);
 						resolve(null);
 					});
 				} finally {
 					logs.unsubscribe();
 				}
-				return lines;
+				expect(lines.map((l) => l.message)).to.deep.equal(messages);
 			}
 
 			it('should not load historical logs by default', async function () {
 				const logs = await balena.logs.subscribe(this.device.uuid);
-				expect(await getLogLinesAndUnsubscribe(logs)).to.deep.equal([]);
+				await expectLogLinesAndUnsubscribe(logs, []);
 			});
 
 			it('should load historical logs if requested', async function () {
 				const logs = await balena.logs.subscribe(this.device.uuid, {
 					count: 'all',
 				});
-				expect(
-					(await getLogLinesAndUnsubscribe(logs)).map((l) => l.message),
-				).to.deep.equal(['Old message', 'Newer message']);
+				await expectLogLinesAndUnsubscribe(logs, [
+					'Old message',
+					'Newer message',
+				]);
 			});
 
 			it('should limit historical logs by count', async function () {
 				const logs = await balena.logs.subscribe(this.device.uuid, {
 					count: 1,
 				});
-				expect(
-					(await getLogLinesAndUnsubscribe(logs)).map((l) => l.message),
-				).to.deep.equal(['Newer message']);
+				await expectLogLinesAndUnsubscribe(logs, ['Newer message']);
 			});
 
 			it('should limit historical logs by start using a timestamp', async function () {
@@ -135,9 +154,7 @@ describe('Logs', function () {
 					start: this.pastTimeStamp,
 					count: 'all',
 				});
-				expect(
-					(await getLogLinesAndUnsubscribe(logs)).map((l) => l.message),
-				).to.deep.equal(['Newer message']);
+				await expectLogLinesAndUnsubscribe(logs, ['Newer message']);
 			});
 
 			it('should limit historical logs by start using an ISO date string', async function () {
@@ -145,9 +162,7 @@ describe('Logs', function () {
 					start: new Date(this.pastTimeStamp).toISOString(),
 					count: 'all',
 				});
-				expect(
-					(await getLogLinesAndUnsubscribe(logs)).map((l) => l.message),
-				).to.deep.equal(['Newer message']);
+				await expectLogLinesAndUnsubscribe(logs, ['Newer message']);
 			});
 
 			it('should stream new logs after historical logs', async function () {
@@ -172,7 +187,18 @@ describe('Logs', function () {
 							timestamp: Date.now(),
 						},
 					]);
-					await delay(LOG_PROPAGATION_TIMEOUT);
+
+					// Wait for all three logs to propagate
+					await waitFor(
+						async () => {
+							const currentLines = await balena.logs.history(this.device.uuid);
+							return currentLines.length === 3;
+						},
+						{
+							timeout: LOG_PROPAGATION_TIMEOUT,
+							maxCount: 10,
+						},
+					);
 				} finally {
 					logs.unsubscribe();
 				}

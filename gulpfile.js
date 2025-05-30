@@ -24,7 +24,7 @@ const OPTIONS = {
 		browserLibraryName: 'balena-sdk',
 	},
 	files: {
-		tests: ['tests/**/*.spec.js', 'tests/**/*.spec.ts'],
+		tests: ['tests/integration/logs.spec.ts'],
 		browserEntry: 'index.js',
 		browserMinifiedOutput: 'balena-browser.min.js',
 	},

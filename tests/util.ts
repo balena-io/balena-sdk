@@ -108,3 +108,23 @@ export async function delay(ms: number) {
 		setTimeout(resolve, ms);
 	});
 }
+
+// Wait for a condition to be true, throw if it doesn't happen in time
+export async function waitFor(
+	checkFn: () => boolean | Promise<boolean>,
+	options?: {
+		timeout?: number;
+		maxCount?: number;
+	},
+): Promise<void> {
+	const timeout = options?.timeout ?? 2000;
+	const maxCount = options?.maxCount ?? 10;
+	for (let i = 1; i <= maxCount; i++) {
+		console.log(`Waiting (${i}/${maxCount})...`);
+		await delay(timeout);
+		if (await checkFn()) {
+			return;
+		}
+	}
+	throw new Error('waitFor timed out');
+}
