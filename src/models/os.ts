@@ -21,7 +21,6 @@ import {
 	isNotFoundResponse,
 	onlyIf,
 	mergePineOptions,
-	mergePineOptionsTyped,
 	type ExtendedPineTypedResult,
 } from '../util';
 import type { BalenaRequestStreamResult } from 'balena-request';
@@ -228,7 +227,7 @@ const getOsModel = function (
 					is_for__device_type: {
 						$select: 'slug',
 					},
-					owns__release: mergePineOptionsTyped(baseReleasePineOptions, options),
+					owns__release: mergePineOptions(baseReleasePineOptions, options),
 				},
 				$filter: {
 					is_host: true,
@@ -1015,7 +1014,7 @@ const getOsModel = function (
 	> => {
 		const results = await pine.get({
 			resource: 'release',
-			options: mergePineOptionsTyped(
+			options: mergePineOptions(
 				{
 					$select: ['id', 'raw_version', 'known_issue_list'],
 					$filter: {
