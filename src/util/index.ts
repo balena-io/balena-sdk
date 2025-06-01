@@ -1,7 +1,7 @@
 import * as errors from 'balena-errors';
 import type { WebResourceFile } from 'balena-request';
 import * as mime from 'mime';
-import type { Expand, ODataOptions, ResourceExpand } from 'pinejs-client-core';
+import type { Expand, ODataOptions, Resource, ResourceExpand, AnyResource } from 'pinejs-client-core';
 
 export interface BalenaUtils {
 	mergePineOptions: typeof mergePineOptions;
@@ -79,7 +79,7 @@ type MergedInnerOptions<
 			: K extends '$expand'
 				? // * expands are combined (include both expansions), and this recurses down.
 					//   * That means $expands within expands are combined
-					MergeExpand<SafeKeyOf<D, K>, SafeKeyOf<E, K>>
+					MergeExpand<SafeKeyOf<D, K>, NonNullable<E[K]>>
 				: undefined;
 };
 
@@ -89,6 +89,11 @@ export type MergedOptions<
 > = E extends undefined
 	? Readonly<D>
 	: Readonly<MergedInnerOptions<D, NonNullable<E>>>;
+
+export type ExtraKeys = '$select' | '$orderby' | '$skip' | '$top' | '$filter' | '$expand';
+export type ExtraOptions<T extends Resource['Read'] = AnyResource> = Readonly<Pick<ODataOptions<T>, ExtraKeys>> | undefined;
+
+
 
 // Merging two sets of pine options sensibly is more complicated than it sounds.
 //
@@ -187,16 +192,14 @@ type EmptyObject = Record<string, never>;
 
 type MergeExpand<
 	DExpand extends Expand | undefined,
-	EExpand extends Expand | undefined,
+	EExpand extends Expand,
 > = DExpand extends undefined
 	? EExpand
-	: EExpand extends undefined
-		? DExpand
-		: MergeExpandObjects<ToResourceExpand<EExpand>, ToResourceExpand<DExpand>>;
+		: MergeExpandObjects<ToResourceExpand<DExpand>, ToResourceExpand<EExpand>>;
 
 function mergeExpandOptions<
 	DExpand extends Expand | undefined,
-	EExpand extends Expand | undefined,
+	EExpand extends Expand,
 >(defaultExpand: DExpand, extraExpand: EExpand): MergeExpand<DExpand, EExpand> {
 	if (defaultExpand == null) {
 		return extraExpand as MergeExpand<DExpand, EExpand>;
