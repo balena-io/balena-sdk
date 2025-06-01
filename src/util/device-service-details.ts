@@ -32,7 +32,7 @@ export interface DeviceWithServiceDetails<
 
 // Pine expand options necessary for getting raw service data for a device
 export const getCurrentServiceDetailsPineExpand = (expandRelease: boolean) => {
-	const pineExpand: PineExpand<Device> = {
+	const pineExpand = {
 		image_install: {
 			$select: ['id', 'download_progress', 'status', 'install_date'],
 			$filter: {

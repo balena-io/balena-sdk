@@ -19,41 +19,49 @@ This file contains an abstract implementation for dependent metadata resources:
 key-value resources directly attached to a parent (e.g. tags, config variables).
 */
 
-import { isId, isUnauthorizedResponse, mergePineOptions } from '../util';
-import type { Pine, PineOptions } from '..';
+import { type ExtraOptions, isId, isUnauthorizedResponse, mergePineOptions } from '../util';
+import type { DefaultSDKModel, PinejsClient } from '../pine';
+
 import type { Dictionary } from '../../typings/utils';
 
-interface DependentResource {
-	id: number;
-	value: string;
-}
+type DependentResourceNames =
+	'device_tag' |
+	'application_tag' |
+	'application_config_variable' |
+	'application_environment_variable' |
+	'build_environment_variable' |
+	'device_config_variable' |
+	'device_environment_variable' |
+	'organization_membership_tag' |
+	'release_tag' |
+	'device_service_environment_variable' |
+	'service_environment_variable';
 
-export function buildDependentResource<T extends DependentResource>(
-	{ pine }: { pine: Pine },
+export function buildDependentResource<T extends DefaultSDKModel[DependentResourceNames]>(
+	{ pine }: { pine: PinejsClient },
 	{
 		resourceName,
 		resourceKeyField,
 		parentResourceName,
 		getResourceId,
 	}: {
-		resourceName: string; // e.g. device_tag
-		resourceKeyField: keyof T & string; // e.g. tag_key
-		parentResourceName: keyof T & string; // e.g. device
+		resourceName: DependentResourceNames;
+		resourceKeyField: keyof T['Read'] & string; // e.g. tag_key
+		parentResourceName: keyof DefaultSDKModel; // e.g. device
 		getResourceId: (
 			uuidOrIdOrDict: string | number | Dictionary<unknown>,
 		) => Promise<number>; // e.g. getId(uuidOrIdOrDict)
 	},
 ) {
 	const exports = {
-		getAll(options?: PineOptions<T>): Promise<T[]> {
-			options ??= {};
-			return pine.get<T>({
+		getAll(options?: Readonly<ExtraOptions<T['Read']>>) {
+			return pine.get({
 				resource: resourceName,
 				options: mergePineOptions(
 					{
 						$orderby: {
 							[resourceKeyField]: 'asc',
-						} as PineOptions<T>['$orderby'],
+						} as const,
 					},
 					options,
 				),
@@ -62,30 +70,30 @@ export function buildDependentResource<T extends DependentResource>(
 
 		async getAllByParent(
 			parentParam: string | number | Dictionary<unknown>,
-			options?: PineOptions<T>,
-		): Promise<T[]> {
+			options?: ExtraOptions<T['Read']>,
+		) {
 			options ??= {};
 			const id = await getResourceId(parentParam);
-			return await exports.getAll(
-				mergePineOptions(
-					{
-						$filter: { [parentResourceName]: id },
-						$orderby: `${resourceKeyField} asc`,
-					},
-					options,
-				),
-			);
+			return await exports.getAll(mergePineOptions(
+				{
+					$filter: { [parentResourceName]: id } as const,
+					$orderby: {
+						[resourceKeyField]: 'asc'
+					} as const,
+				},
+				options,
+			));
 		},
 
 		async get(
 			parentParam: string | number | Dictionary<unknown>,
 			key: string,
-		): Promise<string | undefined> {
+		) {
 			const id = await getResourceId(parentParam);
-			const [result] = await pine.get<DependentResource>({
+			const [result] = await pine.get({
 				resource: resourceName,
 				options: {
-					$select: 'value',
+					$select: ['value'],
 					$filter: {
 						[parentResourceName]: id,
 						[resourceKeyField]: key,
@@ -101,7 +109,7 @@ export function buildDependentResource<T extends DependentResource>(
 			parentParam: string | number | Dictionary<unknown>,
 			key: string,
 			value: string,
-		): Promise<void> {
+		) {
 			value = String(value);
 
 			// Trying to avoid an extra HTTP request
@@ -138,7 +146,7 @@ export function buildDependentResource<T extends DependentResource>(
 		async remove(
 			parentParam: string | number | Dictionary<unknown>,
 			key: string,
-		): Promise<void> {
+		) {
 			const parentId = await getResourceId(parentParam);
 			await pine.delete({
 				resource: resourceName,

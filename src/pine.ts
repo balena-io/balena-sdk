@@ -20,6 +20,7 @@ interface BackendParams {
 	auth: import('balena-auth').default;
 }
 
+export type DefaultSDKModel = BalenaV7;
 /**
  * @class
  * @classdesc A PineJS Client subclass to communicate with balena.
@@ -28,7 +29,7 @@ interface BackendParams {
  * @description
  * This subclass makes use of the [balena-request](https://github.com/balena-io-modules/balena-request) project.
  */
-export class PinejsClient extends PinejsClientCore<BalenaV7> {
+export class PinejsClient extends PinejsClientCore<DefaultSDKModel> {
 	public API_URL: string;
 	public API_VERSION: string;
 

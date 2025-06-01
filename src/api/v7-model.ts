@@ -4,108 +4,26 @@ import type { Types } from '@balena/abstract-sql-to-typescript';
 
 export interface Actor {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		is_of__user?: Array<User['Read']>;
 		is_of__application?: Array<Application['Read']>;
 		is_of__device?: Array<Device['Read']>;
 		api_key?: Array<ApiKey['Read']>;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-	};
-}
-
-export interface Permission {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		name: Types['Short Text']['Read'];
-		is_of__role?: Array<RoleHasPermission['Read']>;
-		is_of__user?: Array<UserHasPermission['Read']>;
-		is_of__api_key?: Array<ApiKeyHasPermission['Read']>;
-		user__has__permission?: Array<UserHasPermission['Read']>;
-		user_permission?: Array<UserHasPermission['Read']>;
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		name: Types['Short Text']['Write'];
-	};
-}
-
-export interface Role {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		name: Types['Short Text']['Read'];
-		role__has__permission?: Array<RoleHasPermission['Read']>;
-		user__has__role?: Array<UserHasRole['Read']>;
-		user_role?: Array<UserHasRole['Read']>;
-		is_of__user?: Array<UserHasRole['Read']>;
-		is_of__api_key?: Array<ApiKeyHasRole['Read']>;
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		name: Types['Short Text']['Write'];
-	};
-}
-
-export interface RoleHasPermission {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		role: { __id: Role['Read']['id'] } | [Role['Read']];
-		permission: { __id: Permission['Read']['id'] } | [Permission['Read']];
-		id: Types['Serial']['Read'];
-		is_of__role: { __id: Role['Read']['id'] } | [Role['Read']];
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		role: Role['Write']['id'];
-		permission: Permission['Write']['id'];
-		id: Types['Serial']['Write'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface User {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		actor: { __id: Actor['Read']['id'] } | [Actor['Read']];
 		username: Types['Short Text']['Read'];
-		password: Types['Hashed']['Read'] | null;
-		jwt_secret: Types['Short Text']['Read'] | null;
-		email: Types['Text']['Read'] | null;
-		two_factor_key: Types['File']['Read'] | null;
-		is_two_factor_protected: Types['Boolean']['Read'];
-		has_disabled_newsletter: Types['Boolean']['Read'];
-		has_been_sent_verification_email: Types['Boolean']['Read'];
-		password_reset_code: Types['Text']['Read'] | null;
-		can_reset_password_until__expiry_date: Types['Date Time']['Read'] | null;
-		first_name: Types['Text']['Read'] | null;
-		last_name: Types['Text']['Read'] | null;
-		company_name: Types['Text']['Read'] | null;
-		account_type: Types['Text']['Read'] | null;
 		has_legacy_link_to__organization:
 			| { __id: Organization['Read']['id'] }
 			| [Organization['Read']]
 			| []
 			| null;
-		user__has__role?: Array<UserHasRole['Read']>;
-		user_role?: Array<UserHasRole['Read']>;
-		user__has__permission?: Array<UserHasPermission['Read']>;
-		user_permission?: Array<UserHasPermission['Read']>;
 		user__has__public_key?: Array<UserHasPublicKey['Read']>;
 		user_public_key?: Array<UserHasPublicKey['Read']>;
 		user__is_member_of__organization?: Array<OrganizationMembership['Read']>;
@@ -117,11 +35,6 @@ export interface User {
 		is_member_of__organization?: Array<OrganizationMembership['Read']>;
 		is_member_of__team?: Array<TeamMembership['Read']>;
 		is_member_of__application?: Array<UserIsMemberOfApplication['Read']>;
-		has_legacy_link_to__public_organization:
-			| { __id: Organization['Read']['id'] }
-			| [Organization['Read']]
-			| []
-			| null;
 		includes__user__is_member_of__organization?: Array<
 			OrganizationMembership['Read']
 		>;
@@ -145,7 +58,6 @@ export interface User {
 		creates__release?: Array<Release['Read']>;
 		owns__social_service_account?: Array<SocialServiceAccount['Read']>;
 		owns__device?: Array<Device['Read']>;
-		owns__image_download?: Array<ImageDownload['Read']>;
 		owns__recovery_two_factor?: Array<RecoveryTwoFactor['Read']>;
 		owns__saml_account?: Array<SamlAccount['Read']>;
 		has_direct_access_to__application?: Array<
@@ -153,135 +65,28 @@ export interface User {
 		>;
 		user_profile?: Array<UserProfile['Read']>;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		actor: Actor['Write']['id'];
-		username: Types['Short Text']['Write'];
-		password: Types['Hashed']['Write'] | null;
-		jwt_secret: Types['Short Text']['Write'] | null;
-		email: Types['Text']['Write'] | null;
-		two_factor_key: Types['File']['Write'] | null;
-		is_two_factor_protected: Types['Boolean']['Write'];
-		has_disabled_newsletter: Types['Boolean']['Write'];
-		has_been_sent_verification_email: Types['Boolean']['Write'];
-		password_reset_code: Types['Text']['Write'] | null;
-		can_reset_password_until__expiry_date: Types['Date Time']['Write'] | null;
-		first_name: Types['Text']['Write'] | null;
-		last_name: Types['Text']['Write'] | null;
-		company_name: Types['Text']['Write'] | null;
-		account_type: Types['Text']['Write'] | null;
-		has_legacy_link_to__organization: Organization['Write']['id'] | null;
-	};
-}
-
-export interface UserHasRole {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		user: { __id: User['Read']['id'] } | [User['Read']];
-		role: { __id: Role['Read']['id'] } | [Role['Read']];
-		id: Types['Serial']['Read'];
-		expiry_date: Types['Date Time']['Read'] | null;
-		is_of__user: { __id: User['Read']['id'] } | [User['Read']];
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		user: User['Write']['id'];
-		role: Role['Write']['id'];
-		id: Types['Serial']['Write'];
-		expiry_date: Types['Date Time']['Write'] | null;
-	};
-}
-
-export interface UserHasPermission {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		user: { __id: User['Read']['id'] } | [User['Read']];
-		permission: { __id: Permission['Read']['id'] } | [Permission['Read']];
-		id: Types['Serial']['Read'];
-		expiry_date: Types['Date Time']['Read'] | null;
-		is_of__user: { __id: User['Read']['id'] } | [User['Read']];
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		user: User['Write']['id'];
-		permission: Permission['Write']['id'];
-		id: Types['Serial']['Write'];
-		expiry_date: Types['Date Time']['Write'] | null;
-	};
+	Write: Record<string, never>;
 }
 
 export interface ApiKey {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		key: Types['Short Text']['Read'];
+		id: Types['Integer']['Read'];
 		expiry_date: Types['Date Time']['Read'] | null;
 		is_of__actor: { __id: Actor['Read']['id'] } | [Actor['Read']];
 		name: Types['Short Text']['Read'] | null;
 		description: Types['Text']['Read'] | null;
-		api_key__has__role?: Array<ApiKeyHasRole['Read']>;
-		api_key__has__permission?: Array<ApiKeyHasPermission['Read']>;
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		key: Types['Short Text']['Write'];
 		expiry_date: Types['Date Time']['Write'] | null;
-		is_of__actor: Actor['Write']['id'];
 		name: Types['Short Text']['Write'] | null;
 		description: Types['Text']['Write'] | null;
 	};
 }
 
-export interface ApiKeyHasRole {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		api_key: { __id: ApiKey['Read']['id'] } | [ApiKey['Read']];
-		role: { __id: Role['Read']['id'] } | [Role['Read']];
-		id: Types['Serial']['Read'];
-		is_of__api_key: { __id: ApiKey['Read']['id'] } | [ApiKey['Read']];
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		api_key: ApiKey['Write']['id'];
-		role: Role['Write']['id'];
-		id: Types['Serial']['Write'];
-	};
-}
-
-export interface ApiKeyHasPermission {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		api_key: { __id: ApiKey['Read']['id'] } | [ApiKey['Read']];
-		permission: { __id: Permission['Read']['id'] } | [Permission['Read']];
-		id: Types['Serial']['Read'];
-		is_of__api_key: { __id: ApiKey['Read']['id'] } | [ApiKey['Read']];
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		api_key: ApiKey['Write']['id'];
-		permission: Permission['Write']['id'];
-		id: Types['Serial']['Write'];
-	};
-}
-
 export interface ApplicationType {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		name: Types['Short Text']['Read'];
 		supports_web_url: Types['Boolean']['Read'];
 		supports_multicontainer: Types['Boolean']['Read'];
@@ -293,70 +98,22 @@ export interface ApplicationType {
 		description: Types['Text']['Read'] | null;
 		maximum_device_count: Types['Integer']['Read'] | null;
 		is_of__application?: Array<Application['Read']>;
-		is_of__application_history?: Array<ApplicationHistory['Read']>;
-		is_billed_as__application_type_feature?: Array<
-			ApplicationTypeFeature['Read']
-		>;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		name: Types['Short Text']['Write'];
-		supports_web_url: Types['Boolean']['Write'];
-		supports_multicontainer: Types['Boolean']['Write'];
-		supports_gateway_mode: Types['Boolean']['Write'];
-		needs__os_version_range: Types['Short Text']['Write'] | null;
-		requires_payment: Types['Boolean']['Write'];
-		is_legacy: Types['Boolean']['Write'];
-		slug: Types['Short Text']['Write'];
-		description: Types['Text']['Write'] | null;
-		maximum_device_count: Types['Integer']['Write'] | null;
-	};
-}
-
-export interface Config {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		key: Types['Short Text']['Read'];
-		value: Types['Text']['Read'];
-		scope: Types['Short Text']['Read'] | null;
-		description: Types['Text']['Read'] | null;
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		key: Types['Short Text']['Write'];
-		value: Types['Text']['Write'];
-		scope: Types['Short Text']['Write'] | null;
-		description: Types['Text']['Write'] | null;
-	};
+	Write: Record<string, never>;
 }
 
 export interface CpuArchitecture {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		slug: Types['Short Text']['Read'];
 		is_supported_by__device_type?: Array<DeviceType['Read']>;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		slug: Types['Short Text']['Write'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface DeviceFamily {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		slug: Types['Short Text']['Read'];
 		name: Types['Short Text']['Read'];
 		is_manufactured_by__device_manufacturer:
@@ -366,40 +123,21 @@ export interface DeviceFamily {
 			| null;
 		device_type?: Array<DeviceType['Read']>;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		slug: Types['Short Text']['Write'];
-		name: Types['Short Text']['Write'];
-		is_manufactured_by__device_manufacturer:
-			| DeviceManufacturer['Write']['id']
-			| null;
-	};
+	Write: Record<string, never>;
 }
 
 export interface DeviceManufacturer {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		slug: Types['Short Text']['Read'];
 		name: Types['Short Text']['Read'];
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		slug: Types['Short Text']['Write'];
-		name: Types['Short Text']['Write'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface DeviceType {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		slug: Types['Short Text']['Read'];
 		name: Types['Short Text']['Read'];
 		is_of__cpu_architecture:
@@ -424,25 +162,13 @@ export interface DeviceType {
 		>;
 		device_history?: Array<DeviceHistory['Read']>;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		slug: Types['Short Text']['Write'];
-		name: Types['Short Text']['Write'];
-		is_of__cpu_architecture: CpuArchitecture['Write']['id'];
-		logo: Types['Text']['Write'] | null;
-		contract: Types['JSON']['Write'] | null;
-		belongs_to__device_family: DeviceFamily['Write']['id'] | null;
-		is_private: Types['Boolean']['Write'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface Image {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		start_timestamp: Types['Date Time']['Read'];
 		end_timestamp: Types['Date Time']['Read'] | null;
 		dockerfile: Types['Text']['Read'] | null;
@@ -468,13 +194,10 @@ export interface Image {
 		is_produced_by__delta?: Array<Delta['Read']>;
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
 		start_timestamp: Types['Date Time']['Write'];
 		end_timestamp: Types['Date Time']['Write'] | null;
 		dockerfile: Types['Text']['Write'] | null;
-		is_a_build_of__service: Service['Write']['id'];
+		is_a_build_of__service: Types['Integer']['Write'];
 		image_size: Types['Big Integer']['Write'] | null;
 		is_stored_at__image_location: Types['Short Text']['Write'];
 		project_type: Types['Short Text']['Write'] | null;
@@ -490,15 +213,11 @@ export interface Image {
 export interface Organization {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		name: Types['Short Text']['Read'];
 		handle: Types['Short Text']['Read'];
 		company_name: Types['Text']['Read'] | null;
-		internal_company_name: Types['Text']['Read'] | null;
-		internal_note: Types['Text']['Read'] | null;
 		billing_account_code: Types['Short Text']['Read'] | null;
-		is_billed_with__stripe_id: Types['Short Text']['Read'] | null;
 		has_past_due_invoice_since__date: Types['Date Time']['Read'] | null;
 		is_frozen: Types['Boolean']['Read'];
 		industry: Types['Short Text']['Read'] | null;
@@ -553,51 +272,27 @@ export interface Organization {
 		>;
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		name: Types['Short Text']['Write'];
-		handle: Types['Short Text']['Write'];
 		company_name: Types['Text']['Write'] | null;
-		internal_company_name: Types['Text']['Write'] | null;
-		internal_note: Types['Text']['Write'] | null;
-		billing_account_code: Types['Short Text']['Write'] | null;
-		is_billed_with__stripe_id: Types['Short Text']['Write'] | null;
-		has_past_due_invoice_since__date: Types['Date Time']['Write'] | null;
-		is_frozen: Types['Boolean']['Write'];
 		industry: Types['Short Text']['Write'] | null;
 		website: Types['Text']['Write'] | null;
 		logo_image: Types['WebResource']['Write'] | null;
-		is_using__billing_version: Types['Text']['Write'] | null;
 		is_enforcing_saml_login: Types['Boolean']['Write'];
 	};
 }
 
 export interface ServiceInstance {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		service_type: Types['Short Text']['Read'];
+		id: Types['Integer']['Read'];
 		ip_address: Types['Short Text']['Read'];
-		last_heartbeat: Types['Date Time']['Read'];
 		manages__device?: Array<Device['Read']>;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		service_type: Types['Short Text']['Write'];
-		ip_address: Types['Short Text']['Write'];
-		last_heartbeat: Types['Date Time']['Write'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface Application {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		actor: { __id: Actor['Read']['id'] } | [Actor['Read']];
 		should_track_latest_release: Types['Boolean']['Read'];
 		is_of__class: 'fleet' | 'block' | 'app';
@@ -642,7 +337,6 @@ export interface Application {
 		build_environment_variable?: Array<BuildEnvironmentVariable['Read']>;
 		owns__device?: Array<Device['Read']>;
 		owns__release?: Array<Release['Read']>;
-		owns__image_download?: Array<ImageDownload['Read']>;
 		owns__public_device?: Array<PublicDevice['Read']>;
 		team__grants_access_to__application?: Array<TeamApplicationAccess['Read']>;
 		team_application_access?: Array<TeamApplicationAccess['Read']>;
@@ -667,29 +361,20 @@ export interface Application {
 		can_use__application_as_host?: Array<
 			ApplicationCanUseApplicationAsHost['Read']
 		>;
-		public_organization:
-			| { __id: Organization['Read']['id'] }
-			| [Organization['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		actor: Actor['Write']['id'];
 		should_track_latest_release: Types['Boolean']['Write'];
 		is_of__class: 'fleet' | 'block' | 'app';
-		organization: Organization['Write']['id'];
+		organization: Types['Integer']['Write'];
 		app_name: Types['Text']['Write'];
 		slug: Types['Short Text']['Write'];
-		is_for__device_type: DeviceType['Write']['id'];
-		should_be_running__release: Release['Write']['id'] | null;
-		application_type: ApplicationType['Write']['id'];
-		is_host: Types['Boolean']['Write'];
+		is_for__device_type: Types['Integer']['Write'];
+		should_be_running__release: Types['Integer']['Write'] | null;
+		application_type: Types['Integer']['Write'];
 		is_archived: Types['Boolean']['Write'];
 		uuid: Types['Text']['Write'];
 		is_public: Types['Boolean']['Write'];
 		is_accessible_by_support_until__date: Types['Date Time']['Write'] | null;
-		is_discoverable: Types['Boolean']['Write'];
 		is_stored_at__repository_url: Types['Text']['Write'] | null;
 	};
 }
@@ -697,37 +382,28 @@ export interface Application {
 export interface ApplicationEnvironmentVariable {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		application: { __id: Application['Read']['id'] } | [Application['Read']];
 		name: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		application: Application['Write']['id'];
+		application: Types['Integer']['Write'];
 		name: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
 		value: Types['Text']['Write'];
 	};
 }
 
 export interface ApplicationConfigVariable {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		application: { __id: Application['Read']['id'] } | [Application['Read']];
 		name: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		application: Application['Write']['id'];
+		application: Types['Integer']['Write'];
 		name: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
 		value: Types['Text']['Write'];
 	};
 }
@@ -735,10 +411,9 @@ export interface ApplicationConfigVariable {
 export interface Service {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		application: { __id: Application['Read']['id'] } | [Application['Read']];
 		service_name: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		application__has__service_name__has__label_name?: Array<
 			ServiceLabel['Read']
 		>;
@@ -757,32 +432,25 @@ export interface Service {
 		is_built_by__image?: Array<Image['Read']>;
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		application: Application['Write']['id'];
+		application: Types['Integer']['Write'];
 		service_name: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
 	};
 }
 
 export interface ServiceLabel {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		service: { __id: Service['Read']['id'] } | [Service['Read']];
 		label_name: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 		application__has__service_name:
 			| { __id: Service['Read']['id'] }
 			| [Service['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		service: Service['Write']['id'];
+		service: Types['Integer']['Write'];
 		label_name: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
 		value: Types['Text']['Write'];
 	};
 }
@@ -790,40 +458,31 @@ export interface ServiceLabel {
 export interface ServiceEnvironmentVariable {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		service: { __id: Service['Read']['id'] } | [Service['Read']];
 		name: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 		application__has__service_name:
 			| { __id: Service['Read']['id'] }
 			| [Service['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		service: Service['Write']['id'];
+		service: Types['Integer']['Write'];
 		name: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
 		value: Types['Text']['Write'];
 	};
 }
 
 export interface ApplicationTag {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		application: { __id: Application['Read']['id'] } | [Application['Read']];
 		tag_key: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		application: Application['Write']['id'];
+		application: Types['Integer']['Write'];
 		tag_key: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
 		value: Types['Text']['Write'];
 	};
 }
@@ -832,7 +491,7 @@ export interface Device {
 	Read: {
 		created_at: Types['Date Time']['Read'];
 		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		actor: { __id: Actor['Read']['id'] } | [Actor['Read']];
 		api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
 		changed_api_heartbeat_state_on__date: Types['Date Time']['Read'] | null;
@@ -880,8 +539,6 @@ export interface Device {
 		supervisor_version: Types['Short Text']['Read'] | null;
 		provisioning_progress: Types['Integer']['Read'] | null;
 		provisioning_state: Types['Short Text']['Read'] | null;
-		api_port: Types['Integer']['Read'] | null;
-		api_secret: Types['Short Text']['Read'] | null;
 		is_managed_by__service_instance:
 			| { __id: ServiceInstance['Read']['id'] }
 			| [ServiceInstance['Read']]
@@ -945,22 +602,14 @@ export interface Device {
 		installs__service?: Array<ServiceInstall['Read']>;
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		actor: Actor['Write']['id'];
-		api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
-		changed_api_heartbeat_state_on__date: Types['Date Time']['Write'] | null;
 		uuid: Types['Text']['Write'];
 		local_id: Types['Short Text']['Write'] | null;
 		device_name: Types['Short Text']['Write'];
 		note: Types['Text']['Write'] | null;
-		is_of__device_type: DeviceType['Write']['id'];
-		belongs_to__application: Application['Write']['id'] | null;
+		is_of__device_type: Types['Integer']['Write'];
+		belongs_to__application: Types['Integer']['Write'] | null;
 		is_online: Types['Boolean']['Write'];
 		last_connectivity_event: Types['Date Time']['Write'] | null;
-		is_connected_to_vpn: Types['Boolean']['Write'];
-		last_vpn_event: Types['Date Time']['Write'] | null;
 		is_locked_until__date: Types['Date Time']['Write'] | null;
 		public_address: Types['Short Text']['Write'] | null;
 		ip_address: Types['Short Text']['Write'] | null;
@@ -975,23 +624,18 @@ export interface Device {
 		cpu_temp: Types['Integer']['Write'] | null;
 		is_undervolted: Types['Boolean']['Write'];
 		cpu_id: Types['Short Text']['Write'] | null;
-		is_running__release: Release['Write']['id'] | null;
+		is_running__release: Types['Integer']['Write'] | null;
 		download_progress: Types['Integer']['Write'] | null;
 		status: Types['Short Text']['Write'] | null;
 		os_version: Types['Short Text']['Write'] | null;
 		os_variant: Types['Short Text']['Write'] | null;
-		overall_status: Types['Short Text']['Write'];
-		overall_progress: Types['Integer']['Write'] | null;
 		supervisor_version: Types['Short Text']['Write'] | null;
 		provisioning_progress: Types['Integer']['Write'] | null;
 		provisioning_state: Types['Short Text']['Write'] | null;
-		api_port: Types['Integer']['Write'] | null;
-		api_secret: Types['Short Text']['Write'] | null;
-		is_managed_by__service_instance: ServiceInstance['Write']['id'] | null;
-		is_pinned_on__release: Release['Write']['id'] | null;
-		should_be_running__release: Release['Write']['id'] | null;
-		should_be_operated_by__release: Release['Write']['id'] | null;
-		should_be_managed_by__release: Release['Write']['id'] | null;
+		is_managed_by__service_instance: Types['Integer']['Write'] | null;
+		is_pinned_on__release: Types['Integer']['Write'] | null;
+		should_be_operated_by__release: Types['Integer']['Write'] | null;
+		should_be_managed_by__release: Types['Integer']['Write'] | null;
 		update_status:
 			| 'rejected'
 			| 'downloading'
@@ -1001,63 +645,48 @@ export interface Device {
 			| 'done'
 			| null;
 		last_update_status_event: Types['Date Time']['Write'] | null;
-		belongs_to__user: User['Write']['id'] | null;
-		latitude: Types['Short Text']['Write'] | null;
-		longitude: Types['Short Text']['Write'] | null;
+		belongs_to__user: Types['Integer']['Write'] | null;
 		custom_latitude: Types['Short Text']['Write'] | null;
 		custom_longitude: Types['Short Text']['Write'] | null;
-		location: Types['Text']['Write'] | null;
 		is_accessible_by_support_until__date: Types['Date Time']['Write'] | null;
 		is_active: Types['Boolean']['Write'];
-		is_frozen: Types['Boolean']['Write'];
 	};
 }
 
 export interface DeviceEnvironmentVariable {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		device: { __id: Device['Read']['id'] } | [Device['Read']];
 		name: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		device: Device['Write']['id'];
+		device: Types['Integer']['Write'];
 		name: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
 		value: Types['Text']['Write'];
 	};
 }
 
 export interface DeviceConfigVariable {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		device: { __id: Device['Read']['id'] } | [Device['Read']];
 		name: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		device: Device['Write']['id'];
+		device: Types['Integer']['Write'];
 		name: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
 		value: Types['Text']['Write'];
 	};
 }
 
 export interface ImageInstall {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		device: { __id: Device['Read']['id'] } | [Device['Read']];
 		installs__image: { __id: Image['Read']['id'] } | [Image['Read']];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		install_date: Types['Date Time']['Read'];
 		download_progress: Types['Integer']['Read'] | null;
 		status: Types['Short Text']['Read'];
@@ -1067,25 +696,21 @@ export interface ImageInstall {
 		image: { __id: Image['Read']['id'] } | [Image['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		device: Device['Write']['id'];
-		installs__image: Image['Write']['id'];
-		id: Types['Serial']['Write'];
+		device: Types['Integer']['Write'];
+		installs__image: Types['Integer']['Write'];
 		install_date: Types['Date Time']['Write'];
 		download_progress: Types['Integer']['Write'] | null;
 		status: Types['Short Text']['Write'];
-		is_provided_by__release: Release['Write']['id'];
+		is_provided_by__release: Types['Integer']['Write'];
 	};
 }
 
 export interface ServiceInstall {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		device: { __id: Device['Read']['id'] } | [Device['Read']];
 		installs__service: { __id: Service['Read']['id'] } | [Service['Read']];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		device__installs__application__has__service_name__has__name?: Array<
 			DeviceServiceEnvironmentVariable['Read']
 		>;
@@ -1110,23 +735,19 @@ export interface ServiceInstall {
 			| [Service['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		device: Device['Write']['id'];
-		installs__service: Service['Write']['id'];
-		id: Types['Serial']['Write'];
+		device: Types['Integer']['Write'];
+		installs__service: Types['Integer']['Write'];
 	};
 }
 
 export interface DeviceServiceEnvironmentVariable {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		service_install:
 			| { __id: ServiceInstall['Read']['id'] }
 			| [ServiceInstall['Read']];
 		name: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 		device__installs__application__has__service_name:
 			| { __id: ServiceInstall['Read']['id'] }
@@ -1136,30 +757,22 @@ export interface DeviceServiceEnvironmentVariable {
 			| [ServiceInstall['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		service_install: ServiceInstall['Write']['id'];
+		service_install: Types['Integer']['Write'];
 		name: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
 		value: Types['Text']['Write'];
 	};
 }
 
 export interface DeviceTag {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		device: { __id: Device['Read']['id'] } | [Device['Read']];
 		tag_key: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		device: Device['Write']['id'];
+		device: Types['Integer']['Write'];
 		tag_key: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
 		value: Types['Text']['Write'];
 	};
 }
@@ -1167,8 +780,7 @@ export interface DeviceTag {
 export interface Release {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		belongs_to__application:
 			| { __id: Application['Read']['id'] }
 			| [Application['Read']];
@@ -1220,10 +832,7 @@ export interface Release {
 		provides__image_install?: Array<ImageInstall['Read']>;
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		belongs_to__application: Application['Write']['id'];
+		belongs_to__application: Types['Integer']['Write'];
 		commit: Types['Short Text']['Write'];
 		composition: Types['JSON']['Write'];
 		status: Types['Short Text']['Write'];
@@ -1236,7 +845,6 @@ export interface Release {
 		release_version: Types['Short Text']['Write'] | null;
 		contract: Types['JSON']['Write'] | null;
 		is_passing_tests: Types['Boolean']['Write'];
-		is_finalized_at__date: Types['Date Time']['Write'] | null;
 		phase: 'next' | 'current' | 'sunset' | 'end-of-life' | null;
 		is_final: Types['Boolean']['Write'];
 		semver: Types['Short Text']['Write'];
@@ -1246,31 +854,23 @@ export interface Release {
 		semver_prerelease: Types['Short Text']['Write'];
 		semver_build: Types['Short Text']['Write'];
 		variant: Types['Short Text']['Write'];
-		revision: Types['Integer']['Write'] | null;
-		raw_version: Types['Short Text']['Write'];
-		version: Types['JSON']['Write'];
 		known_issue_list: Types['Text']['Write'] | null;
 		note: Types['Text']['Write'] | null;
 		invalidation_reason: Types['Text']['Write'] | null;
-		is_created_by__user: User['Write']['id'] | null;
+		is_created_by__user: Types['Integer']['Write'] | null;
 	};
 }
 
 export interface ReleaseTag {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		release: { __id: Release['Read']['id'] } | [Release['Read']];
 		tag_key: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		release: Release['Write']['id'];
+		release: Types['Integer']['Write'];
 		tag_key: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
 		value: Types['Text']['Write'];
 	};
 }
@@ -1278,10 +878,9 @@ export interface ReleaseTag {
 export interface ImageIsPartOfRelease {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		image: { __id: Image['Read']['id'] } | [Image['Read']];
 		is_part_of__release: { __id: Release['Read']['id'] } | [Release['Read']];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		image__is_part_of__release__has__label_name?: Array<ImageLabel['Read']>;
 		release_image__has__label_name?: Array<ImageLabel['Read']>;
 		image_label?: Array<ImageLabel['Read']>;
@@ -1294,34 +893,27 @@ export interface ImageIsPartOfRelease {
 		contains__image: { __id: Image['Read']['id'] } | [Image['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		image: Image['Write']['id'];
-		is_part_of__release: Release['Write']['id'];
-		id: Types['Serial']['Write'];
+		image: Types['Integer']['Write'];
+		is_part_of__release: Types['Integer']['Write'];
 	};
 }
 
 export interface ImageLabel {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		release_image:
 			| { __id: ImageIsPartOfRelease['Read']['id'] }
 			| [ImageIsPartOfRelease['Read']];
 		label_name: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 		image__is_part_of__release:
 			| { __id: ImageIsPartOfRelease['Read']['id'] }
 			| [ImageIsPartOfRelease['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		release_image: ImageIsPartOfRelease['Write']['id'];
+		release_image: Types['Integer']['Write'];
 		label_name: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
 		value: Types['Text']['Write'];
 	};
 }
@@ -1329,23 +921,19 @@ export interface ImageLabel {
 export interface ImageEnvironmentVariable {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		release_image:
 			| { __id: ImageIsPartOfRelease['Read']['id'] }
 			| [ImageIsPartOfRelease['Read']];
 		name: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 		image__is_part_of__release:
 			| { __id: ImageIsPartOfRelease['Read']['id'] }
 			| [ImageIsPartOfRelease['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		release_image: ImageIsPartOfRelease['Write']['id'];
+		release_image: Types['Integer']['Write'];
 		name: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
 		value: Types['Text']['Write'];
 	};
 }
@@ -1353,12 +941,11 @@ export interface ImageEnvironmentVariable {
 export interface OrganizationMembership {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		user: { __id: User['Read']['id'] } | [User['Read']];
 		is_member_of__organization:
 			| { __id: Organization['Read']['id'] }
 			| [Organization['Read']];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		organization_membership_role:
 			| { __id: OrganizationMembershipRole['Read']['id'] }
 			| [OrganizationMembershipRole['Read']];
@@ -1374,57 +961,39 @@ export interface OrganizationMembership {
 		includes__user: { __id: User['Read']['id'] } | [User['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		user: User['Write']['id'];
-		is_member_of__organization: Organization['Write']['id'];
-		id: Types['Serial']['Write'];
-		organization_membership_role: OrganizationMembershipRole['Write']['id'];
-		effective_seat_role: Types['Short Text']['Write'];
+		user: Types['Integer']['Write'];
+		is_member_of__organization: Types['Integer']['Write'];
+		organization_membership_role: Types['Integer']['Write'];
 	};
 }
 
 export interface UserHasPublicKey {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		user: { __id: User['Read']['id'] } | [User['Read']];
 		public_key: Types['Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		title: Types['Short Text']['Read'];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		user: User['Write']['id'];
+		user: Types['Integer']['Write'];
 		public_key: Types['Text']['Write'];
-		id: Types['Serial']['Write'];
 		title: Types['Short Text']['Write'];
 	};
 }
 
 export interface DeviceTypeAlias {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		device_type: { __id: DeviceType['Read']['id'] } | [DeviceType['Read']];
 		is_referenced_by__alias: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		device_type: DeviceType['Write']['id'];
-		is_referenced_by__alias: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface ApplicationMembershipRole {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		name: Types['Short Text']['Read'];
 		is_of__team__grants_access_to__application?: Array<
 			TeamApplicationAccess['Read']
@@ -1440,68 +1009,15 @@ export interface ApplicationMembershipRole {
 		is_of__user_application_membership?: Array<
 			UserIsMemberOfApplication['Read']
 		>;
-		is_of__user_is_member_of_application_history?: Array<
-			UserIsMemberOfApplicationHistory['Read']
-		>;
-		is_of__team_application_access_history?: Array<
-			TeamApplicationAccessHistory['Read']
-		>;
-		is_billed_as__application_member_feature?: Array<
-			ApplicationMemberFeature['Read']
-		>;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		name: Types['Short Text']['Write'];
-	};
-}
-
-export interface BillableComponent {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		slug: Types['Short Text']['Read'];
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		slug: Types['Short Text']['Write'];
-	};
-}
-
-export interface BillingPeriod {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		is_of__subscription:
-			| { __id: Subscription['Read']['id'] }
-			| [Subscription['Read']];
-		started_on__date: Types['Date Time']['Read'];
-		ends_on__date: Types['Date Time']['Read'];
-		includes__credit_bundle_consumption?: Array<
-			CreditBundleConsumption['Read']
-		>;
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		is_of__subscription: Subscription['Write']['id'];
-		started_on__date: Types['Date Time']['Write'];
-		ends_on__date: Types['Date Time']['Write'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface CreditBundle {
 	Read: {
 		created_at: Types['Date Time']['Read'];
 		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		payment_status:
 			| 'processing'
 			| 'paid'
@@ -1520,99 +1036,21 @@ export interface CreditBundle {
 		available_balance: Types['Integer']['Read'];
 		total_cost: Types['Integer']['Read'];
 		total_balance: Types['Integer']['Read'];
-		discount_percentage: Types['Real']['Read'];
 		expires_on__date: Types['Date Time']['Read'];
 		is_associated_with__invoice_id: Types['Short Text']['Read'] | null;
 		error_message: Types['Text']['Read'] | null;
-		belongs_to__public_organization:
-			| { __id: Organization['Read']['id'] }
-			| [Organization['Read']];
-		is_consumed_by__credit_bundle_consumption?: Array<
-			CreditBundleConsumption['Read']
-		>;
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		payment_status:
-			| 'processing'
-			| 'paid'
-			| 'failed'
-			| 'complimentary'
-			| 'cancelled'
-			| 'refunded'
-			| 'manually invoiced';
-		is_created_by__user: User['Write']['id'];
-		is_for__feature: Feature['Write']['id'];
-		belongs_to__organization: Organization['Write']['id'];
-		unit_cost: Types['Integer']['Write'];
+		is_for__feature: Types['Integer']['Write'];
+		belongs_to__organization: Types['Integer']['Write'];
 		original_quantity: Types['Integer']['Write'];
-		available_balance: Types['Integer']['Write'];
-		total_cost: Types['Integer']['Write'];
-		total_balance: Types['Integer']['Write'];
-		discount_percentage: Types['Real']['Write'];
-		expires_on__date: Types['Date Time']['Write'];
-		is_associated_with__invoice_id: Types['Short Text']['Write'] | null;
-		error_message: Types['Text']['Write'] | null;
-	};
-}
-
-export interface CreditBundleConsumption {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		consumed__credit_bundle:
-			| { __id: CreditBundle['Read']['id'] }
-			| [CreditBundle['Read']];
-		occurred_during__billing_period:
-			| { __id: BillingPeriod['Read']['id'] }
-			| [BillingPeriod['Read']];
-		quantity: Types['Integer']['Read'];
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		consumed__credit_bundle: CreditBundle['Write']['id'];
-		occurred_during__billing_period: BillingPeriod['Write']['id'];
-		quantity: Types['Integer']['Write'];
-	};
-}
-
-export interface CspReport {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		document_uri: Types['Text']['Read'];
-		blocked_uri: Types['Text']['Read'];
-		referrer: Types['Text']['Read'] | null;
-		violated_directive: Types['Text']['Read'];
-		original_policy: Types['Text']['Read'];
-		incidents_counter: Types['Integer']['Read'];
-		last_seen_time: Types['Date Time']['Read'];
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		document_uri: Types['Text']['Write'];
-		blocked_uri: Types['Text']['Write'];
-		referrer: Types['Text']['Write'] | null;
-		violated_directive: Types['Text']['Write'];
-		original_policy: Types['Text']['Write'];
-		incidents_counter: Types['Integer']['Write'];
-		last_seen_time: Types['Date Time']['Write'];
 	};
 }
 
 export interface Delta {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		originates_from__image:
 			| { __id: Image['Read']['id'] }
 			| [Image['Read']]
@@ -1629,10 +1067,8 @@ export interface Delta {
 	};
 	Write: {
 		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		originates_from__image: Image['Write']['id'] | null;
-		produces__image: Image['Write']['id'];
+		originates_from__image: Types['Integer']['Write'] | null;
+		produces__image: Types['Integer']['Write'];
 		version: Types['Integer']['Write'];
 		status: Types['Short Text']['Write'];
 		error_message: Types['Text']['Write'] | null;
@@ -1645,18 +1081,11 @@ export interface Delta {
 
 export interface Feature {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		title: Types['Short Text']['Read'];
 		slug: Types['Short Text']['Read'];
 		billing_code: Types['Short Text']['Read'] | null;
 		is_of__support_feature?: Array<SupportFeature['Read']>;
-		is_of__application_type_feature?: Array<ApplicationTypeFeature['Read']>;
-		is_of__application_member_feature?: Array<ApplicationMemberFeature['Read']>;
-		is_of__organization_member_feature?: Array<
-			OrganizationMemberFeature['Read']
-		>;
 		organization__owns_credit_notification_for__feature?: Array<
 			OrganizationCreditNotification['Read']
 		>;
@@ -1669,64 +1098,13 @@ export interface Feature {
 		plan_addon?: Array<PlanAddon['Read']>;
 		is_offered_by__plan?: Array<PlanAddon['Read']>;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		title: Types['Short Text']['Write'];
-		slug: Types['Short Text']['Write'];
-		billing_code: Types['Short Text']['Write'] | null;
-	};
-}
-
-export interface ImageDownload {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		belongs_to__application:
-			| { __id: Application['Read']['id'] }
-			| [Application['Read']];
-		belongs_to__user: { __id: User['Read']['id'] } | [User['Read']];
-		is_for__device_type:
-			| { __id: DeviceType['Read']['id'] }
-			| [DeviceType['Read']];
-		is_for__release:
-			| { __id: Release['Read']['id'] }
-			| [Release['Read']]
-			| []
-			| null;
-		os_version: Types['Short Text']['Read'];
-		file_name: Types['Short Text']['Read'];
-		file_size: Types['Integer']['Read'];
-		bytes_sent: Types['Integer']['Read'];
-		start_timestamp: Types['Date Time']['Read'];
-		end_timestamp: Types['Date Time']['Read'];
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		belongs_to__application: Application['Write']['id'];
-		belongs_to__user: User['Write']['id'];
-		is_for__device_type: DeviceType['Write']['id'];
-		is_for__release: Release['Write']['id'] | null;
-		os_version: Types['Short Text']['Write'];
-		file_name: Types['Short Text']['Write'];
-		file_size: Types['Integer']['Write'];
-		bytes_sent: Types['Integer']['Write'];
-		start_timestamp: Types['Date Time']['Write'];
-		end_timestamp: Types['Date Time']['Write'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface OauthApplication {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		name: Types['Short Text']['Read'];
-		secret: Types['Short Text']['Read'];
 		client_id: Types['Short Text']['Read'];
 		redirect_uri: Types['Short Text']['Read'];
 		description: Types['Text']['Read'] | null;
@@ -1734,42 +1112,27 @@ export interface OauthApplication {
 			OauthApplicationAuthorization['Read']
 		>;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		name: Types['Short Text']['Write'];
-		secret: Types['Short Text']['Write'];
-		client_id: Types['Short Text']['Write'];
-		redirect_uri: Types['Short Text']['Write'];
-		description: Types['Text']['Write'] | null;
-	};
+	Write: Record<string, never>;
 }
 
 export interface OauthApplicationAuthorization {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		belongs_to__user: { __id: User['Read']['id'] } | [User['Read']];
 		is_for__oauth_application:
 			| { __id: OauthApplication['Read']['id'] }
 			| [OauthApplication['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		belongs_to__user: User['Write']['id'];
-		is_for__oauth_application: OauthApplication['Write']['id'];
+		id: Types['Integer']['Write'];
+		belongs_to__user: Types['Integer']['Write'];
+		is_for__oauth_application: Types['Integer']['Write'];
 	};
 }
 
 export interface OrganizationMembershipRole {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		name: Types['Short Text']['Read'];
 		is_of__user__is_member_of__organization?: Array<
 			OrganizationMembership['Read']
@@ -1779,50 +1142,15 @@ export interface OrganizationMembershipRole {
 			InviteeIsInvitedToOrganization['Read']
 		>;
 		is_of__organization_invite?: Array<InviteeIsInvitedToOrganization['Read']>;
-		is_of__organization_membership_history?: Array<
-			OrganizationMembershipHistory['Read']
-		>;
-		is_billed_as__organization_member_feature?: Array<
-			OrganizationMemberFeature['Read']
-		>;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		name: Types['Short Text']['Write'];
-	};
-}
-
-export interface OverageReport {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		organization_id: Types['Integer']['Read'];
-		billing_code: Types['Short Text']['Read'];
-		unit_cost: Types['Integer']['Read'];
-		quantity: Types['Integer']['Read'];
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		organization_id: Types['Integer']['Write'];
-		billing_code: Types['Short Text']['Write'];
-		unit_cost: Types['Integer']['Write'];
-		quantity: Types['Integer']['Write'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface Plan {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		title: Types['Short Text']['Read'];
 		billing_code: Types['Short Text']['Read'] | null;
-		generation: Types['Integer']['Read'] | null;
 		monthly_price: Types['Integer']['Read'];
 		annual_price: Types['Integer']['Read'];
 		can_self_serve: Types['Boolean']['Read'];
@@ -1830,79 +1158,32 @@ export interface Plan {
 		is_valid_from__date: Types['Date Time']['Read'] | null;
 		is_valid_until__date: Types['Date Time']['Read'] | null;
 		plan__has__discount_code?: Array<PlanHasDiscountCode['Read']>;
-		plan__provides__feature?: Array<PlanFeature['Read']>;
-		plan_feature?: Array<PlanFeature['Read']>;
-		plan__offers__feature?: Array<PlanAddon['Read']>;
-		plan_addon?: Array<PlanAddon['Read']>;
-		provides__feature?: Array<PlanFeature['Read']>;
-		offers__feature?: Array<PlanAddon['Read']>;
-		offers__plan__offers__feature?: Array<PlanAddon['Read']>;
-		offers__plan_addon?: Array<PlanAddon['Read']>;
 		subscription?: Array<Subscription['Read']>;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		title: Types['Short Text']['Write'];
-		billing_code: Types['Short Text']['Write'] | null;
-		generation: Types['Integer']['Write'] | null;
-		monthly_price: Types['Integer']['Write'];
-		annual_price: Types['Integer']['Write'];
-		can_self_serve: Types['Boolean']['Write'];
-		is_legacy: Types['Boolean']['Write'];
-		is_valid_from__date: Types['Date Time']['Write'] | null;
-		is_valid_until__date: Types['Date Time']['Write'] | null;
-	};
+	Write: Record<string, never>;
 }
 
 export interface RecoveryTwoFactor {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		recovery_code: Types['Short Text']['Read'];
+		id: Types['Integer']['Read'];
 		used_timestamp: Types['Date Time']['Read'] | null;
 		belongs_to__user: { __id: User['Read']['id'] } | [User['Read']];
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		recovery_code: Types['Short Text']['Write'];
-		used_timestamp: Types['Date Time']['Write'] | null;
-		belongs_to__user: User['Write']['id'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface SocialServiceAccount {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
 		belongs_to__user: { __id: User['Read']['id'] } | [User['Read']];
 		provider: Types['Short Text']['Read'];
-		remote_id: Types['Short Text']['Read'];
 		display_name: Types['Short Text']['Read'] | null;
-		email: Types['Text']['Read'] | null;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		belongs_to__user: User['Write']['id'];
-		provider: Types['Short Text']['Write'];
-		remote_id: Types['Short Text']['Write'];
-		display_name: Types['Short Text']['Write'] | null;
-		email: Types['Text']['Write'] | null;
-	};
+	Write: Record<string, never>;
 }
 
 export interface Subscription {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		is_for__plan: { __id: Plan['Read']['id'] } | [Plan['Read']];
 		is_for__organization:
 			| { __id: Organization['Read']['id'] }
@@ -1913,19 +1194,6 @@ export interface Subscription {
 		is_active: Types['Boolean']['Read'];
 		discount_percentage: Types['Real']['Read'];
 		origin: Types['Short Text']['Read'];
-		bills_base_with__recurly_id: Types['Short Text']['Read'] | null;
-		bills_addons_with__recurly_id: Types['Short Text']['Read'] | null;
-		bills_base_with__stripe_id: Types['Short Text']['Read'] | null;
-		bills_addons_with__stripe_id: Types['Short Text']['Read'] | null;
-		is_agreed_upon_on__date: Types['Date Time']['Read'];
-		is_terminated_on__date: Types['Date Time']['Read'] | null;
-		is_terminated_with__reason: Types['Text']['Read'] | null;
-		expects_first_payment_on__date: Types['Date Time']['Read'] | null;
-		internal_note: Types['Text']['Read'] | null;
-		billing_period?: Array<BillingPeriod['Read']>;
-		is_for__public_organization:
-			| { __id: Organization['Read']['id'] }
-			| [Organization['Read']];
 		subscription__discounts__plan__offers__feature?: Array<
 			SubscriptionDiscountsPlanAddon['Read']
 		>;
@@ -1940,34 +1208,19 @@ export interface Subscription {
 		subscription_prepaid_addon?: Array<SubscriptionPrepaidAddon['Read']>;
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		is_for__plan: Plan['Write']['id'];
-		is_for__organization: Organization['Write']['id'];
+		is_for__plan: Types['Integer']['Write'];
+		is_for__organization: Types['Integer']['Write'];
 		billing_cycle: Types['Short Text']['Write'];
 		starts_on__date: Types['Date Time']['Write'];
 		ends_on__date: Types['Date Time']['Write'] | null;
-		is_active: Types['Boolean']['Write'];
 		discount_percentage: Types['Real']['Write'];
 		origin: Types['Short Text']['Write'];
-		bills_base_with__recurly_id: Types['Short Text']['Write'] | null;
-		bills_addons_with__recurly_id: Types['Short Text']['Write'] | null;
-		bills_base_with__stripe_id: Types['Short Text']['Write'] | null;
-		bills_addons_with__stripe_id: Types['Short Text']['Write'] | null;
-		is_agreed_upon_on__date: Types['Date Time']['Write'];
-		is_terminated_on__date: Types['Date Time']['Write'] | null;
-		is_terminated_with__reason: Types['Text']['Write'] | null;
-		expects_first_payment_on__date: Types['Date Time']['Write'] | null;
-		internal_note: Types['Text']['Write'] | null;
 	};
 }
 
 export interface SubscriptionPrepaidAddon {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		is_for__subscription:
 			| { __id: Subscription['Read']['id'] }
 			| [Subscription['Read']];
@@ -1980,54 +1233,30 @@ export interface SubscriptionPrepaidAddon {
 			| { __id: PlanAddon['Read']['id'] }
 			| [PlanAddon['Read']];
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		is_for__subscription: Subscription['Write']['id'];
-		is_for__plan_addon: PlanAddon['Write']['id'];
-		discount_percentage: Types['Real']['Write'];
-		quantity: Types['Integer']['Write'];
-		starts_on__date: Types['Date Time']['Write'];
-		expires_on__date: Types['Date Time']['Write'] | null;
-	};
+	Write: Record<string, never>;
 }
 
 export interface SupportTier {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		title: Types['Short Text']['Read'];
 		slug: Types['Short Text']['Read'];
 		includes_private_support: Types['Boolean']['Read'];
 		includes__SLA: Types['Short Text']['Read'] | null;
 		is_of__support_feature?: Array<SupportFeature['Read']>;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		title: Types['Short Text']['Write'];
-		slug: Types['Short Text']['Write'];
-		includes_private_support: Types['Boolean']['Write'];
-		includes__SLA: Types['Short Text']['Write'] | null;
-	};
+	Write: Record<string, never>;
 }
 
 export interface Team {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		belongs_to__organization:
 			| { __id: Organization['Read']['id'] }
 			| [Organization['Read']];
 		name: Types['Short Text']['Read'];
 		description: Types['Text']['Read'] | null;
-		belongs_to__public_organization:
-			| { __id: Organization['Read']['id'] }
-			| [Organization['Read']];
 		team__grants_access_to__application?: Array<TeamApplicationAccess['Read']>;
 		team_application_access?: Array<TeamApplicationAccess['Read']>;
 		grants_access_to__application?: Array<TeamApplicationAccess['Read']>;
@@ -2036,10 +1265,7 @@ export interface Team {
 		includes__user?: Array<TeamMembership['Read']>;
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		belongs_to__organization: Organization['Write']['id'];
+		belongs_to__organization: Types['Integer']['Write'];
 		name: Types['Short Text']['Write'];
 		description: Types['Text']['Write'] | null;
 	};
@@ -2047,9 +1273,7 @@ export interface Team {
 
 export interface Invitee {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		email: Types['Text']['Read'];
 		is_invited_to__application?: Array<InviteeIsInvitedToApplication['Read']>;
 		is_invited_to__organization?: Array<InviteeIsInvitedToOrganization['Read']>;
@@ -2073,114 +1297,27 @@ export interface Invitee {
 		>;
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
 		email: Types['Text']['Write'];
 	};
 }
 
 export interface SupportFeature {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		feature: { __id: Feature['Read']['id'] } | [Feature['Read']];
 		support_tier: { __id: SupportTier['Read']['id'] } | [SupportTier['Read']];
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		feature: Feature['Write']['id'];
-		support_tier: SupportTier['Write']['id'];
-	};
-}
-
-export interface ApplicationTypeFeature {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		feature: { __id: Feature['Read']['id'] } | [Feature['Read']];
-		application_type:
-			| { __id: ApplicationType['Read']['id'] }
-			| [ApplicationType['Read']];
-		application_type_feature__is_composed_of__billable_component?: Array<
-			ApplicationTypeFeatureIsComposedOfBillableComponent['Read']
-		>;
-		is_composed_of__billable_component?: Array<
-			ApplicationTypeFeatureIsComposedOfBillableComponent['Read']
-		>;
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		feature: Feature['Write']['id'];
-		application_type: ApplicationType['Write']['id'];
-	};
-}
-
-export interface ApplicationMemberFeature {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		feature: { __id: Feature['Read']['id'] } | [Feature['Read']];
-		application_membership_role:
-			| { __id: ApplicationMembershipRole['Read']['id'] }
-			| [ApplicationMembershipRole['Read']];
-		application_member_feature__is_composed_of__billable_component?: Array<
-			ApplicationMemberFeatureIsComposedOfBillableComponent['Read']
-		>;
-		is_composed_of__billable_component?: Array<
-			ApplicationMemberFeatureIsComposedOfBillableComponent['Read']
-		>;
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		feature: Feature['Write']['id'];
-		application_membership_role: ApplicationMembershipRole['Write']['id'];
-	};
-}
-
-export interface OrganizationMemberFeature {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		feature: { __id: Feature['Read']['id'] } | [Feature['Read']];
-		organization_membership_role:
-			| { __id: OrganizationMembershipRole['Read']['id'] }
-			| [OrganizationMembershipRole['Read']];
-		organization_member_feature__is_composed_of__billable_component?: Array<
-			OrganizationMemberFeatureIsComposedOfBillableComponent['Read']
-		>;
-		is_composed_of__billable_component?: Array<
-			OrganizationMemberFeatureIsComposedOfBillableComponent['Read']
-		>;
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		feature: Feature['Write']['id'];
-		organization_membership_role: OrganizationMembershipRole['Write']['id'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface TeamApplicationAccess {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		team: { __id: Team['Read']['id'] } | [Team['Read']];
 		grants_access_to__application:
 			| { __id: Application['Read']['id'] }
 			| [Application['Read']];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		application_membership_role:
 			| { __id: ApplicationMembershipRole['Read']['id'] }
 			| [ApplicationMembershipRole['Read']];
@@ -2188,43 +1325,34 @@ export interface TeamApplicationAccess {
 		is_accessible_by__team: { __id: Team['Read']['id'] } | [Team['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		team: Team['Write']['id'];
-		grants_access_to__application: Application['Write']['id'];
-		id: Types['Serial']['Write'];
-		application_membership_role: ApplicationMembershipRole['Write']['id'];
+		team: Types['Integer']['Write'];
+		grants_access_to__application: Types['Integer']['Write'];
+		application_membership_role: Types['Integer']['Write'];
 	};
 }
 
 export interface TeamMembership {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		user: { __id: User['Read']['id'] } | [User['Read']];
 		is_member_of__team: { __id: Team['Read']['id'] } | [Team['Read']];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		team: { __id: Team['Read']['id'] } | [Team['Read']];
 		includes__user: { __id: User['Read']['id'] } | [User['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		user: User['Write']['id'];
-		is_member_of__team: Team['Write']['id'];
-		id: Types['Serial']['Write'];
+		user: Types['Integer']['Write'];
+		is_member_of__team: Types['Integer']['Write'];
 	};
 }
 
 export interface UserIsMemberOfApplication {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		user: { __id: User['Read']['id'] } | [User['Read']];
 		is_member_of__application:
 			| { __id: Application['Read']['id'] }
 			| [Application['Read']];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		application_membership_role:
 			| { __id: ApplicationMembershipRole['Read']['id'] }
 			| [ApplicationMembershipRole['Read']];
@@ -2232,28 +1360,22 @@ export interface UserIsMemberOfApplication {
 		includes__user: { __id: User['Read']['id'] } | [User['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		user: User['Write']['id'];
-		is_member_of__application: Application['Write']['id'];
-		id: Types['Serial']['Write'];
-		application_membership_role: ApplicationMembershipRole['Write']['id'];
+		user: Types['Integer']['Write'];
+		is_member_of__application: Types['Integer']['Write'];
+		application_membership_role: Types['Integer']['Write'];
 	};
 }
 
 export interface InviteeIsInvitedToApplication {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		invitee: { __id: Invitee['Read']['id'] } | [Invitee['Read']];
 		is_invited_to__application:
 			| { __id: Application['Read']['id'] }
 			| [Application['Read']];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		application_membership_role:
 			| { __id: ApplicationMembershipRole['Read']['id'] }
 			| [ApplicationMembershipRole['Read']];
-		invitation_token: Types['Short Text']['Read'] | null;
 		message: Types['Text']['Read'] | null;
 		is_created_by__user:
 			| { __id: User['Read']['id'] }
@@ -2263,31 +1385,23 @@ export interface InviteeIsInvitedToApplication {
 		application: { __id: Application['Read']['id'] } | [Application['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		invitee: Invitee['Write']['id'];
-		is_invited_to__application: Application['Write']['id'];
-		id: Types['Serial']['Write'];
-		application_membership_role: ApplicationMembershipRole['Write']['id'];
-		invitation_token: Types['Short Text']['Write'] | null;
+		invitee: Types['Integer']['Write'];
+		is_invited_to__application: Types['Integer']['Write'];
+		application_membership_role: Types['Integer']['Write'];
 		message: Types['Text']['Write'] | null;
-		is_created_by__user: User['Write']['id'] | null;
 	};
 }
 
 export interface InviteeIsInvitedToOrganization {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		invitee: { __id: Invitee['Read']['id'] } | [Invitee['Read']];
 		is_invited_to__organization:
 			| { __id: Organization['Read']['id'] }
 			| [Organization['Read']];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		organization_membership_role:
 			| { __id: OrganizationMembershipRole['Read']['id'] }
 			| [OrganizationMembershipRole['Read']];
-		invitation_token: Types['Short Text']['Read'] | null;
 		message: Types['Text']['Read'] | null;
 		is_created_by__user:
 			| { __id: User['Read']['id'] }
@@ -2297,114 +1411,84 @@ export interface InviteeIsInvitedToOrganization {
 		organization: { __id: Organization['Read']['id'] } | [Organization['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		invitee: Invitee['Write']['id'];
-		is_invited_to__organization: Organization['Write']['id'];
-		id: Types['Serial']['Write'];
-		organization_membership_role: OrganizationMembershipRole['Write']['id'];
-		invitation_token: Types['Short Text']['Write'] | null;
+		invitee: Types['Integer']['Write'];
+		is_invited_to__organization: Types['Integer']['Write'];
+		organization_membership_role: Types['Integer']['Write'];
 		message: Types['Text']['Write'] | null;
-		is_created_by__user: User['Write']['id'] | null;
 	};
 }
 
 export interface DeviceDomainMapping {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		device: { __id: Device['Read']['id'] } | [Device['Read']];
 		fqdn: Types['Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		device: Device['Write']['id'];
+		device: Types['Integer']['Write'];
 		fqdn: Types['Text']['Write'];
-		id: Types['Serial']['Write'];
 	};
 }
 
 export interface ApplicationDomainMapping {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		application: { __id: Application['Read']['id'] } | [Application['Read']];
 		domain: Types['Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		application: Application['Write']['id'];
+		application: Types['Integer']['Write'];
 		domain: Types['Text']['Write'];
-		id: Types['Serial']['Write'];
 	};
 }
 
 export interface BuildEnvironmentVariable {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		application: { __id: Application['Read']['id'] } | [Application['Read']];
 		name: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		application: Application['Write']['id'];
+		application: Types['Integer']['Write'];
 		name: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
 		value: Types['Text']['Write'];
 	};
 }
 
 export interface OrganizationHasPrivateAccessToDeviceType {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		organization: { __id: Organization['Read']['id'] } | [Organization['Read']];
 		has_private_access_to__device_type:
 			| { __id: DeviceType['Read']['id'] }
 			| [DeviceType['Read']];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		device_type: { __id: DeviceType['Read']['id'] } | [DeviceType['Read']];
 		is_accessible_privately_by__organization:
 			| { __id: Organization['Read']['id'] }
 			| [Organization['Read']];
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		organization: Organization['Write']['id'];
-		has_private_access_to__device_type: DeviceType['Write']['id'];
-		id: Types['Serial']['Write'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface OrganizationMembershipTag {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		organization_membership:
 			| { __id: OrganizationMembership['Read']['id'] }
 			| [OrganizationMembership['Read']];
 		tag_key: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 		user__is_member_of__organization:
 			| { __id: OrganizationMembership['Read']['id'] }
 			| [OrganizationMembership['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		organization_membership: OrganizationMembership['Write']['id'];
+		organization_membership: Types['Integer']['Write'];
 		tag_key: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
 		value: Types['Text']['Write'];
 	};
 }
@@ -2412,145 +1496,46 @@ export interface OrganizationMembershipTag {
 export interface OrganizationCreditNotification {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		organization: { __id: Organization['Read']['id'] } | [Organization['Read']];
 		owns_credit_notification_for__feature:
 			| { __id: Feature['Read']['id'] }
 			| [Feature['Read']];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		is_sent_when_below__threshold: Types['Integer']['Read'];
-		was_sent_in__total: Types['Integer']['Read'];
-		was_sent_on__date: Types['Date Time']['Read'] | null;
 		feature: { __id: Feature['Read']['id'] } | [Feature['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		organization: Organization['Write']['id'];
-		owns_credit_notification_for__feature: Feature['Write']['id'];
-		id: Types['Serial']['Write'];
+		organization: Types['Integer']['Write'];
+		owns_credit_notification_for__feature: Types['Integer']['Write'];
 		is_sent_when_below__threshold: Types['Integer']['Write'];
-		was_sent_in__total: Types['Integer']['Write'];
-		was_sent_on__date: Types['Date Time']['Write'] | null;
 	};
 }
 
 export interface PlanHasDiscountCode {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		plan: { __id: Plan['Read']['id'] } | [Plan['Read']];
 		discount_code: Types['Short Text']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		plan: Plan['Write']['id'];
-		discount_code: Types['Short Text']['Write'];
-		id: Types['Serial']['Write'];
-	};
-}
-
-export interface ApplicationTypeFeatureIsComposedOfBillableComponent {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		application_type_feature:
-			| { __id: ApplicationTypeFeature['Read']['id'] }
-			| [ApplicationTypeFeature['Read']];
-		is_composed_of__billable_component:
-			| { __id: BillableComponent['Read']['id'] }
-			| [BillableComponent['Read']];
-		id: Types['Serial']['Read'];
-		billable_component:
-			| { __id: BillableComponent['Read']['id'] }
-			| [BillableComponent['Read']];
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		application_type_feature: ApplicationTypeFeature['Write']['id'];
-		is_composed_of__billable_component: BillableComponent['Write']['id'];
-		id: Types['Serial']['Write'];
-	};
-}
-
-export interface ApplicationMemberFeatureIsComposedOfBillableComponent {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		application_member_feature:
-			| { __id: ApplicationMemberFeature['Read']['id'] }
-			| [ApplicationMemberFeature['Read']];
-		is_composed_of__billable_component:
-			| { __id: BillableComponent['Read']['id'] }
-			| [BillableComponent['Read']];
-		id: Types['Serial']['Read'];
-		billable_component:
-			| { __id: BillableComponent['Read']['id'] }
-			| [BillableComponent['Read']];
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		application_member_feature: ApplicationMemberFeature['Write']['id'];
-		is_composed_of__billable_component: BillableComponent['Write']['id'];
-		id: Types['Serial']['Write'];
-	};
-}
-
-export interface OrganizationMemberFeatureIsComposedOfBillableComponent {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		organization_member_feature:
-			| { __id: OrganizationMemberFeature['Read']['id'] }
-			| [OrganizationMemberFeature['Read']];
-		is_composed_of__billable_component:
-			| { __id: BillableComponent['Read']['id'] }
-			| [BillableComponent['Read']];
-		id: Types['Serial']['Read'];
-		billable_component:
-			| { __id: BillableComponent['Read']['id'] }
-			| [BillableComponent['Read']];
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		organization_member_feature: OrganizationMemberFeature['Write']['id'];
-		is_composed_of__billable_component: BillableComponent['Write']['id'];
-		id: Types['Serial']['Write'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface PlanFeature {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		plan: { __id: Plan['Read']['id'] } | [Plan['Read']];
 		provides__feature: { __id: Feature['Read']['id'] } | [Feature['Read']];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		quantity: Types['Integer']['Read'];
 		feature: { __id: Feature['Read']['id'] } | [Feature['Read']];
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		plan: Plan['Write']['id'];
-		provides__feature: Feature['Write']['id'];
-		id: Types['Serial']['Write'];
-		quantity: Types['Integer']['Write'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface PlanAddon {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		plan: { __id: Plan['Read']['id'] } | [Plan['Read']];
 		offers__feature: { __id: Feature['Read']['id'] } | [Feature['Read']];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		base_price: Types['Integer']['Read'];
 		can_self_serve: Types['Boolean']['Read'];
 		bills_dynamically: Types['Boolean']['Read'];
@@ -2564,27 +1549,16 @@ export interface PlanAddon {
 		>;
 		subscription_addon_discount?: Array<SubscriptionDiscountsPlanAddon['Read']>;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		plan: Plan['Write']['id'];
-		offers__feature: Feature['Write']['id'];
-		id: Types['Serial']['Write'];
-		base_price: Types['Integer']['Write'];
-		can_self_serve: Types['Boolean']['Write'];
-		bills_dynamically: Types['Boolean']['Write'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface SubscriptionDiscountsPlanAddon {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		subscription: { __id: Subscription['Read']['id'] } | [Subscription['Read']];
 		discounts__plan_addon:
 			| { __id: PlanAddon['Read']['id'] }
 			| [PlanAddon['Read']];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		discount_percentage: Types['Real']['Read'];
 		plan__offers__feature:
 			| { __id: PlanAddon['Read']['id'] }
@@ -2594,21 +1568,11 @@ export interface SubscriptionDiscountsPlanAddon {
 			| { __id: PlanAddon['Read']['id'] }
 			| [PlanAddon['Read']];
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		subscription: Subscription['Write']['id'];
-		discounts__plan_addon: PlanAddon['Write']['id'];
-		id: Types['Serial']['Write'];
-		discount_percentage: Types['Real']['Write'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface PublicDevice {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
 		is_of__device_type:
 			| { __id: DeviceType['Read']['id'] }
 			| [DeviceType['Read']];
@@ -2621,30 +1585,17 @@ export interface PublicDevice {
 		longitude: Types['Short Text']['Read'] | null;
 		was_recently_online: Types['Boolean']['Read'];
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		is_of__device_type: DeviceType['Write']['id'];
-		belongs_to__application: Application['Write']['id'] | null;
-		latitude: Types['Short Text']['Write'] | null;
-		longitude: Types['Short Text']['Write'] | null;
-		was_recently_online: Types['Boolean']['Write'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface IdentityProvider {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		sso_identifier: Types['Short Text']['Read'];
 		entry_point: Types['Text']['Read'];
 		issuer: Types['Text']['Read'];
 		certificate: Types['Text']['Read'];
 		requires_signed_authn_response: Types['Boolean']['Read'];
-		is_active: Types['Boolean']['Read'];
-		manages__saml_account?: Array<SamlAccount['Read']>;
 		organization__is_authorized_by__identity_provider?: Array<
 			IdentityProviderMembership['Read']
 		>;
@@ -2658,23 +1609,17 @@ export interface IdentityProvider {
 		>;
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
 		sso_identifier: Types['Short Text']['Write'];
 		entry_point: Types['Text']['Write'];
 		issuer: Types['Text']['Write'];
 		certificate: Types['Text']['Write'];
 		requires_signed_authn_response: Types['Boolean']['Write'];
-		is_active: Types['Boolean']['Write'];
 	};
 }
 
 export interface SamlAccount {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		belongs_to__user: { __id: User['Read']['id'] } | [User['Read']];
 		was_generated_by__identity_provider:
 			| { __id: IdentityProvider['Read']['id'] }
@@ -2682,26 +1627,16 @@ export interface SamlAccount {
 		remote_id: Types['Short Text']['Read'];
 		display_name: Types['Short Text']['Read'] | null;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		belongs_to__user: User['Write']['id'];
-		was_generated_by__identity_provider: IdentityProvider['Write']['id'];
-		remote_id: Types['Short Text']['Write'];
-		display_name: Types['Short Text']['Write'] | null;
-	};
+	Write: Record<string, never>;
 }
 
 export interface IdentityProviderMembership {
 	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
 		organization: { __id: Organization['Read']['id'] } | [Organization['Read']];
 		is_authorized_by__identity_provider:
 			| { __id: IdentityProvider['Read']['id'] }
 			| [IdentityProvider['Read']];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		grants_access_to__team:
 			| { __id: Team['Read']['id'] }
 			| [Team['Read']]
@@ -2715,20 +1650,16 @@ export interface IdentityProviderMembership {
 			| [Organization['Read']];
 	};
 	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		organization: Organization['Write']['id'];
-		is_authorized_by__identity_provider: IdentityProvider['Write']['id'];
-		id: Types['Serial']['Write'];
-		grants_access_to__team: Team['Write']['id'] | null;
+		organization: Types['Integer']['Write'];
+		is_authorized_by__identity_provider: Types['Integer']['Write'];
+		grants_access_to__team: Types['Integer']['Write'] | null;
 	};
 }
 
 export interface DeviceHistory {
 	Read: {
 		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		end_timestamp: Types['Date Time']['Read'] | null;
 		is_created_by__actor:
 			| { __id: Actor['Read']['id'] }
@@ -2763,8 +1694,6 @@ export interface DeviceHistory {
 			| [Release['Read']]
 			| []
 			| null;
-		api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
-		is_connected_to_vpn: Types['Boolean']['Read'];
 		is_managed_by__service_instance:
 			| { __id: ServiceInstance['Read']['id'] }
 			| [ServiceInstance['Read']]
@@ -2785,215 +1714,11 @@ export interface DeviceHistory {
 			| []
 			| null;
 	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		end_timestamp: Types['Date Time']['Write'] | null;
-		is_created_by__actor: Actor['Write']['id'] | null;
-		is_ended_by__actor: Actor['Write']['id'] | null;
-		tracks__device: Device['Write']['id'] | null;
-		tracks__actor: Actor['Write']['id'] | null;
-		uuid: Types['Text']['Write'] | null;
-		belongs_to__application: Application['Write']['id'] | null;
-		is_active: Types['Boolean']['Write'];
-		is_running__release: Release['Write']['id'] | null;
-		is_pinned_on__release: Release['Write']['id'] | null;
-		api_heartbeat_state: 'online' | 'offline' | 'timeout' | 'unknown';
-		is_connected_to_vpn: Types['Boolean']['Write'];
-		is_managed_by__service_instance: ServiceInstance['Write']['id'] | null;
-		os_version: Types['Short Text']['Write'] | null;
-		os_variant: Types['Short Text']['Write'] | null;
-		supervisor_version: Types['Short Text']['Write'] | null;
-		is_of__device_type: DeviceType['Write']['id'] | null;
-		cpu_id: Types['Short Text']['Write'] | null;
-		should_be_managed_by__release: Release['Write']['id'] | null;
-	};
-}
-
-export interface ApplicationHistory {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		end_timestamp: Types['Date Time']['Read'] | null;
-		application_id: Types['Integer']['Read'];
-		application_type:
-			| { __id: ApplicationType['Read']['id'] }
-			| [ApplicationType['Read']];
-		is_host: Types['Boolean']['Read'];
-		organization_id: Types['Integer']['Read'];
-		should_be_running_release_id: Types['Integer']['Read'] | null;
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		end_timestamp: Types['Date Time']['Write'] | null;
-		application_id: Types['Integer']['Write'];
-		application_type: ApplicationType['Write']['id'];
-		is_host: Types['Boolean']['Write'];
-		organization_id: Types['Integer']['Write'];
-		should_be_running_release_id: Types['Integer']['Write'] | null;
-	};
-}
-
-export interface OrganizationHistory {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		end_timestamp: Types['Date Time']['Read'] | null;
-		organization_id: Types['Integer']['Read'];
-		tracks__organization:
-			| { __id: Organization['Read']['id'] }
-			| [Organization['Read']]
-			| []
-			| null;
-		billing_account_code: Types['Short Text']['Read'] | null;
-		tracks__public_organization:
-			| { __id: Organization['Read']['id'] }
-			| [Organization['Read']]
-			| []
-			| null;
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		end_timestamp: Types['Date Time']['Write'] | null;
-		organization_id: Types['Integer']['Write'];
-		tracks__organization: Organization['Write']['id'] | null;
-		billing_account_code: Types['Short Text']['Write'] | null;
-	};
-}
-
-export interface OrganizationMembershipHistory {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		end_timestamp: Types['Date Time']['Read'] | null;
-		organization_membership_id: Types['Integer']['Read'];
-		organization_id: Types['Integer']['Read'];
-		user_id: Types['Integer']['Read'];
-		organization_membership_role:
-			| { __id: OrganizationMembershipRole['Read']['id'] }
-			| [OrganizationMembershipRole['Read']];
-		effective_seat_role: Types['Short Text']['Read'] | null;
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		end_timestamp: Types['Date Time']['Write'] | null;
-		organization_membership_id: Types['Integer']['Write'];
-		organization_id: Types['Integer']['Write'];
-		user_id: Types['Integer']['Write'];
-		organization_membership_role: OrganizationMembershipRole['Write']['id'];
-		effective_seat_role: Types['Short Text']['Write'] | null;
-	};
-}
-
-export interface UserIsMemberOfApplicationHistory {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		end_timestamp: Types['Date Time']['Read'] | null;
-		user_is_member_of_application_id: Types['Integer']['Read'];
-		is_member_of__application_id: Types['Integer']['Read'];
-		user_id: Types['Integer']['Read'];
-		application_membership_role:
-			| { __id: ApplicationMembershipRole['Read']['id'] }
-			| [ApplicationMembershipRole['Read']]
-			| []
-			| null;
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		end_timestamp: Types['Date Time']['Write'] | null;
-		user_is_member_of_application_id: Types['Integer']['Write'];
-		is_member_of__application_id: Types['Integer']['Write'];
-		user_id: Types['Integer']['Write'];
-		application_membership_role:
-			| ApplicationMembershipRole['Write']['id']
-			| null;
-	};
-}
-
-export interface TeamHistory {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		end_timestamp: Types['Date Time']['Read'] | null;
-		team_id: Types['Integer']['Read'];
-		name: Types['Short Text']['Read'];
-		organization_id: Types['Integer']['Read'];
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		end_timestamp: Types['Date Time']['Write'] | null;
-		team_id: Types['Integer']['Write'];
-		name: Types['Short Text']['Write'];
-		organization_id: Types['Integer']['Write'];
-	};
-}
-
-export interface TeamMembershipHistory {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		end_timestamp: Types['Date Time']['Read'] | null;
-		team_membership_id: Types['Integer']['Read'];
-		team_id: Types['Integer']['Read'];
-		user_id: Types['Integer']['Read'];
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		end_timestamp: Types['Date Time']['Write'] | null;
-		team_membership_id: Types['Integer']['Write'];
-		team_id: Types['Integer']['Write'];
-		user_id: Types['Integer']['Write'];
-	};
-}
-
-export interface TeamApplicationAccessHistory {
-	Read: {
-		created_at: Types['Date Time']['Read'];
-		modified_at: Types['Date Time']['Read'];
-		id: Types['Serial']['Read'];
-		end_timestamp: Types['Date Time']['Read'] | null;
-		team_application_access_id: Types['Integer']['Read'];
-		application_id: Types['Integer']['Read'];
-		team_id: Types['Integer']['Read'];
-		application_membership_role:
-			| { __id: ApplicationMembershipRole['Read']['id'] }
-			| [ApplicationMembershipRole['Read']];
-	};
-	Write: {
-		created_at: Types['Date Time']['Write'];
-		modified_at: Types['Date Time']['Write'];
-		id: Types['Serial']['Write'];
-		end_timestamp: Types['Date Time']['Write'] | null;
-		team_application_access_id: Types['Integer']['Write'];
-		application_id: Types['Integer']['Write'];
-		team_id: Types['Integer']['Write'];
-		application_membership_role: ApplicationMembershipRole['Write']['id'];
-	};
+	Write: Record<string, never>;
 }
 
 export interface UserHasDirectAccessToApplication {
 	Read: {
-		id: Types['Big Integer']['Read'];
 		user: { __id: User['Read']['id'] } | [User['Read']];
 		has_direct_access_to__application:
 			| { __id: Application['Read']['id'] }
@@ -3008,7 +1733,6 @@ export interface UserHasDirectAccessToApplication {
 
 export interface ApplicationCanUseApplicationAsHost {
 	Read: {
-		id: Types['Big Integer']['Read'];
 		application: { __id: Application['Read']['id'] } | [Application['Read']];
 		can_use__application_as_host:
 			| { __id: Application['Read']['id'] }
@@ -3019,7 +1743,6 @@ export interface ApplicationCanUseApplicationAsHost {
 
 export interface PublicOrganization {
 	Read: {
-		id: Types['Serial']['Read'];
 		name: Types['Short Text']['Read'];
 		handle: Types['Short Text']['Read'];
 		application?: Array<Application['Read']>;
@@ -3033,7 +1756,7 @@ export interface PublicOrganization {
 
 export interface UserProfile {
 	Read: {
-		id: Types['Serial']['Read'];
+		id: Types['Integer']['Read'];
 		is_of__user: { __id: User['Read']['id'] } | [User['Read']];
 		email: Types['Text']['Read'] | null;
 		has_disabled_newsletter: Types['Boolean']['Read'];
@@ -3050,17 +1773,9 @@ export interface UserProfile {
 
 export default interface $Model {
 	actor: Actor;
-	permission: Permission;
-	role: Role;
-	role__has__permission: RoleHasPermission;
 	user: User;
-	user__has__role: UserHasRole;
-	user__has__permission: UserHasPermission;
 	api_key: ApiKey;
-	api_key__has__role: ApiKeyHasRole;
-	api_key__has__permission: ApiKeyHasPermission;
 	application_type: ApplicationType;
-	config: Config;
 	cpu_architecture: CpuArchitecture;
 	device_family: DeviceFamily;
 	device_manufacturer: DeviceManufacturer;
@@ -3091,18 +1806,12 @@ export default interface $Model {
 	user__has__public_key: UserHasPublicKey;
 	device_type__is_referenced_by__alias: DeviceTypeAlias;
 	application_membership_role: ApplicationMembershipRole;
-	billable_component: BillableComponent;
-	billing_period: BillingPeriod;
 	credit_bundle: CreditBundle;
-	credit_bundle_consumption: CreditBundleConsumption;
-	csp_report: CspReport;
 	delta: Delta;
 	feature: Feature;
-	image_download: ImageDownload;
 	oauth_application: OauthApplication;
 	oauth_application_authorization: OauthApplicationAuthorization;
 	organization_membership_role: OrganizationMembershipRole;
-	overage_report: OverageReport;
 	plan: Plan;
 	recovery_two_factor: RecoveryTwoFactor;
 	social_service_account: SocialServiceAccount;
@@ -3112,9 +1821,6 @@ export default interface $Model {
 	team: Team;
 	invitee: Invitee;
 	support_feature: SupportFeature;
-	application_type_feature: ApplicationTypeFeature;
-	application_member_feature: ApplicationMemberFeature;
-	organization_member_feature: OrganizationMemberFeature;
 	team__grants_access_to__application: TeamApplicationAccess;
 	user__is_member_of__team: TeamMembership;
 	user__is_member_of__application: UserIsMemberOfApplication;
@@ -3127,9 +1833,6 @@ export default interface $Model {
 	user__is_member_of__organization__has__tag_key: OrganizationMembershipTag;
 	organization__owns_credit_notification_for__feature: OrganizationCreditNotification;
 	plan__has__discount_code: PlanHasDiscountCode;
-	application_type_feature__is_composed_of__billable_component: ApplicationTypeFeatureIsComposedOfBillableComponent;
-	application_member_feature__is_composed_of__billable_component: ApplicationMemberFeatureIsComposedOfBillableComponent;
-	organization_member_feature__is_composed_of__billable_component: OrganizationMemberFeatureIsComposedOfBillableComponent;
 	plan__provides__feature: PlanFeature;
 	plan__offers__feature: PlanAddon;
 	subscription__discounts__plan__offers__feature: SubscriptionDiscountsPlanAddon;
@@ -3138,20 +1841,11 @@ export default interface $Model {
 	saml_account: SamlAccount;
 	organization__is_authorized_by__identity_provider: IdentityProviderMembership;
 	device_history: DeviceHistory;
-	application_history: ApplicationHistory;
-	organization_history: OrganizationHistory;
-	organization_membership_history: OrganizationMembershipHistory;
-	user_is_member_of_application_history: UserIsMemberOfApplicationHistory;
-	team_history: TeamHistory;
-	team_membership_history: TeamMembershipHistory;
-	team_application_access_history: TeamApplicationAccessHistory;
 	user__has_direct_access_to__application: UserHasDirectAccessToApplication;
 	application__can_use__application_as_host: ApplicationCanUseApplicationAsHost;
 	public_organization: PublicOrganization;
 	user_profile: UserProfile;
 	// Synonyms
-	user_role: UserHasRole;
-	user_permission: UserHasPermission;
 	application_environment_variable: ApplicationEnvironmentVariable;
 	application_config_variable: ApplicationConfigVariable;
 	service: Service;

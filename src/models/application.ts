@@ -18,14 +18,7 @@ import type { SubmitBody } from '../../typings/pinejs-client-core';
 import type {
 	InjectedDependenciesParam,
 	InjectedOptionsParam,
-	PineOptions,
-	PineTypedResult,
-	Application,
-	ApplicationTag,
-	ApplicationVariable,
-	BuildVariable,
-	Device,
-	PinePostResult,
+
 } from '..';
 import type {
 	CurrentServiceWithCommit,
@@ -37,12 +30,14 @@ import * as url from 'url';
 import once from 'lodash/once';
 import * as errors from 'balena-errors';
 
-import { isId, mergePineOptions, withSupervisorLockedError } from '../util';
+import { type ExtraOptions, isId, mergePineOptions, withSupervisorLockedError } from '../util';
 
 import {
 	getCurrentServiceDetailsPineExpand,
 	generateCurrentServiceDetails,
 } from '../util/device-service-details';
+import type { Application, ApplicationConfigVariable, ApplicationEnvironmentVariable, ApplicationTag, BuildEnvironmentVariable } from '../api/v7-model';
+import type { ODataOptions } from 'pinejs-client-core';
 
 const getApplicationModel = function (
 	deps: InjectedDependenciesParam,
@@ -105,7 +100,7 @@ const getApplicationModel = function (
 		},
 	);
 
-	const configVarModel = buildDependentResource<ApplicationVariable>(
+	const configVarModel = buildDependentResource<ApplicationConfigVariable>(
 		{ pine },
 		{
 			resourceName: 'application_config_variable',
@@ -125,7 +120,7 @@ const getApplicationModel = function (
 			},
 		},
 	);
-	const envVarModel = buildDependentResource<ApplicationVariable>(
+	const envVarModel = buildDependentResource<ApplicationEnvironmentVariable>(
 		{ pine },
 		{
 			resourceName: 'application_environment_variable',
@@ -146,7 +141,7 @@ const getApplicationModel = function (
 		},
 	);
 
-	const buildVarModel = buildDependentResource<BuildVariable>(
+	const buildVarModel = buildDependentResource<BuildEnvironmentVariable>(
 		{ pine },
 		{
 			resourceName: 'build_environment_variable',
@@ -190,7 +185,7 @@ const getApplicationModel = function (
 				},
 			},
 		},
-	};
+	} as const;
 
 	const exports = {
 		_getId: getId,
@@ -236,10 +231,10 @@ const getApplicationModel = function (
 		 * 	console.log(applications);
 		 * });
 		 */
-		async getAll(
-			options?: PineOptions<Application>,
+		async getAll<T extends ExtraOptions<Application['Read']>>(
+			options?: T,
 			context?: 'directly_accessible',
-		): Promise<Application[]> {
+		) {
 			const apps = await pine.get({
 				resource: 'application',
 				options: mergePineOptions(
@@ -247,9 +242,11 @@ const getApplicationModel = function (
 						...(context === 'directly_accessible' && {
 							$filter: isDirectlyAccessibleByUserFilter,
 						}),
-						$orderby: 'app_name asc',
+						$orderby: {
+							app_name: 'asc',
+						}
 					},
-					options ?? {},
+					options,
 				),
 			});
 			return apps;
@@ -271,9 +268,9 @@ const getApplicationModel = function (
 		 * 	console.log(applications);
 		 * });
 		 */
-		async getAllDirectlyAccessible(
-			options?: PineOptions<Application>,
-		): Promise<Application[]> {
+		async getAllDirectlyAccessible<T extends ExtraOptions<Application['Read']>>(
+			options?: T,
+		) {
 			return await exports.getAll(options, 'directly_accessible');
 		},
 
@@ -294,10 +291,10 @@ const getApplicationModel = function (
 		 * 	console.log(applications);
 		 * });
 		 */
-		async getAllByOrganization(
+		async getAllByOrganization<T extends ExtraOptions<Application['Read']>>(
 			orgHandleOrId: number | string,
-			options?: PineOptions<Application>,
-		): Promise<Application[]> {
+			options?: T,
+		) {
 			const { id: orgId } = await sdkInstance.models.organization.get(
 				orgHandleOrId,
 				{
@@ -311,9 +308,11 @@ const getApplicationModel = function (
 						$filter: {
 							organization: orgId,
 						},
-						$orderby: 'app_name asc',
+						$orderby: {
+							app_name: 'asc'
+						},
 					},
-					options ?? {},
+					options,
 				),
 			});
 			return apps;
@@ -347,21 +346,18 @@ const getApplicationModel = function (
 		 * 	console.log(application);
 		 * });
 		 */
-		async get(
+		async get<T extends ExtraOptions<Application['Read']>>(
 			slugOrUuidOrId: string | number,
-			options?: PineOptions<Application>,
+			options?: T,
 			context?: 'directly_accessible',
-		): Promise<Application> {
-			options ??= {};
-
+		) {
 			const accessFilter =
 				context === 'directly_accessible'
 					? isDirectlyAccessibleByUserFilter
 					: null;
 
-			let application;
 			if (isId(slugOrUuidOrId)) {
-				application = await pine.get({
+				const application = await pine.get({
 					resource: 'application',
 					id: slugOrUuidOrId,
 					options: mergePineOptions(
@@ -369,8 +365,15 @@ const getApplicationModel = function (
 						options,
 					),
 				});
+
+				if (application == null) {
+					throw new errors.BalenaApplicationNotFound(slugOrUuidOrId);
+				}
+
+				return application;
 			} else if (typeof slugOrUuidOrId === 'string') {
 				const lowerCaseSlugOrUuid = slugOrUuidOrId.toLowerCase();
+
 				const applications = await pine.get({
 					resource: 'application',
 					options: mergePineOptions(
@@ -382,19 +385,23 @@ const getApplicationModel = function (
 									uuid: lowerCaseSlugOrUuid,
 								},
 							},
-						},
-						options,
-					),
+						} as const,
+						options
+					)
 				});
+
 				if (applications.length > 1) {
 					throw new errors.BalenaAmbiguousApplication(slugOrUuidOrId);
 				}
-				application = applications[0];
+				const application = applications[0];
+
+				if (application == null) {
+					throw new errors.BalenaApplicationNotFound(slugOrUuidOrId);
+				}
+
+				return application;
 			}
-			if (application == null) {
-				throw new errors.BalenaApplicationNotFound(slugOrUuidOrId);
-			}
-			return application;
+
 		},
 
 		/**
@@ -419,10 +426,10 @@ const getApplicationModel = function (
 		 * 	console.log(application);
 		 * });
 		 */
-		async getDirectlyAccessible(
+		async getDirectlyAccessible<T extends ExtraOptions<Application['Read']>>(
 			slugOrUuidOrId: string | number,
-			options?: PineOptions<Application>,
-		): Promise<Application> {
+			options?: T,
+		) {
 			return await exports.get(slugOrUuidOrId, options, 'directly_accessible');
 		},
 
@@ -455,15 +462,10 @@ const getApplicationModel = function (
 		 * 	console.log(device);
 		 * })
 		 */
-		async getWithDeviceServiceDetails(
+		async getWithDeviceServiceDetails<T extends ExtraOptions<Application['Read']>>(
 			slugOrUuidOrId: string | number,
-			options?: PineOptions<Application>,
-		): Promise<
-			Application & {
-				owns__device: Array<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
-			}
-		> {
-			options ??= {};
+			options?: T,
+		) {
 			const serviceOptions = mergePineOptions(
 				{
 					$expand: [
@@ -480,10 +482,11 @@ const getApplicationModel = function (
 			const app = (await exports.get(
 				slugOrUuidOrId,
 				serviceOptions,
-			)) as Application & {
-				owns__device: Array<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
-			};
+			));
+
 			if (app.owns__device) {
+				// TODO Otavio revisit once you have device done
+				// @ts-expect-error - we are overrding the inffered type with something custom
 				app.owns__device = app.owns__device.map((d) =>
 					generateCurrentServiceDetails<CurrentServiceWithCommit>(d),
 				);
@@ -509,13 +512,11 @@ const getApplicationModel = function (
 		 * 	console.log(application);
 		 * });
 		 */
-		async getAppByName(
+		async getAppByName<T extends ExtraOptions<Application['Read']>>(
 			appName: string,
-			options?: PineOptions<Application>,
+			options?: T,
 			context?: 'directly_accessible',
-		): Promise<Application> {
-			options ??= {};
-
+		) {
 			const accessFilter =
 				context === 'directly_accessible'
 					? isDirectlyAccessibleByUserFilter
@@ -530,9 +531,10 @@ const getApplicationModel = function (
 							app_name: appName,
 						},
 					},
-					options,
+					options satisfies ExtraOptions<Application['Read']>,
 				),
 			});
+
 			if (applications.length === 0) {
 				throw new errors.BalenaApplicationNotFound(appName);
 			}
@@ -567,7 +569,8 @@ const getApplicationModel = function (
 		 */
 		has: async (slugOrUuidOrId: string | number): Promise<boolean> => {
 			try {
-				await exports.get(slugOrUuidOrId, { $select: ['id'] });
+				const d = await exports.get(slugOrUuidOrId, { $select: ['id'] });
+				d.
 				return true;
 			} catch (err) {
 				if (err instanceof errors.BalenaApplicationNotFound) {

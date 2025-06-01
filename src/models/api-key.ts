@@ -16,7 +16,7 @@ limitations under the License.
 import * as errors from 'balena-errors';
 
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
-import { mergePineOptions } from '../util';
+import { type ExtraOptions, mergePineOptions } from '../util';
 import type { ApiKey } from '../api/v7-model';
 import type { ODataOptions } from 'pinejs-client-core';
 
@@ -112,19 +112,36 @@ const getApiKeysModel = function (
 		 * 	console.log(apiKeys);
 		 * });
 		 */
-		async getAll<T extends ODataOptions<ApiKey['Read']>>(options?: T) {
-			return await pine.get({
-				resource: 'api_key',
-				options: mergePineOptions(
-					{
-						$orderby: {
-							name: 'asc',
-						},
+		async getAll<T extends ExtraOptions<ApiKey['Read']>>(options?: T) {
+
+			const opts: ODataOptions<ApiKey['Read']> = mergePineOptions(
+				{
+					$orderby: {
+						name: 'asc',
 					},
-					options,
-				),
+				},
+				options,
+			);
+			const b = await pine.get({
+				resource: 'api_key',
+				options: opts,
 			});
+
+			console.log(b.length);
+
+			return b;
 		},
+
+		async test() {
+			const out = await this.getAll({
+				$select: 'id'
+			});
+
+			console.log(out[0].id);
+			console.log(out[0].key);
+
+		},
+
 		/**
 		 * @summary Get all named user API keys of the current user
 		 * @name getAllNamedUserApiKeys
@@ -141,7 +158,7 @@ const getApiKeysModel = function (
 		 * 	console.log(apiKeys);
 		 * });
 		 */
-		async getAllNamedUserApiKeys<T extends ODataOptions<ApiKey['Read']>>(
+		async getAllNamedUserApiKeys<T extends ExtraOptions<ApiKey['Read']>>(
 			options?: T,
 		) {
 			return await exports.getAll(
@@ -180,11 +197,11 @@ const getApiKeysModel = function (
 		 * });
 		 */
 		async getProvisioningApiKeysByApplication<
-			T extends ODataOptions<ApiKey['Read']>,
+			T extends ExtraOptions<ApiKey['Read']>,
 		>(slugOrUuidOrId: string | number, options: T) {
 			const appOpts = {
-				$select: 'actor' as const,
-			};
+				$select: 'actor',
+			} as const;
 			const { actor } = (await sdkInstance.models.application.get(
 				slugOrUuidOrId,
 				appOpts,
@@ -219,7 +236,7 @@ const getApiKeysModel = function (
 		 * 	console.log(apiKeys);
 		 * });
 		 */
-		async getDeviceApiKeysByDevice<T extends ODataOptions<ApiKey['Read']>>(
+		async getDeviceApiKeysByDevice<T extends ExtraOptions<ApiKey['Read']>>(
 			uuidOrId: string | number,
 			options?: T,
 		) {
@@ -242,7 +259,7 @@ const getApiKeysModel = function (
 							name: 'asc',
 						},
 					},
-					options,
+					options satisfies ExtraOptions<ApiKey['Read']>,
 				),
 			});
 		},
