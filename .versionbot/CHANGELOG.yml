@@ -1,4 +1,16 @@
 - commits:
+    - subject: Replace BillingAccountInfo with extended AccountInfo
+      hash: 186d4030beb38727c3c6482b3e96066a67fe4d2f
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Andrea Rosci
+      nested: []
+  version: 21.6.0
+  title: ""
+  date: 2025-06-05T09:11:22.099Z
+- commits:
     - subject: "tests: Skip the org logo tests temporarily"
       hash: 2c110d827afba12b3c3a5b86d6188d65198e154f
       body: ""
