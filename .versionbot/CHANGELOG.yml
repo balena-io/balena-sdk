@@ -1,4 +1,40 @@
 - commits:
+    - subject: "tests: Skip the org logo tests temporarily"
+      hash: 2c110d827afba12b3c3a5b86d6188d65198e154f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "Log tests: Increase timeout between logs in setup"
+      hash: b0cf350b507c68196a6f23535d5aa620e6f93a84
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: joshbwlng
+      nested: []
+    - subject: "tests: Only retry ratelimited requests with retry delay < 1m"
+      hash: c558ac9298ca7010381fe1de5eff62dc83065c3f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Extend the retryRateLimitedRequests sdk option to also accept a function
+      hash: a7050bc007248ec12a0bfebb0d7edb90c04c0b68
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Thodoris Greasidis
+      nested: []
+  version: 21.5.0
+  title: ""
+  date: 2025-06-05T08:15:32.339Z
+- commits:
     - subject: Update dependency lint-staged to v16
       hash: 9ea3d70aa3e82c2cd26b287cb2200912ed188ad5
       body: |
