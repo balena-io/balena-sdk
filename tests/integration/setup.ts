@@ -14,7 +14,15 @@ export let balenaSdkExports: typeof BalenaSdk;
 export const sdkOpts: BalenaSdk.SdkOptions = {
 	isBrowser: IS_BROWSER,
 	requestBatchingChunkSize: 5,
-	retryRateLimitedRequests: true,
+	// Retry ratelimited requests only if the ratelimiting is for less than 60s
+	// Since in some cases ratelimiting can last for hours, which would make the sdk tests look like they are
+	// stalled w/o any clear reason, this surfaces such cases right sooner and make clear what the issue is.
+	retryRateLimitedRequests: (retryAfterMs) => {
+		console.log(
+			`Request ratelimited for ${retryAfterMs / 1000}s, until ${new Date(Date.now() + retryAfterMs).toISOString()}`,
+		);
+		return retryAfterMs < 60_000;
+	},
 };
 if (IS_BROWSER) {
 	// eslint-disable-next-line @typescript-eslint/no-require-imports

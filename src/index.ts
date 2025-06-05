@@ -21,6 +21,7 @@ import type {
 	Interceptor,
 } from 'balena-request';
 import { globalEnv } from './util/global-env';
+import type { BalenaRequestError } from 'balena-errors';
 
 export type { Pine, PineStrict } from './pine';
 
@@ -130,7 +131,7 @@ export interface SdkOptions {
 	deviceUrlsBase?: string;
 	requestLimit?: number;
 	requestLimitInterval?: number;
-	retryRateLimitedRequests?: boolean;
+	retryRateLimitedRequests?: boolean | ((retryAfterMs: number) => boolean);
 	requestBatchingChunkSize?:
 		| number
 		| {
@@ -428,16 +429,19 @@ export const getSdk = function ($opts?: SdkOptions) {
 	if (opts.retryRateLimitedRequests) {
 		// retryAfter429ErrorsInterceptor
 		sdk.interceptors.push({
-			async responseError(error) {
+			async responseError($error) {
 				if (
-					!(error instanceof sdk.errors.BalenaRequestError) ||
-					error.statusCode !== 429
+					!($error instanceof sdk.errors.BalenaRequestError) ||
+					$error.statusCode !== 429
 				) {
-					throw error;
+					throw $error;
 				}
-				const requestOptions = error.requestOptions as BalenaRequestOptions & {
-					doNotRetry?: boolean;
+				const error = $error as BalenaRequestError & {
+					requestOptions: BalenaRequestOptions & {
+						doNotRetry?: boolean;
+					};
 				};
+				const requestOptions = error.requestOptions;
 				if (requestOptions.doNotRetry) {
 					throw error;
 				}
@@ -451,10 +455,17 @@ export const getSdk = function ($opts?: SdkOptions) {
 				) {
 					throw error;
 				}
+				const retryAfterMs = retryAfter * 1000;
+				if (
+					typeof opts.retryRateLimitedRequests === 'function' &&
+					!opts.retryRateLimitedRequests(retryAfterMs)
+				) {
+					throw error;
+				}
 
 				// eslint-disable-next-line @typescript-eslint/no-require-imports
 				const { delay } = require('./util') as typeof import('./util');
-				await delay(retryAfter * 1000);
+				await delay(retryAfterMs);
 
 				return await sdk.request.send(requestOptions);
 			},
@@ -546,7 +557,10 @@ export const getSdk = function ($opts?: SdkOptions) {
  * @param {String} [options.deviceUrlsBase='balena-devices.com'] - the base balena device API url to use.
  * @param {Number} [options.requestLimit] - the number of requests per requestLimitInterval that the SDK should respect.
  * @param {Number} [options.requestLimitInterval = 60000] - the timespan that the requestLimit should apply to in milliseconds, defaults to 60000 (1 minute).
- * @param {Boolean} [options.retryRateLimitedRequests = false] - when enabled the sdk will retry requests that are failing with a 429 Too Many Requests status code and that include a numeric Retry-After response header.
+ * @param {Boolean|Function} [options.retryRateLimitedRequests = false] - Determines whether to automatically retry requests that are failing with a 429 Too Many Requests status code and that include a numeric Retry-After response header.
+ * - If `false`, rate-limited requests will not be retried, and the rate limit error will be propagated.
+ * - If `true`, all rate-limited requests will be retried after the duration specified by the `Retry-After` header.
+ * - If a function `(retryAfterMs: number) => boolean` is provided, it will be called with the retry duration in ms and the request will be retried only when `true` is returned.
  * @param {String|False} [options.dataDirectory='$HOME/.balena'] - *ignored in the browser unless false*, the directory where the user settings are stored, normally retrieved like `require('balena-settings-client').get('dataDirectory')`. Providing `false` creates an isolated in-memory instance.
  * @param {Boolean} [options.isBrowser] - the flag to tell if the module works in the browser. If not set will be computed based on the presence of the global `window` value.
  * @param {Boolean} [options.debug] - when set will print some extra debug information.
