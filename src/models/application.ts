@@ -43,6 +43,7 @@ import {
 	getCurrentServiceDetailsPineExpand,
 	generateCurrentServiceDetails,
 } from '../util/device-service-details';
+import { ODataOptionsWithoutCount } from 'pinejs-client-core';
 
 const getApplicationModel = function (
 	deps: InjectedDependenciesParam,
@@ -84,7 +85,7 @@ const getApplicationModel = function (
 	);
 	/* eslint-enable @typescript-eslint/no-require-imports */
 
-	const tagsModel = buildDependentResource<ApplicationTag>(
+	const tagsModel = buildDependentResource(
 		{ pine },
 		{
 			resourceName: 'application_tag',
@@ -105,7 +106,7 @@ const getApplicationModel = function (
 		},
 	);
 
-	const configVarModel = buildDependentResource<ApplicationVariable>(
+	const configVarModel = buildDependentResource(
 		{ pine },
 		{
 			resourceName: 'application_config_variable',
@@ -125,7 +126,7 @@ const getApplicationModel = function (
 			},
 		},
 	);
-	const envVarModel = buildDependentResource<ApplicationVariable>(
+	const envVarModel = buildDependentResource(
 		{ pine },
 		{
 			resourceName: 'application_environment_variable',
@@ -146,7 +147,7 @@ const getApplicationModel = function (
 		},
 	);
 
-	const buildVarModel = buildDependentResource<BuildVariable>(
+	const buildVarModel = buildDependentResource(
 		{ pine },
 		{
 			resourceName: 'build_environment_variable',
@@ -237,9 +238,9 @@ const getApplicationModel = function (
 		 * });
 		 */
 		async getAll(
-			options?: PineOptions<Application>,
+			options?: ODataOptionsWithoutCount<Application['Read']>,
 			context?: 'directly_accessible',
-		): Promise<Application[]> {
+		): Promise<Array<Application['Read']>> {
 			const apps = await pine.get({
 				resource: 'application',
 				options: mergePineOptions(
@@ -247,7 +248,7 @@ const getApplicationModel = function (
 						...(context === 'directly_accessible' && {
 							$filter: isDirectlyAccessibleByUserFilter,
 						}),
-						$orderby: 'app_name asc',
+						$orderby: { app_name: 'asc' },
 					},
 					options ?? {},
 				),
@@ -272,8 +273,8 @@ const getApplicationModel = function (
 		 * });
 		 */
 		async getAllDirectlyAccessible(
-			options?: PineOptions<Application>,
-		): Promise<Application[]> {
+			options?: ODataOptionsWithoutCount<Application['Read']>,
+		): Promise<Array<Application['Read']>> {
 			return await exports.getAll(options, 'directly_accessible');
 		},
 
@@ -296,8 +297,8 @@ const getApplicationModel = function (
 		 */
 		async getAllByOrganization(
 			orgHandleOrId: number | string,
-			options?: PineOptions<Application>,
-		): Promise<Application[]> {
+			options?: ODataOptionsWithoutCount<Application['Read']>,
+		): Promise<Array<Application['Read']>> {
 			const { id: orgId } = await sdkInstance.models.organization.get(
 				orgHandleOrId,
 				{
@@ -311,7 +312,7 @@ const getApplicationModel = function (
 						$filter: {
 							organization: orgId,
 						},
-						$orderby: 'app_name asc',
+						$orderby: { app_name: 'asc' },
 					},
 					options ?? {},
 				),
@@ -349,9 +350,9 @@ const getApplicationModel = function (
 		 */
 		async get(
 			slugOrUuidOrId: string | number,
-			options?: PineOptions<Application>,
+			options?: ODataOptionsWithoutCount<Application['Read']>,
 			context?: 'directly_accessible',
-		): Promise<Application> {
+		): Promise<Application['Read']> {
 			options ??= {};
 
 			const accessFilter =
@@ -421,8 +422,8 @@ const getApplicationModel = function (
 		 */
 		async getDirectlyAccessible(
 			slugOrUuidOrId: string | number,
-			options?: PineOptions<Application>,
-		): Promise<Application> {
+			options?: ODataOptionsWithoutCount<Application['Read']>,
+		): Promise<Application['Read']> {
 			return await exports.get(slugOrUuidOrId, options, 'directly_accessible');
 		},
 
@@ -457,9 +458,9 @@ const getApplicationModel = function (
 		 */
 		async getWithDeviceServiceDetails(
 			slugOrUuidOrId: string | number,
-			options?: PineOptions<Application>,
+			options?: ODataOptionsWithoutCount<Application['Read']>,
 		): Promise<
-			Application & {
+			Application['Read'] & {
 				owns__device: Array<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
 			}
 		> {
@@ -475,15 +476,16 @@ const getApplicationModel = function (
 					],
 				},
 				options,
-			);
+			) as ODataOptionsWithoutCount<Application['Read']>;
 
 			const app = (await exports.get(
 				slugOrUuidOrId,
 				serviceOptions,
-			)) as Application & {
+			)) as Application['Read'] & {
 				owns__device: Array<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
 			};
 			if (app.owns__device) {
+				// @ts-expect-error - type overriding
 				app.owns__device = app.owns__device.map((d) =>
 					generateCurrentServiceDetails<CurrentServiceWithCommit>(d),
 				);
@@ -511,9 +513,9 @@ const getApplicationModel = function (
 		 */
 		async getAppByName(
 			appName: string,
-			options?: PineOptions<Application>,
+			options?: ODataOptionsWithoutCount<Application['Read']>,
 			context?: 'directly_accessible',
-		): Promise<Application> {
+		): Promise<Application['Read']> {
 			options ??= {};
 
 			const accessFilter =
@@ -1037,7 +1039,7 @@ const getApplicationModel = function (
 							is_invalidated: false,
 							status: 'success',
 						},
-						$orderby: 'created_at desc',
+						$orderby: { created_at: 'desc' },
 					},
 				},
 			} as const;
@@ -1135,10 +1137,10 @@ const getApplicationModel = function (
 				$expand: { should_be_running__release: { $select: 'commit' } },
 			} as const;
 
-			const application = (await exports.get(
+			const application = await exports.get(
 				slugOrUuidOrId,
 				appOptions,
-			)) as PineTypedResult<Application, typeof appOptions>;
+			);
 			return application.should_be_running__release[0]?.commit;
 		},
 
