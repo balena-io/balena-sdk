@@ -15,9 +15,10 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import type { PineOptions, InjectedDependenciesParam } from '..';
+import type { InjectedDependenciesParam } from '..';
 import type { Service, ServiceEnvironmentVariable } from '../types/models';
 import { mergePineOptions } from '../util';
+import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
 
 const getServiceModel = ({
 	pine,
@@ -28,7 +29,7 @@ const getServiceModel = ({
 		// eslint-disable-next-line @typescript-eslint/no-require-imports
 		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 
-	const varModel = buildDependentResource<ServiceEnvironmentVariable>(
+	const varModel = buildDependentResource(
 		{ pine },
 		{
 			resourceName: 'service_environment_variable',
@@ -78,7 +79,10 @@ const getServiceModel = ({
 
 	// Not exported for now, but we could document & export it in the future
 	// if there are external use cases for this.
-	const get = async (id: number, options: PineOptions<Service> = {}) => {
+	const get = async (
+		id: number,
+		options: ODataOptionsWithoutCount<Service['Read']> = {},
+	) => {
 		const service = await pine.get({
 			resource: 'service',
 			id,
@@ -92,8 +96,8 @@ const getServiceModel = ({
 
 	async function getAllByApplication(
 		slugOrUuidOrId: string | number,
-		options: PineOptions<Service> = {},
-	): Promise<Service[]> {
+		options: ODataOptionsWithoutCount<Service['Read']> = {},
+	): Promise<Array<Service['Read']>> {
 		const { service } = await sdkInstance.models.application.get(
 			slugOrUuidOrId,
 			{
@@ -184,8 +188,10 @@ const getServiceModel = ({
 			 */
 			async getAllByApplication(
 				slugOrUuidOrId: string | number,
-				options: PineOptions<ServiceEnvironmentVariable> = {},
-			): Promise<ServiceEnvironmentVariable[]> {
+				options: ODataOptionsWithoutCount<
+					ServiceEnvironmentVariable['Read']
+				> = {},
+			): Promise<Array<ServiceEnvironmentVariable['Read']>> {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{

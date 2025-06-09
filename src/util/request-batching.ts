@@ -2,11 +2,11 @@ import * as errors from 'balena-errors';
 import chunk from 'lodash/chunk';
 import { groupByMap, mergePineOptions } from '.';
 import type {
-	PineOptionsStrict,
-	PineSelectableProps,
-	PineTypedResult,
-	PineFilter,
-} from '..';
+	ExpandableStringKeyOf,
+	Filter,
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
 
 const NUMERIC_ID_CHUNK_SIZE = 200;
 const STRING_ID_CHUNK_SIZE = 50;
@@ -24,7 +24,7 @@ export function batchResourceOperationFactory<
 	AmbiguousResourceError,
 	chunkSize: chunkSizeParam,
 }: {
-	getAll: (options?: PineOptionsStrict<T>) => Promise<T[]>;
+	getAll: (options: ODataOptionsWithoutCount<T>) => Promise<T[]>;
 	NotFoundError: new (id: string | number) => Error;
 	AmbiguousResourceError: new (id: string | number) => Error;
 	chunkSize?: number | Partial<ChunkSizeOptions>;
@@ -40,13 +40,15 @@ export function batchResourceOperationFactory<
 					stringId: chunkSizeParam?.stringId ?? STRING_ID_CHUNK_SIZE,
 				};
 
-	type Item<TOpts> = {
-		id: number;
-		uuid: string;
-	} & (TOpts extends PineOptionsStrict<T> ? PineTypedResult<T, TOpts> : object);
+	type Item<TOpts extends ODataOptionsWithoutCount<T>> =
+		// We always $select the id
+		Pick<T, 'id'> &
+			// but we might or might not $select the uuid
+			Partial<Pick<T, 'uuid'>> &
+			NonNullable<OptionsToResponse<T, TOpts, number | string>>;
 
 	async function batchResourceOperation<
-		TOpts extends PineOptionsStrict<T>,
+		TOpts extends ODataOptionsWithoutCount<T>,
 	>(options: {
 		uuidOrIdOrArray: number | number[] | string | string[];
 		parameterName?: string;
@@ -55,15 +57,17 @@ export function batchResourceOperationFactory<
 		fn: (items: Array<Item<TOpts>>) => Promise<void>;
 	}): Promise<void>;
 	async function batchResourceOperation<
-		TOpts extends PineOptionsStrict<T>,
+		TOpts extends ODataOptionsWithoutCount<T>,
 	>(options: {
 		uuidOrIdOrArray: number | number[] | string | string[];
 		parameterName?: string;
 		options?: TOpts;
-		groupByNavigationPoperty: PineSelectableProps<T>;
+		groupByNavigationPoperty: ExpandableStringKeyOf<T>;
 		fn: (items: Array<Item<TOpts>>, ownerId: number) => Promise<void>;
 	}): Promise<void>;
-	async function batchResourceOperation<TOpts extends PineOptionsStrict<T>>({
+	async function batchResourceOperation<
+		TOpts extends ODataOptionsWithoutCount<T>,
+	>({
 		uuidOrIdOrArray,
 		parameterName = 'uuidOrIdOrArray',
 		options,
@@ -73,7 +77,7 @@ export function batchResourceOperationFactory<
 		uuidOrIdOrArray: number | number[] | string | string[];
 		parameterName?: string;
 		options?: TOpts;
-		groupByNavigationPoperty?: PineSelectableProps<T>;
+		groupByNavigationPoperty?: ExpandableStringKeyOf<T>;
 		fn:
 			| ((items: Array<Item<TOpts>>) => Promise<void>)
 			| ((items: Array<Item<TOpts>>, ownerId: number) => Promise<void>);
@@ -132,11 +136,12 @@ export function batchResourceOperationFactory<
 		const items: Array<
 			Item<TOpts> &
 				Partial<{
-					[groupByNavigationPoperty: string]: { __id: number };
+					// OptionalNavigationResource
+					[groupByNavigationPoperty: string]: { __id: number } | null;
 				}>
 		> = [];
 		for (const uuidOrIdOrArrayChunk of chunks) {
-			const resourceFilter: PineFilter<{ id: number; uuid: string }> =
+			const resourceFilter: Filter<{ id: number; uuid: string }> =
 				Array.isArray(uuidOrIdOrArrayChunk)
 					? typeof uuidOrIdOrArrayChunk[0] === 'string'
 						? {
@@ -161,12 +166,11 @@ export function batchResourceOperationFactory<
 							? ['uuid']
 							: []),
 						...(groupByNavigationPoperty ? [groupByNavigationPoperty] : []),
-					] as Array<PineSelectableProps<T>>,
-					$filter: resourceFilter as PineFilter<T>,
+					] as ODataOptionsWithoutCount<T>['$select'],
+					$filter: resourceFilter,
 				},
-				options,
-			) as PineOptionsStrict<T>;
-
+				options ?? {},
+			);
 			items.push(...((await getAll(combinedOptions)) as typeof items));
 		}
 

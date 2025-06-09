@@ -114,6 +114,7 @@
     "watch": "^1.0.2"
   },
   "dependencies": {
+    "@balena/abstract-sql-to-typescript": "^5.1.1",
     "@balena/es-version": "^1.0.0",
     "@types/json-schema": "^7.0.9",
     "@types/node": "^20.17.8",
@@ -131,7 +132,7 @@
     "memoizee": "^0.4.15",
     "ndjson": "^2.0.0",
     "p-throttle": "^4.1.1",
-    "pinejs-client-core": "^7.0.0",
+    "pinejs-client-core": "^8.2.0",
     "tslib": "^2.1.0"
   },
   "versionist": {

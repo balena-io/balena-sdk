@@ -14,8 +14,8 @@ export interface Contract {
 	tags?: string[];
 	data?: AnyObject;
 	assets?: AnyObject;
-	requires?: string[];
-	provides?: string[];
+	requires?: Contract[];
+	provides?: Contract[];
 	composedOf?: AnyObject;
 	partials?: Partials;
 }

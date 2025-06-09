@@ -15,7 +15,8 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import type { Image, PineOptions, InjectedDependenciesParam } from '..';
+import type { Image, InjectedDependenciesParam } from '..';
+import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
 
 const getImageModel = function (deps: InjectedDependenciesParam) {
 	const { pine } = deps;
@@ -37,7 +38,10 @@ const getImageModel = function (deps: InjectedDependenciesParam) {
 		 * 	console.log(image);
 		 * });
 		 */
-		async get(id: number, options: PineOptions<Image> = {}): Promise<Image> {
+		async get(
+			id: number,
+			options: ODataOptionsWithoutCount<Image['Read']> = {},
+		): Promise<Image['Read']> {
 			const image = await pine.get({
 				resource: 'image',
 				id,
@@ -46,7 +50,7 @@ const getImageModel = function (deps: InjectedDependenciesParam) {
 			if (image == null) {
 				throw new errors.BalenaImageNotFound(id);
 			}
-			return image as Image;
+			return image;
 		},
 
 		/**
