@@ -14,10 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type * as BalenaSdk from '..';
-import type { InjectedDependenciesParam, PinePostResult, Team } from '..';
+import type { InjectedDependenciesParam, Team } from '..';
 import * as errors from 'balena-errors';
 import { isId, mergePineOptions } from '../util';
+import type {
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
 
 const getTeamModel = function (deps: InjectedDependenciesParam) {
 	const { pine, sdkInstance } = deps;
@@ -56,7 +59,7 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 	const create = async function (
 		organizationSlugOrId: string | number,
 		name: string,
-	): Promise<PinePostResult<Team>> {
+	) {
 		const orgId = (
 			await sdkInstance.models.organization.get(organizationSlugOrId, {
 				$select: 'id',
@@ -97,8 +100,8 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 	 */
 	const getAllByOrganization = async function (
 		organizationSlugOrId: string | number,
-		options: BalenaSdk.PineOptions<BalenaSdk.Team> = {},
-	): Promise<BalenaSdk.Team[]> {
+		options: ODataOptionsWithoutCount<Team['Read']> = {},
+	): Promise<Array<Team['Read']>> {
 		const organization = await sdkInstance.models.organization.get(
 			organizationSlugOrId,
 			{ $select: 'id' },
@@ -146,8 +149,8 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 	 */
 	const get = async function (
 		teamId: number,
-		options: BalenaSdk.PineOptions<BalenaSdk.Team> = {},
-	): Promise<BalenaSdk.Team> {
+		options: ODataOptionsWithoutCount<Team['Read']> = {},
+	): Promise<Team['Read']> {
 		if (teamId == null) {
 			throw new errors.BalenaInvalidParameterError('teamId', teamId);
 		}
@@ -197,10 +200,11 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 					},
 				},
 			},
-		} satisfies BalenaSdk.PineOptions<Team>;
-		const team = (await get(teamId, teamOptions)) as BalenaSdk.PineTypedResult<
-			Team,
-			typeof teamOptions
+		} as const;
+		const team = (await get(teamId, teamOptions)) as OptionsToResponse<
+			Team['Read'],
+			typeof teamOptions,
+			typeof teamId
 		>;
 		if (team == null) {
 			throw new Error(`Team not found: ${teamId}`);
@@ -241,7 +245,7 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 	 * balena.models.team.remove(123);
 	 */
 	const remove = async function (teamId: number): Promise<void> {
-		await pine.delete<BalenaSdk.Organization>({
+		await pine.delete({
 			resource: 'team',
 			id: teamId,
 		});

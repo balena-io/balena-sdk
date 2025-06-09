@@ -113,7 +113,6 @@ describe('Application Invite Model', function () {
 									this.application.id,
 									{
 										invitee: TEST_EMAIL,
-										// @ts-expect-error invalid role
 										roleName: UNKNOWN_ROLE,
 									},
 								);

@@ -1,11 +1,5 @@
-import type {
-	Device,
-	Image,
-	ImageInstall,
-	PineExpand,
-	Release,
-	Service,
-} from '..';
+import type { Expand } from 'pinejs-client-core';
+import type { Device, Image, ImageInstall, Release, Service } from '..';
 
 export interface CurrentService {
 	id: number;
@@ -22,17 +16,19 @@ export interface CurrentServiceWithCommit extends CurrentService {
 	release_id: number;
 }
 
-export interface DeviceWithServiceDetails<
+export type DeviceWithServiceDetails<
 	TCurrentService extends CurrentService = CurrentService,
-> extends Device {
+> = Device['Read'] & {
 	current_services: {
 		[serviceName: string]: TCurrentService[];
 	};
-}
+};
 
 // Pine expand options necessary for getting raw service data for a device
-export const getCurrentServiceDetailsPineExpand = (expandRelease: boolean) => {
-	const pineExpand: PineExpand<Device> = {
+export const getCurrentServiceDetailsPineExpand = (
+	expandRelease: boolean,
+): Readonly<Expand<Device['Read']>> => {
+	return {
 		image_install: {
 			$select: ['id', 'download_progress', 'status', 'install_date'],
 			$filter: {
@@ -57,8 +53,6 @@ export const getCurrentServiceDetailsPineExpand = (expandRelease: boolean) => {
 			},
 		},
 	};
-
-	return pineExpand;
 };
 
 interface WithServiceName {
@@ -66,10 +60,10 @@ interface WithServiceName {
 }
 
 function getSingleInstallSummary(
-	rawData: ImageInstall,
+	rawData: ImageInstall['Read'],
 ): CurrentService & WithServiceName {
-	const image = (rawData.installs__image as Image[])[0];
-	const service = (image.is_a_build_of__service as Service[])[0];
+	const image = (rawData.installs__image as Array<Image['Read']>)[0];
+	const service = (image.is_a_build_of__service as Array<Service['Read']>)[0];
 
 	let releaseInfo: {
 		commit?: string;
@@ -80,7 +74,9 @@ function getSingleInstallSummary(
 		'is_provided_by__release' in rawData &&
 		rawData.is_provided_by__release != null
 	) {
-		const release = (rawData.is_provided_by__release as Release[])[0];
+		const release = (
+			rawData.is_provided_by__release as Array<Release['Read']>
+		)[0];
 		releaseInfo = {
 			commit: release?.commit,
 			raw_version: release?.raw_version,
@@ -89,7 +85,9 @@ function getSingleInstallSummary(
 	}
 
 	const result: CurrentService &
-		Partial<Pick<ImageInstall, 'installs__image' | 'is_provided_by__release'>> &
+		Partial<
+			Pick<ImageInstall['Read'], 'installs__image' | 'is_provided_by__release'>
+		> &
 		WithServiceName = {
 		...rawData,
 		service_id: service.id,
@@ -112,7 +110,7 @@ function getSingleInstallSummary(
 export const generateCurrentServiceDetails = <
 	TCurrentService extends CurrentService = CurrentService,
 >(
-	rawDevice: Device,
+	rawDevice: Device['Read'],
 ): DeviceWithServiceDetails<TCurrentService> => {
 	const installs = rawDevice.image_install!.map((ii) =>
 		getSingleInstallSummary(ii),
