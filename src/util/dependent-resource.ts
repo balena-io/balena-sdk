@@ -20,13 +20,17 @@ key-value resources directly attached to a parent (e.g. tags, config variables).
 */
 
 import { isId, isUnauthorizedResponse, mergePineOptions } from '../util';
-import type { Pine, PineOptions } from '..';
+import type { BalenaModel, Pine, PineOptions } from '..';
 import type { Dictionary } from '../../typings/utils';
+import type { ExpandableStringKeyOf, FilterObj, ODataOptions, StringKeyOf } from 'pinejs-client-core';
 
-interface DependentResource {
-	id: number;
-	value: string;
-}
+type DependentResource = {
+	[K in StringKeyOf<BalenaModel>]: 'Read' extends keyof BalenaModel[K]
+		? BalenaModel[K]['Read'] extends { id: number; value: string }
+			? K
+			: never
+		: never;
+}[StringKeyOf<BalenaModel>];
 
 export function buildDependentResource<T extends DependentResource>(
 	{ pine }: { pine: Pine },
@@ -36,34 +40,33 @@ export function buildDependentResource<T extends DependentResource>(
 		parentResourceName,
 		getResourceId,
 	}: {
-		resourceName: string; // e.g. device_tag
-		resourceKeyField: keyof T & string; // e.g. tag_key
-		parentResourceName: keyof T & string; // e.g. device
+		resourceName: T; // e.g. device_tag
+		resourceKeyField: StringKeyOf<BalenaModel[T]['Read']>; // e.g. tag_key
+		parentResourceName: ExpandableStringKeyOf<BalenaModel[T]['Read']>; // e.g. device
 		getResourceId: (
 			uuidOrIdOrDict: string | number | Dictionary<unknown>,
 		) => Promise<number>; // e.g. getId(uuidOrIdOrDict)
 	},
 ) {
 	const exports = {
-		getAll(options?: PineOptions<T>): Promise<T[]> {
+		getAll(options?: PineOptions<BalenaModel[T]['Read']>) {
 			options ??= {};
-			return pine.get<T>({
+			return pine.get({
 				resource: resourceName,
 				options: mergePineOptions(
 					{
 						$orderby: {
 							[resourceKeyField]: 'asc',
-						} as PineOptions<T>['$orderby'],
+						} as ODataOptions<BalenaModel[T]['Read']>['$orderby'],
 					},
 					options,
-				),
+				)
 			});
 		},
-
 		async getAllByParent(
 			parentParam: string | number | Dictionary<unknown>,
-			options?: PineOptions<T>,
-		): Promise<T[]> {
+			options?: PineOptions<BalenaModel[T]['Read']>,
+		) {
 			options ??= {};
 			const id = await getResourceId(parentParam);
 			return await exports.getAll(
@@ -82,16 +85,19 @@ export function buildDependentResource<T extends DependentResource>(
 			key: string,
 		): Promise<string | undefined> {
 			const id = await getResourceId(parentParam);
-			const [result] = await pine.get<DependentResource>({
+			// @ts-expect-error I don't get it. TODO OTAVIO ask Thodoris?
+			const [result] = await pine.get({
 				resource: resourceName,
 				options: {
 					$select: 'value',
 					$filter: {
 						[parentResourceName]: id,
 						[resourceKeyField]: key,
-					},
+					} as FilterObj<BalenaModel[T]['Read']>,
 				},
 			});
+
+
 			if (result) {
 				return result.value;
 			}
@@ -114,10 +120,12 @@ export function buildDependentResource<T extends DependentResource>(
 			try {
 				await pine.upsert({
 					resource: resourceName,
+					// @ts-expect-error - TODO OTAVIO
 					id: {
 						[parentResourceName]: parentId,
 						[resourceKeyField]: key,
 					},
+					// @ts-expect-error - TODO OTAVIO
 					body: {
 						value,
 					},
@@ -146,7 +154,7 @@ export function buildDependentResource<T extends DependentResource>(
 					$filter: {
 						[parentResourceName]: parentId,
 						[resourceKeyField]: key,
-					},
+					} as FilterObj<BalenaModel[T]['Read']>,
 				},
 			});
 		},

@@ -43,6 +43,7 @@ import {
 	getCurrentServiceDetailsPineExpand,
 	generateCurrentServiceDetails,
 } from '../util/device-service-details';
+import { ODataOptions } from 'pinejs-client-core';
 
 const getApplicationModel = function (
 	deps: InjectedDependenciesParam,
@@ -75,7 +76,7 @@ const getApplicationModel = function (
 	const batchApplicationOperation = once(() =>
 		(
 			require('../util/request-batching') as typeof import('../util/request-batching')
-		).batchResourceOperationFactory<Application>({
+		).batchResourceOperationFactory<Application['Read']>({
 			getAll: exports.getAll,
 			NotFoundError: errors.BalenaApplicationNotFound,
 			AmbiguousResourceError: errors.BalenaAmbiguousApplication,
@@ -84,7 +85,7 @@ const getApplicationModel = function (
 	);
 	/* eslint-enable @typescript-eslint/no-require-imports */
 
-	const tagsModel = buildDependentResource<ApplicationTag>(
+	const tagsModel = buildDependentResource(
 		{ pine },
 		{
 			resourceName: 'application_tag',
@@ -105,7 +106,7 @@ const getApplicationModel = function (
 		},
 	);
 
-	const configVarModel = buildDependentResource<ApplicationVariable>(
+	const configVarModel = buildDependentResource(
 		{ pine },
 		{
 			resourceName: 'application_config_variable',
@@ -125,7 +126,7 @@ const getApplicationModel = function (
 			},
 		},
 	);
-	const envVarModel = buildDependentResource<ApplicationVariable>(
+	const envVarModel = buildDependentResource(
 		{ pine },
 		{
 			resourceName: 'application_environment_variable',
@@ -146,7 +147,7 @@ const getApplicationModel = function (
 		},
 	);
 
-	const buildVarModel = buildDependentResource<BuildVariable>(
+	const buildVarModel = buildDependentResource(
 		{ pine },
 		{
 			resourceName: 'build_environment_variable',
@@ -190,7 +191,7 @@ const getApplicationModel = function (
 				},
 			},
 		},
-	};
+	} as const;
 
 	const exports = {
 		_getId: getId,
@@ -237,9 +238,9 @@ const getApplicationModel = function (
 		 * });
 		 */
 		async getAll(
-			options?: PineOptions<Application>,
+			options?: ODataOptions<Application['Read']>,
 			context?: 'directly_accessible',
-		): Promise<Application[]> {
+		) {
 			const apps = await pine.get({
 				resource: 'application',
 				options: mergePineOptions(
@@ -247,7 +248,9 @@ const getApplicationModel = function (
 						...(context === 'directly_accessible' && {
 							$filter: isDirectlyAccessibleByUserFilter,
 						}),
-						$orderby: 'app_name asc',
+						$orderby: {
+							app_name: 'asc'
+						},
 					},
 					options ?? {},
 				),
@@ -272,8 +275,8 @@ const getApplicationModel = function (
 		 * });
 		 */
 		async getAllDirectlyAccessible(
-			options?: PineOptions<Application>,
-		): Promise<Application[]> {
+			options?: ODataOptions<Application['Read']>,
+		) {
 			return await exports.getAll(options, 'directly_accessible');
 		},
 
@@ -296,8 +299,8 @@ const getApplicationModel = function (
 		 */
 		async getAllByOrganization(
 			orgHandleOrId: number | string,
-			options?: PineOptions<Application>,
-		): Promise<Application[]> {
+			options?: ODataOptions<Application['Read']>,
+		) {
 			const { id: orgId } = await sdkInstance.models.organization.get(
 				orgHandleOrId,
 				{
@@ -311,7 +314,9 @@ const getApplicationModel = function (
 						$filter: {
 							organization: orgId,
 						},
-						$orderby: 'app_name asc',
+						$orderby: {
+							app_name: 'asc',
+						}
 					},
 					options ?? {},
 				),
@@ -349,9 +354,9 @@ const getApplicationModel = function (
 		 */
 		async get(
 			slugOrUuidOrId: string | number,
-			options?: PineOptions<Application>,
+			options?: ODataOptions<Application['Read']>,
 			context?: 'directly_accessible',
-		): Promise<Application> {
+		) {
 			options ??= {};
 
 			const accessFilter =
@@ -421,8 +426,8 @@ const getApplicationModel = function (
 		 */
 		async getDirectlyAccessible(
 			slugOrUuidOrId: string | number,
-			options?: PineOptions<Application>,
-		): Promise<Application> {
+			options?: ODataOptions<Application['Read']>,
+		) {
 			return await exports.get(slugOrUuidOrId, options, 'directly_accessible');
 		},
 
@@ -457,7 +462,7 @@ const getApplicationModel = function (
 		 */
 		async getWithDeviceServiceDetails(
 			slugOrUuidOrId: string | number,
-			options?: PineOptions<Application>,
+			options?: ODataOptions<Application['Read']>,
 		): Promise<
 			Application & {
 				owns__device: Array<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
@@ -480,7 +485,7 @@ const getApplicationModel = function (
 			const app = (await exports.get(
 				slugOrUuidOrId,
 				serviceOptions,
-			)) as Application & {
+			)) as Application['Read'] & {
 				owns__device: Array<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
 			};
 			if (app.owns__device) {
@@ -511,9 +516,9 @@ const getApplicationModel = function (
 		 */
 		async getAppByName(
 			appName: string,
-			options?: PineOptions<Application>,
+			options?: ODataOptions<Application['Read']>,
 			context?: 'directly_accessible',
-		): Promise<Application> {
+		) {
 			options ??= {};
 
 			const accessFilter =
