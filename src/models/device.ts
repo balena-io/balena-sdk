@@ -139,7 +139,7 @@ const getDeviceModel = function (
 	const batchDeviceOperation = once(() =>
 		(
 			require('../util/request-batching') as typeof import('../util/request-batching')
-		).batchResourceOperationFactory<Device>({
+		).batchResourceOperationFactory<Device['Read']>({
 			getAll,
 			NotFoundError: errors.BalenaDeviceNotFound,
 			AmbiguousResourceError: errors.BalenaAmbiguousDevice,

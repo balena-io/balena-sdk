@@ -2,11 +2,9 @@ import * as errors from 'balena-errors';
 import chunk from 'lodash/chunk';
 import { groupByMap, mergePineOptions } from '.';
 import type {
-	PineOptionsStrict,
-	PineSelectableProps,
-	PineTypedResult,
-	PineFilter,
+	BalenaModel,
 } from '..';
+import type { Filter, ODataOptions, OptionsToResponse, SelectPropsOf, StringKeyOf } from 'pinejs-client-core';
 
 const NUMERIC_ID_CHUNK_SIZE = 200;
 const STRING_ID_CHUNK_SIZE = 50;
@@ -16,15 +14,22 @@ export interface ChunkSizeOptions {
 	stringId: number;
 }
 
-export function batchResourceOperationFactory<
-	T extends { id: number; uuid: string },
->({
+type BatchoperationResource = {
+	[K in StringKeyOf<BalenaModel>]: 'Read' extends keyof BalenaModel[K]
+	// does ['Write'] Also needs it ?
+	? BalenaModel[K]['Read'] extends { id: number; uuid: string }
+	? K
+	: never
+	: never;
+}[StringKeyOf<BalenaModel>];
+
+export function batchResourceOperationFactory<T extends BalenaModel[BatchoperationResource]['Read']>({
 	getAll,
 	NotFoundError,
 	AmbiguousResourceError,
 	chunkSize: chunkSizeParam,
 }: {
-	getAll: (options?: PineOptionsStrict<T>) => Promise<T[]>;
+	getAll: (options?: ODataOptions<T>) => Promise<T[]>;
 	NotFoundError: new (id: string | number) => Error;
 	AmbiguousResourceError: new (id: string | number) => Error;
 	chunkSize?: number | Partial<ChunkSizeOptions>;
@@ -32,21 +37,21 @@ export function batchResourceOperationFactory<
 	const chunkSize =
 		typeof chunkSizeParam === 'number'
 			? {
-					numericId: chunkSizeParam,
-					stringId: chunkSizeParam,
-				}
+				numericId: chunkSizeParam,
+				stringId: chunkSizeParam,
+			}
 			: {
-					numericId: chunkSizeParam?.numericId ?? NUMERIC_ID_CHUNK_SIZE,
-					stringId: chunkSizeParam?.stringId ?? STRING_ID_CHUNK_SIZE,
-				};
+				numericId: chunkSizeParam?.numericId ?? NUMERIC_ID_CHUNK_SIZE,
+				stringId: chunkSizeParam?.stringId ?? STRING_ID_CHUNK_SIZE,
+			};
 
 	type Item<TOpts> = {
 		id: number;
 		uuid: string;
-	} & (TOpts extends PineOptionsStrict<T> ? PineTypedResult<T, TOpts> : object);
+	} & (TOpts extends ODataOptions<T> ? OptionsToResponse<T, TOpts, undefined> : object);
 
 	async function batchResourceOperation<
-		TOpts extends PineOptionsStrict<T>,
+		TOpts extends ODataOptions<T>,
 	>(options: {
 		uuidOrIdOrArray: number | number[] | string | string[];
 		parameterName?: string;
@@ -55,15 +60,15 @@ export function batchResourceOperationFactory<
 		fn: (items: Array<Item<TOpts>>) => Promise<void>;
 	}): Promise<void>;
 	async function batchResourceOperation<
-		TOpts extends PineOptionsStrict<T>,
+		TOpts extends ODataOptions<T>,
 	>(options: {
 		uuidOrIdOrArray: number | number[] | string | string[];
 		parameterName?: string;
 		options?: TOpts;
-		groupByNavigationPoperty: PineSelectableProps<T>;
+		groupByNavigationPoperty: SelectPropsOf<T, TOpts>;
 		fn: (items: Array<Item<TOpts>>, ownerId: number) => Promise<void>;
 	}): Promise<void>;
-	async function batchResourceOperation<TOpts extends PineOptionsStrict<T>>({
+	async function batchResourceOperation<TOpts extends ODataOptions<T>>({
 		uuidOrIdOrArray,
 		parameterName = 'uuidOrIdOrArray',
 		options,
@@ -73,10 +78,10 @@ export function batchResourceOperationFactory<
 		uuidOrIdOrArray: number | number[] | string | string[];
 		parameterName?: string;
 		options?: TOpts;
-		groupByNavigationPoperty?: PineSelectableProps<T>;
+		groupByNavigationPoperty?: SelectPropsOf<T, TOpts>;
 		fn:
-			| ((items: Array<Item<TOpts>>) => Promise<void>)
-			| ((items: Array<Item<TOpts>>, ownerId: number) => Promise<void>);
+		| ((items: Array<Item<TOpts>>) => Promise<void>)
+		| ((items: Array<Item<TOpts>>, ownerId: number) => Promise<void>);
 	}): Promise<void> {
 		if (uuidOrIdOrArray === '') {
 			throw new errors.BalenaInvalidParameterError(
@@ -131,42 +136,43 @@ export function batchResourceOperationFactory<
 
 		const items: Array<
 			Item<TOpts> &
-				Partial<{
-					[groupByNavigationPoperty: string]: { __id: number };
-				}>
+			Partial<{
+				[groupByNavigationPoperty: string]: { __id: number };
+			}>
 		> = [];
 		for (const uuidOrIdOrArrayChunk of chunks) {
-			const resourceFilter: PineFilter<{ id: number; uuid: string }> =
+			const resourceFilter: Filter<{ id: number; uuid: string }> =
 				Array.isArray(uuidOrIdOrArrayChunk)
 					? typeof uuidOrIdOrArrayChunk[0] === 'string'
 						? {
-								uuid: { $in: uuidOrIdOrArrayChunk as string[] },
-							}
+							uuid: { $in: uuidOrIdOrArrayChunk as string[] },
+						}
 						: {
-								id: { $in: uuidOrIdOrArrayChunk as number[] },
-							}
+							id: { $in: uuidOrIdOrArrayChunk as number[] },
+						}
 					: typeof uuidOrIdOrArrayChunk === 'string'
 						? {
-								uuid: { $startswith: uuidOrIdOrArrayChunk },
-							}
+							uuid: { $startswith: uuidOrIdOrArrayChunk },
+						}
 						: {
-								id: uuidOrIdOrArrayChunk,
-							};
+							id: uuidOrIdOrArrayChunk,
+						};
 			const combinedOptions = mergePineOptions(
 				{
 					$select: [
 						'id',
 						...(Array.isArray(uuidOrIdOrArrayChunk) &&
-						typeof uuidOrIdOrArrayChunk[0] === 'string'
+							typeof uuidOrIdOrArrayChunk[0] === 'string'
 							? ['uuid']
 							: []),
 						...(groupByNavigationPoperty ? [groupByNavigationPoperty] : []),
-					] as Array<PineSelectableProps<T>>,
-					$filter: resourceFilter as PineFilter<T>,
+					] as Array<SelectPropsOf<T, TOpts>>,
+					$filter: resourceFilter as Filter<T>,
 				},
 				options,
-			) as PineOptionsStrict<T>;
+			) as ODataOptions<T>;
 
+			// @ts-expect-error - TODO Otavio
 			items.push(...((await getAll(combinedOptions)) as typeof items));
 		}
 

@@ -191,7 +191,7 @@ const getApiKeysModel = function (
 			const { actor } = (await sdkInstance.models.application.get(
 				slugOrUuidOrId,
 				appOpts,
-			)) as BalenaSdk.PineTypedResult<BalenaSdk.Application, typeof appOpts>;
+			));
 
 			return await exports.getAll(
 				mergePineOptions(
@@ -241,7 +241,9 @@ const getApiKeysModel = function (
 						$filter: {
 							is_of__actor: actor.__id,
 						},
-						$orderby: 'name asc',
+						$orderby: {
+							name: 'asc'
+						},
 					},
 					options,
 				),

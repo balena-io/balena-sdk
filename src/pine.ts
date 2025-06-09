@@ -2,7 +2,6 @@ import * as url from 'url';
 import * as errors from 'balena-errors';
 import type { Params } from 'pinejs-client-core';
 import { PinejsClientCore } from 'pinejs-client-core';
-import type * as PineClient from '../typings/pinejs-client-core';
 import type { BalenaModel } from './types/models';
 import type BalenaRequest from 'balena-request';
 import type { BalenaRequestOptions } from 'balena-request';
@@ -100,12 +99,12 @@ class PinejsClient extends PinejsClientCore<BalenaModel> {
 	}
 }
 
-export type Pine = PinejsClient;
+export type Pine = PinejsClientCore<BalenaModel>;
 /**
  * A variant that makes $select mandatory, helping to create
  * requests that explicitly fetch only what your code needs.
  */
-export type PineStrict = PineClient.PineStrict<BalenaModel>;
+// export type PineStrict = PineClient.PineStrict<BalenaModel>;
 
 export const createPinejsClient = (
 	...args: ConstructorParameters<typeof PinejsClient>

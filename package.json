@@ -64,6 +64,7 @@
     "node": "^20.12.0 || >= 22.0.0"
   },
   "devDependencies": {
+    "@balena/abstract-sql-to-typescript": "^5.1.1",
     "@balena/env-parsing": "^1.2.0",
     "@balena/lint": "^9.0.1",
     "@types/chai": "^4.3.0",
