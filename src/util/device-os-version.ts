@@ -1,10 +1,10 @@
 import * as bSemver from 'balena-semver';
-import type * as BalenaSdk from '..';
+import type { Device } from '..';
 
 export const getDeviceOsSemverWithVariant = ({
 	os_version,
 	os_variant,
-}: Pick<BalenaSdk.Device, 'os_version' | 'os_variant'>): string | null => {
+}: Pick<Device['Read'], 'os_version' | 'os_variant'>): string | null => {
 	if (!os_version) {
 		return null;
 	}

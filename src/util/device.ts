@@ -1,9 +1,9 @@
-import type * as BalenaSdk from '..';
 import type * as DeviceState from '../types/device-state';
+import type { Device } from '../types/models';
 
 export const isProvisioned = (
 	device: Partial<
-		Pick<BalenaSdk.Device, 'supervisor_version' | 'last_connectivity_event'>
+		Pick<Device['Read'], 'supervisor_version' | 'last_connectivity_event'>
 	>,
 ) => {
 	return (
