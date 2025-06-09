@@ -3,7 +3,7 @@ import * as errors from 'balena-errors';
 import type { Params } from 'pinejs-client-core';
 import { PinejsClientCore } from 'pinejs-client-core';
 import type * as PineClient from '../typings/pinejs-client-core';
-import type { ResourceTypeMap } from './types/models';
+import type { BalenaModel } from './types/models';
 import type BalenaRequest from 'balena-request';
 import type { BalenaRequestOptions } from 'balena-request';
 
@@ -29,7 +29,7 @@ interface BackendParams {
  * @description
  * This subclass makes use of the [balena-request](https://github.com/balena-io-modules/balena-request) project.
  */
-class PinejsClient extends PinejsClientCore<PinejsClient> {
+class PinejsClient extends PinejsClientCore<BalenaModel> {
 	public API_URL: string;
 	public API_VERSION: string;
 
@@ -100,17 +100,15 @@ class PinejsClient extends PinejsClientCore<PinejsClient> {
 	}
 }
 
-export type Pine = PineClient.Pine<ResourceTypeMap>;
+export type Pine = PinejsClient;
 /**
  * A variant that makes $select mandatory, helping to create
  * requests that explicitly fetch only what your code needs.
  */
-export type PineStrict = PineClient.PineStrict<ResourceTypeMap>;
+export type PineStrict = PineClient.PineStrict<BalenaModel>;
 
 export const createPinejsClient = (
 	...args: ConstructorParameters<typeof PinejsClient>
 ) => {
-	const pine = new PinejsClient(...args);
-	// @ts-expect-error the SDK's typed pine client differs significantly from the original pine client.
-	return pine as Pine;
+	return new PinejsClient(...args);
 };

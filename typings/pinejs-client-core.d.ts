@@ -6,6 +6,7 @@ import type {
 	Dictionary,
 	ExactlyExtends,
 } from './utils';
+import type { Pine } from '../src';
 
 export interface WithId {
 	id: number;
@@ -503,121 +504,6 @@ export type ConstructorParams = Pick<
 	ParamsObj<unknown>,
 	(typeof validParams)[number]
 >;
-
-export interface Pine<ResourceTypeMap extends object = object> {
-	apiPrefix: string;
-	passthrough: AnyObject;
-	passthroughByMethod: AnyObject;
-	backendParams?: AnyObject;
-	retry: RetryParameters;
-	clone(params: string | ConstructorParams, backendParams?: AnyObject): this;
-
-	// Fully typed result overloads
-	get<
-		R extends keyof ResourceTypeMap,
-		P extends { resource: R } & ParamsObjWithCount<
-			ResourceTypeMap[P['resource']]
-		>,
-	>(
-		params: ExactlyExtends<
-			P,
-			ParamsObjWithCount<ResourceTypeMap[P['resource']]>
-		>,
-	): Promise<number>;
-	get<
-		R extends keyof ResourceTypeMap,
-		P extends { resource: R } & ParamsObjWithId<ResourceTypeMap[P['resource']]>,
-	>(
-		params: ExactlyExtends<P, ParamsObjWithId<ResourceTypeMap[P['resource']]>>,
-	): Promise<
-		TypedResult<ResourceTypeMap[P['resource']], P['options']> | undefined
-	>;
-	get<
-		R extends keyof ResourceTypeMap,
-		P extends { resource: R } & ParamsObj<ResourceTypeMap[P['resource']]>,
-	>(
-		params: ExactlyExtends<P, ParamsObj<ResourceTypeMap[P['resource']]>>,
-	): Promise<Array<TypedResult<ResourceTypeMap[P['resource']], P['options']>>>;
-	// User provided resource type overloads
-	get<T extends object>(params: ParamsObjWithCount<T>): Promise<number>;
-	get<T extends object>(params: ParamsObjWithId<T>): Promise<T | undefined>;
-	get<T extends object>(params: ParamsObj<T>): Promise<T[]>;
-	get<T extends object, Result>(params: ParamsObj<T>): Promise<Result>;
-
-	patch<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
-	post<
-		R extends keyof ResourceTypeMap,
-		P extends { resource: R } & ParamsObj<ResourceTypeMap[P['resource']]>,
-	>(
-		params: ExactlyExtends<P, ParamsObj<ResourceTypeMap[P['resource']]>> & {
-			body: object;
-		},
-	): Promise<PostResult<ResourceTypeMap[P['resource']]>>;
-	post<T>(
-		params: ParamsObj<T> & { body: object },
-	): Promise<PostResult<T & { id: number }>>;
-	delete<T>(params: ParamsObjWithId<T> | ParamsObjWithFilter<T>): Promise<'OK'>;
-	getOrCreate<T>(params: GetOrCreateParams<T>): Promise<T>;
-	upsert<T>(params: UpsertParams<T>): Promise<T | 'OK'>;
-
-	prepare<T extends Dictionary<ParameterAlias>, R>(
-		params: ParamsObjWithCount<R> & {
-			method?: 'GET';
-		},
-	): PreparedFn<T, Promise<number>, R>;
-	prepare<T extends Dictionary<ParameterAlias>, R>(
-		params: ParamsObjWithId<R> & {
-			method?: 'GET';
-		},
-	): PreparedFn<T, Promise<R | undefined>, R>;
-	prepare<T extends Dictionary<ParameterAlias>, R>(
-		params: ParamsObj<R> & {
-			method?: 'GET';
-		},
-	): PreparedFn<T, Promise<R[]>, R>;
-	prepare<T extends Dictionary<ParameterAlias>, R>(
-		params: ParamsObj<R> & {
-			method: 'POST';
-		},
-	): PreparedFn<T, Promise<R & { id: number }>, R>;
-	prepare<T extends Dictionary<ParameterAlias>, R>(
-		params: ParamsObj<R> & {
-			method: 'PATCH' | 'DELETE';
-		},
-	): PreparedFn<T, Promise<'OK'>, R>;
-
-	compile<R extends keyof ResourceTypeMap>(
-		params: {
-			resource: NonNullable<ParamsObj<R>>;
-		} & ParamsObj<R>,
-	): string;
-
-	subscribe<T>(
-		params: SubscribeParamsWithCount<T> & {
-			method?: 'GET';
-		},
-	): Poll<number>;
-	subscribe<T>(
-		params: SubscribeParamsWithId<T> & {
-			method?: 'GET';
-		},
-	): Poll<T | undefined>;
-	subscribe<T>(
-		params: SubscribeParams<T> & {
-			method?: 'GET';
-		},
-	): Poll<T[]>;
-	subscribe<T>(
-		params: SubscribeParams<T> & {
-			method: 'POST';
-		},
-	): Poll<T & { id: number }>;
-	subscribe<T>(
-		params: SubscribeParams<T> & {
-			method: 'PATCH' | 'DELETE';
-		},
-	): Poll<'OK'>;
-}
 
 /**
  * A variant that makes $select mandatory, helping to create

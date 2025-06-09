@@ -112,13 +112,15 @@ const getApiKeysModel = function (
 		 * });
 		 */
 		async getAll(
-			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
-		): Promise<BalenaSdk.ApiKey[]> {
+			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey['Read']> = {},
+		) {
 			return await pine.get({
 				resource: 'api_key',
 				options: mergePineOptions(
 					{
-						$orderby: 'name asc',
+						$orderby: {
+							name: 'asc',
+						},
 					},
 					options,
 				),
@@ -142,8 +144,8 @@ const getApiKeysModel = function (
 		 * });
 		 */
 		async getAllNamedUserApiKeys(
-			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
-		): Promise<BalenaSdk.ApiKey[]> {
+			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey['Read']> = {},
+		) {
 			return await exports.getAll(
 				mergePineOptions(
 					{
@@ -181,8 +183,8 @@ const getApiKeysModel = function (
 		 */
 		async getProvisioningApiKeysByApplication(
 			slugOrUuidOrId: string | number,
-			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
-		): Promise<BalenaSdk.ApiKey[]> {
+			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey['Read']> = {},
+		) {
 			const appOpts = {
 				$select: 'actor' as const,
 			};
@@ -222,8 +224,8 @@ const getApiKeysModel = function (
 		 */
 		async getDeviceApiKeysByDevice(
 			uuidOrId: string | number,
-			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
-		): Promise<BalenaSdk.ApiKey[]> {
+			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey['Read']> = {},
+		) {
 			const deviceOpts = {
 				$select: 'actor' as const,
 			};
@@ -276,7 +278,7 @@ const getApiKeysModel = function (
 				description?: string | null;
 				expiryDate?: string | null;
 			},
-		): Promise<void> {
+		) {
 			if (!apiKeyInfo) {
 				throw new errors.BalenaInvalidParameterError('apiKeyInfo', apiKeyInfo);
 			}
@@ -291,7 +293,7 @@ const getApiKeysModel = function (
 				description: apiKeyInfo.description,
 				expiry_date: apiKeyInfo.expiryDate,
 			};
-			await pine.patch<BalenaSdk.ApiKey>({
+			await pine.patch({
 				resource: 'api_key',
 				id,
 				body,
