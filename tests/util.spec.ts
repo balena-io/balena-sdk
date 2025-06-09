@@ -2,7 +2,7 @@
 import * as _ from 'lodash';
 import { expect } from 'chai';
 import * as bSemver from 'balena-semver';
-import type { Application, PineOptions } from '../src';
+import type { Application } from '../src';
 
 // HACK: Avoid typescript trying to resolve built es2017 files
 const nodeRequire = require;
@@ -33,13 +33,13 @@ describe('Pine option merging', function () {
 			},
 			$top: 1,
 			$skip: 1,
-		} satisfies PineOptions<Application>;
+		} as const;
 		const result = mergePineOptions({}, extras);
 		return expect(result).to.deep.equal(extras);
 	});
 
 	it('overrides top, skip and orderby options', function () {
-		const result = mergePineOptions<Application>(
+		const result = mergePineOptions<Application['Read']>(
 			{
 				$top: 1,
 				$skip: 2,
@@ -60,7 +60,6 @@ describe('Pine option merging', function () {
 	});
 
 	it('combines filter options with $and', function () {
-		// @ts-expect-error b/c it's not typed
 		const result = mergePineOptions(
 			{ $filter: { id: 1 } },
 			{ $filter: { name: 'MyApp' } },
@@ -229,7 +228,6 @@ describe('Pine option merging', function () {
 	});
 
 	it('ignores any unknown default options', () => {
-		// @ts-expect-error b/c it's not typed
 		expect(() => mergePineOptions({ unknownKey: 'value' }, {})).not.to.throw();
 	});
 });

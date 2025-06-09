@@ -263,7 +263,7 @@ describe('Release Model', function () {
 		});
 
 		describe(`given ${uniquePropertyNames.length} draft releases`, function () {
-			const testReleaseByField: Dictionary<BalenaSdk.Release> = {};
+			const testReleaseByField: Dictionary<BalenaSdk.Release['Read']> = {};
 
 			before(async function () {
 				const { id: userId } = await balena.auth.getUserInfo();

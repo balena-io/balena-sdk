@@ -129,7 +129,7 @@ export async function resetUser() {
 			},
 		}),
 
-		balena.pine.delete<BalenaSdk.ApiKey>({
+		balena.pine.delete({
 			resource: 'api_key',
 			// only delete named user api keys
 			options: {
@@ -414,7 +414,10 @@ export function givenADevice(
 	{
 		api_heartbeat_state,
 		...extraDeviceProps
-	}: BalenaSdk.PineSubmitBody<BalenaSdk.Device> = {},
+	}: Partial<
+		BalenaSdk.Device['Write'] &
+			Pick<BalenaSdk.Device['Read'], 'api_heartbeat_state'>
+	> = {},
 ) {
 	beforeFn(async function () {
 		const uuid = balena.models.device.generateUniqueKey();
@@ -424,7 +427,7 @@ export function givenADevice(
 		);
 
 		if (this.currentRelease?.commit) {
-			await balena.pine.patch<BalenaSdk.Device>({
+			await balena.pine.patch({
 				resource: 'device',
 				body: {
 					is_running__release: this.currentRelease.id,
@@ -437,7 +440,7 @@ export function givenADevice(
 			});
 		}
 		if (Object.keys(extraDeviceProps).length > 0) {
-			await balena.pine.patch<BalenaSdk.Device>({
+			await balena.pine.patch({
 				resource: 'device',
 				body: extraDeviceProps,
 				options: {
@@ -470,7 +473,7 @@ export function givenADevice(
 
 		const [oldWebInstall, newWebInstall, , newDbInstall] = await Promise.all([
 			// Create image installs for the images on the device
-			balena.pine.post<BalenaSdk.ImageInstall>({
+			balena.pine.post({
 				resource: 'image_install',
 				body: {
 					installs__image: this.oldWebImage.id,
@@ -481,7 +484,7 @@ export function givenADevice(
 					install_date: '2017-10-01',
 				},
 			}),
-			balena.pine.post<BalenaSdk.ImageInstall>({
+			balena.pine.post({
 				resource: 'image_install',
 				body: {
 					installs__image: this.newWebImage.id,
@@ -492,7 +495,7 @@ export function givenADevice(
 					install_date: '2017-10-30',
 				},
 			}),
-			balena.pine.post<BalenaSdk.ImageInstall>({
+			balena.pine.post({
 				resource: 'image_install',
 				body: {
 					installs__image: this.oldDbImage.id,
@@ -503,7 +506,7 @@ export function givenADevice(
 					install_date: '2017-09-30',
 				},
 			}),
-			balena.pine.post<BalenaSdk.ImageInstall>({
+			balena.pine.post({
 				resource: 'image_install',
 				body: {
 					installs__image: this.newDbImage.id,
@@ -546,14 +549,14 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 		const [webService, dbService, [oldRelease, newRelease]] = await Promise.all(
 			[
 				// Register web & DB services
-				balena.pine.post<BalenaSdk.Service>({
+				balena.pine.post({
 					resource: 'service',
 					body: {
 						application: this.application.id,
 						service_name: 'web',
 					},
 				}),
-				balena.pine.post<BalenaSdk.Service>({
+				balena.pine.post({
 					resource: 'service',
 					body: {
 						application: this.application.id,
@@ -563,7 +566,7 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 				// Register an old & new release of this application
 				(async () => {
 					return [
-						await balena.pine.post<BalenaSdk.Release>({
+						await balena.pine.post({
 							resource: 'release',
 							body: {
 								belongs_to__application: this.application.id,
@@ -577,7 +580,7 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 							},
 						}),
 						await balena.pine
-							.post<BalenaSdk.Release>({
+							.post({
 								resource: 'release',
 								body: {
 									belongs_to__application: this.application.id,
@@ -613,7 +616,7 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 			await Promise.all([
 				// Register an old & new web image build from the old and new
 				// releases, a db build in the new release only
-				balena.pine.post<BalenaSdk.Image>({
+				balena.pine.post({
 					resource: 'image',
 					body: {
 						is_a_build_of__service: webService.id,
@@ -626,7 +629,7 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 						status: 'success',
 					},
 				}),
-				balena.pine.post<BalenaSdk.Image>({
+				balena.pine.post({
 					resource: 'image',
 					body: {
 						is_a_build_of__service: webService.id,
@@ -639,7 +642,7 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 						status: 'success',
 					},
 				}),
-				balena.pine.post<BalenaSdk.Image>({
+				balena.pine.post({
 					resource: 'image',
 					body: {
 						is_a_build_of__service: dbService.id,
@@ -652,7 +655,7 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 						status: 'success',
 					},
 				}),
-				balena.pine.post<BalenaSdk.Image>({
+				balena.pine.post({
 					resource: 'image',
 					body: {
 						is_a_build_of__service: dbService.id,
@@ -672,28 +675,28 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 		this.newDbImage = newDbImage;
 		await Promise.all([
 			// Tie the images to their corresponding releases
-			balena.pine.post<BalenaSdk.ReleaseImage>({
+			balena.pine.post({
 				resource: 'image__is_part_of__release',
 				body: {
 					image: oldWebImage.id,
 					is_part_of__release: oldRelease.id,
 				},
 			}),
-			balena.pine.post<BalenaSdk.ReleaseImage>({
+			balena.pine.post({
 				resource: 'image__is_part_of__release',
 				body: {
 					image: oldDbImage.id,
 					is_part_of__release: oldRelease.id,
 				},
 			}),
-			balena.pine.post<BalenaSdk.ReleaseImage>({
+			balena.pine.post({
 				resource: 'image__is_part_of__release',
 				body: {
 					image: newWebImage.id,
 					is_part_of__release: newRelease.id,
 				},
 			}),
-			balena.pine.post<BalenaSdk.ReleaseImage>({
+			balena.pine.post({
 				resource: 'image__is_part_of__release',
 				body: {
 					image: newDbImage.id,
@@ -740,13 +743,13 @@ export function givenASupervisorRelease(
 }
 
 export const organizationRetrievalFields = ['id', 'handle'] satisfies Array<
-	keyof BalenaSdk.Organization
+	keyof BalenaSdk.Organization['Read']
 >;
 export const applicationRetrievalFields = [
 	'id',
 	'slug',
 	'uuid',
-] satisfies Array<keyof BalenaSdk.Application>;
+] satisfies Array<keyof BalenaSdk.Application['Read']>;
 export const deviceUniqueFields = ['id', 'uuid'] satisfies Array<
-	keyof BalenaSdk.Device
+	keyof BalenaSdk.Device['Read']
 >;

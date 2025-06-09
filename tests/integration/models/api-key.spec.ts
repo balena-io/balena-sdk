@@ -164,7 +164,7 @@ describe('API Key model', function () {
 			['device', 'deviceApiKey'],
 		] as const;
 
-		const ctx: Partial<Record<(typeof testSet)[number][1], BalenaSdk.ApiKey>> =
+		const ctx: Partial<Record<(typeof testSet)[number][1], BalenaSdk.ApiKey['Read']>> =
 			{};
 
 		before(async function () {
