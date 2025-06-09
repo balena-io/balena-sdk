@@ -99,7 +99,7 @@ class PinejsClient extends PinejsClientCore<BalenaModel> {
 	}
 }
 
-export type Pine = PinejsClient;
+export type Pine = PinejsClientCore<BalenaModel>;
 /**
  * A variant that makes $select mandatory, helping to create
  * requests that explicitly fetch only what your code needs.

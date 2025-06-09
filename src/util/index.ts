@@ -4,6 +4,7 @@ import * as mime from 'mime';
 import type {
 	Expand,
 	ODataOptions,
+	ODataOptionsWithoutCount,
 	Resource,
 	ResourceExpand,
 	SelectPropsOf,
@@ -71,14 +72,16 @@ const passthroughPineOptionKeys = ['$top', '$skip', '$orderby'] as const;
 export function mergePineOptions<
 	R extends Resource['Read'],
 	TDefault extends ODataOptions<R>,
->(defaults: TDefault, extras: ODataOptions<R> | undefined): TDefault;
+>(defaults: TDefault, extras: undefined): TDefault;
+
 export function mergePineOptions<R extends Resource['Read']>(
 	defaults: ODataOptions<R>,
-	extras: ODataOptions<R> | undefined,
+	extras: ODataOptionsWithoutCount<R>,
 ): ODataOptions<R>;
+
 export function mergePineOptions<R extends Resource['Read']>(
 	defaults: ODataOptions<R>,
-	extras: ODataOptions<R> | undefined,
+	extras: ODataOptionsWithoutCount<R> | undefined,
 ): ODataOptions<R> {
 	if (!extras) {
 		return defaults;

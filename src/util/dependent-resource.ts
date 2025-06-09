@@ -20,13 +20,23 @@ key-value resources directly attached to a parent (e.g. tags, config variables).
 */
 
 import { isId, isUnauthorizedResponse, mergePineOptions } from '../util';
-import type { Pine, PineOptions } from '..';
-import type { Dictionary } from '../../typings/utils';
+import type { BalenaModel, Pine } from '..';
+import type { Dictionary, StringKeyof } from '../../typings/utils';
+import type {
+	ExpandableStringKeyOf,
+	FilterObj,
+	ODataOptions,
+} from 'pinejs-client-core';
 
-interface DependentResource {
-	id: number;
-	value: string;
-}
+type DependentResource = {
+	[K in StringKeyof<BalenaModel>]: 'Read' extends keyof BalenaModel[K]
+		? BalenaModel[K]['Read'] extends { id: number; value: string }
+			? BalenaModel[K]['Write'] extends { value: string }
+				? K
+				: never
+			: never
+		: never;
+}[StringKeyof<BalenaModel>];
 
 export function buildDependentResource<T extends DependentResource>(
 	{ pine }: { pine: Pine },
@@ -36,42 +46,43 @@ export function buildDependentResource<T extends DependentResource>(
 		parentResourceName,
 		getResourceId,
 	}: {
-		resourceName: string; // e.g. device_tag
-		resourceKeyField: keyof T & string; // e.g. tag_key
-		parentResourceName: keyof T & string; // e.g. device
+		resourceName: T; // e.g. device_tag
+		resourceKeyField: StringKeyof<BalenaModel[T]['Read']>; // e.g. tag_key
+		parentResourceName: ExpandableStringKeyOf<BalenaModel[T]['Read']>; // e.g. device
 		getResourceId: (
 			uuidOrIdOrDict: string | number | Dictionary<unknown>,
 		) => Promise<number>; // e.g. getId(uuidOrIdOrDict)
 	},
 ) {
 	const exports = {
-		getAll(options?: PineOptions<T>): Promise<T[]> {
+		getAll(options?: ODataOptions<BalenaModel[T]['Read']>) {
 			options ??= {};
-			return pine.get<T>({
+			return pine.get({
 				resource: resourceName,
 				options: mergePineOptions(
 					{
 						$orderby: {
 							[resourceKeyField]: 'asc',
-						} as PineOptions<T>['$orderby'],
+						} as ODataOptions<BalenaModel[T]['Read']>['$orderby'],
 					},
 					options,
 				),
 			});
 		},
-
 		async getAllByParent(
 			parentParam: string | number | Dictionary<unknown>,
-			options?: PineOptions<T>,
-		): Promise<T[]> {
+			options?: ODataOptions<BalenaModel[T]['Read']>,
+		) {
 			options ??= {};
 			const id = await getResourceId(parentParam);
 			return await exports.getAll(
 				mergePineOptions(
 					{
 						$filter: { [parentResourceName]: id },
-						$orderby: `${resourceKeyField} asc`,
-					},
+						$orderby: {
+							[resourceKeyField]: 'asc',
+						},
+					} as ODataOptions<BalenaModel[T]['Read']>,
 					options,
 				),
 			);
@@ -82,7 +93,7 @@ export function buildDependentResource<T extends DependentResource>(
 			key: string,
 		): Promise<string | undefined> {
 			const id = await getResourceId(parentParam);
-			const [result] = await pine.get<DependentResource>({
+			const [result] = (await pine.get({
 				resource: resourceName,
 				options: {
 					$select: 'value',
@@ -90,8 +101,9 @@ export function buildDependentResource<T extends DependentResource>(
 						[parentResourceName]: id,
 						[resourceKeyField]: key,
 					},
-				},
-			});
+				} as ODataOptions<BalenaModel[T]['Read']>,
+			})) as unknown as Array<{ value: string } | undefined>;
+
 			if (result) {
 				return result.value;
 			}
@@ -114,13 +126,15 @@ export function buildDependentResource<T extends DependentResource>(
 			try {
 				await pine.upsert({
 					resource: resourceName,
+					// @ts-expect-error - this is a typing diff from pinejs-client-core
+					// the id is not necessarily writeable while it does require it to be of write type
 					id: {
 						[parentResourceName]: parentId,
 						[resourceKeyField]: key,
 					},
 					body: {
 						value,
-					},
+					} as BalenaModel[T]['Write'],
 				});
 			} catch (err) {
 				// Since Pine 7, when the post throws a 401
@@ -146,7 +160,7 @@ export function buildDependentResource<T extends DependentResource>(
 					$filter: {
 						[parentResourceName]: parentId,
 						[resourceKeyField]: key,
-					},
+					} as FilterObj<BalenaModel[T]['Read']>,
 				},
 			});
 		},

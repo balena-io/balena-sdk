@@ -19,11 +19,14 @@ import type {
 	Organization,
 	InjectedDependenciesParam,
 	InjectedOptionsParam,
-	InviteeIsInvitedToOrganization,
 	OrganizationMembershipRole,
+	BalenaModel,
 } from '..';
 import { mergePineOptions } from '../util';
-import type { ODataOptions } from 'pinejs-client-core';
+import type {
+	ODataOptions,
+	ODataOptionsWithoutCount,
+} from 'pinejs-client-core';
 import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 export interface OrganizationInviteOptions {
@@ -34,7 +37,7 @@ export interface OrganizationInviteOptions {
 
 const RESOURCE = 'invitee__is_invited_to__organization';
 
-type OrganizationInvite = InviteeIsInvitedToOrganization;
+type OrganizationInvite = BalenaModel[typeof RESOURCE];
 
 const getOrganizationInviteModel = function (
 	deps: InjectedDependenciesParam,
@@ -42,7 +45,7 @@ const getOrganizationInviteModel = function (
 	getOrganization: (
 		handleOrId: string | number,
 		options?: ODataOptions<Organization['Read']>,
-	) => Promise<Organization>,
+	) => Promise<Organization['Read']>,
 ) {
 	const { request, pine } = deps;
 	const { apiUrl } = opts;
@@ -103,7 +106,7 @@ const getOrganizationInviteModel = function (
 		 */
 		async getAllByOrganization(
 			handleOrId: number | string,
-			options: ODataOptions<OrganizationInvite['Read']> = {},
+			options: ODataOptionsWithoutCount<OrganizationInvite['Read']> = {},
 		): Promise<Array<OrganizationInvite['Read']>> {
 			const { id } = await getOrganization(handleOrId, {
 				$select: 'id',
