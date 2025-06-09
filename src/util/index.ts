@@ -1,12 +1,14 @@
 import * as errors from 'balena-errors';
-import type * as Pine from '../../typings/pinejs-client-core';
-import type { IfDefined } from '../../typings/utils';
-import type { WebResourceFile } from 'balena-request';
-import * as mime from 'mime';
+import type {
+	Expand,
+	ODataOptions,
+	ODataOptionsWithoutCount,
+	Resource,
+	ResourceExpand,
+} from 'pinejs-client-core';
 
 export interface BalenaUtils {
 	mergePineOptions: typeof mergePineOptions;
-	BalenaWebResourceFile: typeof BalenaWebResourceFile;
 }
 
 export const notImplemented = () => {
@@ -52,21 +54,6 @@ export const isUnauthorizedResponse = (err: Error) =>
 export const isNotFoundResponse = (err: Error) =>
 	isBalenaRequestErrorResponseWithCode(err, 404);
 
-// TODO: Make it so that it also infers the extras param
-export function mergePineOptionsTyped<
-	R extends object,
-	P extends Pine.ODataOptionsStrict<R>,
->(defaults: P, extras: Pine.ODataOptions<R> | undefined): P {
-	return mergePineOptions(defaults, extras);
-}
-
-export type ExtendedPineTypedResult<
-	T,
-	TBaseResult,
-	ExtraPineOptions extends Pine.ODataOptions<T> | undefined,
-> = TBaseResult &
-	IfDefined<ExtraPineOptions, Pine.TypedResult<T, ExtraPineOptions>>;
-
 const passthroughPineOptionKeys = ['$top', '$skip', '$orderby'] as const;
 
 // Merging two sets of pine options sensibly is more complicated than it sounds.
@@ -79,18 +66,25 @@ const passthroughPineOptionKeys = ['$top', '$skip', '$orderby'] as const;
 //   * And $selects within expands override
 // * Any unknown 'extra' options throw an error. Unknown 'default' options are ignored.
 export function mergePineOptions<
-	R extends object,
-	TDefault extends Pine.ODataOptions<R>,
->(defaults: TDefault, extras: Pine.ODataOptions<R> | undefined): TDefault;
-export function mergePineOptions<R extends object>(
-	defaults: Pine.ODataOptions<R>,
-	extras: Pine.ODataOptions<R> | undefined,
-): Pine.ODataOptions<R>;
-export function mergePineOptions<R extends object>(
-	defaults: Pine.ODataOptions<R>,
-	extras: Pine.ODataOptions<R> | undefined,
-): Pine.ODataOptions<R> {
-	if (!extras) {
+	R extends Resource['Read'],
+	TDefault extends ODataOptions<R>,
+>(defaults: TDefault, extras?: undefined): TDefault;
+
+export function mergePineOptions<R extends Resource['Read']>(
+	defaults: ODataOptionsWithoutCount<R>,
+	extras: ODataOptionsWithoutCount<R>,
+): ODataOptionsWithoutCount<R>;
+
+export function mergePineOptions<R extends Resource['Read']>(
+	defaults: ODataOptions<R>,
+	extras: ODataOptionsWithoutCount<R>,
+): ODataOptions<R>;
+
+export function mergePineOptions<R extends Resource['Read']>(
+	defaults: ODataOptions<R>,
+	extras: ODataOptionsWithoutCount<R> | undefined,
+): ODataOptions<R> | ODataOptionsWithoutCount<R> {
+	if (extras == null) {
 		return defaults;
 	}
 
@@ -110,7 +104,7 @@ export function mergePineOptions<R extends object>(
 		} else {
 			result.$select = [
 				...(typeof result.$select === 'string'
-					? [result.$select as Pine.SelectableProps<R>]
+					? [result.$select]
 					: Array.isArray(result.$select)
 						? result.$select
 						: []),
@@ -142,10 +136,10 @@ export function mergePineOptions<R extends object>(
 	return result;
 }
 
-const mergeExpandOptions = <T>(
-	defaultExpand: Pine.Expand<T> | undefined,
-	extraExpand: Pine.Expand<T> | undefined,
-): Pine.Expand<T> | undefined => {
+const mergeExpandOptions = <T extends Resource['Read']>(
+	defaultExpand: Expand<T> | undefined,
+	extraExpand: Expand<T> | undefined,
+): Expand<T> | undefined => {
 	if (defaultExpand == null) {
 		return extraExpand;
 	}
@@ -168,10 +162,10 @@ const mergeExpandOptions = <T>(
 
 // Converts a valid expand object in any format into a new object
 // containing (at most) $expand, $filter and $select keys
-const convertExpandToObject = <T extends object>(
-	expandOption: Pine.Expand<T> | undefined,
+const convertExpandToObject = <T extends Resource['Read']>(
+	expandOption: Expand<T> | undefined,
 	cloneIfNeeded = false,
-): Pine.ResourceExpand<T> => {
+): ResourceExpand<T> => {
 	if (expandOption == null) {
 		return {};
 	}
@@ -179,7 +173,7 @@ const convertExpandToObject = <T extends object>(
 	if (typeof expandOption === 'string') {
 		return {
 			[expandOption]: {},
-		} as Pine.ResourceExpand<T>;
+		} as ResourceExpand<T>;
 	}
 
 	if (Array.isArray(expandOption)) {
@@ -195,10 +189,10 @@ const convertExpandToObject = <T extends object>(
 	}
 
 	if (cloneIfNeeded) {
-		return { ...expandOption };
+		return { ...expandOption } as ResourceExpand<T>;
 	}
 
-	return expandOption;
+	return expandOption as ResourceExpand<T>;
 };
 
 /**
@@ -273,15 +267,3 @@ export const limitedMap = <T, U>(
 		}
 	});
 };
-
-export class BalenaWebResourceFile extends Blob implements WebResourceFile {
-	public name: string;
-	constructor(blobParts: BlobPart[], name: string, options?: BlobPropertyBag) {
-		const opts = {
-			...options,
-			type: options?.type ?? mime.getType(name) ?? undefined,
-		};
-		super(blobParts, opts);
-		this.name = name;
-	}
-}

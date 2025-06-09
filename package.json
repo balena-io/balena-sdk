@@ -39,8 +39,7 @@
     "clean": "rimraf es2017 es2018",
     "test:fast": "npm run lint-fix; npm run build-es2017:fast && npm run test:node",
     "test": "([ \"$GITHUB_WORKFLOW\" = 'Flowzone' ] && [ \"$GITHUB_JOB\" = 'npm_test' ] && echo \"Skipping 'npm test' in flowzone in favor of the custom test action!\") || (npm run build && npm run test:all)",
-    "test:all": "npm run test:dev && npm run test:ts-js && npm run test:typings && npm run test:mjs-imports && npm run test:node && npm run test:browser",
-    "test:node": "gulp test",
+    "test:all": "npm run test:dev && npm run test:ts-js && npm run test:typings && npm run test:mjs-imports && npm run test:node && npm run test:browser",    "test:node": "gulp test",
     "test:browser": "mockttp -c karma start",
     "test:dev": "tsc --noEmit --project ./tsconfig.dev.json",
     "test:ts-js": "tsc --noEmit --project ./tsconfig.js.json",
@@ -69,7 +68,6 @@
     "@types/chai": "^4.3.0",
     "@types/lodash": "^4.14.195",
     "@types/memoizee": "^0.4.12",
-    "@types/mime": "^3.0.3",
     "@types/mocha": "^10.0.1",
     "@types/ndjson": "^2.0.0",
     "@types/sinon": "^17.0.3",
@@ -115,6 +113,7 @@
     "watch": "^1.0.2"
   },
   "dependencies": {
+    "@balena/abstract-sql-to-typescript": "^5.1.1",
     "@balena/es-version": "^1.0.0",
     "@types/json-schema": "^7.0.9",
     "@types/node": "^20.17.8",
@@ -130,10 +129,9 @@
     "handlebars": "^4.7.7",
     "lodash": "^4.17.21",
     "memoizee": "^0.4.15",
-    "mime": "^3.0.0",
     "ndjson": "^2.0.0",
     "p-throttle": "^4.1.1",
-    "pinejs-client-core": "^7.0.0",
+    "pinejs-client-core": "^8.2.0",
     "tslib": "^2.1.0"
   },
   "versionist": {

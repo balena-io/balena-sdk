@@ -17,31 +17,32 @@ limitations under the License.
 import * as errors from 'balena-errors';
 import type {
 	Organization,
-	OrganizationInvite,
-	OrganizationMembershipRoles,
-	PineOptions,
-	PineSubmitBody,
 	InjectedDependenciesParam,
 	InjectedOptionsParam,
-	PinePostResult,
+	OrganizationMembershipRole,
+	BalenaModel,
 } from '..';
 import { mergePineOptions } from '../util';
+import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
+import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 export interface OrganizationInviteOptions {
 	invitee: string;
-	roleName?: OrganizationMembershipRoles;
+	roleName?: OrganizationMembershipRole['Read']['name'];
 	message?: string;
 }
 
 const RESOURCE = 'invitee__is_invited_to__organization';
+
+type OrganizationInvite = BalenaModel[typeof RESOURCE];
 
 const getOrganizationInviteModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
 	getOrganization: (
 		handleOrId: string | number,
-		options?: PineOptions<Organization>,
-	) => Promise<Organization>,
+		options?: ODataOptionsWithoutCount<Organization['Read']>,
+	) => Promise<Organization['Read']>,
 ) {
 	const { request, pine } = deps;
 	const { apiUrl } = opts;
@@ -67,8 +68,8 @@ const getOrganizationInviteModel = function (
 		 * });
 		 */
 		getAll(
-			options: PineOptions<OrganizationInvite> = {},
-		): Promise<OrganizationInvite[]> {
+			options: ODataOptionsWithoutCount<OrganizationInvite['Read']> = {},
+		): Promise<Array<OrganizationInvite['Read']>> {
 			return pine.get({
 				resource: RESOURCE,
 				options,
@@ -102,8 +103,8 @@ const getOrganizationInviteModel = function (
 		 */
 		async getAllByOrganization(
 			handleOrId: number | string,
-			options: PineOptions<OrganizationInvite> = {},
-		): Promise<OrganizationInvite[]> {
+			options: ODataOptionsWithoutCount<OrganizationInvite['Read']> = {},
+		): Promise<Array<OrganizationInvite['Read']>> {
 			const { id } = await getOrganization(handleOrId, {
 				$select: 'id',
 			});
@@ -141,7 +142,7 @@ const getOrganizationInviteModel = function (
 		async create(
 			handleOrId: string | number,
 			{ invitee, roleName, message }: OrganizationInviteOptions,
-		): Promise<PinePostResult<OrganizationInvite>> {
+		): Promise<PickDeferred<OrganizationInvite['Read']>> {
 			const [{ id }, roles] = await Promise.all([
 				getOrganization(handleOrId, { $select: 'id' }),
 				roleName
@@ -157,14 +158,18 @@ const getOrganizationInviteModel = function (
 						})
 					: undefined,
 			]);
-			type OrganizationInviteBase = Omit<OrganizationInvite, 'invitee'>;
+			type OrganizationInviteBase = Omit<
+				OrganizationInvite['Write'],
+				'invitee' | 'organization_membership_role'
+			>;
 			type OrganizationInvitePostBody = OrganizationInviteBase & {
 				invitee: string;
+				organization_membership_role?: OrganizationInvite['Write']['organization_membership_role'];
 			};
-			const body: PineSubmitBody<OrganizationInvitePostBody> = {
+			const body: OrganizationInvitePostBody = {
 				invitee,
 				is_invited_to__organization: id,
-				message,
+				message: message ?? null,
 			};
 			if (roles) {
 				const roleId = roles[0]?.id;
@@ -174,10 +179,11 @@ const getOrganizationInviteModel = function (
 				}
 				body.organization_membership_role = roleId;
 			}
-			return (await pine.post<OrganizationInviteBase>({
+			return await pine.post({
 				resource: RESOURCE,
+				// @ts-expect-error this doesn't actually exist in the model and is a hooks thing :(
 				body,
-			})) as PinePostResult<OrganizationInvite>;
+			});
 		},
 
 		/**

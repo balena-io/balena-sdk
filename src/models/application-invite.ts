@@ -19,29 +19,28 @@ import type {
 	InjectedDependenciesParam,
 	InjectedOptionsParam,
 	Application,
-	ApplicationInvite,
-	ApplicationMembershipRoles,
-	PineOptions,
-	PineSubmitBody,
-	PinePostResult,
+	BalenaModel,
 } from '..';
 import { mergePineOptions } from '../util';
+import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
+import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 export interface ApplicationInviteOptions {
 	invitee: string;
-	roleName?: ApplicationMembershipRoles;
+	roleName?: string;
 	message?: string;
 }
 
 const RESOURCE = 'invitee__is_invited_to__application';
+type ApplicationInvite = BalenaModel[typeof RESOURCE];
 
 const getApplicationInviteModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
 	getApplication: (
 		slugOrUuidOrId: string | number,
-		options?: PineOptions<Application>,
-	) => Promise<Application>,
+		options?: ODataOptionsWithoutCount<Application['Read']>,
+	) => Promise<Application['Read']>,
 ) {
 	const { request, pine } = deps;
 	const { apiUrl } = opts;
@@ -67,8 +66,8 @@ const getApplicationInviteModel = function (
 		 * });
 		 */
 		getAll(
-			options: PineOptions<ApplicationInvite> = {},
-		): Promise<ApplicationInvite[]> {
+			options: ODataOptionsWithoutCount<ApplicationInvite['Read']> = {},
+		): Promise<Array<ApplicationInvite['Read']>> {
 			return pine.get({
 				resource: RESOURCE,
 				options,
@@ -102,8 +101,8 @@ const getApplicationInviteModel = function (
 		 */
 		async getAllByApplication(
 			slugOrUuidOrId: number | string,
-			options: PineOptions<ApplicationInvite> = {},
-		): Promise<ApplicationInvite[]> {
+			options: ODataOptionsWithoutCount<ApplicationInvite['Read']> = {},
+		): Promise<Array<ApplicationInvite['Read']>> {
 			const { id } = await getApplication(slugOrUuidOrId, {
 				$select: 'id',
 			});
@@ -141,7 +140,7 @@ const getApplicationInviteModel = function (
 		async create(
 			slugOrUuidOrId: string | number,
 			{ invitee, roleName, message }: ApplicationInviteOptions,
-		): Promise<PinePostResult<ApplicationInvite>> {
+		): Promise<PickDeferred<ApplicationInvite['Read']>> {
 			const [{ id }, roles] = await Promise.all([
 				getApplication(slugOrUuidOrId, { $select: 'id' }),
 				roleName
@@ -157,14 +156,18 @@ const getApplicationInviteModel = function (
 						})
 					: undefined,
 			]);
-			type ApplicationInviteBase = Omit<ApplicationInvite, 'invitee'>;
+			type ApplicationInviteBase = Omit<
+				ApplicationInvite['Write'],
+				'invitee' | 'application_membership_role'
+			>;
 			type ApplicationInvitePostBody = ApplicationInviteBase & {
 				invitee: string;
+				application_membership_role?: ApplicationInvite['Write']['is_invited_to__application'];
 			};
-			const body: PineSubmitBody<ApplicationInvitePostBody> = {
+			const body: ApplicationInvitePostBody = {
 				invitee,
 				is_invited_to__application: id,
-				message,
+				message: message ?? null,
 			};
 			if (roles) {
 				const roleId = roles[0]?.id;
@@ -174,10 +177,11 @@ const getApplicationInviteModel = function (
 				}
 				body.application_membership_role = roleId;
 			}
-			return (await pine.post<ApplicationInviteBase>({
+			return await pine.post({
 				resource: RESOURCE,
+				// @ts-expect-error this doesn't actually exist in the model and is a hooks thing :(
 				body,
-			})) as PinePostResult<ApplicationInvite>;
+			});
 		},
 
 		/**

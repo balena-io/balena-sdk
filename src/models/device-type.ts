@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { InjectedDependenciesParam, PineOptions } from '..';
+import type { InjectedDependenciesParam } from '..';
 import type { DeviceType } from '../types/models';
 import type { Partials, Contract } from '../types/contract';
 import { mergePineOptions } from '../util';
@@ -27,6 +27,7 @@ import {
 	aliases as contractAliases,
 	BalenaOS as BalenaOsContract,
 } from './balenaos-contract';
+import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
 
 const handlebarsRuntimeOptions = {
 	helpers: {
@@ -148,15 +149,15 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 */
 		async get(
 			idOrSlug: number | string,
-			options?: PineOptions<DeviceType>,
-		): Promise<DeviceType> {
+			options?: ODataOptionsWithoutCount<DeviceType['Read']>,
+		): Promise<DeviceType['Read']> {
 			options ??= {};
 
 			if (idOrSlug == null) {
 				throw new errors.BalenaInvalidDeviceType(idOrSlug);
 			}
 
-			let deviceType: DeviceType | undefined;
+			let deviceType: DeviceType['Read'] | undefined;
 			if (typeof idOrSlug === 'string') {
 				deviceType = (
 					await exports.getAll(
@@ -218,11 +219,13 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * 	console.log(deviceTypes);
 		 * })
 		 */
-		async getAll(options?: PineOptions<DeviceType>): Promise<DeviceType[]> {
+		async getAll(
+			options?: ODataOptionsWithoutCount<DeviceType['Read']>,
+		): Promise<Array<DeviceType['Read']>> {
 			options ??= {};
 			const deviceTypes = await pine.get({
 				resource: 'device_type',
-				options: mergePineOptions({ $orderby: 'name asc' }, options),
+				options: mergePineOptions({ $orderby: { name: 'asc' } }, options),
 			});
 
 			return deviceTypes;
@@ -253,8 +256,8 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * })
 		 */
 		async getAllSupported(
-			options?: PineOptions<DeviceType>,
-		): Promise<DeviceType[]> {
+			options?: ODataOptionsWithoutCount<DeviceType['Read']>,
+		): Promise<Array<DeviceType['Read']>> {
 			options ??= {};
 			const deviceTypes = await exports.getAll(
 				mergePineOptions(
@@ -310,8 +313,8 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 */
 		getBySlugOrName: async (
 			slugOrName: string,
-			options?: PineOptions<DeviceType>,
-		): Promise<DeviceType> => {
+			options?: ODataOptionsWithoutCount<DeviceType['Read']>,
+		): Promise<DeviceType['Read']> => {
 			options ??= {};
 			const [deviceType] = await exports.getAll(
 				mergePineOptions(
@@ -404,7 +407,9 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 					`Could not find contract for device type ${deviceTypeSlug}`,
 				);
 			}
-			return interpolatedPartials(contract);
+			// @ts-expect-error - parsed contract will be a Contract
+			const $contract = contract as Contract;
+			return interpolatedPartials($contract);
 		},
 
 		/**
@@ -434,8 +439,9 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		getInstructions: async (
 			deviceTypeSlugOrContract: string | Contract,
 		): Promise<Record<'Linux' | 'MacOS' | 'Windows', string[]> | string[]> => {
-			let contract: DeviceType['contract'];
+			let contract: Contract;
 			if (typeof deviceTypeSlugOrContract === 'string') {
+				// @ts-expect-error - parsed contract will be a Contract
 				({ contract } = await exports.getBySlugOrName(
 					deviceTypeSlugOrContract,
 					{
@@ -477,7 +483,8 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 				$select: 'contract',
 			});
 			if (contract) {
-				return calculateInstallMethod(contract);
+				// @ts-expect-error - parsed contract will be a Contract
+				return calculateInstallMethod(contract as Contract);
 			} else {
 				return null;
 			}

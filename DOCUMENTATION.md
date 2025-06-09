@@ -508,14 +508,6 @@ balena.utils.mergePineOptions(
  { $expand: { device: { $select: ['name'] } } },
 );
 ```
-**Example**  
-```js
-// Creating a new WebResourceFile in case 'File' API is not available.
-new balena.utils.BalenaWebResourceFile(
-  [fs.readFileSync('./file.tgz')],
-  'file.tgz'
-);
-```
 <a name="balena.request"></a>
 
 ### balena.request : <code>Object</code>
@@ -5020,20 +5012,6 @@ balena.models.organization.create({ name:'MyOrganization' }).then(function(organ
 ```js
 balena.models.organization.create({
   name:'MyOrganization',
-  logo_image: new balena.utils.BalenaWebResourceFile(
-    [fs.readFileSync('./img.jpeg')],
-    'img.jpeg'
-  );
-})
-.then(function(organization) {
-  console.log(organization);
-});
-```
-**Example**  
-```js
-balena.models.organization.create({
-  name:'MyOrganization',
-  // Only in case File API is avaialable (most browsers and Node 20+)
   logo_image: new File(
     imageContent,
     'img.jpeg'
