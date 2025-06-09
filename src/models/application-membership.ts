@@ -15,38 +15,36 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import type { ResourceAlternateKey } from '../../typings/pinejs-client-core';
-import type {
-	Application,
-	ApplicationMembership,
-	ApplicationMembershipRoles,
-	PineOptions,
-	PineSubmitBody,
-	InjectedDependenciesParam,
-	PinePostResult,
-	PineTypedResult,
-} from '..';
+import type { Application, InjectedDependenciesParam, BalenaModel } from '..';
 import { mergePineOptions } from '../util';
+import type {
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+	ResourceAlternateKey,
+} from 'pinejs-client-core';
+import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 const RESOURCE = 'user_application_membership';
+type ApplicationMembership = BalenaModel[typeof RESOURCE];
+
 type ResourceKey =
 	| number
 	| ResourceAlternateKey<
-			Pick<ApplicationMembership, 'user' | 'is_member_of__application'>
+			Pick<ApplicationMembership['Read'], 'user' | 'is_member_of__application'>
 	  >;
 
 export interface ApplicationMembershipCreationOptions {
 	application: string | number;
 	username: string;
-	roleName?: ApplicationMembershipRoles;
+	roleName?: string;
 }
 
 const getApplicationMembershipModel = function (
 	deps: InjectedDependenciesParam,
 	getApplication: (
 		slugOrUuidOrId: string | number,
-		options?: PineOptions<Application>,
-	) => Promise<Application>,
+		options?: ODataOptionsWithoutCount<Application['Read']>,
+	) => Promise<Application['Read']>,
 ) {
 	const { pine } = deps;
 
@@ -54,7 +52,7 @@ const getApplicationMembershipModel = function (
 		const role = await pine.get({
 			resource: 'application_membership_role',
 			id: {
-				name: roleName as ApplicationMembershipRoles,
+				name: roleName,
 			},
 			options: {
 				$select: 'id',
@@ -90,8 +88,8 @@ const getApplicationMembershipModel = function (
 		 */
 		async get(
 			membershipId: ResourceKey,
-			options: PineOptions<ApplicationMembership> = {},
-		): Promise<ApplicationMembership> {
+			options: ODataOptionsWithoutCount<ApplicationMembership['Read']> = {},
+		): Promise<ApplicationMembership['Read']> {
 			if (
 				typeof membershipId !== 'number' &&
 				typeof membershipId !== 'object'
@@ -142,8 +140,8 @@ const getApplicationMembershipModel = function (
 		 */
 		async getAllByApplication(
 			slugOrUuidOrId: number | string,
-			options: PineOptions<ApplicationMembership> = {},
-		): Promise<ApplicationMembership[]> {
+			options: ODataOptionsWithoutCount<ApplicationMembership['Read']> = {},
+		): Promise<Array<ApplicationMembership['Read']>> {
 			const { id } = await getApplication(slugOrUuidOrId, {
 				$select: 'id',
 			});
@@ -183,8 +181,8 @@ const getApplicationMembershipModel = function (
 		 */
 		async getAllByUser(
 			usernameOrId: number | string,
-			options: PineOptions<ApplicationMembership> = {},
-		): Promise<ApplicationMembership[]> {
+			options: ODataOptionsWithoutCount<ApplicationMembership['Read']> = {},
+		): Promise<Array<ApplicationMembership['Read']>> {
 			if (
 				typeof usernameOrId !== 'number' &&
 				typeof usernameOrId !== 'string'
@@ -246,7 +244,7 @@ const getApplicationMembershipModel = function (
 			username,
 			roleName,
 		}: ApplicationMembershipCreationOptions): Promise<
-			PinePostResult<ApplicationMembership>
+			PickDeferred<ApplicationMembership['Read']>
 		> {
 			const appOptions = {
 				$select: 'id',
@@ -270,34 +268,45 @@ const getApplicationMembershipModel = function (
 						},
 					},
 				},
-			} satisfies PineOptions<Application>;
+			} as const;
+
 			const [{ id, organization }, roleId] = await Promise.all([
 				getApplication(application, appOptions) as Promise<
-					PineTypedResult<Application, typeof appOptions>
+					NonNullable<
+						OptionsToResponse<
+							Application['Read'],
+							typeof appOptions,
+							typeof application
+						>
+					>
 				>,
 				roleName ? getRoleId(roleName) : undefined,
 			]);
+
 			// If the user does not have an organization membership, they cannot be added to an application
 			if (organization[0].organization_membership.length === 0) {
 				throw new Error(
 					'It is necessary that each user (Auth) that is member of an application that has an organization, is member of the organization',
 				);
 			}
-			type ApplicationMembershipBase = Omit<ApplicationMembership, 'user'>;
+			type ApplicationMembershipBase = Omit<
+				ApplicationMembership['Write'],
+				'user'
+			>;
 			type ApplicationMembershipPostBody = ApplicationMembershipBase & {
 				username: string;
 			};
-			const body: PineSubmitBody<ApplicationMembershipPostBody> = {
+			const body: Partial<ApplicationMembershipPostBody> = {
 				username,
 				is_member_of__application: id,
 			};
 			if (roleName) {
 				body.application_membership_role = roleId;
 			}
-			return (await pine.post<ApplicationMembershipBase>({
+			return await pine.post({
 				resource: RESOURCE,
 				body,
-			})) as PinePostResult<ApplicationMembership>;
+			});
 		},
 
 		/**
@@ -332,7 +341,7 @@ const getApplicationMembershipModel = function (
 			roleName: string,
 		): Promise<void> {
 			const roleId = await getRoleId(roleName);
-			await pine.patch<ApplicationMembership>({
+			await pine.patch({
 				resource: RESOURCE,
 				id: idOrUniqueKey,
 				body: {

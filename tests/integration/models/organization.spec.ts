@@ -119,7 +119,7 @@ describe('Organization model', function () {
 					.that.is.a('string');
 
 				const res = await balena.request.send({
-					url: fetchedOrg.logo_image.href,
+					url: fetchedOrg.logo_image!.href,
 					sendToken: false,
 					refreshToken: false,
 				});

@@ -114,7 +114,6 @@ describe('Organization Invite Model', function () {
 									this.organization.id,
 									{
 										invitee: TEST_EMAIL,
-										// @ts-expect-error invalid value
 										roleName: UNKNOWN_ROLE,
 									},
 								);
@@ -165,7 +164,7 @@ describe('Organization Invite Model', function () {
 
 				describe('[mutating operations]', function () {
 					let membership:
-						| BalenaSdk.PinePostResult<BalenaSdk.OrganizationInvite>
+						| BalenaSdk.InviteeIsInvitedToOrganization['Read']
 						| undefined;
 					before(async function () {
 						const roles = await balena.pine.get({

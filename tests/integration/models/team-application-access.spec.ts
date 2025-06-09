@@ -9,7 +9,6 @@ import {
 	givenAnApplication,
 } from '../setup';
 import { getInitialOrganization } from '../utils';
-import type { ApplicationMembershipRoles } from '../../..';
 
 describe('Team Application Access Model', function () {
 	timeSuite(before);
@@ -127,7 +126,6 @@ describe('Team Application Access Model', function () {
 						await balena.models.team.applicationAccess.add(
 							ctx.team.id,
 							ctx.application2.id,
-							// @ts-expect-error -- we are testing a failing case
 							roleName,
 						);
 					},
@@ -153,7 +151,7 @@ describe('Team Application Access Model', function () {
 					await balena.pine.get({
 						resource: 'application_membership_role',
 						id: {
-							name: newRoleName as ApplicationMembershipRoles,
+							name: newRoleName,
 						},
 						options: {
 							$select: 'id',
@@ -174,7 +172,6 @@ describe('Team Application Access Model', function () {
 					async () => {
 						await balena.models.team.applicationAccess.update(
 							ctx.teamApplicationAccessWrite.id,
-							// @ts-expect-error -- we are testing a failing case
 							roleName,
 						);
 					},

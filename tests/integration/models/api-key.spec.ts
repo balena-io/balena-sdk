@@ -159,9 +159,9 @@ describe('API Key model', function () {
 		givenADevice(before);
 
 		const ctx: {
-			namedUserApiKey?: BalenaSdk.ApiKey;
-			provisioningApiKey?: BalenaSdk.ApiKey;
-			deviceApiKey?: BalenaSdk.ApiKey;
+			namedUserApiKey?: BalenaSdk.ApiKey['Read'];
+			provisioningApiKey?: BalenaSdk.ApiKey['Read'];
+			deviceApiKey?: BalenaSdk.ApiKey['Read'];
 		} = {};
 
 		const testSet = [
