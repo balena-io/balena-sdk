@@ -2,10 +2,16 @@
 import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
-import type * as BalenaSdk from '../../..';
 import type { Dictionary } from '../../../typings/utils';
 import { getFieldLabel, getParam } from '../utils';
 import { expectError } from '../../util';
+import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
+
+type ResourceTagBase = {
+	id: number;
+	tag_key: string;
+	value: string;
+};
 
 const getAllByResourcePropNameProvider = (resourceName: string) =>
 	`getAllBy${_.upperFirst(_.camelCase(resourceName))}`;
@@ -17,10 +23,10 @@ const getAllByResourceFactory = function (
 	const propName = getAllByResourcePropNameProvider(resourceName);
 	return function (
 		idOrUniqueParam: number | string | Dictionary<unknown>,
-		options?: BalenaSdk.PineOptions<BalenaSdk.ResourceTagBase>,
+		options?: ODataOptionsWithoutCount<ResourceTagBase>,
 	) {
 		return (model as any)[propName](idOrUniqueParam, options) as Promise<
-			BalenaSdk.ResourceTagBase[]
+			ResourceTagBase[]
 		>;
 	};
 };

@@ -11,6 +11,7 @@ import {
 } from '../setup';
 import { expectError, timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
+import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 describe('Service Model', function () {
 	timeSuite(before);
@@ -85,7 +86,7 @@ describe('Service Model', function () {
 			] as const;
 
 			function getParam(
-				service: BalenaSdk.PinePostResult<BalenaSdk.Service>,
+				service: PickDeferred<BalenaSdk.Service['Read']>,
 				paramName: (typeof serviceParams)[number],
 			) {
 				if (paramName === 'service_name & application id') {

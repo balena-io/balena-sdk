@@ -14,17 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type * as BalenaSdk from '..';
-import type { InjectedDependenciesParam } from '..';
+import type { InjectedDependenciesParam, TeamApplicationAccess } from '..';
 import * as errors from 'balena-errors';
 import { mergePineOptions } from '../util';
+import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
 
 const getTeamApplicationAccessModel = function (
 	deps: InjectedDependenciesParam,
 ) {
 	const { pine, sdkInstance } = deps;
 
-	const getRoleId = async (roleName: BalenaSdk.ApplicationMembershipRoles) => {
+	const getRoleId = async (roleName: string) => {
 		const role = await pine.get({
 			resource: 'application_membership_role',
 			id: {
@@ -62,8 +62,8 @@ const getTeamApplicationAccessModel = function (
 	 */
 	const getAllByTeam = async function (
 		teamId: number,
-		options: BalenaSdk.PineOptions<BalenaSdk.TeamApplicationAccess> = {},
-	): Promise<BalenaSdk.TeamApplicationAccess[]> {
+		options: ODataOptionsWithoutCount<TeamApplicationAccess['Read']> = {},
+	): Promise<Array<TeamApplicationAccess['Read']>> {
 		const team = await sdkInstance.models.team.get(teamId, { $select: 'id' });
 
 		return sdkInstance.pine.get({
@@ -101,8 +101,8 @@ const getTeamApplicationAccessModel = function (
 	 */
 	const get = async function (
 		teamApplicationAccessId: number,
-		options: BalenaSdk.PineOptions<BalenaSdk.TeamApplicationAccess> = {},
-	): Promise<BalenaSdk.TeamApplicationAccess | undefined> {
+		options: ODataOptionsWithoutCount<TeamApplicationAccess['Read']> = {},
+	): Promise<TeamApplicationAccess['Read'] | undefined> {
 		const teamApplicationAccess = await sdkInstance.pine.get({
 			resource: 'team_application_access',
 			id: teamApplicationAccessId,
@@ -143,8 +143,8 @@ const getTeamApplicationAccessModel = function (
 	const add = async function (
 		teamId: number,
 		applicationIdOrSlug: number | string,
-		roleName: BalenaSdk.ApplicationMembershipRoles,
-	): Promise<BalenaSdk.TeamApplicationAccess> {
+		roleName: string,
+	): Promise<TeamApplicationAccess['Read']> {
 		const appId = (
 			await sdkInstance.models.application.get(applicationIdOrSlug, {
 				$select: 'id',
@@ -185,7 +185,7 @@ const getTeamApplicationAccessModel = function (
 	 */
 	const update = async function (
 		teamApplicationAccessId: number,
-		roleName: BalenaSdk.ApplicationMembershipRoles,
+		roleName: string,
 	): Promise<void> {
 		const roleId = await getRoleId(roleName);
 

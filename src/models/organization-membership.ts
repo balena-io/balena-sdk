@@ -15,36 +15,35 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import type { ResourceAlternateKey } from '../../typings/pinejs-client-core';
 import type {
 	Organization,
 	OrganizationMembership,
-	OrganizationMembershipRoles,
 	OrganizationMembershipTag,
-	PineOptions,
 	InjectedDependenciesParam,
 } from '..';
 import { mergePineOptions } from '../util';
+import type {
+	ODataOptionsWithoutCount,
+	ResourceAlternateKey,
+} from 'pinejs-client-core';
 
 const RESOURCE = 'organization_membership';
+
 type ResourceKey =
 	| number
 	| ResourceAlternateKey<
-			Pick<OrganizationMembership, 'user' | 'is_member_of__organization'>
+			Pick<
+				OrganizationMembership['Read'],
+				'user' | 'is_member_of__organization'
+			>
 	  >;
-
-export interface OrganizationMembershipCreationOptions {
-	organization: string | number;
-	username: string;
-	roleName?: OrganizationMembershipRoles;
-}
 
 const getOrganizationMembershipModel = function (
 	deps: InjectedDependenciesParam,
 	getOrganization: (
 		handleOrId: string | number,
-		options?: PineOptions<Organization>,
-	) => Promise<Organization>,
+		options?: ODataOptionsWithoutCount<Organization['Read']>,
+	) => Promise<Organization['Read']>,
 ) {
 	const { pine } = deps;
 
@@ -52,7 +51,7 @@ const getOrganizationMembershipModel = function (
 		// eslint-disable-next-line @typescript-eslint/no-require-imports
 		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 
-	const tagsModel = buildDependentResource<OrganizationMembershipTag>(
+	const tagsModel = buildDependentResource(
 		{ pine },
 		{
 			resourceName: 'organization_membership_tag',
@@ -74,7 +73,7 @@ const getOrganizationMembershipModel = function (
 		const role = await pine.get({
 			resource: 'organization_membership_role',
 			id: {
-				name: roleName as OrganizationMembershipRoles,
+				name: roleName,
 			},
 			options: {
 				$select: 'id',
@@ -110,8 +109,8 @@ const getOrganizationMembershipModel = function (
 		 */
 		async get(
 			membershipId: ResourceKey,
-			options: PineOptions<OrganizationMembership> = {},
-		): Promise<OrganizationMembership> {
+			options: ODataOptionsWithoutCount<OrganizationMembership['Read']> = {},
+		): Promise<OrganizationMembership['Read']> {
 			if (
 				typeof membershipId !== 'number' &&
 				typeof membershipId !== 'object'
@@ -162,8 +161,8 @@ const getOrganizationMembershipModel = function (
 		 */
 		async getAllByOrganization(
 			handleOrId: number | string,
-			options: PineOptions<OrganizationMembership> = {},
-		): Promise<OrganizationMembership[]> {
+			options: ODataOptionsWithoutCount<OrganizationMembership['Read']> = {},
+		): Promise<Array<OrganizationMembership['Read']>> {
 			const { id } = await getOrganization(handleOrId, {
 				$select: 'id',
 			});
@@ -203,8 +202,8 @@ const getOrganizationMembershipModel = function (
 		 */
 		async getAllByUser(
 			usernameOrId: number | string,
-			options: PineOptions<OrganizationMembership> = {},
-		): Promise<OrganizationMembership[]> {
+			options: ODataOptionsWithoutCount<OrganizationMembership['Read']> = {},
+		): Promise<Array<OrganizationMembership['Read']>> {
 			if (
 				typeof usernameOrId !== 'number' &&
 				typeof usernameOrId !== 'string'
@@ -271,7 +270,7 @@ const getOrganizationMembershipModel = function (
 			roleName: string,
 		): Promise<void> {
 			const roleId = await getRoleId(roleName);
-			await pine.patch<OrganizationMembership>({
+			await pine.patch({
 				resource: 'organization_membership',
 				id: idOrUniqueKey,
 				body: {
@@ -332,8 +331,8 @@ const getOrganizationMembershipModel = function (
 			 */
 			async getAllByOrganization(
 				handleOrId: string | number,
-				options?: PineOptions<OrganizationMembershipTag>,
-			): Promise<OrganizationMembershipTag[]> {
+				options?: ODataOptionsWithoutCount<OrganizationMembershipTag['Read']>,
+			): Promise<Array<OrganizationMembershipTag['Read']>> {
 				options ??= {};
 				const { id } = await getOrganization(handleOrId, {
 					$select: 'id',

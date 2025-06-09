@@ -2336,6 +2336,7 @@ describe('Device Model', function () {
 						});
 					expect(deviceDetails.device_name).to.be.undefined;
 					expect(deviceDetails.current_services).not.to.be.undefined;
+					// @ts-expect-error - can't infer mergeOptions
 					expect(deviceDetails.belongs_to__application[0]).to.deep.match({
 						id: this.application.id,
 						app_name: this.application.app_name,
@@ -2346,7 +2347,7 @@ describe('Device Model', function () {
 			describe('balena.models.device.serviceVar', function () {
 				const varModel = balena.models.device.serviceVar;
 				const serviceParams = ['id', 'service_name'] satisfies Array<
-					keyof BalenaSdk.Service
+					keyof BalenaSdk.Service['Read']
 				>;
 
 				deviceUniqueFields.forEach(function (deviceParam) {
