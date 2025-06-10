@@ -72,7 +72,12 @@ const passthroughPineOptionKeys = ['$top', '$skip', '$orderby'] as const;
 export function mergePineOptions<
 	R extends Resource['Read'],
 	TDefault extends ODataOptions<R>,
->(defaults: TDefault, extras: undefined): TDefault;
+>(defaults: TDefault, extras?: undefined): TDefault;
+
+export function mergePineOptions<R extends Resource['Read']>(
+	defaults: ODataOptionsWithoutCount<R>,
+	extras: ODataOptionsWithoutCount<R>,
+): ODataOptionsWithoutCount<R>;
 
 export function mergePineOptions<R extends Resource['Read']>(
 	defaults: ODataOptions<R>,
@@ -82,7 +87,7 @@ export function mergePineOptions<R extends Resource['Read']>(
 export function mergePineOptions<R extends Resource['Read']>(
 	defaults: ODataOptions<R>,
 	extras: ODataOptionsWithoutCount<R> | undefined,
-): ODataOptions<R> {
+): ODataOptions<R> | ODataOptionsWithoutCount<R> {
 	if (!extras) {
 		return defaults;
 	}

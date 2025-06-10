@@ -1,8 +1,8 @@
+import { Expand } from 'pinejs-client-core';
 import type {
 	Device,
 	Image,
 	ImageInstall,
-	PineExpand,
 	Release,
 	Service,
 } from '..';
@@ -31,8 +31,8 @@ export interface DeviceWithServiceDetails<
 }
 
 // Pine expand options necessary for getting raw service data for a device
-export const getCurrentServiceDetailsPineExpand = (expandRelease: boolean) => {
-	const pineExpand: PineExpand<Device> = {
+export const getCurrentServiceDetailsPineExpand = (expandRelease: boolean): Readonly<Expand<Device['Read']>>=> {
+	return {
 		image_install: {
 			$select: ['id', 'download_progress', 'status', 'install_date'],
 			$filter: {
@@ -57,8 +57,6 @@ export const getCurrentServiceDetailsPineExpand = (expandRelease: boolean) => {
 			},
 		},
 	};
-
-	return pineExpand;
 };
 
 interface WithServiceName {
@@ -112,7 +110,7 @@ function getSingleInstallSummary(
 export const generateCurrentServiceDetails = <
 	TCurrentService extends CurrentService = CurrentService,
 >(
-	rawDevice: Device,
+	rawDevice: Device['Read'],
 ): DeviceWithServiceDetails<TCurrentService> => {
 	const installs = rawDevice.image_install!.map((ii) =>
 		getSingleInstallSummary(ii),
