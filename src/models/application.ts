@@ -247,7 +247,7 @@ const getApplicationModel = function (
 						...(context === 'directly_accessible' && {
 							$filter: isDirectlyAccessibleByUserFilter,
 						}),
-						$orderby: 'app_name asc',
+						$orderby: { app_name: 'asc' },
 					},
 					options ?? {},
 				),
@@ -311,7 +311,7 @@ const getApplicationModel = function (
 						$filter: {
 							organization: orgId,
 						},
-						$orderby: 'app_name asc',
+						$orderby: { app_name: 'asc' },
 					},
 					options ?? {},
 				),
@@ -1037,7 +1037,7 @@ const getApplicationModel = function (
 							is_invalidated: false,
 							status: 'success',
 						},
-						$orderby: 'created_at desc',
+						$orderby: { created_at: 'desc' },
 					},
 				},
 			} as const;
@@ -1179,7 +1179,7 @@ const getApplicationModel = function (
 							is_invalidated: false,
 							status: 'success',
 						},
-						$orderby: 'created_at desc',
+						$orderby: { created_at: 'desc' },
 					},
 				},
 			} as const;

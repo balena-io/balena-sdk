@@ -82,7 +82,7 @@ describe('Team model', function () {
 						ctx.initialOrganization.id,
 						{
 							$select: 'id',
-							$orderby: 'created_at asc',
+							$orderby: { created_at: 'asc' },
 						},
 					);
 					expect(teams.map((team) => team.id)).to.have.members([

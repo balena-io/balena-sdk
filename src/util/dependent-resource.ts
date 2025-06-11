@@ -70,7 +70,9 @@ export function buildDependentResource<T extends DependentResource>(
 				mergePineOptions(
 					{
 						$filter: { [parentResourceName]: id },
-						$orderby: `${resourceKeyField} asc`,
+						$orderby: {
+							[resourceKeyField]: 'asc',
+						} as PineOptions<T>['$orderby'],
 					},
 					options,
 				),
