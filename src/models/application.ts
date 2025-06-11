@@ -35,7 +35,10 @@ import {
 	getCurrentServiceDetailsPineExpand,
 	generateCurrentServiceDetails,
 } from '../util/device-service-details';
-import type { ODataOptionsWithoutCount, OptionsToResponse } from 'pinejs-client-core';
+import type {
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
 
 const getApplicationModel = function (
 	deps: InjectedDependenciesParam,
@@ -477,7 +480,6 @@ const getApplicationModel = function (
 				owns__device: Array<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
 			};
 			if (app.owns__device) {
-				// @ts-expect-error - type overriding for owns__device
 				app.owns__device = app.owns__device.map((d) =>
 					generateCurrentServiceDetails<CurrentServiceWithCommit>(d),
 				);
@@ -1039,7 +1041,13 @@ const getApplicationModel = function (
 			const application = (await exports.get(
 				slugOrUuidOrId,
 				appOptions,
-			)) as NonNullable<OptionsToResponse<Application['Read'], typeof appOptions, typeof slugOrUuidOrId>>;
+			)) as NonNullable<
+				OptionsToResponse<
+					Application['Read'],
+					typeof appOptions,
+					typeof slugOrUuidOrId
+				>
+			>;
 			const trackedRelease = application.should_be_running__release[0];
 			const latestRelease = application.owns__release[0];
 			return (
@@ -1129,10 +1137,16 @@ const getApplicationModel = function (
 				$expand: { should_be_running__release: { $select: 'commit' } },
 			} as const;
 
-			const application = await exports.get(
+			const application = (await exports.get(
 				slugOrUuidOrId,
 				appOptions,
-			) as NonNullable<OptionsToResponse<Application['Read'], typeof appOptions, typeof slugOrUuidOrId>>;
+			)) as NonNullable<
+				OptionsToResponse<
+					Application['Read'],
+					typeof appOptions,
+					typeof slugOrUuidOrId
+				>
+			>;
 			return application.should_be_running__release[0]?.commit;
 		},
 
@@ -1178,10 +1192,7 @@ const getApplicationModel = function (
 				},
 			} as const;
 
-			const application = (await exports.get(
-				slugOrUuidOrId,
-				appOptions,
-			));
+			const application = await exports.get(slugOrUuidOrId, appOptions);
 			const body: Partial<Application['Write']> = {
 				should_track_latest_release: true,
 			};

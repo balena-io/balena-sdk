@@ -114,7 +114,7 @@ describe('Organization Invite Model', function () {
 									this.organization.id,
 									{
 										invitee: TEST_EMAIL,
-										// @ts-expect-error invalid value
+										// // @ts-expect-error invalid value - this will only fail if the models are narrowed down
 										roleName: UNKNOWN_ROLE,
 									},
 								);
@@ -165,7 +165,7 @@ describe('Organization Invite Model', function () {
 
 				describe('[mutating operations]', function () {
 					let membership:
-						| BalenaSdk.PinePostResult<BalenaSdk.OrganizationInvite>
+						| Partial<BalenaSdk.InviteeIsInvitedToOrganization['Read']>
 						| undefined;
 					before(async function () {
 						const roles = await balena.pine.get({
@@ -180,7 +180,7 @@ describe('Organization Invite Model', function () {
 						this.orgMemberRole = this.orgRoleMap['member'];
 					});
 					afterEach(async function () {
-						await balena.models.organization.invite.revoke(membership!.id);
+						await balena.models.organization.invite.revoke(membership!.id!);
 					});
 					for (const field of organizationRetrievalFields) {
 						it(`should be able to invite a new member to the organization by ${field}`, async function () {

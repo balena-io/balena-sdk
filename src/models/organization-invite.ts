@@ -184,8 +184,7 @@ const getOrganizationInviteModel = function (
 			}
 			return await pine.post({
 				resource: RESOURCE,
-				// @ts-expect-error - this body expects a different typing for invitee & organization_membership_role
-				// which are correct in a hook before actual insert
+				// @ts-expect-error this doesn't actually exist in the model and is a hooks thing :(
 				body,
 			});
 		},

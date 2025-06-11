@@ -161,10 +161,13 @@ const getApplicationInviteModel = function (
 						})
 					: undefined,
 			]);
-			type ApplicationInviteBase = Omit<ApplicationInvite['Write'], 'invitee' | 'application_membership_role'>;
+			type ApplicationInviteBase = Omit<
+				ApplicationInvite['Write'],
+				'invitee' | 'application_membership_role'
+			>;
 			type ApplicationInvitePostBody = ApplicationInviteBase & {
 				invitee: string;
-				application_membership_role?: ApplicationInvite['Write']['is_invited_to__application']
+				application_membership_role?: ApplicationInvite['Write']['is_invited_to__application'];
 			};
 			const body: ApplicationInvitePostBody = {
 				invitee,
@@ -181,7 +184,7 @@ const getApplicationInviteModel = function (
 			}
 			return await pine.post({
 				resource: RESOURCE,
-				// @ts-expect-error - This typing is incomplete from the api as the hooks override the missing properties
+				// @ts-expect-error this doesn't actually exist in the model and is a hooks thing :(
 				body,
 			});
 		},

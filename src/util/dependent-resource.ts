@@ -126,8 +126,7 @@ export function buildDependentResource<T extends DependentResource>(
 			try {
 				await pine.upsert({
 					resource: resourceName,
-					// @ts-expect-error - this is a typing diff from pinejs-client-core
-					// the id is not necessarily writeable while it does require it to be of write type
+					// @ts-expect-error - TODO OTAVIO investigate
 					id: {
 						[parentResourceName]: parentId,
 						[resourceKeyField]: key,

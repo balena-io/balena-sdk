@@ -62,7 +62,6 @@ export type {
 	SupervisorStatus,
 } from './models/device';
 export type { ReleaseWithImageDetails } from './models/release';
-export type { OrganizationMembershipCreationOptions } from './models/organization-membership';
 export type { OrganizationInviteOptions } from './models/organization-invite';
 export type {
 	ImgConfigOptions,

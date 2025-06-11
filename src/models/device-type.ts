@@ -219,7 +219,9 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * 	console.log(deviceTypes);
 		 * })
 		 */
-		async getAll(options?: ODataOptionsWithoutCount<DeviceType['Read']>): Promise<Array<DeviceType['Read']>> {
+		async getAll(
+			options?: ODataOptionsWithoutCount<DeviceType['Read']>,
+		): Promise<Array<DeviceType['Read']>> {
 			options ??= {};
 			const deviceTypes = await pine.get({
 				resource: 'device_type',
@@ -405,7 +407,9 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 					`Could not find contract for device type ${deviceTypeSlug}`,
 				);
 			}
-			return interpolatedPartials(contract as unknown as Contract);
+			// @ts-expect-error - parsed contract will be a Contract
+			const $contract = contract as Contract;
+			return interpolatedPartials($contract);
 		},
 
 		/**
@@ -479,7 +483,8 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 				$select: 'contract',
 			});
 			if (contract) {
-				return calculateInstallMethod(contract as unknown as Contract);
+				// @ts-expect-error - parsed contract will be a Contract
+				return calculateInstallMethod(contract as Contract);
 			} else {
 				return null;
 			}

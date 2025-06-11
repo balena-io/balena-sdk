@@ -62,7 +62,7 @@ const getLogs = function (
 	opts: InjectedOptionsParam,
 ) {
 	const getLogsFromApi = async function (
-		device: Device,
+		device: Device['Read'],
 		options?: LogsOptions,
 	) {
 		const { body } = await request.send({
@@ -74,7 +74,7 @@ const getLogs = function (
 	};
 
 	const subscribeToApiLogs = function (
-		device: Device,
+		device: Device['Read'],
 		options?: LogsOptions,
 	): LogsSubscription {
 		options ??= {};

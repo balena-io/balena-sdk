@@ -22,7 +22,13 @@ import type {
 	OrganizationMembership,
 } from '..';
 import { mergePineOptions } from '../util';
-import type { Filter, ODataOptions, ODataOptionsWithoutCount, OptionsToResponse, ResourceAlternateKey } from 'pinejs-client-core';
+import type {
+	Filter,
+	ODataOptions,
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+	ResourceAlternateKey,
+} from 'pinejs-client-core';
 import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 const RESOURCE = 'user_application_membership';
@@ -31,8 +37,8 @@ type ApplicationMembership = BalenaModel[typeof RESOURCE];
 type ResourceKey =
 	| number
 	| ResourceAlternateKey<
-		Pick<ApplicationMembership['Read'], 'user' | 'is_member_of__application'>
-	>;
+			Pick<ApplicationMembership['Read'], 'user' | 'is_member_of__application'>
+	  >;
 
 export interface ApplicationMembershipCreationOptions {
 	application: string | number;
@@ -202,15 +208,15 @@ const getApplicationMembershipModel = function (
 								typeof usernameOrId === 'number'
 									? usernameOrId
 									: {
-										$any: {
-											$alias: 'u',
-											$expr: {
-												u: {
-													username: usernameOrId,
+											$any: {
+												$alias: 'u',
+												$expr: {
+													u: {
+														username: usernameOrId,
+													},
 												},
 											},
 										},
-									},
 						},
 					},
 					options,
@@ -266,7 +272,13 @@ const getApplicationMembershipModel = function (
 
 			const [{ id, organization }, roleId] = await Promise.all([
 				getApplication(application, appOptions) as Promise<
-					NonNullable<OptionsToResponse<Application['Read'], typeof appOptions, typeof application>>
+					NonNullable<
+						OptionsToResponse<
+							Application['Read'],
+							typeof appOptions,
+							typeof application
+						>
+					>
 				>,
 				roleName ? getRoleId(roleName) : undefined,
 			]);
@@ -277,7 +289,10 @@ const getApplicationMembershipModel = function (
 					'It is necessary that each user (Auth) that is member of an application that has an organization, is member of the organization',
 				);
 			}
-			type ApplicationMembershipBase = Omit<ApplicationMembership['Write'], 'user'>;
+			type ApplicationMembershipBase = Omit<
+				ApplicationMembership['Write'],
+				'user'
+			>;
 			type ApplicationMembershipPostBody = ApplicationMembershipBase & {
 				username: string;
 			};

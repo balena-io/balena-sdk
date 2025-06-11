@@ -7,7 +7,6 @@ import type {
 	ODataOptionsWithoutCount,
 	Resource,
 	ResourceExpand,
-	SelectPropsOf,
 } from 'pinejs-client-core';
 
 export interface BalenaUtils {
@@ -108,7 +107,7 @@ export function mergePineOptions<R extends Resource['Read']>(
 		} else {
 			result.$select = [
 				...(typeof result.$select === 'string'
-					? [result.$select as SelectPropsOf<R, typeof result>]
+					? [result.$select]
 					: Array.isArray(result.$select)
 						? result.$select
 						: []),

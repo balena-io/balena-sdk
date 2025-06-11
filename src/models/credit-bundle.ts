@@ -14,13 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type {
-	CreditBundle,
-	InjectedDependenciesParam,
-	PineOptions,
-	PinePostResult,
-} from '..';
-import type { SubmitBody } from '../../typings/pinejs-client-core';
+import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
+import type { CreditBundle, InjectedDependenciesParam } from '..';
 import { mergePineOptions } from '../util';
 
 const getCreditBundleModel = function ({
@@ -58,8 +53,8 @@ const getCreditBundleModel = function ({
 
 		getAllByOrg: async (
 			organization: string | number,
-			options?: PineOptions<CreditBundle>,
-		): Promise<CreditBundle[]> => {
+			options?: ODataOptionsWithoutCount<CreditBundle['Read']>,
+		): Promise<Array<CreditBundle['Read']>> => {
 			const orgId = await getOrgId(organization);
 			const creditBundles = await pine.get({
 				resource: 'credit_bundle',
@@ -96,9 +91,9 @@ const getCreditBundleModel = function ({
 			organization: string | number,
 			featureId: number,
 			creditsToPurchase: number,
-		): Promise<PinePostResult<CreditBundle>> => {
+		) => {
 			const orgId = await getOrgId(organization);
-			const body: SubmitBody<CreditBundle> = {
+			const body: CreditBundle['Write'] = {
 				belongs_to__organization: orgId,
 				is_for__feature: featureId,
 				original_quantity: creditsToPurchase,

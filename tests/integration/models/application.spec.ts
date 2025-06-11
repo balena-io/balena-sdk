@@ -260,7 +260,7 @@ describe('Application Model', function () {
 								.getAll(
 									{
 										$expand: { is_for__device_type: { $select: 'slug' } },
-										$orderby: 'id desc',
+										$orderby: { id: 'desc' },
 									},
 									'directly_accessible',
 								)
@@ -777,9 +777,9 @@ describe('Application Model', function () {
 					const app = await balena.models.application.get(this.application.id, {
 						$select: 'is_accessible_by_support_until__date',
 					});
-					expect(Date.parse(app.is_accessible_by_support_until__date)).to.equal(
-						expiryTime,
-					);
+					expect(
+						Date.parse(app.is_accessible_by_support_until__date!),
+					).to.equal(expiryTime);
 				});
 			});
 
@@ -1558,7 +1558,7 @@ describe('Application Model', function () {
 						},
 					},
 				},
-			} satisfies BalenaSdk.PineOptions<BalenaSdk.Application>;
+			} as const;
 
 			describe('balena.models.application.getWithDeviceServiceDetails()', () => {
 				it("should retrieve the application and it's devices along with service details including their commit", function () {
@@ -1605,7 +1605,10 @@ describe('Application Model', function () {
 	});
 
 	describe('given public apps', function () {
-		let publicApp: Pick<BalenaSdk.Application, 'id' | 'app_name' | 'slug'>;
+		let publicApp: Pick<
+			BalenaSdk.Application['Read'],
+			'id' | 'app_name' | 'slug'
+		>;
 
 		before(async function () {
 			const [app] = await balena.models.application.getAll({

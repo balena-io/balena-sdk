@@ -14,12 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type {
-	InjectedOptionsParam,
-	InjectedDependenciesParam,
-	PineTypedResult,
-	PineOptions,
-} from '..';
+import type { OptionsToResponse } from 'pinejs-client-core';
+import type { InjectedOptionsParam, InjectedDependenciesParam } from '..';
 import type { Device } from '../types/models';
 
 import { withSupervisorLockedError } from '../util';
@@ -93,7 +89,9 @@ export const getSupervisorApiHelper = function (
 			const device = (await sdkInstance.models.device.get(
 				uuidOrId,
 				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
+			)) as NonNullable<
+				OptionsToResponse<Device['Read'], typeof deviceOptions, typeof uuidOrId>
+			>;
 			await request.send({
 				method: 'POST',
 				url: '/supervisor/ping',
@@ -162,11 +160,17 @@ export const getSupervisorApiHelper = function (
 				const deviceOptions = {
 					$select: ['id', 'supervisor_version'],
 					$expand: { belongs_to__application: { $select: 'id' } },
-				} satisfies PineOptions<Device>;
+				} as const;
 				const device = (await sdkInstance.models.device.get(
 					uuidOrId,
 					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
+				)) as NonNullable<
+					OptionsToResponse<
+						Device['Read'],
+						typeof deviceOptions,
+						typeof uuidOrId
+					>
+				>;
 
 				const appId = device.belongs_to__application[0].id;
 				const { body } = await request.send({
@@ -260,7 +264,13 @@ export const getSupervisorApiHelper = function (
 				const device = (await sdkInstance.models.device.get(
 					uuidOrId,
 					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
+				)) as NonNullable<
+					OptionsToResponse<
+						Device['Read'],
+						typeof deviceOptions,
+						typeof uuidOrId
+					>
+				>;
 				await request.send({
 					method: 'POST',
 					url: '/supervisor/v1/shutdown',
@@ -303,7 +313,13 @@ export const getSupervisorApiHelper = function (
 				const device = (await sdkInstance.models.device.get(
 					uuidOrId,
 					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
+				)) as NonNullable<
+					OptionsToResponse<
+						Device['Read'],
+						typeof deviceOptions,
+						typeof uuidOrId
+					>
+				>;
 				await request.send({
 					method: 'POST',
 					url: '/supervisor/v1/purge',
@@ -354,7 +370,9 @@ export const getSupervisorApiHelper = function (
 			const device = (await sdkInstance.models.device.get(
 				uuidOrId,
 				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
+			)) as NonNullable<
+				OptionsToResponse<Device['Read'], typeof deviceOptions, typeof uuidOrId>
+			>;
 			await request.send({
 				method: 'POST',
 				url: '/supervisor/v1/update',
@@ -435,11 +453,13 @@ export const getSupervisorApiHelper = function (
 			const deviceOptions = {
 				$select: ['id', 'supervisor_version'],
 				$expand: { belongs_to__application: { $select: 'id' } },
-			} satisfies PineOptions<Device>;
+			} as const;
 			const device = (await sdkInstance.models.device.get(
 				uuidOrId,
 				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
+			)) as NonNullable<
+				OptionsToResponse<Device['Read'], typeof deviceOptions, typeof uuidOrId>
+			>;
 			ensureVersionCompatibility(
 				device.supervisor_version,
 				MIN_SUPERVISOR_MC_API,
@@ -488,11 +508,17 @@ export const getSupervisorApiHelper = function (
 				const deviceOptions = {
 					$select: ['id', 'supervisor_version'],
 					$expand: { belongs_to__application: { $select: 'id' } },
-				} satisfies PineOptions<Device>;
+				} as const;
 				const device = (await sdkInstance.models.device.get(
 					uuidOrId,
 					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
+				)) as NonNullable<
+					OptionsToResponse<
+						Device['Read'],
+						typeof deviceOptions,
+						typeof uuidOrId
+					>
+				>;
 				ensureVersionCompatibility(
 					device.supervisor_version,
 					MIN_SUPERVISOR_MC_API,
@@ -544,11 +570,17 @@ export const getSupervisorApiHelper = function (
 				const deviceOptions = {
 					$select: ['id', 'supervisor_version'],
 					$expand: { belongs_to__application: { $select: 'id' } },
-				} satisfies PineOptions<Device>;
+				} as const;
 				const device = (await sdkInstance.models.device.get(
 					uuidOrId,
 					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
+				)) as NonNullable<
+					OptionsToResponse<
+						Device['Read'],
+						typeof deviceOptions,
+						typeof uuidOrId
+					>
+				>;
 				ensureVersionCompatibility(
 					device.supervisor_version,
 					MIN_SUPERVISOR_MC_API,
