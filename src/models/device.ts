@@ -312,7 +312,7 @@ const getDeviceModel = function (
 
 		const devices = await pine.get({
 			resource: 'device',
-			options: mergePineOptions({ $orderby: 'device_name asc' }, options),
+			options: mergePineOptions({ $orderby: { device_name: 'asc' } }, options),
 		});
 		return devices as Device[];
 	}
@@ -2014,7 +2014,7 @@ const getDeviceModel = function (
 							status: 'success',
 							belongs_to__application: appId,
 						},
-						$orderby: 'created_at desc',
+						$orderby: { created_at: 'desc' },
 					});
 				},
 				{ primitive: true, promise: true },
@@ -2449,7 +2449,7 @@ const getDeviceModel = function (
 									},
 								},
 							},
-							$orderby: 'name asc',
+							$orderby: { name: 'asc' },
 						},
 						options,
 					),
@@ -2606,7 +2606,7 @@ const getDeviceModel = function (
 									},
 								},
 							},
-							$orderby: 'name asc',
+							$orderby: { name: 'asc' },
 						},
 						options,
 					),
@@ -2796,7 +2796,7 @@ const getDeviceModel = function (
 									},
 								},
 							},
-							$orderby: 'name asc',
+							$orderby: { name: 'asc' },
 						},
 						options,
 					),

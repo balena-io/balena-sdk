@@ -114,7 +114,7 @@ const getOrganizationModel = function (
 			resource: 'organization',
 			options: mergePineOptions(
 				{
-					$orderby: 'name asc',
+					$orderby: { name: 'asc' },
 				},
 				options,
 			),

@@ -504,13 +504,13 @@ export const string$OrderbyWoPropPrefix: BalenaSdk.PineOptions<BalenaSdk.Applica
 export const string$OrderbyInvalidDirection: BalenaSdk.PineOptions<BalenaSdk.Application> =
 	{
 		// @ts-expect-error test case
-		$orderby: 'id ascending',
+		$orderby: { id: 'ascending' },
 	};
 
 export const string$OrderbyInvalidDirectionCase: BalenaSdk.PineOptions<BalenaSdk.Application> =
 	{
 		// @ts-expect-error test case
-		$orderby: 'id Asc',
+		$orderby: { id: 'Asc' },
 	};
 
 export const string$OrderbyInvalidNestedPropertyPath: BalenaSdk.PineOptions<BalenaSdk.Organization> =
@@ -979,12 +979,12 @@ export const anyObjectOptionsValid1: BalenaSdk.PineOptions<AnyObject> = {
 // valid $orderby
 
 export const string$OrderbyAsc: BalenaSdk.PineOptions<BalenaSdk.Application> = {
-	$orderby: 'id asc',
+	$orderby: { id: 'asc' },
 };
 
 export const string$OrderbyDesc: BalenaSdk.PineOptions<BalenaSdk.Application> =
 	{
-		$orderby: 'id asc',
+		$orderby: { id: 'asc' },
 	};
 
 export const string$OrderbyNestedProp: BalenaSdk.PineOptions<BalenaSdk.Organization> =

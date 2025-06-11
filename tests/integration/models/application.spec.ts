@@ -260,7 +260,7 @@ describe('Application Model', function () {
 								.getAll(
 									{
 										$expand: { is_for__device_type: { $select: 'slug' } },
-										$orderby: 'id desc',
+										$orderby: { id: 'desc' },
 									},
 									'directly_accessible',
 								)

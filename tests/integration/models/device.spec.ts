@@ -2623,7 +2623,7 @@ describe('Device Model', function () {
 										$expand: { is_of__user: { $select: 'username' } },
 									},
 								},
-								$orderby: 'created_at asc',
+								$orderby: { created_at: 'asc' },
 							},
 						);
 						expect(result).to.be.an('array').to.have.length(1);

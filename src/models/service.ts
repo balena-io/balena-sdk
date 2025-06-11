@@ -207,7 +207,7 @@ const getServiceModel = ({
 									},
 								},
 							},
-							$orderby: 'name asc',
+							$orderby: { name: 'asc' },
 						},
 						options,
 					),

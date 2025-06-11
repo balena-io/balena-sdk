@@ -43,19 +43,19 @@ describe('Pine option merging', function () {
 			{
 				$top: 1,
 				$skip: 2,
-				$orderby: 'app_name asc',
+				$orderby: { app_name: 'asc' },
 			},
 			{
 				$top: 3,
 				$skip: 4,
-				$orderby: 'id asc',
+				$orderby: { id: 'asc' },
 			},
 		);
 
 		return expect(result).to.deep.equal({
 			$top: 3,
 			$skip: 4,
-			$orderby: 'id asc',
+			$orderby: { id: 'asc' },
 		});
 	});
 
