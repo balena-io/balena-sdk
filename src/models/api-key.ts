@@ -118,7 +118,7 @@ const getApiKeysModel = function (
 				resource: 'api_key',
 				options: mergePineOptions(
 					{
-						$orderby: 'name asc',
+						$orderby: { name: 'asc' },
 					},
 					options,
 				),
@@ -239,7 +239,7 @@ const getApiKeysModel = function (
 						$filter: {
 							is_of__actor: actor.__id,
 						},
-						$orderby: 'name asc',
+						$orderby: { name: 'asc' },
 					},
 					options,
 				),

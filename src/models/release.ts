@@ -305,7 +305,7 @@ const getReleaseModel = function (
 					$filter: {
 						belongs_to__application: id,
 					},
-					$orderby: 'created_at desc',
+					$orderby: { created_at: 'desc' },
 				},
 				options,
 			),
@@ -657,7 +657,10 @@ const getReleaseModel = function (
 			const releaseOpts = {
 				$select: 'id',
 				$expand: {
-					release_tag: mergePineOptions({ $orderby: 'tag_key asc' }, options),
+					release_tag: mergePineOptions(
+						{ $orderby: { tag_key: 'asc' } },
+						options,
+					),
 				},
 			} as const;
 
