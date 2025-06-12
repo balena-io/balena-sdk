@@ -456,6 +456,7 @@ const getAuth = function (
 			resource: 'user',
 			id,
 			body: {
+				// @ts-expect-error this actually exists on the model but it is only on the update allow list
 				has_been_sent_verification_email: true,
 			},
 		});

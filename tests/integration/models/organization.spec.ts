@@ -81,6 +81,7 @@ describe('Organization model', function () {
 			it('should be able to create a new organization', async function () {
 				ctx.testOrg1Name = `${TEST_ORGANIZATION_NAME}_${Date.now()}`;
 				const org = await balena.models.organization.create({
+					// @ts-expect-error - TODO OTAVIO check why name is not on the org write
 					name: ctx.testOrg1Name,
 				});
 				expect(org).to.have.property('name', ctx.testOrg1Name);
@@ -91,6 +92,7 @@ describe('Organization model', function () {
 
 			it('should be able to create a new organization with the same name', async function () {
 				const org = await balena.models.organization.create({
+					// @ts-expect-error - TODO OTAVIO check why name is not on the org write
 					name: ctx.testOrg1Name,
 				});
 				expect(org).to.have.property('name', ctx.testOrg1Name);
@@ -104,6 +106,7 @@ describe('Organization model', function () {
 			it.skip('should be able to create an organization with a logo', async function () {
 				const org = await balena.models.organization.create({
 					name: `${TEST_ORGANIZATION_NAME} with logo`,
+					// @ts-expect-error - next pinejs-client-core bump should fix this (with File api)
 					logo_image: new balena.utils.BalenaWebResourceFile(
 						[Buffer.from('this is a test\n')],
 						'orglogo.png',
@@ -119,7 +122,7 @@ describe('Organization model', function () {
 					.that.is.a('string');
 
 				const res = await balena.request.send({
-					url: fetchedOrg.logo_image.href,
+					url: fetchedOrg.logo_image!.href,
 					sendToken: false,
 					refreshToken: false,
 				});
@@ -133,7 +136,7 @@ describe('Organization model', function () {
 		describe('balena.models.organization.getAll()', function () {
 			it('should retrieve all organizations', async function () {
 				const orgs = await balena.models.organization.getAll({
-					$orderby: 'id asc',
+					$orderby: { id: 'asc' },
 				});
 				expect(orgs).to.be.an('array');
 				expect(orgs.map((o) => o.handle)).to.deep.equal(

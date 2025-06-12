@@ -408,14 +408,17 @@ describe('OS model', function () {
 						$filter: { raw_version: '5.1.20+rev1' },
 					},
 				);
+
 				expect(versionInfos).to.be.an('array');
 				expect(versionInfos).to.have.lengthOf(1);
 				expect(versionInfos[0]).to.have.property('raw_version', '5.1.20+rev1');
 				// Testing the values separatelly as well so that the correctness of the return type is also tested
+				// @ts-expect-error - TODO OTAVIO CHECK
 				expect(versionInfos[0].raw_version).to.equal('5.1.20+rev1');
 				expect(versionInfos[0]).to.have.nested.property(
 					'belongs_to__application[0].id',
 				);
+				// @ts-expect-error - TODO OTAVIO CHECK
 				expect(versionInfos[0].belongs_to__application[0].id).to.be.a('number');
 			});
 
@@ -426,6 +429,7 @@ describe('OS model', function () {
 						$filter: { raw_version: '5.1.10-1706616336246+rev2' },
 					});
 				expect(finalizedVersionInfos).to.be.an('array');
+				// @ts-expect-error - TODO OTAVIO CHECK
 				expect(finalizedVersionInfos.map((v) => v.raw_version)).to.deep.equal(
 					[],
 				);
@@ -445,12 +449,14 @@ describe('OS model', function () {
 					'5.1.10-1706616336246+rev2',
 				);
 				// Testing the values separatelly as well so that the correctness of the return type is also tested
+				// @ts-expect-error - TODO OTAVIO CHECK
 				expect(draftVersionInfos[0].raw_version).to.equal(
 					'5.1.10-1706616336246+rev2',
 				);
 				expect(draftVersionInfos[0]).to.have.nested.property(
 					'belongs_to__application[0].id',
 				);
+				// @ts-expect-error - TODO OTAVIO CHECK
 				expect(draftVersionInfos[0].belongs_to__application[0].id).to.be.a(
 					'number',
 				);

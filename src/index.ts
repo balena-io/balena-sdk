@@ -23,7 +23,7 @@ import type {
 import { globalEnv } from './util/global-env';
 import type { BalenaRequestError } from 'balena-errors';
 
-export type { Pine, PineStrict } from './pine';
+export type { Pine } from './pine';
 
 export * from './types/models';
 export * from './types/jwt';
@@ -32,26 +32,6 @@ export * from './types/user-invite';
 export * from './types/auth';
 
 export type { Interceptor };
-export type {
-	WithId,
-	PineDeferred,
-	NavigationResource,
-	OptionalNavigationResource,
-	ReverseNavigationResource,
-	ParamsObj as PineParams,
-	ParamsObjWithId as PineParamsWithId,
-	Filter as PineFilter,
-	Expand as PineExpand,
-	ODataOptions as PineOptions,
-	SubmitBody as PineSubmitBody,
-	ODataOptionsWithFilter as PineOptionsWithFilter,
-	ODataOptionsStrict as PineOptionsStrict,
-	SelectableProps as PineSelectableProps,
-	ExpandableProps as PineExpandableProps,
-	ExpandResultObject as PineExpandResultObject,
-	TypedResult as PineTypedResult,
-	PostResult as PinePostResult,
-} from '../typings/pinejs-client-core';
 
 export type { ApplicationMembershipCreationOptions } from './models/application-membership';
 export type { ApplicationInviteOptions } from './models/application-invite';
@@ -82,7 +62,6 @@ export type {
 	SupervisorStatus,
 } from './models/device';
 export type { ReleaseWithImageDetails } from './models/release';
-export type { OrganizationMembershipCreationOptions } from './models/organization-membership';
 export type { OrganizationInviteOptions } from './models/organization-invite';
 export type {
 	ImgConfigOptions,

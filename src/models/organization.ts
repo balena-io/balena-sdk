@@ -16,9 +16,17 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 
-import type * as BalenaSdk from '..';
-import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type {
+	InjectedDependenciesParam,
+	InjectedOptionsParam,
+	Organization,
+} from '..';
 import { isId, mergePineOptions } from '../util';
+import type {
+	ODataOptions,
+	ODataOptionsWithoutCount,
+} from 'pinejs-client-core';
+import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 const getOrganizationModel = function (
 	deps: InjectedDependenciesParam,
@@ -83,8 +91,8 @@ const getOrganizationModel = function (
 	 * });
 	 */
 	const create = function (
-		organization: BalenaSdk.PineSubmitBody<BalenaSdk.Organization>,
-	): Promise<BalenaSdk.PinePostResult<BalenaSdk.Organization>> {
+		organization: Organization['Write'],
+	): Promise<PickDeferred<Organization['Read']>> {
 		return pine.post({
 			resource: 'organization',
 			body: organization,
@@ -108,13 +116,15 @@ const getOrganizationModel = function (
 	 * });
 	 */
 	const getAll = function (
-		options: BalenaSdk.PineOptions<BalenaSdk.Organization> = {},
-	): Promise<BalenaSdk.Organization[]> {
+		options: ODataOptionsWithoutCount<Organization['Read']> = {},
+	): Promise<Array<Organization['Read']>> {
 		return pine.get({
 			resource: 'organization',
 			options: mergePineOptions(
 				{
-					$orderby: 'name asc',
+					$orderby: {
+						name: 'asc',
+					},
 				},
 				options,
 			),
@@ -145,8 +155,8 @@ const getOrganizationModel = function (
 	 */
 	const get = async function (
 		handleOrId: string | number,
-		options: BalenaSdk.PineOptions<BalenaSdk.Organization> = {},
-	): Promise<BalenaSdk.Organization> {
+		options: ODataOptions<Organization['Read']> = {},
+	): Promise<Organization['Read']> {
 		if (handleOrId == null) {
 			throw new errors.BalenaInvalidParameterError('handleOrId', handleOrId);
 		}
@@ -179,7 +189,7 @@ const getOrganizationModel = function (
 		const id = (
 			await sdkInstance.models.organization.get(handleOrId, { $select: 'id' })
 		).id;
-		await pine.delete<BalenaSdk.Organization>({
+		await pine.delete({
 			resource: 'organization',
 			id,
 		});
