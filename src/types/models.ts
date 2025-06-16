@@ -298,7 +298,12 @@ export interface ApplicationHostedOnApplication {
 	can_use__application_as_host: NavigationResource<Application>;
 }
 
-export type ApplicationMembershipRoles = 'developer' | 'operator' | 'observer';
+export type ApplicationMembershipRoles =
+	| 'developer'
+	| 'safe-developer'
+	| 'operator'
+	| 'safe-operator'
+	| 'observer';
 
 export interface ApplicationMembershipRole {
 	id: number;
