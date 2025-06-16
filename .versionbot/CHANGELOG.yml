@@ -1,4 +1,16 @@
 - commits:
+    - subject: Run CI on supported node version (20)
+      hash: 9ec6303fb92bac45be5debf89b29c3f9fa6531f0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Otavio Jacobi
+      nested: []
+  version: 21.6.1
+  title: ""
+  date: 2025-06-16T12:52:07.749Z
+- commits:
     - subject: Replace BillingAccountInfo with extended AccountInfo
       hash: 186d4030beb38727c3c6482b3e96066a67fe4d2f
       body: ""
