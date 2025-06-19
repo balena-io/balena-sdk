@@ -1,4 +1,17 @@
 - commits:
+    - subject: "ApplicationMembershipRoles: Add `safe_developer` and `safe_operator`
+        roles"
+      hash: 72d7c2c3377d58714da9915324d74c3c89cd23ec
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 21.7.0
+  title: ""
+  date: 2025-06-19T11:22:21.774Z
+- commits:
     - subject: Run CI on supported node version (20)
       hash: 9ec6303fb92bac45be5debf89b29c3f9fa6531f0
       body: ""
