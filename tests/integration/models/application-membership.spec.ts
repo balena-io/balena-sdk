@@ -217,7 +217,7 @@ describe('Application Membership Model', function () {
 					const key = keyGetter(membership!);
 					await balena.models.application.membership.changeRole(key, rolenName);
 
-					membership = await balena.models.application.membership.get(
+					membership = (await balena.models.application.membership.get(
 						membership!.id,
 						{
 							$select: 'id',
@@ -233,7 +233,7 @@ describe('Application Membership Model', function () {
 								},
 							},
 						},
-					);
+					)) as BalenaSdk.UserIsMemberOfApplication['Read'];
 					expect(membership).to.have.nested.property('user[0].id');
 					expect(membership).to.have.nested.property(
 						'user[0].username',

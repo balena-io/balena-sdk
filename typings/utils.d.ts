@@ -37,3 +37,7 @@ export type AtLeast<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
 export type ExactlyExtends<T, ExtendsBase> = ExtendsBase extends T
 	? T
 	: ExtendsBase;
+
+export type Mutable<T> = {
+	-readonly [P in keyof T]: T[P];
+};

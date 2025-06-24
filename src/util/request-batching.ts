@@ -3,7 +3,6 @@ import chunk from 'lodash/chunk';
 import { groupByMap, mergePineOptions } from '.';
 import type {
 	ExpandableStringKeyOf,
-	Filter,
 	ODataOptionsWithoutCount,
 	OptionsToResponse,
 } from 'pinejs-client-core';
@@ -141,35 +140,34 @@ export function batchResourceOperationFactory<
 				}>
 		> = [];
 		for (const uuidOrIdOrArrayChunk of chunks) {
-			const resourceFilter: Filter<{ id: number; uuid: string }> =
-				Array.isArray(uuidOrIdOrArrayChunk)
-					? typeof uuidOrIdOrArrayChunk[0] === 'string'
-						? {
-								uuid: { $in: uuidOrIdOrArrayChunk as string[] },
-							}
-						: {
-								id: { $in: uuidOrIdOrArrayChunk as number[] },
-							}
-					: typeof uuidOrIdOrArrayChunk === 'string'
-						? {
-								uuid: { $startswith: uuidOrIdOrArrayChunk },
-							}
-						: {
-								id: uuidOrIdOrArrayChunk,
-							};
+			const resourceFilter = Array.isArray(uuidOrIdOrArrayChunk)
+				? typeof uuidOrIdOrArrayChunk[0] === 'string'
+					? ({
+							uuid: { $in: uuidOrIdOrArrayChunk as string[] },
+						} as const)
+					: ({
+							id: { $in: uuidOrIdOrArrayChunk as number[] },
+						} as const)
+				: typeof uuidOrIdOrArrayChunk === 'string'
+					? ({
+							uuid: { $startswith: uuidOrIdOrArrayChunk },
+						} as const)
+					: ({
+							id: uuidOrIdOrArrayChunk,
+						} as const);
 			const combinedOptions = mergePineOptions(
 				{
 					$select: [
 						'id',
 						...(Array.isArray(uuidOrIdOrArrayChunk) &&
 						typeof uuidOrIdOrArrayChunk[0] === 'string'
-							? ['uuid']
+							? (['uuid'] as const)
 							: []),
 						...(groupByNavigationPoperty ? [groupByNavigationPoperty] : []),
-					] as ODataOptionsWithoutCount<T>['$select'],
+					],
 					$filter: resourceFilter,
 				},
-				options ?? {},
+				options,
 			);
 			items.push(...((await getAll(combinedOptions)) as typeof items));
 		}

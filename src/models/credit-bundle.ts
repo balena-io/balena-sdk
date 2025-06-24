@@ -17,7 +17,6 @@ limitations under the License.
 import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
 import type { CreditBundle, InjectedDependenciesParam } from '..';
 import { mergePineOptions } from '../util';
-import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 const getCreditBundleModel = function ({
 	pine,
@@ -52,17 +51,22 @@ const getCreditBundleModel = function ({
 		 *
 		 */
 
-		getAllByOrg: async (
+		getAllByOrg: async <
+			T extends ODataOptionsWithoutCount<CreditBundle['Read']>,
+		>(
 			organization: string | number,
-			options?: ODataOptionsWithoutCount<CreditBundle['Read']>,
-		): Promise<Array<CreditBundle['Read']>> => {
+			options?: T,
+		) => {
 			const orgId = await getOrgId(organization);
 			const creditBundles = await pine.get({
 				resource: 'credit_bundle',
-				options: mergePineOptions(options ?? {}, {
-					$filter: { belongs_to__organization: orgId },
-					$orderby: { created_at: 'desc' },
-				}),
+				options: mergePineOptions(
+					{
+						$filter: { belongs_to__organization: orgId },
+						$orderby: { created_at: 'desc' },
+					},
+					options,
+				),
 			});
 			return creditBundles;
 		},
@@ -92,16 +96,15 @@ const getCreditBundleModel = function ({
 			organization: string | number,
 			featureId: number,
 			creditsToPurchase: number,
-		): Promise<PickDeferred<CreditBundle['Read']>> => {
+		) => {
 			const orgId = await getOrgId(organization);
-			const body: CreditBundle['Write'] = {
-				belongs_to__organization: orgId,
-				is_for__feature: featureId,
-				original_quantity: creditsToPurchase,
-			};
 			return await pine.post({
 				resource: 'credit_bundle',
-				body,
+				body: {
+					belongs_to__organization: orgId,
+					is_for__feature: featureId,
+					original_quantity: creditsToPurchase,
+				},
 			});
 		},
 	};

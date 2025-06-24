@@ -20,6 +20,7 @@ import type {
 	OrganizationMembership,
 	OrganizationMembershipTag,
 	InjectedDependenciesParam,
+	OrganizationMembershipRole,
 } from '..';
 import { mergePineOptions } from '../util';
 import type {
@@ -69,7 +70,9 @@ const getOrganizationMembershipModel = function (
 		},
 	);
 
-	const getRoleId = async (roleName: string) => {
+	const getRoleId = async (
+		roleName: OrganizationMembershipRole['Read']['name'],
+	) => {
 		const role = await pine.get({
 			resource: 'organization_membership_role',
 			id: {
@@ -107,10 +110,9 @@ const getOrganizationMembershipModel = function (
 		 * 	console.log(memberships);
 		 * });
 		 */
-		async get(
-			membershipId: ResourceKey,
-			options: ODataOptionsWithoutCount<OrganizationMembership['Read']> = {},
-		): Promise<OrganizationMembership['Read']> {
+		async get<
+			T extends ODataOptionsWithoutCount<OrganizationMembership['Read']>,
+		>(membershipId: ResourceKey, options?: T) {
 			if (
 				typeof membershipId !== 'number' &&
 				typeof membershipId !== 'object'
@@ -159,10 +161,9 @@ const getOrganizationMembershipModel = function (
 		 * 	console.log(memberships);
 		 * });
 		 */
-		async getAllByOrganization(
-			handleOrId: number | string,
-			options: ODataOptionsWithoutCount<OrganizationMembership['Read']> = {},
-		): Promise<Array<OrganizationMembership['Read']>> {
+		async getAllByOrganization<
+			T extends ODataOptionsWithoutCount<OrganizationMembership['Read']>,
+		>(handleOrId: number | string, options?: T) {
 			const { id } = await getOrganization(handleOrId, {
 				$select: 'id',
 			});
@@ -200,10 +201,9 @@ const getOrganizationMembershipModel = function (
 		 * 	console.log(memberships);
 		 * });
 		 */
-		async getAllByUser(
-			usernameOrId: number | string,
-			options: ODataOptionsWithoutCount<OrganizationMembership['Read']> = {},
-		): Promise<Array<OrganizationMembership['Read']>> {
+		async getAllByUser<
+			T extends ODataOptionsWithoutCount<OrganizationMembership['Read']>,
+		>(usernameOrId: number | string, options?: T) {
 			if (
 				typeof usernameOrId !== 'number' &&
 				typeof usernameOrId !== 'string'
@@ -267,7 +267,7 @@ const getOrganizationMembershipModel = function (
 		 */
 		async changeRole(
 			idOrUniqueKey: ResourceKey,
-			roleName: string,
+			roleName: OrganizationMembershipRole['Read']['name'],
 		): Promise<void> {
 			const roleId = await getRoleId(roleName);
 			await pine.patch({
@@ -329,11 +329,9 @@ const getOrganizationMembershipModel = function (
 			 * 	console.log(tags);
 			 * });
 			 */
-			async getAllByOrganization(
-				handleOrId: string | number,
-				options?: ODataOptionsWithoutCount<OrganizationMembershipTag['Read']>,
-			): Promise<Array<OrganizationMembershipTag['Read']>> {
-				options ??= {};
+			async getAllByOrganization<
+				T extends ODataOptionsWithoutCount<OrganizationMembershipTag['Read']>,
+			>(handleOrId: string | number, options?: T) {
 				const { id } = await getOrganization(handleOrId, {
 					$select: 'id',
 				});
