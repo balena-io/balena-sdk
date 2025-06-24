@@ -257,7 +257,14 @@ const getApplicationMembershipModel = function (
 							organization_membership: {
 								$select: 'id',
 								$filter: {
-									user: { username },
+									user: {
+										$any: {
+											$alias: 'u',
+											$expr: {
+												u: { username },
+											},
+										},
+									},
 								},
 							},
 						},
