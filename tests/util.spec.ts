@@ -2,7 +2,6 @@
 import * as _ from 'lodash';
 import { expect } from 'chai';
 import * as bSemver from 'balena-semver';
-import type { Application } from '../src';
 
 // HACK: Avoid typescript trying to resolve built es2017 files
 const nodeRequire = require;
@@ -39,7 +38,7 @@ describe('Pine option merging', function () {
 	});
 
 	it('overrides top, skip and orderby options', function () {
-		const result = mergePineOptions<Application['Read']>(
+		const result = mergePineOptions(
 			{
 				$top: 1,
 				$skip: 2,

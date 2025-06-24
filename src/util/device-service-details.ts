@@ -1,7 +1,11 @@
-import type { Expand } from 'pinejs-client-core';
-import type { Device, Image, ImageInstall, Release, Service } from '..';
+import type { OptionsToResponse } from 'pinejs-client-core';
+import type { Device, ImageInstall } from '..';
+import type { Mutable } from '../../typings/utils';
 
 export interface CurrentService {
+	commit: string;
+	raw_version: string;
+	release_id: number;
 	id: number;
 	image_id: number;
 	service_id: number;
@@ -10,48 +14,38 @@ export interface CurrentService {
 	install_date: string;
 }
 
-export interface CurrentServiceWithCommit extends CurrentService {
-	commit: string;
-	raw_version: string;
-	release_id: number;
-}
-
-export type DeviceWithServiceDetails<
-	TCurrentService extends CurrentService = CurrentService,
-> = Device['Read'] & {
-	current_services: {
-		[serviceName: string]: TCurrentService[];
-	};
-};
-
 // Pine expand options necessary for getting raw service data for a device
-export const getCurrentServiceDetailsPineExpand = (
-	expandRelease: boolean,
-): Readonly<Expand<Device['Read']>> => {
-	return {
-		image_install: {
-			$select: ['id', 'download_progress', 'status', 'install_date'],
-			$filter: {
-				status: {
-					$ne: 'deleted',
-				},
-			},
-			$expand: {
-				installs__image: {
-					$select: ['id'],
-					$expand: {
-						is_a_build_of__service: {
-							$select: ['id', 'service_name'],
-						},
-					},
-				},
-				...(expandRelease && {
-					is_provided_by__release: {
-						$select: ['id', 'commit', 'raw_version'],
-					},
-				}),
+export const getCurrentServiceDetailsPineExpand = {
+	image_install: {
+		$select: ['id', 'download_progress', 'status', 'install_date'],
+		$filter: {
+			status: {
+				$ne: 'deleted',
 			},
 		},
+		$expand: {
+			installs__image: {
+				$select: ['id'],
+				$expand: {
+					is_a_build_of__service: {
+						$select: ['id', 'service_name'],
+					},
+				},
+			},
+			is_provided_by__release: {
+				$select: ['id', 'commit', 'raw_version'],
+			},
+		},
+	},
+} as const;
+
+export type DeviceWithServiceDetails = OptionsToResponse<
+	Device['Read'],
+	{ $expand: typeof getCurrentServiceDetailsPineExpand },
+	undefined
+>[number] & {
+	current_services: {
+		[serviceName: string]: CurrentService[];
 	};
 };
 
@@ -60,33 +54,27 @@ interface WithServiceName {
 }
 
 function getSingleInstallSummary(
-	rawData: ImageInstall['Read'],
+	rawData: OptionsToResponse<
+		ImageInstall['Read'],
+		typeof getCurrentServiceDetailsPineExpand.image_install,
+		undefined
+	>[number],
 ): CurrentService & WithServiceName {
-	const image = (rawData.installs__image as Array<Image['Read']>)[0];
-	const service = (image.is_a_build_of__service as Array<Service['Read']>)[0];
+	const image = rawData.installs__image[0];
+	const service = image.is_a_build_of__service[0];
 
-	let releaseInfo: {
-		commit?: string;
-		raw_version?: string;
-		release_id?: number;
-	} = {};
-	if (
-		'is_provided_by__release' in rawData &&
-		rawData.is_provided_by__release != null
-	) {
-		const release = (
-			rawData.is_provided_by__release as Array<Release['Read']>
-		)[0];
-		releaseInfo = {
-			commit: release?.commit,
-			raw_version: release?.raw_version,
-			release_id: release?.id,
-		};
-	}
+	const release = rawData.is_provided_by__release[0];
+	const releaseInfo = {
+		commit: release?.commit,
+		raw_version: release?.raw_version,
+		release_id: release?.id,
+	};
 
 	const result: CurrentService &
 		Partial<
-			Pick<ImageInstall['Read'], 'installs__image' | 'is_provided_by__release'>
+			Mutable<
+				Pick<typeof rawData, 'installs__image' | 'is_provided_by__release'>
+			>
 		> &
 		WithServiceName = {
 		...rawData,
@@ -107,24 +95,24 @@ function getSingleInstallSummary(
 	return result;
 }
 
-export const generateCurrentServiceDetails = <
-	TCurrentService extends CurrentService = CurrentService,
->(
-	rawDevice: Device['Read'],
-): DeviceWithServiceDetails<TCurrentService> => {
-	const installs = rawDevice.image_install!.map((ii) =>
-		getSingleInstallSummary(ii),
-	) as Array<TCurrentService & WithServiceName>;
+export const generateCurrentServiceDetails = (
+	rawDevice: OptionsToResponse<
+		Device['Read'],
+		{ $expand: typeof getCurrentServiceDetailsPineExpand },
+		undefined
+	>[number],
+): DeviceWithServiceDetails => {
+	const installs = rawDevice.image_install.map(getSingleInstallSummary);
 
 	// Essentially a groupBy(installs, 'service_name')
 	// but try making it a bit faster for the sake of large fleets.
 	// Uses Object.create(null) so that there are no inherited properties
 	// which could match service names
-	const currentServicesGroupedByName: Record<string, TCurrentService[]> =
+	const currentServicesGroupedByName: Record<string, CurrentService[]> =
 		Object.create(null);
 	for (const containerWithServiceName of installs) {
 		const { service_name } = containerWithServiceName;
-		let serviceContainerGroup: TCurrentService[];
+		let serviceContainerGroup: CurrentService[];
 		if (currentServicesGroupedByName[service_name] == null) {
 			serviceContainerGroup = [];
 			currentServicesGroupedByName[service_name] = serviceContainerGroup;
@@ -132,7 +120,7 @@ export const generateCurrentServiceDetails = <
 			serviceContainerGroup = currentServicesGroupedByName[service_name];
 		}
 
-		const container: TCurrentService & Partial<WithServiceName> =
+		const container: CurrentService & Partial<WithServiceName> =
 			containerWithServiceName;
 
 		// remove the extra property that we added for the grouping
@@ -148,7 +136,7 @@ export const generateCurrentServiceDetails = <
 		}
 	}
 
-	const device = rawDevice as DeviceWithServiceDetails<TCurrentService>;
+	const device = rawDevice as DeviceWithServiceDetails;
 	device.current_services = currentServicesGroupedByName;
 	return device;
 };

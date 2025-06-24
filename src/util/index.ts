@@ -1,11 +1,12 @@
 import * as errors from 'balena-errors';
 import type {
 	Expand,
-	ODataOptions,
+	Filter,
 	ODataOptionsWithoutCount,
 	Resource,
 	ResourceExpand,
 } from 'pinejs-client-core';
+import type { StringKeyof } from '../../typings/utils';
 
 export interface BalenaUtils {
 	mergePineOptions: typeof mergePineOptions;
@@ -59,36 +60,168 @@ const passthroughPineOptionKeys = ['$top', '$skip', '$orderby'] as const;
 // Merging two sets of pine options sensibly is more complicated than it sounds.
 //
 // The general rules are:
-// * select, orderby, top and skip override (select this, instead of the default)
+// * orderby, top and skip override (select this, instead of the default)
+// * selects are combined (i.e. everything selected by both clients will be combined)
 // * filters are combined (i.e. both filters must match)
 // * expands are combined (include both expansions), and this recurses down.
 //   * That means $expands within expands are combined
 //   * And $selects within expands override
 // * Any unknown 'extra' options throw an error. Unknown 'default' options are ignored.
-export function mergePineOptions<
+
+export type AsArray<T> = T extends string
+	? [T]
+	: T extends readonly string[]
+		? T
+		: [];
+export type Concat<
+	A extends readonly unknown[],
+	B extends readonly unknown[],
+> = [...A, ...B];
+export type OverrideProp<D, E, K> = K extends keyof E
+	? E[K]
+	: K extends keyof D
+		? D[K]
+		: undefined;
+
+export type ExtraKeys =
+	| '$select'
+	| '$orderby'
+	| '$skip'
+	| '$top'
+	| '$filter'
+	| '$expand';
+export type MergeSelect<
 	R extends Resource['Read'],
-	TDefault extends ODataOptions<R>,
->(defaults: TDefault, extras?: undefined): TDefault;
+	TDefault extends Readonly<ODataOptionsWithoutCount<R>>,
+	TExtra extends Readonly<ODataOptionsWithoutCount<R>>,
+> = TExtra extends { $select: infer ESelect }
+	? ESelect extends StringKeyof<R> | ReadonlyArray<StringKeyof<R>>
+		? TDefault extends { $select: infer DSelect }
+			? DSelect extends StringKeyof<R> | ReadonlyArray<StringKeyof<R>>
+				? Concat<AsArray<DSelect>, AsArray<ESelect>>
+				: AsArray<ESelect>
+			: AsArray<ESelect>
+		: never
+	: TDefault extends { $select: infer DSelect }
+		? DSelect extends StringKeyof<R> | ReadonlyArray<StringKeyof<R>>
+			? AsArray<DSelect>
+			: undefined
+		: undefined;
 
-export function mergePineOptions<R extends Resource['Read']>(
-	defaults: ODataOptionsWithoutCount<R>,
-	extras: ODataOptionsWithoutCount<R>,
-): ODataOptionsWithoutCount<R>;
+export type MergeFilter<
+	R extends Resource['Read'],
+	TDefault extends Readonly<ODataOptionsWithoutCount<R>>,
+	TExtra extends Readonly<ODataOptionsWithoutCount<R>>,
+> = TExtra extends { $filter: infer EFilter }
+	? EFilter extends Filter<R>
+		? TDefault extends { $filter: infer DFilter }
+			? DFilter extends Filter<R>
+				? { $and: [DFilter, EFilter] }
+				: EFilter
+			: EFilter
+		: never
+	: TDefault extends { $filter: infer DFilter }
+		? DFilter extends Filter<R>
+			? DFilter
+			: undefined
+		: undefined;
 
-export function mergePineOptions<R extends Resource['Read']>(
-	defaults: ODataOptions<R>,
-	extras: ODataOptionsWithoutCount<R>,
-): ODataOptions<R>;
+export type ToResourceExpand<R extends Resource['Read'], E extends Expand<R>> =
+	E extends ResourceExpand<R>
+		? E
+		: E extends Array<StringKeyof<R>> | ReadonlyArray<StringKeyof<R>>
+			? // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+				{ [K in E[number]]: {} }
+			: E extends Array<ResourceExpand<R>>
+				? E[number]
+				: never;
 
-export function mergePineOptions<R extends Resource['Read']>(
-	defaults: ODataOptions<R>,
-	extras: ODataOptionsWithoutCount<R> | undefined,
-): ODataOptions<R> | ODataOptionsWithoutCount<R> {
-	if (extras == null) {
-		return defaults;
+export type EnsureODataOptionsWithoutCount<T> =
+	T extends Readonly<ODataOptionsWithoutCount> ? T : never;
+
+export type ExtractNavigationResource<R, K extends keyof R> =
+	R[K] extends Array<infer U>
+		? U extends Resource['Read']
+			? U
+			: never
+		: never;
+
+export type MergeExpandedOptions<
+	R extends Resource['Read'],
+	_DExpand extends Expand<R>,
+	_EExpand extends Expand<R>,
+	DExpand extends ToResourceExpand<R, _DExpand> = ToResourceExpand<R, _DExpand>,
+	EExpand extends ToResourceExpand<R, _EExpand> = ToResourceExpand<R, _EExpand>,
+	AllKeys extends StringKeyof<DExpand> | StringKeyof<EExpand> =
+		| StringKeyof<DExpand>
+		| StringKeyof<EExpand>,
+> = {
+	[K in AllKeys]: K extends StringKeyof<DExpand>
+		? K extends StringKeyof<EExpand>
+			? MergePineOptions<
+					ExtractNavigationResource<R, K>,
+					// @ts-expect-error - we know the expand will be a valid odata options
+					EnsureODataOptionsWithoutCount<DExpand[K]>,
+					EnsureODataOptionsWithoutCount<EExpand[K]>
+				>
+			: DExpand[K]
+		: K extends StringKeyof<EExpand>
+			? EExpand[K]
+			: undefined;
+};
+
+export type MergeExpand<
+	R extends Resource['Read'],
+	TDefault extends Readonly<ODataOptionsWithoutCount<R>>,
+	TExtra extends Readonly<ODataOptionsWithoutCount<R>>,
+> = TExtra extends { $expand: infer EExpand }
+	? EExpand extends Expand<R>
+		? TDefault extends { $expand: infer DExpand }
+			? DExpand extends Expand<R>
+				? MergeExpandedOptions<R, DExpand, EExpand>
+				: EExpand
+			: EExpand
+		: never
+	: TDefault extends { $expand: infer DExpand }
+		? DExpand extends Expand<R>
+			? DExpand
+			: undefined
+		: undefined;
+
+// TODO: This exported AliasResourceRead is an workaround
+// If you do not use it in the top level call of `MergePineOptions` typing
+// and instead use the expeted `R extends Resource['Read']` as in all the other typings
+// the generated index.d.ts will try to inline the Resource['Read'] type generating a huge definition
+// for each function call
+export type AliasResourceRead = { [key: string]: any };
+
+export type MergePineOptions<
+	R extends AliasResourceRead,
+	TDefault extends Readonly<ODataOptionsWithoutCount<R>>,
+	TExtra extends Readonly<ODataOptionsWithoutCount<R>>,
+> = {
+	[K in Extract<keyof (TDefault & TExtra), ExtraKeys>]: K extends '$select'
+		? MergeSelect<R, TDefault, TExtra>
+		: K extends '$top' | '$skip' | '$orderby'
+			? OverrideProp<TDefault, TExtra, K>
+			: K extends '$filter'
+				? MergeFilter<R, TDefault, TExtra>
+				: K extends '$expand'
+					? MergeExpand<R, TDefault, TExtra>
+					: never;
+};
+
+export function mergePineOptions<
+	R extends AliasResourceRead,
+	TDefault extends Readonly<ODataOptionsWithoutCount<R>>,
+	TExtra extends Readonly<ODataOptionsWithoutCount<R>>,
+>(defaults: TDefault, extras?: TExtra): MergePineOptions<R, TDefault, TExtra> {
+	if (extras == null || Object.keys(extras).length === 0) {
+		// @ts-expect-error - we own the merged response and know what it is gonna be
+		return defaults as MergePineOptions<R, TDefault, TExtra>;
 	}
 
-	const result = { ...defaults };
+	const result = { ...defaults } as ODataOptionsWithoutCount<R>;
 
 	if (extras.$select != null) {
 		const extraSelect =
@@ -133,7 +266,7 @@ export function mergePineOptions<R extends Resource['Read']>(
 		result.$expand = mergeExpandOptions(defaults.$expand, extras.$expand);
 	}
 
-	return result;
+	return result as MergePineOptions<R, TDefault, TExtra>;
 }
 
 const mergeExpandOptions = <T extends Resource['Read']>(
@@ -148,17 +281,24 @@ const mergeExpandOptions = <T extends Resource['Read']>(
 	const $defaultExpand = convertExpandToObject(defaultExpand, true);
 	const $extraExpand = convertExpandToObject(extraExpand);
 
-	for (const expandKey of Object.keys($extraExpand || {}) as Array<
-		keyof typeof extraExpand
-	>) {
-		$defaultExpand[expandKey] = mergePineOptions(
-			$defaultExpand[expandKey] ?? {},
-			$extraExpand[expandKey],
-		);
+	if ($extraExpand != null) {
+		for (const expandKey of Object.keys($extraExpand) as Array<
+			keyof typeof $extraExpand
+		>) {
+			$defaultExpand[expandKey] = mergePineOptions(
+				$defaultExpand[expandKey] ?? {},
+				$extraExpand[expandKey],
+			);
+		}
 	}
 
 	return $defaultExpand;
 };
+
+function isArray(value: any): value is readonly unknown[] {
+	// See: https://github.com/microsoft/TypeScript/issues/17002
+	return Array.isArray(value);
+}
 
 // Converts a valid expand object in any format into a new object
 // containing (at most) $expand, $filter and $select keys
@@ -176,7 +316,7 @@ const convertExpandToObject = <T extends Resource['Read']>(
 		} as ResourceExpand<T>;
 	}
 
-	if (Array.isArray(expandOption)) {
+	if (isArray(expandOption)) {
 		// Reduce the array into a single object
 		return expandOption.reduce(
 			(result, option) =>
@@ -189,10 +329,10 @@ const convertExpandToObject = <T extends Resource['Read']>(
 	}
 
 	if (cloneIfNeeded) {
-		return { ...expandOption } as ResourceExpand<T>;
+		return { ...expandOption };
 	}
 
-	return expandOption as ResourceExpand<T>;
+	return expandOption;
 };
 
 /**

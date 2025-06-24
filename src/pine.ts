@@ -28,7 +28,7 @@ interface BackendParams {
  * @description
  * This subclass makes use of the [balena-request](https://github.com/balena-io-modules/balena-request) project.
  */
-class PinejsClient extends PinejsClientCore<BalenaModel> {
+export class PinejsClient extends PinejsClientCore<BalenaModel> {
 	public API_URL: string;
 	public API_VERSION: string;
 
@@ -100,9 +100,3 @@ class PinejsClient extends PinejsClientCore<BalenaModel> {
 }
 
 export type PineClient = PinejsClientCore<BalenaModel>;
-
-export const createPinejsClient = (
-	...args: ConstructorParameters<typeof PinejsClient>
-) => {
-	return new PinejsClient(...args);
-};
