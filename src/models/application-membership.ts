@@ -15,14 +15,18 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import type { Application, InjectedDependenciesParam, BalenaModel } from '..';
+import type {
+	Application,
+	InjectedDependenciesParam,
+	BalenaModel,
+	ApplicationMembershipRole,
+} from '..';
 import { mergePineOptions } from '../util';
 import type {
 	ODataOptionsWithoutCount,
 	OptionsToResponse,
 	ResourceAlternateKey,
 } from 'pinejs-client-core';
-import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 const RESOURCE = 'user_application_membership';
 type ApplicationMembership = BalenaModel[typeof RESOURCE];
@@ -36,19 +40,21 @@ type ResourceKey =
 export interface ApplicationMembershipCreationOptions {
 	application: string | number;
 	username: string;
-	roleName?: string;
+	roleName?: ApplicationMembershipRole['Read']['name'];
 }
 
 const getApplicationMembershipModel = function (
 	deps: InjectedDependenciesParam,
-	getApplication: (
+	getApplication: <T extends ODataOptionsWithoutCount<Application['Read']>>(
 		slugOrUuidOrId: string | number,
-		options?: ODataOptionsWithoutCount<Application['Read']>,
-	) => Promise<Application['Read']>,
+		options?: T,
+	) => Promise<OptionsToResponse<Application['Read'], T, undefined>[number]>,
 ) {
 	const { pine } = deps;
 
-	const getRoleId = async (roleName: string) => {
+	const getRoleId = async (
+		roleName: ApplicationMembershipRole['Read']['name'],
+	) => {
 		const role = await pine.get({
 			resource: 'application_membership_role',
 			id: {
@@ -86,10 +92,9 @@ const getApplicationMembershipModel = function (
 		 * 	console.log(memberships);
 		 * });
 		 */
-		async get(
-			membershipId: ResourceKey,
-			options: ODataOptionsWithoutCount<ApplicationMembership['Read']> = {},
-		): Promise<ApplicationMembership['Read']> {
+		async get<
+			T extends ODataOptionsWithoutCount<ApplicationMembership['Read']>,
+		>(membershipId: ResourceKey, options?: T) {
 			if (
 				typeof membershipId !== 'number' &&
 				typeof membershipId !== 'object'
@@ -138,10 +143,9 @@ const getApplicationMembershipModel = function (
 		 * 	console.log(memberships);
 		 * });
 		 */
-		async getAllByApplication(
-			slugOrUuidOrId: number | string,
-			options: ODataOptionsWithoutCount<ApplicationMembership['Read']> = {},
-		): Promise<Array<ApplicationMembership['Read']>> {
+		async getAllByApplication<
+			T extends ODataOptionsWithoutCount<ApplicationMembership['Read']>,
+		>(slugOrUuidOrId: number | string, options?: T) {
 			const { id } = await getApplication(slugOrUuidOrId, {
 				$select: 'id',
 			});
@@ -179,10 +183,9 @@ const getApplicationMembershipModel = function (
 		 * 	console.log(memberships);
 		 * });
 		 */
-		async getAllByUser(
-			usernameOrId: number | string,
-			options: ODataOptionsWithoutCount<ApplicationMembership['Read']> = {},
-		): Promise<Array<ApplicationMembership['Read']>> {
+		async getAllByUser<
+			T extends ODataOptionsWithoutCount<ApplicationMembership['Read']>,
+		>(usernameOrId: number | string, options?: T) {
 			if (
 				typeof usernameOrId !== 'number' &&
 				typeof usernameOrId !== 'string'
@@ -243,9 +246,7 @@ const getApplicationMembershipModel = function (
 			application,
 			username,
 			roleName,
-		}: ApplicationMembershipCreationOptions): Promise<
-			PickDeferred<ApplicationMembership['Read']>
-		> {
+		}: ApplicationMembershipCreationOptions) {
 			const appOptions = {
 				$select: 'id',
 				$expand: {
@@ -271,15 +272,7 @@ const getApplicationMembershipModel = function (
 			} as const;
 
 			const [{ id, organization }, roleId] = await Promise.all([
-				getApplication(application, appOptions) as Promise<
-					NonNullable<
-						OptionsToResponse<
-							Application['Read'],
-							typeof appOptions,
-							typeof application
-						>
-					>
-				>,
+				getApplication(application, appOptions),
 				roleName ? getRoleId(roleName) : undefined,
 			]);
 
@@ -338,7 +331,7 @@ const getApplicationMembershipModel = function (
 		 */
 		async changeRole(
 			idOrUniqueKey: ResourceKey,
-			roleName: string,
+			roleName: ApplicationMembershipRole['Read']['name'],
 		): Promise<void> {
 			const roleId = await getRoleId(roleName);
 			await pine.patch({

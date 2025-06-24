@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+	 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -79,9 +79,9 @@ const getServiceModel = ({
 
 	// Not exported for now, but we could document & export it in the future
 	// if there are external use cases for this.
-	const get = async (
+	const get = async <T extends ODataOptionsWithoutCount<Service['Read']>>(
 		id: number,
-		options: ODataOptionsWithoutCount<Service['Read']> = {},
+		options?: T,
 	) => {
 		const service = await pine.get({
 			resource: 'service',
@@ -94,10 +94,9 @@ const getServiceModel = ({
 		return service;
 	};
 
-	async function getAllByApplication(
-		slugOrUuidOrId: string | number,
-		options: ODataOptionsWithoutCount<Service['Read']> = {},
-	): Promise<Array<Service['Read']>> {
+	async function getAllByApplication<
+		T extends ODataOptionsWithoutCount<Service['Read']>,
+	>(slugOrUuidOrId: string | number, options: T = {} as T) {
 		const { service } = await sdkInstance.models.application.get(
 			slugOrUuidOrId,
 			{
@@ -107,7 +106,7 @@ const getServiceModel = ({
 				},
 			},
 		);
-		return service!;
+		return service;
 	}
 
 	const exports = {
@@ -186,12 +185,9 @@ const getServiceModel = ({
 			 * 	console.log(vars);
 			 * });
 			 */
-			async getAllByApplication(
-				slugOrUuidOrId: string | number,
-				options: ODataOptionsWithoutCount<
-					ServiceEnvironmentVariable['Read']
-				> = {},
-			): Promise<Array<ServiceEnvironmentVariable['Read']>> {
+			async getAllByApplication<
+				T extends ODataOptionsWithoutCount<ServiceEnvironmentVariable['Read']>,
+			>(slugOrUuidOrId: string | number, options?: T) {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{

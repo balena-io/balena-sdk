@@ -24,7 +24,6 @@ import type {
 } from '..';
 import { mergePineOptions } from '../util';
 import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
-import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 export interface OrganizationInviteOptions {
 	invitee: string;
@@ -67,9 +66,9 @@ const getOrganizationInviteModel = function (
 		 * 	console.log(invites);
 		 * });
 		 */
-		getAll(
-			options: ODataOptionsWithoutCount<OrganizationInvite['Read']> = {},
-		): Promise<Array<OrganizationInvite['Read']>> {
+		getAll<T extends ODataOptionsWithoutCount<OrganizationInvite['Read']>>(
+			options?: T,
+		) {
 			return pine.get({
 				resource: RESOURCE,
 				options,
@@ -101,10 +100,9 @@ const getOrganizationInviteModel = function (
 		 * 	console.log(invites);
 		 * });
 		 */
-		async getAllByOrganization(
-			handleOrId: number | string,
-			options: ODataOptionsWithoutCount<OrganizationInvite['Read']> = {},
-		): Promise<Array<OrganizationInvite['Read']>> {
+		async getAllByOrganization<
+			T extends ODataOptionsWithoutCount<OrganizationInvite['Read']>,
+		>(handleOrId: number | string, options?: T) {
 			const { id } = await getOrganization(handleOrId, {
 				$select: 'id',
 			});
@@ -142,7 +140,7 @@ const getOrganizationInviteModel = function (
 		async create(
 			handleOrId: string | number,
 			{ invitee, roleName, message }: OrganizationInviteOptions,
-		): Promise<PickDeferred<OrganizationInvite['Read']>> {
+		) {
 			const [{ id }, roles] = await Promise.all([
 				getOrganization(handleOrId, { $select: 'id' }),
 				roleName
@@ -159,14 +157,10 @@ const getOrganizationInviteModel = function (
 					: undefined,
 			]);
 
-			type OrganizationInvitePostBody = Partial<
-				Omit<OrganizationInvite['Write'], 'invitee'>
-			> & {
-				invitee: string;
-			};
-			const body: OrganizationInvitePostBody = {
-				invitee,
+			const body: Partial<OrganizationInvite['Write']> = {
 				is_invited_to__organization: id,
+				// @ts-expect-error this doesn't actually exist in the model and is a hooks thing :(
+				invitee,
 				message,
 			};
 			if (roles) {
@@ -179,7 +173,6 @@ const getOrganizationInviteModel = function (
 			}
 			return await pine.post({
 				resource: RESOURCE,
-				// @ts-expect-error this doesn't actually exist in the model and is a hooks thing :(
 				body,
 			});
 		},

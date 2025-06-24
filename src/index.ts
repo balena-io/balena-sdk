@@ -76,7 +76,6 @@ export type { OsUpdateActionResult } from './util/device-actions/os-update';
 export type { BuilderUrlDeployOptions } from './util/builder';
 export type {
 	CurrentService,
-	CurrentServiceWithCommit,
 	DeviceWithServiceDetails,
 } from './util/device-service-details';
 export type {
@@ -212,7 +211,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 	};
 	const BalenaAuth = (require('balena-auth') as typeof import('balena-auth'))
 		.default;
-	const { createPinejsClient } = require('./pine') as typeof import('./pine');
+	const { PinejsClient } = require('./pine') as typeof import('./pine');
 	const errors = require('balena-errors') as typeof import('balena-errors');
 	const { PubSub } = require('./util/pubsub') as typeof import('./util/pubsub');
 
@@ -265,7 +264,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 		})(request.send);
 	}
 	/* eslint-enable @typescript-eslint/no-require-imports */
-	const pine = createPinejsClient({}, { ...opts, auth, request });
+	const pine = new PinejsClient({}, { ...opts, auth, request });
 	const pubsub = new PubSub();
 
 	const sdk = {} as BalenaSDK;
