@@ -38,10 +38,10 @@ const getImageModel = function (deps: InjectedDependenciesParam) {
 		 * 	console.log(image);
 		 * });
 		 */
-		async get(
+		async get<T extends ODataOptionsWithoutCount<Image['Read']>>(
 			id: number,
-			options: ODataOptionsWithoutCount<Image['Read']> = {},
-		): Promise<Image['Read']> {
+			options?: T,
+		) {
 			const image = await pine.get({
 				resource: 'image',
 				id,

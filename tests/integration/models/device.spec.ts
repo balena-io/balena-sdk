@@ -253,6 +253,7 @@ describe('Device Model', function () {
 							{ $select: ['id'] },
 						);
 						expect(device.id).to.equal(ctx.device.id);
+						// @ts-expect-error - test case
 						return expect(device.device_name).to.equal(undefined);
 					});
 
@@ -301,6 +302,7 @@ describe('Device Model', function () {
 							{ $select: ['id'] },
 						);
 						expect(device.id).to.equal(ctx.device.id);
+						// @ts-expect-error - test case
 						return expect(device.device_name).to.equal(undefined);
 					});
 
@@ -359,6 +361,7 @@ describe('Device Model', function () {
 							$select: ['id'],
 						});
 						expect(device.id).to.equal(ctx.device.id);
+						// @ts-expect-error - test case
 						return expect(device.device_name).to.equal(undefined);
 					});
 
@@ -394,6 +397,7 @@ describe('Device Model', function () {
 							{ $select: ['id'] },
 						);
 						expect(device.id).to.equal(ctx.device.id);
+						// @ts-expect-error - test case
 						return expect(device.device_name).to.equal(undefined);
 					});
 				});
@@ -2334,9 +2338,9 @@ describe('Device Model', function () {
 								},
 							},
 						});
+					// @ts-expect-error - test case
 					expect(deviceDetails.device_name).to.be.undefined;
 					expect(deviceDetails.current_services).not.to.be.undefined;
-					// @ts-expect-error - can't infer mergeOptions
 					expect(deviceDetails.belongs_to__application[0]).to.deep.match({
 						id: this.application.id,
 						app_name: this.application.app_name,

@@ -19,27 +19,27 @@ import type {
 	InjectedOptionsParam,
 	Application,
 } from '..';
-import type {
-	CurrentServiceWithCommit,
-	DeviceWithServiceDetails,
-} from '../util/device-service-details';
 
 import * as url from 'url';
 
 import once from 'lodash/once';
 import * as errors from 'balena-errors';
 
-import { isId, mergePineOptions, withSupervisorLockedError } from '../util';
+import {
+	isId,
+	type MergePineOptions,
+	mergePineOptions,
+	withSupervisorLockedError,
+} from '../util';
 
 import {
-	getCurrentServiceDetailsPineExpand,
 	generateCurrentServiceDetails,
+	getCurrentServiceDetailsPineExpand,
 } from '../util/device-service-details';
 import type {
 	ODataOptionsWithoutCount,
 	OptionsToResponse,
 } from 'pinejs-client-core';
-import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 const getApplicationModel = function (
 	deps: InjectedDependenciesParam,
@@ -233,10 +233,10 @@ const getApplicationModel = function (
 		 * 	console.log(applications);
 		 * });
 		 */
-		async getAll(
-			options?: ODataOptionsWithoutCount<Application['Read']>,
+		async getAll<T extends ODataOptionsWithoutCount<Application['Read']>>(
+			options?: T,
 			context?: 'directly_accessible',
-		): Promise<Array<Application['Read']>> {
+		) {
 			const apps = await pine.get({
 				resource: 'application',
 				options: mergePineOptions(
@@ -246,7 +246,7 @@ const getApplicationModel = function (
 						}),
 						$orderby: { app_name: 'asc' },
 					},
-					options ?? {},
+					options,
 				),
 			});
 			return apps;
@@ -268,9 +268,9 @@ const getApplicationModel = function (
 		 * 	console.log(applications);
 		 * });
 		 */
-		async getAllDirectlyAccessible(
-			options?: ODataOptionsWithoutCount<Application['Read']>,
-		): Promise<Array<Application['Read']>> {
+		async getAllDirectlyAccessible<
+			T extends ODataOptionsWithoutCount<Application['Read']>,
+		>(options?: T) {
 			return await exports.getAll(options, 'directly_accessible');
 		},
 
@@ -291,10 +291,9 @@ const getApplicationModel = function (
 		 * 	console.log(applications);
 		 * });
 		 */
-		async getAllByOrganization(
-			orgHandleOrId: number | string,
-			options?: ODataOptionsWithoutCount<Application['Read']>,
-		): Promise<Array<Application['Read']>> {
+		async getAllByOrganization<
+			T extends ODataOptionsWithoutCount<Application['Read']>,
+		>(orgHandleOrId: number | string, options?: T) {
 			const { id: orgId } = await sdkInstance.models.organization.get(
 				orgHandleOrId,
 				{
@@ -310,7 +309,7 @@ const getApplicationModel = function (
 						},
 						$orderby: { app_name: 'asc' },
 					},
-					options ?? {},
+					options,
 				),
 			});
 			return apps;
@@ -344,19 +343,19 @@ const getApplicationModel = function (
 		 * 	console.log(application);
 		 * });
 		 */
-		async get(
+		async get<T extends ODataOptionsWithoutCount<Application['Read']>>(
 			slugOrUuidOrId: string | number,
-			options?: ODataOptionsWithoutCount<Application['Read']>,
+			options?: T,
 			context?: 'directly_accessible',
-		): Promise<Application['Read']> {
-			options ??= {};
-
+		) {
 			const accessFilter =
 				context === 'directly_accessible'
 					? isDirectlyAccessibleByUserFilter
 					: null;
 
-			let application;
+			let application:
+				| OptionsToResponse<Application['Read'], T, undefined>[number]
+				| undefined;
 			if (isId(slugOrUuidOrId)) {
 				application = await pine.get({
 					resource: 'application',
@@ -364,7 +363,7 @@ const getApplicationModel = function (
 					options: mergePineOptions(
 						accessFilter != null ? { $filter: accessFilter } : {},
 						options,
-					),
+					) as T,
 				});
 			} else if (typeof slugOrUuidOrId === 'string') {
 				const lowerCaseSlugOrUuid = slugOrUuidOrId.toLowerCase();
@@ -381,7 +380,7 @@ const getApplicationModel = function (
 							},
 						},
 						options,
-					),
+					) as T,
 				});
 				if (applications.length > 1) {
 					throw new errors.BalenaAmbiguousApplication(slugOrUuidOrId);
@@ -416,10 +415,9 @@ const getApplicationModel = function (
 		 * 	console.log(application);
 		 * });
 		 */
-		async getDirectlyAccessible(
-			slugOrUuidOrId: string | number,
-			options?: ODataOptionsWithoutCount<Application['Read']>,
-		): Promise<Application['Read']> {
+		async getDirectlyAccessible<
+			T extends ODataOptionsWithoutCount<Application['Read']>,
+		>(slugOrUuidOrId: string | number, options?: T) {
 			return await exports.get(slugOrUuidOrId, options, 'directly_accessible');
 		},
 
@@ -452,40 +450,39 @@ const getApplicationModel = function (
 		 * 	console.log(device);
 		 * })
 		 */
-		async getWithDeviceServiceDetails(
-			slugOrUuidOrId: string | number,
-			options?: ODataOptionsWithoutCount<Application['Read']>,
-		): Promise<
-			Application['Read'] & {
-				owns__device: Array<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
-			}
-		> {
-			options ??= {};
-			const serviceOptions = mergePineOptions(
-				{
-					$expand: [
-						{
-							owns__device: {
-								$expand: getCurrentServiceDetailsPineExpand(true),
-							},
-						},
-					],
+		async getWithDeviceServiceDetails<
+			T extends ODataOptionsWithoutCount<Application['Read']>,
+		>(slugOrUuidOrId: string | number, options?: T) {
+			const baseOptions = {
+				$expand: {
+					owns__device: {
+						$expand: getCurrentServiceDetailsPineExpand,
+					},
 				},
+			} as const;
+
+			const serviceOptions: typeof baseOptions = mergePineOptions(
+				baseOptions,
 				options,
 			);
 
-			const app = (await exports.get(
-				slugOrUuidOrId,
-				serviceOptions,
-			)) as Application['Read'] & {
-				owns__device: Array<DeviceWithServiceDetails<CurrentServiceWithCommit>>;
+			const app = await exports.get(slugOrUuidOrId, serviceOptions);
+
+			// We use this intermediate assignment not to hide any error with ts-expect-error
+			// if we directly assigned like `app.owns__device = app.owns__device.map(generateCurrentServiceDetails)`
+			const ownsDevice = app.owns__device.map(generateCurrentServiceDetails);
+			// @ts-expect-error - assigning to readonly property
+			app.owns__device = ownsDevice;
+
+			return app as unknown as NonNullable<
+				OptionsToResponse<
+					Application['Read'],
+					MergePineOptions<Application['Read'], typeof baseOptions, T>,
+					typeof slugOrUuidOrId
+				>
+			> & {
+				owns__device: typeof ownsDevice;
 			};
-			if (app.owns__device) {
-				app.owns__device = app.owns__device.map((d) =>
-					generateCurrentServiceDetails<CurrentServiceWithCommit>(d),
-				);
-			}
-			return app;
 		},
 
 		/**
@@ -506,13 +503,11 @@ const getApplicationModel = function (
 		 * 	console.log(application);
 		 * });
 		 */
-		async getAppByName(
+		async getAppByName<T extends ODataOptionsWithoutCount<Application['Read']>>(
 			appName: string,
-			options?: ODataOptionsWithoutCount<Application['Read']>,
+			options?: T,
 			context?: 'directly_accessible',
-		): Promise<Application['Read']> {
-			options ??= {};
-
+		) {
 			const accessFilter =
 				context === 'directly_accessible'
 					? isDirectlyAccessibleByUserFilter
@@ -528,7 +523,7 @@ const getApplicationModel = function (
 						},
 					},
 					options,
-				),
+				) as T,
 			});
 			if (applications.length === 0) {
 				throw new errors.BalenaApplicationNotFound(appName);
@@ -641,7 +636,7 @@ const getApplicationModel = function (
 			applicationClass?: 'app' | 'fleet' | 'block';
 			deviceType: string;
 			organization: number | string;
-		}): Promise<PickDeferred<Application['Read']>> {
+		}) {
 			if (organization == null) {
 				throw new errors.BalenaInvalidParameterError(
 					'organization',
@@ -1039,16 +1034,7 @@ const getApplicationModel = function (
 				},
 			} as const;
 
-			const application = (await exports.get(
-				slugOrUuidOrId,
-				appOptions,
-			)) as NonNullable<
-				OptionsToResponse<
-					Application['Read'],
-					typeof appOptions,
-					typeof slugOrUuidOrId
-				>
-			>;
+			const application = await exports.get(slugOrUuidOrId, appOptions);
 			const trackedRelease = application.should_be_running__release[0];
 			const latestRelease = application.owns__release[0];
 			return (
@@ -1138,16 +1124,7 @@ const getApplicationModel = function (
 				$expand: { should_be_running__release: { $select: 'commit' } },
 			} as const;
 
-			const application = (await exports.get(
-				slugOrUuidOrId,
-				appOptions,
-			)) as NonNullable<
-				OptionsToResponse<
-					Application['Read'],
-					typeof appOptions,
-					typeof slugOrUuidOrId
-				>
-			>;
+			const application = await exports.get(slugOrUuidOrId, appOptions);
 			return application.should_be_running__release[0]?.commit;
 		},
 
@@ -1197,7 +1174,7 @@ const getApplicationModel = function (
 			const body: Partial<Application['Write']> = {
 				should_track_latest_release: true,
 			};
-			const latestRelease = application.owns__release?.[0];
+			const latestRelease = application.owns__release[0];
 			if (latestRelease) {
 				body.should_be_running__release = latestRelease.id;
 			}

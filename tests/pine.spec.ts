@@ -4,7 +4,7 @@ import * as mockttp from 'mockttp';
 import { expect } from 'chai';
 import { IS_BROWSER, apiVersion } from './integration/setup';
 import tokens from './data/tokens';
-import { createPinejsClient } from '../src/pine';
+import { PinejsClient } from '../src/pine';
 import { expectError } from './util';
 
 const mockServer = mockttp.getLocal();
@@ -20,7 +20,7 @@ const auth = new BalenaAuth({ dataDirectory });
 const request = getRequest({ auth });
 
 const buildPineInstance = (apiUrl: string, extraOpts?: object) =>
-	createPinejsClient(
+	new PinejsClient(
 		{},
 		{
 			apiUrl,

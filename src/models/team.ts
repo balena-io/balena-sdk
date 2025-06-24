@@ -17,10 +17,7 @@ limitations under the License.
 import type { InjectedDependenciesParam, Team } from '..';
 import * as errors from 'balena-errors';
 import { isId, mergePineOptions } from '../util';
-import type {
-	ODataOptionsWithoutCount,
-	OptionsToResponse,
-} from 'pinejs-client-core';
+import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
 
 const getTeamModel = function (deps: InjectedDependenciesParam) {
 	const { pine, sdkInstance } = deps;
@@ -98,10 +95,9 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 	 * 	console.log(teams);
 	 * });
 	 */
-	const getAllByOrganization = async function (
-		organizationSlugOrId: string | number,
-		options: ODataOptionsWithoutCount<Team['Read']> = {},
-	): Promise<Array<Team['Read']>> {
+	const getAllByOrganization = async function <
+		T extends ODataOptionsWithoutCount<Team['Read']>,
+	>(organizationSlugOrId: string | number, options?: T) {
 		const organization = await sdkInstance.models.organization.get(
 			organizationSlugOrId,
 			{ $select: 'id' },
@@ -147,10 +143,10 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 	 * 	console.log(team);
 	 * });
 	 */
-	const get = async function (
+	const get = async function <T extends ODataOptionsWithoutCount<Team['Read']>>(
 		teamId: number,
-		options: ODataOptionsWithoutCount<Team['Read']> = {},
-	): Promise<Team['Read']> {
+		options?: T,
+	) {
 		if (teamId == null) {
 			throw new errors.BalenaInvalidParameterError('teamId', teamId);
 		}
@@ -201,15 +197,7 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 				},
 			},
 		} as const;
-		const team = (await get(teamId, teamOptions)) as OptionsToResponse<
-			Team['Read'],
-			typeof teamOptions,
-			typeof teamId
-		>;
-		if (team == null) {
-			throw new Error(`Team not found: ${teamId}`);
-		}
-
+		const team = await get(teamId, teamOptions);
 		const org = team.belongs_to__organization[0];
 
 		if (org.id == null) {

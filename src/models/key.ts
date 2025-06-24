@@ -16,9 +16,7 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import type { UserHasPublicKey, InjectedDependenciesParam } from '..';
-import { mergePineOptions } from '../util';
 import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
-import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 const getKeyModel = function (deps: InjectedDependenciesParam) {
 	const {
@@ -43,12 +41,12 @@ const getKeyModel = function (deps: InjectedDependenciesParam) {
 	 * 	console.log(keys);
 	 * });
 	 */
-	function getAll(
-		options: ODataOptionsWithoutCount<UserHasPublicKey['Read']> = {},
-	): Promise<Array<UserHasPublicKey['Read']>> {
+	function getAll<T extends ODataOptionsWithoutCount<UserHasPublicKey['Read']>>(
+		options?: T,
+	) {
 		return pine.get({
 			resource: 'user__has__public_key',
-			options: mergePineOptions({}, options),
+			options,
 		});
 	}
 
@@ -68,7 +66,7 @@ const getKeyModel = function (deps: InjectedDependenciesParam) {
 	 * 	console.log(key);
 	 * });
 	 */
-	async function get(id: number): Promise<UserHasPublicKey['Read']> {
+	async function get(id: number) {
 		const key = await pine.get({
 			resource: 'user__has__public_key',
 			id,
@@ -117,10 +115,7 @@ const getKeyModel = function (deps: InjectedDependenciesParam) {
 	 * 	console.log(key);
 	 * });
 	 */
-	async function create(
-		title: string,
-		key: string,
-	): Promise<PickDeferred<UserHasPublicKey['Read']>> {
+	async function create(title: string, key: string) {
 		// Avoid ugly whitespaces
 		key = key.trim();
 
