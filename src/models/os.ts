@@ -24,7 +24,13 @@ import type {
 	ResolvableReturnType,
 	TypeOrDictionary,
 } from '../../typings/utils';
-import type { ApplicationTag, Release } from '../types/models';
+import type {
+	ApplicationTag,
+	DeviceTag,
+	OrganizationMembershipTag,
+	Release,
+	ReleaseTag,
+} from '../types/models';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { getAuthDependentMemoize } from '../util/cache';
 import { BalenaReleaseNotFound } from 'balena-errors';
@@ -33,11 +39,13 @@ import type {
 	OptionsToResponse,
 } from 'pinejs-client-core';
 
-type ResourceTagBase = {
-	id: number;
-	tag_key: string;
-	value: string;
-};
+type ResourceTagBase = Pick<
+	ApplicationTag['Read'] &
+		DeviceTag['Read'] &
+		OrganizationMembershipTag['Read'] &
+		ReleaseTag['Read'],
+	'id' | 'tag_key' | 'value'
+>;
 
 const RELEASE_POLICY_TAG_NAME = 'release-policy';
 const ESR_NEXT_TAG_NAME = 'esr-next';
@@ -239,10 +247,7 @@ const getOsModel = function (
 					is_for__device_type: {
 						$select: 'slug',
 					},
-					owns__release: mergePineOptions(
-						baseReleasePineOptions,
-						options,
-					) as typeof baseReleasePineOptions,
+					owns__release: mergePineOptions(baseReleasePineOptions, options),
 				},
 				$filter: {
 					is_host: true,
@@ -430,7 +435,7 @@ const getOsModel = function (
 	 * balena.models.os.getAvailableOsVersions(['fincm3', 'raspberrypi3']);
 	 */
 	async function getAvailableOsVersions<
-		TP extends ODataOptionsWithoutCount<Release['Read']> | undefined,
+		TP extends ODataOptionsWithoutCount<Release['Read']>,
 	>(
 		deviceTypes: string[] | string,
 		// TODO: Consider providing a different way to for specifying includeDraft in the next major
@@ -477,13 +482,13 @@ const getOsModel = function (
 	): Promise<Dictionary<OsVersion[]>>;
 
 	async function getAllOsVersions<
-		TP extends ODataOptionsWithoutCount<Release['Read']> | undefined,
+		TP extends ODataOptionsWithoutCount<Release['Read']>,
 	>(
 		deviceType: string,
 		options?: TP,
 	): Promise<OsVersionResponse<NonNullable<TP>>>;
 	async function getAllOsVersions<
-		TP extends ODataOptionsWithoutCount<Release['Read']> | undefined,
+		TP extends ODataOptionsWithoutCount<Release['Read']>,
 	>(
 		deviceTypes: string[],
 		options?: TP,
@@ -511,7 +516,7 @@ const getOsModel = function (
 	 * balena.models.os.getAllOsVersions(['fincm3', 'raspberrypi3'], { $filter: { is_invalidated: false } });
 	 */
 	async function getAllOsVersions<
-		TP extends ODataOptionsWithoutCount<Release['Read']> | undefined,
+		TP extends ODataOptionsWithoutCount<Release['Read']>,
 	>(
 		deviceTypes: string[] | string,
 		options?: TP,
@@ -1030,16 +1035,11 @@ const getOsModel = function (
 	 * );
 	 */
 	const getSupervisorReleasesForCpuArchitecture = async <
-		TP extends ODataOptionsWithoutCount<Release['Read']> | undefined,
+		T extends ODataOptionsWithoutCount<Release['Read']>,
 	>(
 		cpuArchitectureSlugOrId: string | number,
-		options?: TP,
-	): Promise<
-		Array<
-			OptionsToResponse<Release['Read'], NonNullable<TP>, undefined>[number] &
-				Pick<Release['Read'], 'id' | 'raw_version' | 'known_issue_list'>
-		>
-	> => {
+		options?: T,
+	) => {
 		const results = await pine.get({
 			resource: 'release',
 			options: mergePineOptions(
@@ -1095,14 +1095,11 @@ const getOsModel = function (
 						{ revision: 'desc' },
 					],
 				},
-				options ?? {},
+				options,
 			),
 		});
 
-		return results as Array<
-			OptionsToResponse<Release['Read'], NonNullable<TP>, undefined>[number] &
-				Pick<Release['Read'], 'id' | 'raw_version' | 'known_issue_list'>
-		>;
+		return results;
 	};
 
 	return {

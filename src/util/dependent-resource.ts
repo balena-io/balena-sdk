@@ -24,22 +24,22 @@ import type { BalenaModel, PineClient } from '..';
 import type { Dictionary, StringKeyof } from '../../typings/utils';
 import type {
 	ExpandableStringKeyOf,
-	FilterObj,
 	ODataOptionsWithoutCount,
-	UpsertParams,
 } from 'pinejs-client-core';
 
-type DependentResource = {
-	[K in StringKeyof<BalenaModel>]: 'Read' extends keyof BalenaModel[K]
-		? BalenaModel[K]['Read'] extends { id: number; value: string }
-			? BalenaModel[K]['Write'] extends { value: string }
-				? K
-				: never
-			: never
+type DependentResourceName = {
+	[K in StringKeyof<BalenaModel>]: BalenaModel[K] extends {
+		Read: {
+			id: number;
+			value: string;
+		};
+		Write: { value: string };
+	}
+		? K
 		: never;
 }[StringKeyof<BalenaModel>];
 
-export function buildDependentResource<T extends DependentResource>(
+export function buildDependentResource<T extends DependentResourceName>(
 	{ pine }: { pine: PineClient },
 	{
 		resourceName,
@@ -64,7 +64,7 @@ export function buildDependentResource<T extends DependentResource>(
 					{
 						$orderby: {
 							[resourceKeyField]: 'asc',
-						} as ODataOptionsWithoutCount<BalenaModel[T]['Read']>['$orderby'],
+						} as const,
 					},
 					options,
 				),
@@ -74,7 +74,6 @@ export function buildDependentResource<T extends DependentResource>(
 			parentParam: string | number | Dictionary<unknown>,
 			options?: ODataOptionsWithoutCount<BalenaModel[T]['Read']>,
 		) {
-			options ??= {};
 			const id = await getResourceId(parentParam);
 			return await exports.getAll(
 				mergePineOptions(
@@ -94,16 +93,16 @@ export function buildDependentResource<T extends DependentResource>(
 			key: string,
 		): Promise<string | undefined> {
 			const id = await getResourceId(parentParam);
-			const [result] = (await pine.get({
-				resource: resourceName,
+			const [result] = await pine.get({
+				resource: resourceName satisfies DependentResourceName,
 				options: {
 					$select: 'value',
 					$filter: {
 						[parentResourceName]: id,
 						[resourceKeyField]: key,
 					},
-				} as ODataOptionsWithoutCount<BalenaModel[T]['Read']>,
-			})) as unknown as Array<{ value: string } | undefined>;
+				},
+			});
 
 			if (result) {
 				return result.value;
@@ -126,14 +125,14 @@ export function buildDependentResource<T extends DependentResource>(
 				: await getResourceId(parentParam);
 			try {
 				await pine.upsert({
-					resource: resourceName,
+					resource: resourceName satisfies DependentResourceName,
 					id: {
 						[parentResourceName]: parentId,
 						[resourceKeyField]: key,
-					} as UpsertParams<BalenaModel[T]>['id'],
+					},
 					body: {
 						value,
-					} as Partial<BalenaModel[T]['Write']>,
+					},
 				});
 			} catch (err) {
 				// Since Pine 7, when the post throws a 401
@@ -154,12 +153,12 @@ export function buildDependentResource<T extends DependentResource>(
 		): Promise<void> {
 			const parentId = await getResourceId(parentParam);
 			await pine.delete({
-				resource: resourceName,
+				resource: resourceName satisfies DependentResourceName,
 				options: {
 					$filter: {
 						[parentResourceName]: parentId,
 						[resourceKeyField]: key,
-					} as FilterObj<BalenaModel[T]['Read']>,
+					},
 				},
 			});
 		},

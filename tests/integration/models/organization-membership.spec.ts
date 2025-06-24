@@ -16,7 +16,6 @@ import {
 } from './tags';
 import type * as tagsHelper from './tags';
 import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
-import type { OptionsToResponse } from 'pinejs-client-core';
 
 const keyAlternatives = [
 	[
@@ -77,14 +76,10 @@ describe('Organization Membership Model', function () {
 				},
 			} as const;
 			const memberships =
-				(await balena.models.organization.membership.getAllByOrganization(
+				await balena.models.organization.membership.getAllByOrganization(
 					this.initialOrg.id,
 					opts,
-				)) as OptionsToResponse<
-					BalenaSdk.OrganizationMembership['Read'],
-					typeof opts,
-					undefined
-				>;
+				);
 			assertDeepMatchAndLength(
 				memberships.map((m) => m.user[0].username).sort(),
 				[credentials.username, credentials.member.username].sort(),
@@ -273,7 +268,7 @@ describe('Organization Membership Model', function () {
 							rolenName,
 						);
 
-						memberMembership = await balena.models.organization.membership.get(
+						memberMembership = (await balena.models.organization.membership.get(
 							memberMembership!.id,
 							{
 								$select: 'id',
@@ -289,7 +284,7 @@ describe('Organization Membership Model', function () {
 									},
 								},
 							},
-						);
+						)) as BalenaSdk.OrganizationMembership['Read'];
 						expect(memberMembership).to.have.nested.property(
 							'user[0].username',
 							credentials.member.username,
