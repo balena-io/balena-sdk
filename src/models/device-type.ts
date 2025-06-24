@@ -222,7 +222,7 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 			options ??= {};
 			const deviceTypes = await pine.get({
 				resource: 'device_type',
-				options: mergePineOptions({ $orderby: 'name asc' }, options),
+				options: mergePineOptions({ $orderby: { name: 'asc' } }, options),
 			});
 
 			return deviceTypes;
