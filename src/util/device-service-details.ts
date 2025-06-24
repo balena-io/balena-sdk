@@ -1,4 +1,3 @@
-import type { Expand } from 'pinejs-client-core';
 import type { Device, Image, ImageInstall, Release, Service } from '..';
 
 export interface CurrentService {
@@ -25,35 +24,29 @@ export type DeviceWithServiceDetails<
 };
 
 // Pine expand options necessary for getting raw service data for a device
-export const getCurrentServiceDetailsPineExpand = (
-	expandRelease: boolean,
-): Readonly<Expand<Device['Read']>> => {
-	return {
-		image_install: {
-			$select: ['id', 'download_progress', 'status', 'install_date'],
-			$filter: {
-				status: {
-					$ne: 'deleted',
-				},
-			},
-			$expand: {
-				installs__image: {
-					$select: ['id'],
-					$expand: {
-						is_a_build_of__service: {
-							$select: ['id', 'service_name'],
-						},
-					},
-				},
-				...(expandRelease && {
-					is_provided_by__release: {
-						$select: ['id', 'commit', 'raw_version'],
-					},
-				}),
+export const getCurrentServiceDetailsPineExpand = {
+	image_install: {
+		$select: ['id', 'download_progress', 'status', 'install_date'],
+		$filter: {
+			status: {
+				$ne: 'deleted',
 			},
 		},
-	};
-};
+		$expand: {
+			installs__image: {
+				$select: ['id'],
+				$expand: {
+					is_a_build_of__service: {
+						$select: ['id', 'service_name'],
+					},
+				},
+			},
+			is_provided_by__release: {
+				$select: ['id', 'commit', 'raw_version'],
+			},
+		},
+	},
+} as const;
 
 interface WithServiceName {
 	service_name: string;

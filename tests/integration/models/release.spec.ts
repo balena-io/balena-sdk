@@ -284,7 +284,7 @@ describe('Release Model', function () {
 								start_timestamp: new Date().toISOString(),
 							},
 						});
-						testReleaseByField[fieldKey] = await balena.models.release.get(
+						testReleaseByField[fieldKey] = (await balena.models.release.get(
 							release.id,
 							{
 								$select: [
@@ -294,7 +294,7 @@ describe('Release Model', function () {
 									'belongs_to__application',
 								],
 							},
-						);
+						)) as BalenaSdk.Release['Read'];
 					}),
 				);
 			});
@@ -330,7 +330,8 @@ describe('Release Model', function () {
 							});
 							// Only update the releases in the context if the tests pass
 							// otherwise retries could conceal errors.
-							testReleaseByField[fieldLabel] = freshRelease;
+							testReleaseByField[fieldLabel] =
+								freshRelease as BalenaSdk.Release['Read'];
 						});
 					});
 			});

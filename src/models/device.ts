@@ -14,21 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { InjectedOptionsParam, InjectedDependenciesParam } from '..';
+import type {
+	InjectedOptionsParam,
+	InjectedDependenciesParam,
+	CurrentService,
+} from '..';
 import type {
 	Device,
 	DeviceServiceEnvironmentVariable,
 	DeviceTag,
-	Application,
 	DeviceHistory,
 	BalenaModel,
 } from '../types/models';
 import { DeviceOverallStatus as OverallStatus } from '../types/device-overall-status';
 import type * as DeviceState from '../types/device-state';
-import type {
-	CurrentServiceWithCommit,
-	DeviceWithServiceDetails,
-} from '../util/device-service-details';
+
 import type { OsUpdateActionResult } from '../util/device-actions/os-update';
 
 import * as url from 'url';
@@ -72,7 +72,6 @@ import type {
 	StringKeyof,
 } from '../../typings/utils';
 import type { DeviceType } from '../types/models';
-
 import { subDays } from 'date-fns/subDays';
 import type {
 	FilterObj,
@@ -262,9 +261,7 @@ const getDeviceModel = function (
 					application_config_variable: [appConfig],
 				},
 			],
-		} = (await exports.get(uuidOrId, options)) as NonNullable<
-			OptionsToResponse<Device['Read'], typeof options, typeof uuidOrId>
-		>;
+		} = await exports.get(uuidOrId, options);
 		return (deviceConfig ?? appConfig)?.value;
 	};
 
@@ -312,11 +309,9 @@ const getDeviceModel = function (
 		return timeRangeFilter;
 	};
 
-	async function getAll(
-		options?: ODataOptionsWithoutCount<Device['Read']>,
-	): Promise<Array<Device['Read']>> {
-		options ??= {};
-
+	async function getAll<T extends ODataOptionsWithoutCount<Device['Read']>>(
+		options?: T,
+	) {
 		const devices = await pine.get({
 			resource: 'device',
 			options: mergePineOptions({ $orderby: { device_name: 'asc' } }, options),
@@ -482,12 +477,9 @@ const getDeviceModel = function (
 		 * 	console.log(device);
 		 * })
 		 */
-		async getAllByApplication(
-			slugOrUuidOrId: string | number,
-			options?: ODataOptionsWithoutCount<Device['Read']>,
-		): Promise<Array<Device['Read']>> {
-			options ??= {};
-
+		async getAllByApplication<
+			T extends ODataOptionsWithoutCount<Device['Read']>,
+		>(slugOrUuidOrId: string | number, options?: T) {
 			const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 				$select: 'id',
 			});
@@ -531,12 +523,9 @@ const getDeviceModel = function (
 		 * 	console.log(device);
 		 * })
 		 */
-		async getAllByOrganization(
-			handleOrId: string | number,
-			options?: ODataOptionsWithoutCount<Device['Read']>,
-		): Promise<Array<Device['Read']>> {
-			options ??= {};
-
+		async getAllByOrganization<
+			T extends ODataOptionsWithoutCount<Device['Read']>,
+		>(handleOrId: string | number, options?: T) {
 			const { id } = await sdkInstance.models.organization.get(handleOrId, {
 				$select: 'id',
 			});
@@ -596,12 +585,10 @@ const getDeviceModel = function (
 		 * 	console.log(device);
 		 * })
 		 */
-		async get(
+		async get<T extends ODataOptionsWithoutCount<Device['Read']>>(
 			uuidOrId: string | number,
-			options?: ODataOptionsWithoutCount<Device['Read']>,
-		): Promise<Device['Read']> {
-			options ??= {};
-
+			options?: T,
+		) {
 			if (uuidOrId == null) {
 				throw new errors.BalenaDeviceNotFound(uuidOrId);
 			}
@@ -618,7 +605,7 @@ const getDeviceModel = function (
 					options,
 				});
 			} else {
-				const devices = await pine.get({
+				const devices = (await pine.get({
 					resource: 'device',
 					options: mergePineOptions(
 						{
@@ -628,7 +615,7 @@ const getDeviceModel = function (
 						},
 						options,
 					),
-				});
+				})) as OptionsToResponse<Device['Read'], T, undefined>;
 				if (devices.length > 1) {
 					throw new errors.BalenaAmbiguousDevice(uuidOrId);
 				}
@@ -637,7 +624,9 @@ const getDeviceModel = function (
 			if (device == null) {
 				throw new errors.BalenaDeviceNotFound(uuidOrId);
 			}
-			return device;
+			return device as NonNullable<
+				OptionsToResponse<Device['Read'], T, typeof uuidOrId>
+			>;
 		},
 
 		/**
@@ -669,20 +658,21 @@ const getDeviceModel = function (
 		 * 	console.log(device);
 		 * })
 		 */
-		async getWithServiceDetails(
-			uuidOrId: string | number,
-			options?: ODataOptionsWithoutCount<Device['Read']>,
-		): Promise<DeviceWithServiceDetails<CurrentServiceWithCommit>> {
-			options ??= {};
-
+		async getWithServiceDetails<
+			T extends ODataOptionsWithoutCount<Device['Read']>,
+		>(uuidOrId: string | number, options?: T) {
 			const device = await exports.get(
 				uuidOrId,
 				mergePineOptions(
-					{ $expand: getCurrentServiceDetailsPineExpand(true) },
+					{ $expand: getCurrentServiceDetailsPineExpand },
 					options,
 				),
 			);
-			return generateCurrentServiceDetails(device);
+
+			// @ts-expect-error - generateCurrentServiceDetails param does not satisfies
+			return generateCurrentServiceDetails(device) as typeof device & {
+				current_services: Record<string, CurrentService[]>;
+			};
 		},
 
 		/**
@@ -701,15 +691,13 @@ const getDeviceModel = function (
 		 * 	console.log(devices);
 		 * });
 		 */
-		async getByName(
+		async getByName<T extends ODataOptionsWithoutCount<Device['Read']>>(
 			name: string,
-			options?: ODataOptionsWithoutCount<Device['Read']>,
-		): Promise<Array<Device['Read']>> {
-			options ??= {};
-
-			const devices = await getAll(
+			options?: T,
+		) {
+			const devices = (await getAll(
 				mergePineOptions({ $filter: { device_name: name } }, options),
-			);
+			)) as OptionsToResponse<Device['Read'], T, undefined>;
 			if (devices.length === 0) {
 				throw new errors.BalenaDeviceNotFound(name);
 			}
@@ -771,12 +759,7 @@ const getDeviceModel = function (
 				$expand: { belongs_to__application: { $select: 'app_name' } },
 			} as const;
 
-			const device = (await exports.get(
-				uuidOrId,
-				deviceOptions,
-			)) as NonNullable<
-				OptionsToResponse<Device['Read'], typeof deviceOptions, typeof uuidOrId>
-			>;
+			const device = await exports.get(uuidOrId, deviceOptions);
 			return device.belongs_to__application[0].app_name;
 		},
 
@@ -1154,16 +1137,10 @@ const getDeviceModel = function (
 					},
 				},
 			} as const;
-			const application = (await sdkInstance.models.application.get(
+			const application = await sdkInstance.models.application.get(
 				applicationSlugOrUuidOrId,
 				applicationOptions,
-			)) as NonNullable<
-				OptionsToResponse<
-					Application['Read'],
-					typeof applicationOptions,
-					typeof applicationSlugOrUuidOrId
-				>
-			>;
+			);
 			const appCpuArchSlug =
 				application.is_for__device_type[0].is_of__cpu_architecture[0].slug;
 
@@ -1383,30 +1360,16 @@ const getDeviceModel = function (
 					sdkInstance.models.application.get(
 						applicationSlugOrUuidOrId,
 						applicationOptions,
-					) as Promise<
-						NonNullable<
-							OptionsToResponse<
-								Application['Read'],
-								typeof applicationOptions,
-								typeof applicationSlugOrUuidOrId
-							>
-						>
-					>,
+					),
 					typeof deviceTypeSlug === 'string'
-						? (sdkInstance.models.deviceType.get(deviceTypeSlug, {
+						? sdkInstance.models.deviceType.get(deviceTypeSlug, {
 								$select: 'slug',
 								$expand: {
 									is_of__cpu_architecture: {
 										$select: 'slug',
 									},
 								},
-							}) as Promise<
-								OptionsToResponse<
-									DeviceType['Read'],
-									typeof deviceTypeOptions,
-									typeof deviceTypeSlug
-								>
-							>)
+							})
 						: null,
 				]);
 			if (deviceType != null) {
@@ -1989,12 +1952,10 @@ const getDeviceModel = function (
 				},
 			} as const;
 
-			const { should_be_running__release } = (await exports.get(
+			const { should_be_running__release } = await exports.get(
 				uuidOrId,
 				deviceOptions,
-			)) as NonNullable<
-				OptionsToResponse<Device['Read'], typeof deviceOptions, typeof uuidOrId>
-			>;
+			);
 			return should_be_running__release[0]?.commit;
 		},
 
@@ -2309,11 +2270,9 @@ const getDeviceModel = function (
 			 * 	console.log(tags);
 			 * });
 			 */
-			async getAllByApplication(
-				slugOrUuidOrId: string | number,
-				options?: ODataOptionsWithoutCount<DeviceTag['Read']>,
-			): Promise<Array<DeviceTag['Read']>> {
-				options ??= {};
+			async getAllByApplication<
+				T extends ODataOptionsWithoutCount<DeviceTag['Read']>,
+			>(slugOrUuidOrId: string | number, options?: T) {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -2450,12 +2409,9 @@ const getDeviceModel = function (
 			 * 	console.log(vars);
 			 * });
 			 */
-			async getAllByApplication(
-				slugOrUuidOrId: string | number,
-				options?: ODataOptionsWithoutCount<DeviceVariableModels['Read']>,
-			): Promise<Array<DeviceVariableModels['Read']>> {
-				options ??= {};
-
+			async getAllByApplication<
+				T extends ODataOptionsWithoutCount<DeviceVariableModels['Read']>,
+			>(slugOrUuidOrId: string | number, options?: T) {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -2607,12 +2563,9 @@ const getDeviceModel = function (
 			 * 	console.log(vars);
 			 * });
 			 */
-			async getAllByApplication(
-				slugOrUuidOrId: string | number,
-				options?: ODataOptionsWithoutCount<DeviceVariableModels['Read']>,
-			): Promise<Array<DeviceVariableModels['Read']>> {
-				options ??= {};
-
+			async getAllByApplication<
+				T extends ODataOptionsWithoutCount<DeviceVariableModels['Read']>,
+			>(slugOrUuidOrId: string | number, options?: T) {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -2740,14 +2693,11 @@ const getDeviceModel = function (
 			 * 	console.log(vars);
 			 * });
 			 */
-			async getAllByDevice(
-				uuidOrId: string | number,
-				options?: ODataOptionsWithoutCount<
+			async getAllByDevice<
+				T extends ODataOptionsWithoutCount<
 					DeviceServiceEnvironmentVariable['Read']
 				>,
-			): Promise<Array<DeviceServiceEnvironmentVariable['Read']>> {
-				options ??= {};
-
+			>(uuidOrId: string | number, options?: T) {
 				const { id: deviceId } = await exports.get(uuidOrId, { $select: 'id' });
 				return await pine.get({
 					resource: 'device_service_environment_variable',
@@ -2789,14 +2739,11 @@ const getDeviceModel = function (
 			 * 	console.log(vars);
 			 * });
 			 */
-			async getAllByApplication(
-				slugOrUuidOrId: string | number,
-				options?: ODataOptionsWithoutCount<
+			async getAllByApplication<
+				T extends ODataOptionsWithoutCount<
 					DeviceServiceEnvironmentVariable['Read']
 				>,
-			): Promise<Array<DeviceServiceEnvironmentVariable['Read']>> {
-				options ??= {};
-
+			>(slugOrUuidOrId: string | number, options?: T) {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -3105,17 +3052,22 @@ const getDeviceModel = function (
 			 * // get all device history entries between now - 20 days and now - 10 days
 			 * balena.models.device.history.getAllByDevice(999999, { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10)})
 			 */
-			async getAllByDevice(
+			async getAllByDevice<
+				T extends ODataOptionsWithoutCount<DeviceHistory['Read']>,
+			>(
 				uuidOrId: string | number,
 				{
 					fromDate = subDays(new Date(), DEFAULT_DAYS_OF_REQUESTED_HISTORY),
 					toDate,
 					...options
-				}: ODataOptionsWithoutCount<DeviceHistory['Read']> & {
+				}: T & {
 					fromDate?: Date;
 					toDate?: Date;
-				} = {},
-			): Promise<Array<DeviceHistory['Read']>> {
+				} = {} as T & {
+					fromDate?: Date;
+					toDate?: Date;
+				},
+			) {
 				let $filter: FilterObj<DeviceHistory['Read']> =
 					historyTimeRangeFilterWithGuard(fromDate, toDate);
 
@@ -3170,17 +3122,22 @@ const getDeviceModel = function (
 			 * balena.models.device.history.getAllByApplication(999999, { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10)})
 			 *
 			 */
-			async getAllByApplication(
+			async getAllByApplication<
+				T extends ODataOptionsWithoutCount<DeviceHistory['Read']>,
+			>(
 				slugOrUuidOrId: string | number,
 				{
 					fromDate = subDays(new Date(), DEFAULT_DAYS_OF_REQUESTED_HISTORY),
 					toDate,
 					...options
-				}: ODataOptionsWithoutCount<DeviceHistory['Read']> & {
+				}: T & {
 					fromDate?: Date;
 					toDate?: Date;
-				} = {},
-			): Promise<Array<DeviceHistory['Read']>> {
+				} = {} as T & {
+					fromDate?: Date;
+					toDate?: Date;
+				},
+			) {
 				const { id: applicationId } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
