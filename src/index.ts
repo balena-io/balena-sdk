@@ -76,7 +76,6 @@ export type { OsUpdateActionResult } from './util/device-actions/os-update';
 export type { BuilderUrlDeployOptions } from './util/builder';
 export type {
 	CurrentService,
-	CurrentServiceWithCommit,
 	DeviceWithServiceDetails,
 } from './util/device-service-details';
 export type {

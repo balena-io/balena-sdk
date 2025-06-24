@@ -24,7 +24,13 @@ import type {
 	ResolvableReturnType,
 	TypeOrDictionary,
 } from '../../typings/utils';
-import type { ApplicationTag, Release } from '../types/models';
+import type {
+	ApplicationTag,
+	DeviceTag,
+	OrganizationMembershipTag,
+	Release,
+	ReleaseTag,
+} from '../types/models';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { getAuthDependentMemoize } from '../util/cache';
 import { BalenaReleaseNotFound } from 'balena-errors';
@@ -33,11 +39,13 @@ import type {
 	OptionsToResponse,
 } from 'pinejs-client-core';
 
-type ResourceTagBase = {
-	id: number;
-	tag_key: string;
-	value: string;
-};
+type ResourceTagBase = Pick<
+	ApplicationTag['Read'] &
+		DeviceTag['Read'] &
+		OrganizationMembershipTag['Read'] &
+		ReleaseTag['Read'],
+	'id' | 'tag_key' | 'value'
+>;
 
 const RELEASE_POLICY_TAG_NAME = 'release-policy';
 const ESR_NEXT_TAG_NAME = 'esr-next';

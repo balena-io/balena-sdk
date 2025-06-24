@@ -23,7 +23,6 @@ import type {
 } from '..';
 import { mergePineOptions } from '../util';
 import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
-import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 export interface ApplicationInviteOptions {
 	invitee: string;
@@ -65,12 +64,12 @@ const getApplicationInviteModel = function (
 		 * 	console.log(invites);
 		 * });
 		 */
-		getAll(
-			options: ODataOptionsWithoutCount<ApplicationInvite['Read']> = {},
-		): Promise<Array<ApplicationInvite['Read']>> {
+		getAll<T extends ODataOptionsWithoutCount<ApplicationInvite['Read']>>(
+			options?: T,
+		) {
 			return pine.get({
 				resource: RESOURCE,
-				options,
+				options: options,
 			});
 		},
 
@@ -99,10 +98,9 @@ const getApplicationInviteModel = function (
 		 * 	console.log(invites);
 		 * });
 		 */
-		async getAllByApplication(
-			slugOrUuidOrId: number | string,
-			options: ODataOptionsWithoutCount<ApplicationInvite['Read']> = {},
-		): Promise<Array<ApplicationInvite['Read']>> {
+		async getAllByApplication<
+			T extends ODataOptionsWithoutCount<ApplicationInvite['Read']>,
+		>(slugOrUuidOrId: number | string, options?: T) {
 			const { id } = await getApplication(slugOrUuidOrId, {
 				$select: 'id',
 			});
@@ -140,7 +138,7 @@ const getApplicationInviteModel = function (
 		async create(
 			slugOrUuidOrId: string | number,
 			{ invitee, roleName, message }: ApplicationInviteOptions,
-		): Promise<PickDeferred<ApplicationInvite['Read']>> {
+		) {
 			const [{ id }, roles] = await Promise.all([
 				getApplication(slugOrUuidOrId, { $select: 'id' }),
 				roleName
