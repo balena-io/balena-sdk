@@ -23,7 +23,6 @@ import type {
 } from '..';
 import { isId, mergePineOptions } from '../util';
 import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
-import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 const getOrganizationModel = function (
 	deps: InjectedDependenciesParam,
@@ -74,9 +73,7 @@ const getOrganizationModel = function (
 	 *   console.log(organization);
 	 * });
 	 */
-	const create = function (
-		organization: Partial<Organization['Write']>,
-	): Promise<PickDeferred<Organization['Read']>> {
+	const create = function (organization: Partial<Organization['Write']>) {
 		return pine.post({
 			resource: 'organization',
 			body: organization,
@@ -99,9 +96,9 @@ const getOrganizationModel = function (
 	 * 	console.log(organizations);
 	 * });
 	 */
-	const getAll = function (
-		options: ODataOptionsWithoutCount<Organization['Read']> = {},
-	): Promise<Array<Organization['Read']>> {
+	const getAll = function <
+		T extends ODataOptionsWithoutCount<Organization['Read']>,
+	>(options?: T) {
 		return pine.get({
 			resource: 'organization',
 			options: mergePineOptions(
@@ -137,10 +134,9 @@ const getOrganizationModel = function (
 	 * 	console.log(organization);
 	 * });
 	 */
-	const get = async function (
-		handleOrId: string | number,
-		options: ODataOptionsWithoutCount<Organization['Read']> = {},
-	): Promise<Organization['Read']> {
+	const get = async function <
+		T extends ODataOptionsWithoutCount<Organization['Read']>,
+	>(handleOrId: string | number, options?: T) {
 		if (handleOrId == null) {
 			throw new errors.BalenaInvalidParameterError('handleOrId', handleOrId);
 		}

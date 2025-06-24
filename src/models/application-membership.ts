@@ -22,7 +22,6 @@ import type {
 	OptionsToResponse,
 	ResourceAlternateKey,
 } from 'pinejs-client-core';
-import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 const RESOURCE = 'user_application_membership';
 type ApplicationMembership = BalenaModel[typeof RESOURCE];
@@ -86,10 +85,9 @@ const getApplicationMembershipModel = function (
 		 * 	console.log(memberships);
 		 * });
 		 */
-		async get(
-			membershipId: ResourceKey,
-			options: ODataOptionsWithoutCount<ApplicationMembership['Read']> = {},
-		): Promise<ApplicationMembership['Read']> {
+		async get<
+			T extends ODataOptionsWithoutCount<ApplicationMembership['Read']>,
+		>(membershipId: ResourceKey, options?: T) {
 			if (
 				typeof membershipId !== 'number' &&
 				typeof membershipId !== 'object'
@@ -138,10 +136,9 @@ const getApplicationMembershipModel = function (
 		 * 	console.log(memberships);
 		 * });
 		 */
-		async getAllByApplication(
-			slugOrUuidOrId: number | string,
-			options: ODataOptionsWithoutCount<ApplicationMembership['Read']> = {},
-		): Promise<Array<ApplicationMembership['Read']>> {
+		async getAllByApplication<
+			T extends ODataOptionsWithoutCount<ApplicationMembership['Read']>,
+		>(slugOrUuidOrId: number | string, options?: T) {
 			const { id } = await getApplication(slugOrUuidOrId, {
 				$select: 'id',
 			});
@@ -179,10 +176,9 @@ const getApplicationMembershipModel = function (
 		 * 	console.log(memberships);
 		 * });
 		 */
-		async getAllByUser(
-			usernameOrId: number | string,
-			options: ODataOptionsWithoutCount<ApplicationMembership['Read']> = {},
-		): Promise<Array<ApplicationMembership['Read']>> {
+		async getAllByUser<
+			T extends ODataOptionsWithoutCount<ApplicationMembership['Read']>,
+		>(usernameOrId: number | string, options?: T) {
 			if (
 				typeof usernameOrId !== 'number' &&
 				typeof usernameOrId !== 'string'
@@ -243,9 +239,7 @@ const getApplicationMembershipModel = function (
 			application,
 			username,
 			roleName,
-		}: ApplicationMembershipCreationOptions): Promise<
-			PickDeferred<ApplicationMembership['Read']>
-		> {
+		}: ApplicationMembershipCreationOptions) {
 			const appOptions = {
 				$select: 'id',
 				$expand: {

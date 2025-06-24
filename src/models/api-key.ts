@@ -17,16 +17,11 @@ import * as errors from 'balena-errors';
 
 import type {
 	ApiKey,
-	Application,
-	Device,
 	InjectedDependenciesParam,
 	InjectedOptionsParam,
 } from '..';
 import { mergePineOptions } from '../util';
-import type {
-	ODataOptionsWithoutCount,
-	OptionsToResponse,
-} from 'pinejs-client-core';
+import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
 
 const getApiKeysModel = function (
 	{
@@ -120,14 +115,14 @@ const getApiKeysModel = function (
 		 * 	console.log(apiKeys);
 		 * });
 		 */
-		async getAll(
-			options: ODataOptionsWithoutCount<ApiKey['Read']> = {},
-		): Promise<Array<ApiKey['Read']>> {
+		async getAll<T extends ODataOptionsWithoutCount<ApiKey['Read']>>(
+			options?: T,
+		) {
 			return await pine.get({
 				resource: 'api_key',
 				options: mergePineOptions(
 					{
-						$orderby: { name: 'asc' },
+						$orderby: { name: 'asc' } as const,
 					},
 					options,
 				),
@@ -150,9 +145,9 @@ const getApiKeysModel = function (
 		 * 	console.log(apiKeys);
 		 * });
 		 */
-		async getAllNamedUserApiKeys(
-			options: ODataOptionsWithoutCount<ApiKey['Read']> = {},
-		): Promise<Array<ApiKey['Read']>> {
+		async getAllNamedUserApiKeys<
+			T extends ODataOptionsWithoutCount<ApiKey['Read']>,
+		>(options?: T) {
 			return await exports.getAll(
 				mergePineOptions(
 					{
@@ -188,29 +183,18 @@ const getApiKeysModel = function (
 		 * 	console.log(apiKeys);
 		 * });
 		 */
-		async getProvisioningApiKeysByApplication(
-			slugOrUuidOrId: string | number,
-			options: ODataOptionsWithoutCount<ApiKey['Read']> = {},
-		): Promise<Array<ApiKey['Read']>> {
-			const appOpts = {
+		async getProvisioningApiKeysByApplication<
+			T extends ODataOptionsWithoutCount<ApiKey['Read']>,
+		>(slugOrUuidOrId: string | number, options?: T) {
+			const app = await sdkInstance.models.application.get(slugOrUuidOrId, {
 				$select: 'actor',
-			} as const;
-			const { actor } = (await sdkInstance.models.application.get(
-				slugOrUuidOrId,
-				appOpts,
-			)) as NonNullable<
-				OptionsToResponse<
-					Application['Read'],
-					typeof appOpts,
-					typeof slugOrUuidOrId
-				>
-			>;
+			});
 
 			return await exports.getAll(
 				mergePineOptions(
 					{
 						$filter: {
-							is_of__actor: actor.__id,
+							is_of__actor: app.actor.__id,
 						},
 					},
 					options,
@@ -235,19 +219,12 @@ const getApiKeysModel = function (
 		 * 	console.log(apiKeys);
 		 * });
 		 */
-		async getDeviceApiKeysByDevice(
-			uuidOrId: string | number,
-			options: ODataOptionsWithoutCount<ApiKey['Read']> = {},
-		): Promise<Array<ApiKey['Read']>> {
-			const deviceOpts = {
+		async getDeviceApiKeysByDevice<
+			T extends ODataOptionsWithoutCount<ApiKey['Read']>,
+		>(uuidOrId: string | number, options?: T) {
+			const { actor } = await sdkInstance.models.device.get(uuidOrId, {
 				$select: 'actor',
-			} as const;
-			const { actor } = (await sdkInstance.models.device.get(
-				uuidOrId,
-				deviceOpts,
-			)) as NonNullable<
-				OptionsToResponse<Device['Read'], typeof deviceOpts, typeof uuidOrId>
-			>;
+			});
 
 			return await pine.get({
 				resource: 'api_key',
@@ -293,7 +270,7 @@ const getApiKeysModel = function (
 				description?: string | null;
 				expiryDate?: string | null;
 			},
-		): Promise<void> {
+		) {
 			if (!apiKeyInfo) {
 				throw new errors.BalenaInvalidParameterError('apiKeyInfo', apiKeyInfo);
 			}
@@ -328,7 +305,7 @@ const getApiKeysModel = function (
 		 * @example
 		 * balena.models.apiKey.revoke(123);
 		 */
-		async revoke(id: number): Promise<void> {
+		async revoke(id: number) {
 			await pine.delete({
 				resource: 'api_key',
 				id,
