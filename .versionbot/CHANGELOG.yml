@@ -1,4 +1,17 @@
 - commits:
+    - subject: "application-membership: Replace nested $filter with explicit $any on
+        create"
+      hash: 768529673b9c49bd2ec715609195a08ff238a6e9
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Otavio Jacobi
+      nested: []
+  version: 21.7.1
+  title: ""
+  date: 2025-06-30T11:20:56.993Z
+- commits:
     - subject: "ApplicationMembershipRoles: Add `safe_developer` and `safe_operator`
         roles"
       hash: 72d7c2c3377d58714da9915324d74c3c89cd23ec
