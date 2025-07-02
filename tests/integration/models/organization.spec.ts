@@ -104,7 +104,7 @@ describe('Organization model', function () {
 			it.skip('should be able to create an organization with a logo', async function () {
 				const org = await balena.models.organization.create({
 					name: `${TEST_ORGANIZATION_NAME} with logo`,
-					logo_image: new balena.utils.BalenaWebResourceFile(
+					logo_image: new File(
 						[Buffer.from('this is a test\n')],
 						'orglogo.png',
 					),
