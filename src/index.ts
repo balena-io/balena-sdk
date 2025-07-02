@@ -386,22 +386,15 @@ export const getSdk = function ($opts?: SdkOptions) {
 	 *  { $expand: { device: { $select: ['id'] } } },
 	 *  { $expand: { device: { $select: ['name'] } } },
 	 * );
-	 *
-	 * @example
-	 * // Creating a new WebResourceFile in case 'File' API is not available.
-	 * new balena.utils.BalenaWebResourceFile(
-	 *   [fs.readFileSync('./file.tgz')],
-	 *   'file.tgz'
-	 * );
 	 */
 	Object.defineProperty(sdk, 'utils', {
 		enumerable: true,
 		configurable: true,
 		get() {
-			const { mergePineOptions, BalenaWebResourceFile } =
+			const { mergePineOptions } =
 				// eslint-disable-next-line @typescript-eslint/no-require-imports
 				require('./util') as typeof import('./util');
-			return { mergePineOptions, BalenaWebResourceFile };
+			return { mergePineOptions };
 		},
 	});
 
