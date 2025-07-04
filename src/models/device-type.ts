@@ -437,8 +437,17 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * });
 		 */
 		getInstructions: async (
-			deviceTypeSlugOrContract: string | Contract,
+			deviceTypeSlugOrContract:
+				| string
+				| Contract
+				| NonNullable<DeviceType['Read']['contract']>,
 		): Promise<Record<'Linux' | 'MacOS' | 'Windows', string[]> | string[]> => {
+			if (Array.isArray(deviceTypeSlugOrContract)) {
+				throw new errors.BalenaInvalidParameterError(
+					'deviceTypeSlugOrContract',
+					deviceTypeSlugOrContract,
+				);
+			}
 			let contract: Contract | null;
 			if (typeof deviceTypeSlugOrContract === 'string') {
 				const { contract: $contract } = await exports.getBySlugOrName(
@@ -457,7 +466,7 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 					);
 				}
 			} else {
-				contract = deviceTypeSlugOrContract;
+				contract = deviceTypeSlugOrContract as Contract;
 			}
 			return getInstructionsFromContract(contract)!;
 		},

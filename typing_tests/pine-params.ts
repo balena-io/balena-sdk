@@ -572,11 +572,11 @@ await (async () => {
 
 // pine.post
 await (async () => {
+	// @ts-expect-error test case
 	await sdk.pine.post({
 		resource: 'application',
 		body: {
 			organization: 3,
-			// @ts-expect-error test case
 			asdf: 4,
 		},
 	});
@@ -623,21 +623,14 @@ await (async () => {
 })();
 
 await (async () => {
+	// @ts-expect-error - test case
 	const result = await sdk.pine.post({
 		resource: 'application',
 		body: {
 			organization: 3,
-			// @ts-expect-error - test case
 			asdf: 4,
 		},
 	});
-	aNumber = result.id;
-	aString = result.app_name;
-	aNumber = result.organization.__id;
-	aNumberOrUndefined = result.should_be_running__release?.__id;
-	// @ts-expect-error - test case
-	aNumberOrUndefined = result.asdf;
-
-	// @ts-expect-error test case
-	anArray = result.owns__device;
+	const test: Equals<typeof result, unknown> = EqualsTrue;
+	console.log(result, test);
 })();
