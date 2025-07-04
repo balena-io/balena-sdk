@@ -2599,8 +2599,8 @@ describe('Device Model', function () {
 							{
 								fromDate: subDays(new Date(), 1),
 								toDate: addDays(new Date(), 1),
-								$top: 1,
 							},
+							{ $top: 1 },
 						);
 						expect(result).to.be.an('array').to.have.length(1);
 					});
@@ -2622,6 +2622,8 @@ describe('Device Model', function () {
 							{
 								fromDate: subDays(new Date(), 1),
 								toDate: addDays(new Date(), 1),
+							},
+							{
 								$top: 1,
 								$expand: {
 									is_ended_by__actor: {
