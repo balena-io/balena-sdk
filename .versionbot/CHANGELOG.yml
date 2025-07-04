@@ -1,4 +1,16 @@
 - commits:
+    - subject: Migrate all `$orderby` from string form to object form
+      hash: ea4e4a3883d08201cc948db6a3aa330b88353f5e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Otavio Jacobi
+      nested: []
+  version: 21.7.2
+  title: ""
+  date: 2025-07-04T07:25:46.603Z
+- commits:
     - subject: "application-membership: Replace nested $filter with explicit $any on
         create"
       hash: 768529673b9c49bd2ec715609195a08ff238a6e9
