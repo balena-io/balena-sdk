@@ -100,6 +100,11 @@ export type DeviceMetrics = Pick<
 	| 'is_undervolted'
 >;
 
+export interface DateFilters {
+	fromDate?: Date;
+	toDate?: Date;
+}
+
 const DEFAULT_DAYS_OF_REQUESTED_HISTORY = 7;
 
 const getDeviceModel = function (
@@ -753,12 +758,10 @@ const getDeviceModel = function (
 		 * });
 		 */
 		getApplicationName: async (uuidOrId: string | number): Promise<string> => {
-			const deviceOptions = {
+			const device = await exports.get(uuidOrId, {
 				$select: 'id',
 				$expand: { belongs_to__application: { $select: 'app_name' } },
-			} as const;
-
-			const device = await exports.get(uuidOrId, deviceOptions);
+			});
 			return device.belongs_to__application[0].app_name;
 		},
 
@@ -3030,9 +3033,9 @@ const getDeviceModel = function (
 			 * @memberof balena.models.device.history
 			 *
 			 * @param {String|Number} uuidOrId - device uuid (32 / 62 digits string) or id (number)
-			 * @param {Object} [options] - options
-			 * @param {Date} [options.fromDate=subDays(new Date(), 7)] - history entries older or equal to this date - default now() - 7 days
-			 * @param {Date} [options.toDate] - history entries younger or equal to this date
+			 * @param {Date} [dateFilter.fromDate=subDays(new Date(), 7)] - history entries older or equal to this date - default now() - 7 days
+			 * @param {Date} [dateFilter.toDate] - history entries younger or equal to this date
+			 * @param {Object} [options] - extra pine options to use
 			 * @fulfil {Object[]} - device history
 			 * @returns {Promise}
 			 *
@@ -3050,6 +3053,14 @@ const getDeviceModel = function (
 			 * @example
 			 * // get all device history entries between now - 20 days and now - 10 days
 			 * balena.models.device.history.getAllByDevice(999999, { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10)})
+			 *
+			 * @example
+			 * // get all device history entries between now - 20 days and now - 10 days
+			 * balena.models.device.history.getAllByDevice(
+			 *  999999,
+			 *  { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10)},
+			 *  { $top: 10, $orderby: { id: 'desc' }}
+			 * )
 			 */
 			async getAllByDevice<
 				T extends ODataOptionsWithoutCount<DeviceHistory['Read']>,
@@ -3058,14 +3069,8 @@ const getDeviceModel = function (
 				{
 					fromDate = subDays(new Date(), DEFAULT_DAYS_OF_REQUESTED_HISTORY),
 					toDate,
-					...options
-				}: T & {
-					fromDate?: Date;
-					toDate?: Date;
-				} = {} as T & {
-					fromDate?: Date;
-					toDate?: Date;
-				},
+				}: DateFilters = {},
+				options?: T,
 			) {
 				let $filter: FilterObj<DeviceHistory['Read']> =
 					historyTimeRangeFilterWithGuard(fromDate, toDate);
@@ -3100,9 +3105,9 @@ const getDeviceModel = function (
 			 * @memberof balena.models.device.history
 			 *
 			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
-			 * @param {Object} [options] - options
-			 * @param {Date} [options.fromDate=subDays(new Date(), 7)] - history entries older or equal to this date - default now() - 7 days
-			 * @param {Date} [options.toDate] - history entries younger or equal to this date
+			 * @param {Date} [dateFilter.fromDate=subDays(new Date(), 7)] - history entries older or equal to this date - default now() - 7 days
+			 * @param {Date} [dateFilter.toDate] - history entries younger or equal to this date
+			 * @param {Object} [options] - extra pine options to use
 			 * @fulfil {Object[]} - device history
 			 * @returns {Promise}
 			 *
@@ -3120,6 +3125,14 @@ const getDeviceModel = function (
 			 * // get all device history entries between now - 20 days and now - 10 days
 			 * balena.models.device.history.getAllByApplication(999999, { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10)})
 			 *
+			 * @example
+			 * // get all device history entries between now - 20 days and now - 10 days
+			 * balena.models.device.history.getAllByApplication(
+			 *   999999,
+			 *   { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10),
+			 *   { $top: 10, $orderby: { id: 'desc' }}
+			 * });
+			 *
 			 */
 			async getAllByApplication<
 				T extends ODataOptionsWithoutCount<DeviceHistory['Read']>,
@@ -3128,14 +3141,8 @@ const getDeviceModel = function (
 				{
 					fromDate = subDays(new Date(), DEFAULT_DAYS_OF_REQUESTED_HISTORY),
 					toDate,
-					...options
-				}: T & {
-					fromDate?: Date;
-					toDate?: Date;
-				} = {} as T & {
-					fromDate?: Date;
-					toDate?: Date;
-				},
+				}: DateFilters = {},
+				options?: T,
 			) {
 				const { id: applicationId } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,

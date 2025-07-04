@@ -24,6 +24,7 @@ import type { BalenaModel, PineClient } from '..';
 import type { Dictionary, StringKeyof } from '../../typings/utils';
 import type {
 	ExpandableStringKeyOf,
+	Filter,
 	ODataOptionsWithoutCount,
 } from 'pinejs-client-core';
 
@@ -57,7 +58,6 @@ export function buildDependentResource<T extends DependentResourceName>(
 ) {
 	const exports = {
 		getAll(options?: ODataOptionsWithoutCount<BalenaModel[T]['Read']>) {
-			options ??= {};
 			return pine.get({
 				resource: resourceName,
 				options: mergePineOptions(
@@ -78,11 +78,13 @@ export function buildDependentResource<T extends DependentResourceName>(
 			return await exports.getAll(
 				mergePineOptions(
 					{
-						$filter: { [parentResourceName]: id },
+						$filter: { [parentResourceName]: id } as Filter<
+							BalenaModel[T]['Read']
+						>,
 						$orderby: {
 							[resourceKeyField]: 'asc',
 						},
-					} as ODataOptionsWithoutCount<BalenaModel[T]['Read']>,
+					},
 					options,
 				),
 			);
