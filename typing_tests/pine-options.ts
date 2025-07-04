@@ -48,7 +48,7 @@ export const unkownODataPropInside$expand: BalenaSdk.Pine.ODataOptions<
 > = {
 	$expand: {
 		owns__device: {
-			// // @ts-expect-error test case - new pine client is not able to detect invalid double expand
+			// TODO this should ideally be failing but atm pine client is not able to detect invalid double expand
 			asdf: {},
 			$select: ['note', 'device_name', 'uuid'],
 		},
@@ -536,6 +536,20 @@ export const string$OrderbyInvalidDirection: BalenaSdk.Pine.ODataOptions<
 > = {
 	// @ts-expect-error test case
 	$orderby: 'id ascending',
+};
+
+export const object$OrderbyInvalidDirection: BalenaSdk.Pine.ODataOptions<
+	BalenaSdk.Application['Read']
+> = {
+	// @ts-expect-error test case
+	$orderby: { id: 'ascending' },
+};
+
+export const object$OrderbyInvalidDirectionCase: BalenaSdk.Pine.ODataOptions<
+	BalenaSdk.Application['Read']
+> = {
+	// @ts-expect-error test case
+	$orderby: { id: 'Asc' },
 };
 
 export const string$OrderbyInvalidDirectionCase: BalenaSdk.Pine.ODataOptions<
@@ -1067,8 +1081,15 @@ export const string$OrderbyDesc: BalenaSdk.Pine.ODataOptions<
 };
 
 export const string$OrderbyNestedProp: BalenaSdk.Pine.ODataOptions<
-	BalenaSdk.Organization['Read']
+	BalenaSdk.Application['Read']
 > = {
 	// @ts-expect-error - prefer object notation for orderby
 	$orderby: 'application_type/slug asc',
+};
+
+export const string$OrderbyStringProp: BalenaSdk.Pine.ODataOptions<
+	BalenaSdk.Application['Read']
+> = {
+	// @ts-expect-error - prefer object notation for orderby
+	$orderby: 'app_name asc',
 };

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 /// <reference types="node" />
 import type * as BalenaSdk from '..';
 import type { AnyObject } from '../typings/utils';
@@ -8,6 +9,7 @@ export let aNumberOrUndefined: number | undefined;
 export let aString: string;
 export let aStringOrUndefined: string | undefined;
 export let anArray: any[];
+export let anUndefined: undefined;
 
 // This file is in .prettierignore, since otherwise
 // the @ts-expect-error comments would move to the wrong place
@@ -16,44 +18,40 @@ export let anArray: any[];
 
 {
 	type deviceOptionsNoProps = NonNullable<
-		BalenaSdk.Pine.OptionsToResponse<
-			BalenaSdk.Device['Read'],
-			{}, // eslint-disable-line @typescript-eslint/no-empty-object-type
-			number
-		>
+		BalenaSdk.Pine.OptionsToResponse<BalenaSdk.Device['Read'], {}, number>
 	>;
 
 	const result: deviceOptionsNoProps = {} as any;
 
 	aNumber = result.id;
 	aString = result.device_name;
-	aNumberOrUndefined = result.belongs_to__application?.__id;
+	aNumber = result.is_of__device_type.__id;
 	aNumberOrUndefined = result.is_pinned_on__release?.__id;
 
 	// @ts-expect-error test case
 	aNumber = result.is_pinned_on__release.__id;
-	// @ts-expect-error test case
-	anArray = result.device_tag;
+	// TODO: Ideally the prop shouldn't be there at all
+	anUndefined = result.device_tag;
 }
 
 {
 	type deviceOptionsNoProps = BalenaSdk.Pine.OptionsToResponse<
 		BalenaSdk.Device['Read'],
-		{}, // eslint-disable-line @typescript-eslint/no-empty-object-type
+		{},
 		undefined
 	>;
 
-	const result: deviceOptionsNoProps = {} as any;
+	const result: deviceOptionsNoProps[number] = {} as any;
 
-	aNumber = result[0].id;
-	aString = result[0].device_name;
-	aNumberOrUndefined = result[0].belongs_to__application?.__id;
-	aNumberOrUndefined = result[0].is_pinned_on__release?.__id;
+	aNumber = result.id;
+	aString = result.device_name;
+	aNumber = result.is_of__device_type.__id;
+	aNumberOrUndefined = result.is_pinned_on__release?.__id;
 
 	// @ts-expect-error test case
-	aNumber = result[0].is_pinned_on__release.__id;
-	// @ts-expect-error test case
-	anArray = result[0].device_tag;
+	aNumber = result.is_pinned_on__release.__id;
+	// TODO: Ideally the prop shouldn't be there at all
+	anUndefined = result.device_tag;
 }
 
 {
@@ -72,7 +70,7 @@ export let anArray: any[];
 	aNumber = result.id;
 
 	// @ts-expect-error test case
-	aNumber = result.belongs_to__application.__id;
+	aNumber = result.is_of__device_type.__id;
 	// @ts-expect-error test case
 	aNumber = result.is_pinned_on__release.__id;
 	// @ts-expect-error test case
@@ -84,7 +82,7 @@ export let anArray: any[];
 		BalenaSdk.Pine.OptionsToResponse<
 			BalenaSdk.Device['Read'],
 			{
-				$select: 'belongs_to__application';
+				$select: 'is_of__device_type';
 			},
 			number
 		>
@@ -92,7 +90,7 @@ export let anArray: any[];
 
 	const result: deviceOptionsSelectRelease = {} as any;
 
-	aNumberOrUndefined = result.belongs_to__application?.__id;
+	aNumber = result.is_of__device_type.__id;
 
 	// @ts-expect-error test case
 	aAny = result.is_pinned_on__release;
@@ -178,7 +176,7 @@ export let anArray: any[];
 		BalenaSdk.Pine.OptionsToResponse<
 			BalenaSdk.Device['Read'],
 			{
-				$expand: ['belongs_to__application'];
+				$expand: ['is_of__device_type'];
 			},
 			number
 		>
@@ -186,14 +184,13 @@ export let anArray: any[];
 
 	const result: deviceOptionsExpandNavigationResourceString = {} as any;
 
-	aNumber = result.belongs_to__application[0].id;
+	aNumber = result.is_of__device_type[0].id;
 	aNumber = result.id;
 	aString = result.device_name;
-
-	// // @ts-expect-error test case - TODO It is now inferred as array
-	aAny = result.belongs_to__application[1];
-	// @ts-expect-error test case
-	anArray = result.device_tag;
+	// TODO: TS should complain about resource[1] since the prop should ideally be a single item tuple
+	aAny = result.is_of__device_type[1];
+	// TODO: Ideally the prop shouldn't be there at all
+	anUndefined = result.device_tag;
 }
 
 {
@@ -212,14 +209,14 @@ export let anArray: any[];
 	aNumber = result.id;
 	aString = result.device_name;
 	aNumberOrUndefined = result.is_pinned_on__release[0]?.id;
-
+	// TODO: This should fail b/c is_pinned_on__release is a nullable navigation resource
 	aNumber = result.is_pinned_on__release[0].id;
 	// @ts-expect-error test case
 	aAny = result.is_pinned_on__release.__id;
-	// // @ts-expect-error test case - TODO It is now inferred as array
+	// TODO: TS should complain about resource[1] since the prop should ideally be a single item tuple
 	aAny = result.is_pinned_on__release[1];
-	// @ts-expect-error test case
-	anArray = result.device_tag;
+	// TODO: Ideally the prop shouldn't be there at all
+	anUndefined = result.device_tag;
 }
 
 {
@@ -267,8 +264,8 @@ export let anArray: any[];
 		BalenaSdk.Pine.OptionsToResponse<
 			BalenaSdk.Device['Read'],
 			{
-				$select: 'belongs_to__application';
-				$expand: ['belongs_to__application'];
+				$select: 'is_of__device_type';
+				$expand: ['is_of__device_type'];
 			},
 			number
 		>
@@ -276,15 +273,15 @@ export let anArray: any[];
 
 	const result: deviceOptionsExpandNavigationResourceString = {} as any;
 
-	aNumber = result.belongs_to__application[0].id;
-	aString = result.belongs_to__application[0].app_name;
+	aNumber = result.is_of__device_type[0].id;
+	aString = result.is_of__device_type[0].name;
 
 	// @ts-expect-error test case
 	aNumber = result.id;
 	// @ts-expect-error test case
 	aString = result.device_name;
-	// // @ts-expect-error test case - TODO It is now inferred as array
-	aAny = result.belongs_to__application[1];
+	// TODO: TS should complain about resource[1] since the prop should ideally be a single item tuple
+	aAny = result.is_of__device_type[1];
 	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
@@ -310,7 +307,7 @@ export let anArray: any[];
 	aNumber = result.id;
 	// @ts-expect-error test case
 	aString = result.device_name;
-	// // @ts-expect-error test case - TODO It is now inferred as array
+	// TODO: TS should complain about resource[1] since the prop should ideally be a single item tuple
 	aAny = result.is_pinned_on__release[1];
 	// @ts-expect-error test case
 	aAny = result.device_tag;
@@ -347,9 +344,9 @@ export let anArray: any[];
 		BalenaSdk.Pine.OptionsToResponse<
 			BalenaSdk.Device['Read'],
 			{
-				$select: 'belongs_to__application';
+				$select: 'is_of__device_type';
 				$expand: {
-					belongs_to__application: {}; // eslint-disable-line @typescript-eslint/no-empty-object-type
+					is_of__device_type: {};
 				};
 			},
 			number
@@ -358,15 +355,15 @@ export let anArray: any[];
 
 	const result: deviceOptionsExpandNavigationResourceString = {} as any;
 
-	aNumber = result.belongs_to__application[0].id;
-	aString = result.belongs_to__application[0].app_name;
+	aNumber = result.is_of__device_type[0].id;
+	aString = result.is_of__device_type[0].name;
 
 	// @ts-expect-error test case
 	aNumber = result.id;
 	// @ts-expect-error test case
 	aString = result.device_name;
-	// // @ts-expect-error test case - TODO It is now inferred as array
-	aAny = result.belongs_to__application[1];
+	// TODO: TS should complain about resource[1] since the prop should ideally be a single item tuple
+	aAny = result.is_of__device_type[1];
 	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
@@ -378,7 +375,7 @@ export let anArray: any[];
 			{
 				$select: 'is_pinned_on__release';
 				$expand: {
-					is_pinned_on__release: {}; // eslint-disable-line @typescript-eslint/no-empty-object-type
+					is_pinned_on__release: {};
 				};
 			},
 			number
@@ -394,7 +391,7 @@ export let anArray: any[];
 	aNumber = result.id;
 	// @ts-expect-error test case
 	aString = result.device_name;
-	// // @ts-expect-error test case - TODO It is now inferred as array
+	// TODO: TS should complain about resource[1] since the prop should ideally be a single item tuple
 	aAny = result.is_pinned_on__release[1];
 	// @ts-expect-error test case
 	aAny = result.device_tag;
@@ -407,7 +404,7 @@ export let anArray: any[];
 			{
 				$select: 'id';
 				$expand: {
-					device_tag: {}; // eslint-disable-line @typescript-eslint/no-empty-object-type
+					device_tag: {};
 				};
 			},
 			number
@@ -435,8 +432,8 @@ export let anArray: any[];
 			{
 				$select: 'id';
 				$expand: {
-					belongs_to__application: {
-						$select: 'app_name';
+					is_of__device_type: {
+						$select: 'name';
 					};
 				};
 			},
@@ -447,14 +444,14 @@ export let anArray: any[];
 	const result: deviceOptionsExpandNavigationResourceString = {} as any;
 
 	aNumber = result.id;
-	aString = result.belongs_to__application[0].app_name;
+	aString = result.is_of__device_type[0].name;
 
 	// @ts-expect-error test case
-	aNumber = result.belongs_to__application[0].id;
+	aNumber = result.is_of__device_type[0].id;
 	// @ts-expect-error test case
 	aString = result.device_name;
-	// // @ts-expect-error test case - TODO It is now inferred as array
-	aAny = result.belongs_to__application[1];
+	// TODO: TS should complain about resource[1] since the prop should ideally be a single item tuple
+	aAny = result.is_of__device_type[1];
 	// @ts-expect-error test case
 	aAny = result.device_tag;
 }
@@ -484,7 +481,7 @@ export let anArray: any[];
 	aNumberOrUndefined = result.is_pinned_on__release[0]?.id;
 	// @ts-expect-error test case
 	aString = result.device_name;
-	// // @ts-expect-error test case - TODO It is now inferred as array
+	// TODO: TS should complain about resource[1] since the prop should ideally be a single item tuple
 	aAny = result.is_pinned_on__release[1];
 	// @ts-expect-error test case
 	aAny = result.device_tag;
@@ -534,11 +531,13 @@ export let anArray: any[];
 
 	aNumber = result.id;
 	// Errors, since it could be an OptionalNavigationResource
+	// TODO: This should fail b/c is_pinned_on__release is a nullable navigation resource
 	aStringOrUndefined = result.is_pinned_on__release[0].commit;
 	aStringOrUndefined = result.is_pinned_on__release[0]?.commit;
 	// @ts-expect-error test case
 	aNumberOrUndefined = result.is_pinned_on__release[0]?.id;
 	// This also works, since the typings don't know whether this is Navigation or a Reverse Navigation Resounce
+	// TODO: TS should complain about resource[1] since the prop should ideally be a single item tuple
 	aAny = result.is_pinned_on__release[1].commit;
 
 	// @ts-expect-error test case
@@ -581,7 +580,7 @@ export let anArray: any[];
 {
 	type deviceOptionsNoProps = BalenaSdk.Pine.OptionsToResponse<
 		BalenaSdk.Device['Read'],
-		{ $count: {} }, // eslint-disable-line @typescript-eslint/no-empty-object-type
+		{ $count: {} },
 		undefined
 	>;
 
@@ -598,7 +597,7 @@ export let anArray: any[];
 				$select: 'id';
 				$expand: {
 					belongs_to__application: {
-						$count: {}; // eslint-disable-line @typescript-eslint/no-empty-object-type
+						$count: {};
 					};
 				};
 			},
@@ -620,7 +619,7 @@ export let anArray: any[];
 				$select: 'id';
 				$expand: {
 					device_tag: {
-						$count: {}; // eslint-disable-line @typescript-eslint/no-empty-object-type
+						$count: {};
 					};
 				};
 			},

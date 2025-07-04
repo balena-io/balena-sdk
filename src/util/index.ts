@@ -27,7 +27,7 @@ export const onlyIf =
 	};
 
 export const isId = (v?: unknown): v is number => typeof v === 'number';
-export const isFullUuid = (v?: unknown): v is string | { length: 32 | 62 } =>
+export const isFullUuid = (v?: unknown): v is string & { length: 32 | 62 } =>
 	typeof v === 'string' && (v.length === 32 || v.length === 62);
 
 const SUPERVISOR_LOCKED_STATUS_CODE = 423;
@@ -136,8 +136,8 @@ export type ToResourceExpand<R extends Resource['Read'], E extends Expand<R>> =
 				? E[number]
 				: never;
 
-export type EnsureODataOptionsWithoutCount<T> =
-	T extends Readonly<ODataOptionsWithoutCount> ? T : never;
+export type EnsureODataOptionsWithoutCount<R extends Resource['Read'], T> =
+	T extends Readonly<ODataOptionsWithoutCount<R>> ? T : never;
 
 export type ExtractNavigationResource<R, K extends keyof R> =
 	R[K] extends Array<infer U>
@@ -145,6 +145,16 @@ export type ExtractNavigationResource<R, K extends keyof R> =
 			? U
 			: never
 		: never;
+
+export type SafeMergePineOptions<
+	R extends Resource['Read'],
+	DExpand,
+	EExpand,
+> = MergePineOptions<
+	R,
+	EnsureODataOptionsWithoutCount<R, DExpand>,
+	EnsureODataOptionsWithoutCount<R, EExpand>
+>;
 
 export type MergeExpandedOptions<
 	R extends Resource['Read'],
@@ -158,11 +168,10 @@ export type MergeExpandedOptions<
 > = {
 	[K in AllKeys]: K extends StringKeyof<DExpand>
 		? K extends StringKeyof<EExpand>
-			? MergePineOptions<
+			? SafeMergePineOptions<
 					ExtractNavigationResource<R, K>,
-					// @ts-expect-error - we know the expand will be a valid odata options
-					EnsureODataOptionsWithoutCount<DExpand[K]>,
-					EnsureODataOptionsWithoutCount<EExpand[K]>
+					DExpand[K],
+					EExpand[K]
 				>
 			: DExpand[K]
 		: K extends StringKeyof<EExpand>
@@ -200,7 +209,7 @@ export type MergePineOptions<
 	TDefault extends Readonly<ODataOptionsWithoutCount<R>>,
 	TExtra extends Readonly<ODataOptionsWithoutCount<R>>,
 > = {
-	[K in Extract<keyof (TDefault & TExtra), ExtraKeys>]: K extends '$select'
+	[K in Extract<keyof TDefault | keyof TExtra, ExtraKeys>]: K extends '$select'
 		? MergeSelect<R, TDefault, TExtra>
 		: K extends '$top' | '$skip' | '$orderby'
 			? OverrideProp<TDefault, TExtra, K>

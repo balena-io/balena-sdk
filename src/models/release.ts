@@ -667,7 +667,7 @@ const getReleaseModel = function (
 					release_tag: mergePineOptions(
 						{ $orderby: { tag_key: 'asc' } },
 						options,
-					) as NonNullable<T>,
+					),
 				},
 			});
 

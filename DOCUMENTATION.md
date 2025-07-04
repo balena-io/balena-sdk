@@ -2817,9 +2817,9 @@ balena.models.device.serviceVar.remove(999999, 123, 'VAR').then(function() {
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | uuidOrId | <code>String</code> \| <code>Number</code> |  | device uuid (32 / 62 digits string) or id (number) |
-| [options] | <code>Object</code> |  | options |
-| [options.fromDate] | <code>Date</code> | <code>subDays(new Date(), 7)</code> | history entries older or equal to this date - default now() - 7 days |
-| [options.toDate] | <code>Date</code> |  | history entries younger or equal to this date |
+| [dateFilter.fromDate] | <code>Date</code> | <code>subDays(new Date(), 7)</code> | history entries older or equal to this date - default now() - 7 days |
+| [dateFilter.toDate] | <code>Date</code> |  | history entries younger or equal to this date |
+| [options] | <code>Object</code> |  | extra pine options to use |
 
 **Example**  
 ```js
@@ -2838,6 +2838,15 @@ balena.models.device.history.getAllByDevice(999999).then(function(entries) {
 // get all device history entries between now - 20 days and now - 10 days
 balena.models.device.history.getAllByDevice(999999, { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10)})
 ```
+**Example**  
+```js
+// get all device history entries between now - 20 days and now - 10 days
+balena.models.device.history.getAllByDevice(
+ 999999,
+ { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10)},
+ { $top: 10, $orderby: { id: 'desc' }}
+)
+```
 <a name="balena.models.device.history.getAllByApplication"></a>
 
 ###### history.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
@@ -2849,9 +2858,9 @@ balena.models.device.history.getAllByDevice(999999, { fromDate: subDays(new Date
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | slugOrUuidOrId | <code>String</code> \| <code>Number</code> |  | application slug (string), uuid (string) or id (number) |
-| [options] | <code>Object</code> |  | options |
-| [options.fromDate] | <code>Date</code> | <code>subDays(new Date(), 7)</code> | history entries older or equal to this date - default now() - 7 days |
-| [options.toDate] | <code>Date</code> |  | history entries younger or equal to this date |
+| [dateFilter.fromDate] | <code>Date</code> | <code>subDays(new Date(), 7)</code> | history entries older or equal to this date - default now() - 7 days |
+| [dateFilter.toDate] | <code>Date</code> |  | history entries younger or equal to this date |
+| [options] | <code>Object</code> |  | extra pine options to use |
 
 **Example**  
 ```js
@@ -2871,6 +2880,15 @@ balena.models.device.history.getAllByApplication(999999).then(function(entries) 
 ```js
 // get all device history entries between now - 20 days and now - 10 days
 balena.models.device.history.getAllByApplication(999999, { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10)})
+```
+**Example**  
+```js
+// get all device history entries between now - 20 days and now - 10 days
+balena.models.device.history.getAllByApplication(
+  999999,
+  { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10),
+  { $top: 10, $orderby: { id: 'desc' }}
+});
 ```
 <a name="balena.models.device.getDashboardUrl"></a>
 

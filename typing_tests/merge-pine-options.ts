@@ -30,30 +30,30 @@ await (async () => {
 	});
 	aNumber = narrowDownSelectString[0].id;
 	// @ts-expect-error - test case
-	aString = narrowDownSelectString[0].created_at;
+	aAny = narrowDownSelectString[0].created_at;
 	// @ts-expect-error - test case
-	aStringOrNull = narrowDownSelectString[0].expiry_date;
+	aAny = narrowDownSelectString[0].expiry_date;
 	// @ts-expect-error - test case
-	aStringOrNull = narrowDownSelectString[0].description;
+	aAny = narrowDownSelectString[0].description;
 	// @ts-expect-error - test case
-	aStringOrNull = narrowDownSelectString[0].name;
+	aAny = narrowDownSelectString[0].name;
 	// @ts-expect-error - test case
-	aNumber = narrowDownSelectString[0].is_of__actor.__id;
+	aAny = narrowDownSelectString[0].is_of__actor.__id;
 
 	const narrowDownSelectArraySingle = await sdk.models.apiKey.getAll({
 		$select: ['id'],
 	});
 	aNumber = narrowDownSelectArraySingle[0].id;
 	// @ts-expect-error - test case
-	aString = narrowDownSelectArraySingle[0].created_at;
+	aAny = narrowDownSelectArraySingle[0].created_at;
 	// @ts-expect-error - test case
-	aStringOrNull = narrowDownSelectArraySingle[0].expiry_date;
+	aAny = narrowDownSelectArraySingle[0].expiry_date;
 	// @ts-expect-error - test case
-	aStringOrNull = narrowDownSelectArraySingle[0].description;
+	aAny = narrowDownSelectArraySingle[0].description;
 	// @ts-expect-error - test case
-	aStringOrNull = narrowDownSelectArraySingle[0].name;
+	aAny = narrowDownSelectArraySingle[0].name;
 	// @ts-expect-error - test case
-	aNumber = narrowDownSelectArraySingle[0].is_of__actor.__id;
+	aAny = narrowDownSelectArraySingle[0].is_of__actor.__id;
 
 	const narrowDownSelectArrayMultiple = await sdk.models.apiKey.getAll({
 		$select: ['id', 'description'],
@@ -61,13 +61,13 @@ await (async () => {
 	aNumber = narrowDownSelectArrayMultiple[0].id;
 	aStringOrNull = narrowDownSelectArrayMultiple[0].description;
 	// @ts-expect-error - test case
-	aString = narrowDownSelectArrayMultiple[0].created_at;
+	aAny = narrowDownSelectArrayMultiple[0].created_at;
 	// @ts-expect-error - test case
-	aStringOrNull = narrowDownSelectArrayMultiple[0].expiry_date;
+	aAny = narrowDownSelectArrayMultiple[0].expiry_date;
 	// @ts-expect-error - test case
-	aStringOrNull = narrowDownSelectArrayMultiple[0].name;
+	aAny = narrowDownSelectArrayMultiple[0].name;
 	// @ts-expect-error - test case
-	aNumber = narrowDownSelectArrayMultiple[0].is_of__actor.__id;
+	aAny = narrowDownSelectArrayMultiple[0].is_of__actor.__id;
 
 	const narrowDownSelectArrayWithNavigation = await sdk.models.apiKey.getAll({
 		$select: ['id', 'description', 'is_of__actor'],
@@ -76,11 +76,11 @@ await (async () => {
 	aStringOrNull = narrowDownSelectArrayWithNavigation[0].description;
 	aNumber = narrowDownSelectArrayWithNavigation[0].is_of__actor.__id;
 	// @ts-expect-error - test case
-	aString = narrowDownSelectArrayWithNavigation[0].created_at;
+	aAny = narrowDownSelectArrayWithNavigation[0].created_at;
 	// @ts-expect-error - test case
-	aStringOrNull = narrowDownSelectArrayWithNavigation[0].expiry_date;
+	aAny = narrowDownSelectArrayWithNavigation[0].expiry_date;
 	// @ts-expect-error - test case
-	aStringOrNull = narrowDownSelectArrayWithNavigation[0].name;
+	aAny = narrowDownSelectArrayWithNavigation[0].name;
 })();
 
 // $expand properties
@@ -88,7 +88,9 @@ await (async () => {
 	const noExpand = await sdk.models.application.getAll();
 	aNumberOrUndefined = noExpand[0].is_for__device_type?.__id;
 	aNumberOrUndefined = noExpand[0].should_be_running__release?.__id;
+	// TODO: ideally this prop shouldn't be there at all
 	anUndefined = noExpand[0].owns__device;
+	// TODO: ideally this prop shouldn't be there at all
 	anUndefined = noExpand[0].owns__release;
 
 	const arrayExpand = await sdk.models.application.getAll({
@@ -98,6 +100,7 @@ await (async () => {
 	aNumber = arrayExpand[0].is_for__device_type[0].id;
 	aNumberOrUndefined = arrayExpand[0].should_be_running__release?.__id;
 	aNumber = arrayExpand[0].owns__device[0].id;
+	// TODO: ideally this prop shouldn't be there at all
 	anUndefined = arrayExpand[0].owns__release;
 
 	const objectExpand = await sdk.models.application.getAll({
@@ -107,6 +110,7 @@ await (async () => {
 	aNumber = objectExpand[0].is_for__device_type[0].id;
 	aNumberOrUndefined = objectExpand[0].should_be_running__release?.__id;
 	aNumber = objectExpand[0].owns__device[0].id;
+	// TODO: ideally this prop shouldn't be there at all
 	anUndefined = objectExpand[0].owns__release;
 
 	const objectExpandWithSelect = await sdk.models.application.getAll({
@@ -119,13 +123,14 @@ await (async () => {
 	});
 
 	// @ts-expect-error - test case
-	aNumber = objectExpandWithSelect[0].is_for__device_type[0].id;
+	aAny = objectExpandWithSelect[0].is_for__device_type[0].id;
 	aString = objectExpandWithSelect[0].is_for__device_type[0].name;
 	aString = objectExpandWithSelect[0].is_for__device_type[0].slug;
 
 	aNumberOrUndefined =
 		objectExpandWithSelect[0].should_be_running__release?.__id;
 	aNumber = objectExpandWithSelect[0].owns__device[0].id;
+	// TODO: ideally this prop shouldn't be there at all
 	anUndefined = objectExpandWithSelect[0].owns__release;
 
 	const objectExpandNestedArray = await sdk.models.application.getAll({
@@ -159,15 +164,23 @@ await (async () => {
 			},
 		},
 	});
-	aNumber =
+
+	aString = objectExpandNestedWithSelect[0].app_name;
+	aAny =
 		// @ts-expect-error - test case
 		objectExpandNestedWithSelect[0].owns__device[0].belongs_to__user[0].id;
+	aString =
+		objectExpandNestedWithSelect[0].owns__device[0].belongs_to__user[0]
+			.username;
 
 	const apps = await sdk.models.service.getAllByApplication(3, {
 		$select: 'id',
 	});
+
 	// @ts-expect-error - test case
-	aString = apps[0].service_name;
+	aAny = apps[0].service_name;
+	// @ts-expect-error - test case
+	aAny = apps[0].app_name;
 })();
 
 // @ application.getWithDeviceServiceDetails
@@ -183,8 +196,10 @@ await (async () => {
 		await sdk.models.application.getWithDeviceServiceDetails(123, {
 			$select: 'app_name',
 		});
+
+	aString = appWithExpand.app_name;
 	// @ts-expect-error - test case
-	aNumber = appWithExpand.id;
+	aAny = appWithExpand.id;
 
 	const appWithNestedExpand =
 		await sdk.models.application.getWithDeviceServiceDetails(123, {
@@ -208,6 +223,13 @@ await (async () => {
 			},
 		} as const);
 
+	const img =
+		appWithNestedExpand.owns__device[0].image_install[0].installs__image[0];
+	// @ts-expect-error - test case
+	aAny = img.download_progress;
+	// @ts-expect-error - test case
+	aAny = appWithNestedExpand.owns__release[0].commit;
+	aString = appWithNestedExpand.app_name;
 	aString =
 		appWithNestedExpand.owns__device[0].image_install[0].installs__image[0]
 			.is_stored_at__image_location;
@@ -229,8 +251,10 @@ await (async () => {
 	const deviceWithExpand = await sdk.models.device.getWithServiceDetails(123, {
 		$select: 'cpu_id',
 	});
+
+	aStringOrNull = deviceWithExpand.cpu_id;
 	// @ts-expect-error - test case
-	aNumber = deviceWithExpand.id;
+	aAny = deviceWithExpand.id;
 
 	const appWithNestedExpand = await sdk.models.device.getWithServiceDetails(
 		123,
@@ -248,6 +272,7 @@ await (async () => {
 		} as const,
 	);
 
+	aStringOrNull = deviceWithExpand.cpu_id;
 	aString =
 		appWithNestedExpand.image_install[0].installs__image[0]
 			.is_stored_at__image_location;
@@ -489,6 +514,36 @@ await (async () => {
 			a: {};
 			readonly b: {
 				readonly $select: readonly ['id'];
+			};
+		};
+	};
+
+	console.log(mergedExpandString);
+})();
+
+// $expand with nested expands
+(() => {
+	const mergedExpandString = mergePineOptions(
+		{
+			$expand: {
+				a: {},
+				b: {
+					$select: 'name',
+				},
+			},
+		} as const,
+		{
+			$expand: {
+				b: {
+					$select: ['id'],
+				},
+			},
+		} as const,
+	) satisfies {
+		$expand: {
+			readonly a: {};
+			readonly b: {
+				readonly $select: readonly ['name', 'id'];
 			};
 		};
 	};
