@@ -133,7 +133,7 @@ describe('Organization model', function () {
 		describe('balena.models.organization.getAll()', function () {
 			it('should retrieve all organizations', async function () {
 				const orgs = await balena.models.organization.getAll({
-					$orderby: 'id asc',
+					$orderby: { id: 'asc' },
 				});
 				expect(orgs).to.be.an('array');
 				expect(orgs.map((o) => o.handle)).to.deep.equal(
