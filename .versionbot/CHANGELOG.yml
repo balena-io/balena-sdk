@@ -1,4 +1,16 @@
 - commits:
+    - subject: Narrow down the fullUuid type assertion
+      hash: 394624e70c430622722be8c319869eabd9c27a6f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Otavio Jacobi
+      nested: []
+  version: 21.7.3
+  title: ""
+  date: 2025-07-05T19:13:03.868Z
+- commits:
     - subject: Migrate all `$orderby` from string form to object form
       hash: ea4e4a3883d08201cc948db6a3aa330b88353f5e
       body: ""
