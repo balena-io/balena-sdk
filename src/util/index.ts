@@ -24,7 +24,7 @@ export const onlyIf =
 	};
 
 export const isId = (v?: unknown): v is number => typeof v === 'number';
-export const isFullUuid = (v?: unknown): v is string =>
+export const isFullUuid = (v?: unknown): v is string | { length: 32 | 62 } =>
 	typeof v === 'string' && (v.length === 32 || v.length === 62);
 
 const SUPERVISOR_LOCKED_STATUS_CODE = 423;
