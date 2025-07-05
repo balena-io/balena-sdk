@@ -22,7 +22,7 @@ describe('arbitrary pine requests', function () {
 		},
 	});
 
-	describeExpandAssertions<BalenaSdk.ApplicationMembership>({
+	describeExpandAssertions<BalenaSdk.UserIsMemberOfApplication>({
 		resource: 'user_application_membership',
 		options: {
 			$expand: {

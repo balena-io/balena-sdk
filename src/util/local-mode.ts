@@ -1,5 +1,5 @@
 import * as bSemver from 'balena-semver';
-import type * as BalenaSdk from '..';
+import type { Device } from '..';
 import type { AtLeast } from '../../typings/utils';
 import { isProvisioned } from './device';
 
@@ -16,10 +16,7 @@ export const LOCAL_MODE_SUPPORT_PROPERTIES = [
 ] as const;
 
 export const checkLocalModeSupported = (
-	device: Pick<
-		BalenaSdk.Device,
-		(typeof LOCAL_MODE_SUPPORT_PROPERTIES)[number]
-	>,
+	device: Pick<Device['Read'], (typeof LOCAL_MODE_SUPPORT_PROPERTIES)[number]>,
 ): void => {
 	if (!isProvisioned(device)) {
 		throw new Error('Device is not yet fully provisioned');
@@ -40,7 +37,7 @@ export const checkLocalModeSupported = (
 
 export const getLocalModeSupport = (
 	device: AtLeast<
-		BalenaSdk.Device,
+		Device['Read'],
 		(typeof LOCAL_MODE_SUPPORT_PROPERTIES)[number]
 	>,
 ): {

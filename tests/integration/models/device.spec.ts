@@ -253,6 +253,7 @@ describe('Device Model', function () {
 							{ $select: ['id'] },
 						);
 						expect(device.id).to.equal(ctx.device.id);
+						// @ts-expect-error - test case
 						return expect(device.device_name).to.equal(undefined);
 					});
 
@@ -301,6 +302,7 @@ describe('Device Model', function () {
 							{ $select: ['id'] },
 						);
 						expect(device.id).to.equal(ctx.device.id);
+						// @ts-expect-error - test case
 						return expect(device.device_name).to.equal(undefined);
 					});
 
@@ -359,6 +361,7 @@ describe('Device Model', function () {
 							$select: ['id'],
 						});
 						expect(device.id).to.equal(ctx.device.id);
+						// @ts-expect-error - test case
 						return expect(device.device_name).to.equal(undefined);
 					});
 
@@ -394,6 +397,7 @@ describe('Device Model', function () {
 							{ $select: ['id'] },
 						);
 						expect(device.id).to.equal(ctx.device.id);
+						// @ts-expect-error - test case
 						return expect(device.device_name).to.equal(undefined);
 					});
 				});
@@ -2334,6 +2338,7 @@ describe('Device Model', function () {
 								},
 							},
 						});
+					// @ts-expect-error - test case
 					expect(deviceDetails.device_name).to.be.undefined;
 					expect(deviceDetails.current_services).not.to.be.undefined;
 					expect(deviceDetails.belongs_to__application[0]).to.deep.match({
@@ -2346,7 +2351,7 @@ describe('Device Model', function () {
 			describe('balena.models.device.serviceVar', function () {
 				const varModel = balena.models.device.serviceVar;
 				const serviceParams = ['id', 'service_name'] satisfies Array<
-					keyof BalenaSdk.Service
+					keyof BalenaSdk.Service['Read']
 				>;
 
 				deviceUniqueFields.forEach(function (deviceParam) {

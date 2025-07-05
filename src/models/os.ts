@@ -17,28 +17,35 @@ limitations under the License.
 import * as bSemver from 'balena-semver';
 import once from 'lodash/once';
 
-import {
-	isNotFoundResponse,
-	onlyIf,
-	mergePineOptions,
-	mergePineOptionsTyped,
-	type ExtendedPineTypedResult,
-} from '../util';
+import { isNotFoundResponse, onlyIf, mergePineOptions } from '../util';
 import type { BalenaRequestStreamResult } from 'balena-request';
 import type {
 	Dictionary,
 	ResolvableReturnType,
 	TypeOrDictionary,
 } from '../../typings/utils';
-import type { ResourceTagBase, ApplicationTag, Release } from '../types/models';
 import type {
-	InjectedDependenciesParam,
-	InjectedOptionsParam,
-	PineOptions,
-	PineTypedResult,
-} from '..';
+	ApplicationTag,
+	DeviceTag,
+	OrganizationMembershipTag,
+	Release,
+	ReleaseTag,
+} from '../types/models';
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { getAuthDependentMemoize } from '../util/cache';
 import { BalenaReleaseNotFound } from 'balena-errors';
+import type {
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
+
+type ResourceTagBase = Pick<
+	ApplicationTag['Read'] &
+		DeviceTag['Read'] &
+		OrganizationMembershipTag['Read'] &
+		ReleaseTag['Read'],
+	'id' | 'tag_key' | 'value'
+>;
 
 const RELEASE_POLICY_TAG_NAME = 'release-policy';
 const ESR_NEXT_TAG_NAME = 'esr-next';
@@ -69,15 +76,27 @@ const baseReleasePineOptions = {
 			$select: ['tag_key', 'value'],
 		},
 	},
-} satisfies PineOptions<Release>;
+} as const;
+type PickExpandedRelease = OptionsToResponse<
+	Release['Read'],
+	typeof baseReleasePineOptions,
+	undefined
+>[number];
 
-export interface OsVersion
-	extends PineTypedResult<Release, typeof baseReleasePineOptions> {
+type OsVersionProps = {
 	strippedVersion: string;
 	basedOnVersion?: string;
 	osType: string;
 	line?: OsLines;
-}
+};
+
+export type OsVersion = PickExpandedRelease & OsVersionProps;
+
+type OsVersionResponse<TP extends ODataOptionsWithoutCount<Release['Read']>> =
+	Array<
+		OptionsToResponse<Release['Read'], NonNullable<TP>, undefined>[number] &
+			OsVersionProps
+	>;
 
 export interface ImgConfigOptions {
 	network?: 'ethernet' | 'wifi';
@@ -142,7 +161,7 @@ const tagsToDictionary = (
 };
 
 const getOsAppTags = (
-	applicationTags: Array<Pick<ApplicationTag, 'tag_key' | 'value'>>,
+	applicationTags: Array<Pick<ApplicationTag['Read'], 'tag_key' | 'value'>>,
 ) => {
 	const tagMap = tagsToDictionary(applicationTags);
 	return {
@@ -156,7 +175,7 @@ const getOsAppTags = (
 type HostAppTagSet = ReturnType<typeof getOsAppTags>;
 // TODO: Drop this function & just use `release.phase` once we migrate our OS release process
 const getOsVersionReleaseLine = (
-	phase: Release['phase'],
+	phase: Release['Read']['phase'],
 	version: string,
 	appTags: HostAppTagSet,
 ) => {
@@ -215,7 +234,7 @@ const getOsModel = function (
 	type HostAppInfo = ResolvableReturnType<typeof _getOsVersions>[number];
 	const _getOsVersions = async (
 		deviceTypes: string[],
-		options?: PineOptions<Release>,
+		options: ODataOptionsWithoutCount<Release['Read']> = {},
 	) => {
 		return await pine.get({
 			resource: 'application',
@@ -228,7 +247,7 @@ const getOsModel = function (
 					is_for__device_type: {
 						$select: 'slug',
 					},
-					owns__release: mergePineOptionsTyped(baseReleasePineOptions, options),
+					owns__release: mergePineOptions(baseReleasePineOptions, options),
 				},
 				$filter: {
 					is_host: true,
@@ -340,19 +359,19 @@ const getOsModel = function (
 
 	const _getAllOsVersions = async (
 		deviceTypes: string[],
-		options: PineOptions<Release> | undefined,
+		options: ODataOptionsWithoutCount<Release['Read']> | undefined,
 		convenienceFilter: 'supported' | 'include_draft' | 'all',
 	): Promise<Dictionary<OsVersion[]>> => {
-		const extraFilterOptions =
-			convenienceFilter === 'supported' || convenienceFilter === 'include_draft'
-				? ({
-						$filter: {
-							...(convenienceFilter === 'supported' && { is_final: true }),
-							is_invalidated: false,
-							status: 'success',
-						},
-					} satisfies PineOptions<Release>)
-				: undefined;
+		const extraFilterOptions = {
+			...((convenienceFilter === 'supported' ||
+				convenienceFilter === 'include_draft') && {
+				$filter: {
+					...(convenienceFilter === 'supported' && { is_final: true }),
+					is_invalidated: false,
+					status: 'success',
+				},
+			}),
+		};
 
 		const finalOptions =
 			options != null
@@ -382,16 +401,19 @@ const getOsModel = function (
 	): Promise<Dictionary<OsVersion[]>>;
 	// We define the includeDraft-only overloads separately in order to avoid,
 	// "Expression produces a union type that is too complex to represent." errors.
-	async function getAvailableOsVersions<TP extends PineOptions<Release>>(
+	async function getAvailableOsVersions<
+		TP extends ODataOptionsWithoutCount<Release['Read']>,
+	>(
 		deviceType: string,
 		options: TP & { includeDraft?: boolean },
-	): Promise<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>;
-	async function getAvailableOsVersions<TP extends PineOptions<Release>>(
+	): Promise<OsVersionResponse<TP>>;
+
+	async function getAvailableOsVersions<
+		TP extends ODataOptionsWithoutCount<Release['Read']>,
+	>(
 		deviceTypes: string[],
 		options: TP & { includeDraft?: boolean },
-	): Promise<
-		Dictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>
-	>;
+	): Promise<Dictionary<OsVersionResponse<TP>>>;
 	/**
 	 * @summary Get the supported OS versions for the provided device type(s)
 	 * @name getAvailableOsVersions
@@ -413,14 +435,14 @@ const getOsModel = function (
 	 * balena.models.os.getAvailableOsVersions(['fincm3', 'raspberrypi3']);
 	 */
 	async function getAvailableOsVersions<
-		TP extends PineOptions<Release> | undefined,
+		TP extends ODataOptionsWithoutCount<Release['Read']>,
 	>(
 		deviceTypes: string[] | string,
 		// TODO: Consider providing a different way to for specifying includeDraft in the next major
 		// eg: make a methods that returns the complex filter
 		options?: TP & { includeDraft?: boolean },
 	): Promise<
-		TypeOrDictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>
+		TypeOrDictionary<OsVersion[] | OsVersionResponse<NonNullable<TP>>>
 	> {
 		const pineOptionEntries =
 			options != null
@@ -436,29 +458,41 @@ const getOsModel = function (
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
 		const convenienceFilter =
 			options?.includeDraft === true ? 'include_draft' : 'supported';
-		const versionsByDt = (
+		const versionsByDt =
 			pineOptions == null
 				? await _memoizedGetAllOsVersions(
 						deviceTypes.slice().sort(),
 						convenienceFilter,
 					)
-				: await _getAllOsVersions(deviceTypes, pineOptions, convenienceFilter)
-		) as Dictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>;
+				: await _getAllOsVersions(deviceTypes, pineOptions, convenienceFilter);
+
 		return singleDeviceTypeArg
 			? (versionsByDt[singleDeviceTypeArg] ?? [])
 			: versionsByDt;
 	}
 
-	async function getAllOsVersions<TP extends PineOptions<Release> | undefined>(
+	async function getAllOsVersions(
+		deviceType: string,
+		options?: undefined,
+	): Promise<OsVersion[]>;
+
+	async function getAllOsVersions(
+		deviceType: string[],
+		options?: undefined,
+	): Promise<Dictionary<OsVersion[]>>;
+
+	async function getAllOsVersions<
+		TP extends ODataOptionsWithoutCount<Release['Read']>,
+	>(
 		deviceType: string,
 		options?: TP,
-	): Promise<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>;
-	async function getAllOsVersions<TP extends PineOptions<Release> | undefined>(
+	): Promise<OsVersionResponse<NonNullable<TP>>>;
+	async function getAllOsVersions<
+		TP extends ODataOptionsWithoutCount<Release['Read']>,
+	>(
 		deviceTypes: string[],
 		options?: TP,
-	): Promise<
-		Dictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>
-	>;
+	): Promise<Dictionary<OsVersionResponse<NonNullable<TP>>>>;
 	/**
 	 * @summary Get all OS versions for the provided device type(s), inlcuding invalidated ones
 	 * @name getAllOsVersions
@@ -481,20 +515,21 @@ const getOsModel = function (
 	 * @example
 	 * balena.models.os.getAllOsVersions(['fincm3', 'raspberrypi3'], { $filter: { is_invalidated: false } });
 	 */
-	async function getAllOsVersions<TP extends PineOptions<Release> | undefined>(
+	async function getAllOsVersions<
+		TP extends ODataOptionsWithoutCount<Release['Read']>,
+	>(
 		deviceTypes: string[] | string,
 		options?: TP,
 	): Promise<
-		TypeOrDictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>
+		TypeOrDictionary<OsVersionResponse<NonNullable<TP>> | OsVersion[]>
 	> {
 		const singleDeviceTypeArg =
 			typeof deviceTypes === 'string' ? deviceTypes : false;
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
-		const versionsByDt = (
+		const versionsByDt =
 			options == null
 				? await _memoizedGetAllOsVersions(deviceTypes.slice().sort(), 'all')
-				: await _getAllOsVersions(deviceTypes, options, 'all')
-		) as Dictionary<Array<ExtendedPineTypedResult<Release, OsVersion, TP>>>;
+				: await _getAllOsVersions(deviceTypes, options, 'all');
 		return singleDeviceTypeArg
 			? (versionsByDt[singleDeviceTypeArg] ?? [])
 			: versionsByDt;
@@ -1000,22 +1035,14 @@ const getOsModel = function (
 	 * );
 	 */
 	const getSupervisorReleasesForCpuArchitecture = async <
-		TP extends PineOptions<Release> | undefined,
+		T extends ODataOptionsWithoutCount<Release['Read']>,
 	>(
 		cpuArchitectureSlugOrId: string | number,
-		options?: TP,
-	): Promise<
-		Array<
-			ExtendedPineTypedResult<
-				Release,
-				Pick<Release, 'id' | 'raw_version' | 'known_issue_list'>,
-				TP
-			>
-		>
-	> => {
+		options?: T,
+	) => {
 		const results = await pine.get({
 			resource: 'release',
-			options: mergePineOptionsTyped(
+			options: mergePineOptions(
 				{
 					$select: ['id', 'raw_version', 'known_issue_list'],
 					$filter: {
@@ -1072,13 +1099,7 @@ const getOsModel = function (
 			),
 		});
 
-		return results as Array<
-			ExtendedPineTypedResult<
-				Release,
-				Pick<Release, 'id' | 'raw_version' | 'known_issue_list'>,
-				TP
-			>
-		>;
+		return results;
 	};
 
 	return {
