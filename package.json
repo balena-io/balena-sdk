@@ -71,6 +71,7 @@
     "@types/memoizee": "^0.4.12",
     "@types/mocha": "^10.0.1",
     "@types/ndjson": "^2.0.0",
+    "@types/p-limit": "^2.1.0",
     "@types/sinon": "^17.0.3",
     "balena-config-karma": "^4.0.0",
     "browserify": "^17.0.0",
@@ -131,6 +132,7 @@
     "lodash": "^4.17.21",
     "memoizee": "^0.4.15",
     "ndjson": "^2.0.0",
+    "p-limit": "^3.1.0",
     "p-throttle": "^4.1.1",
     "pinejs-client-core": "^8.3.0",
     "tslib": "^2.1.0"

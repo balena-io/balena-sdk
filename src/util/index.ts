@@ -209,7 +209,7 @@ export type MergePineOptions<
 	TDefault extends Readonly<ODataOptionsWithoutCount<R>>,
 	TExtra extends Readonly<ODataOptionsWithoutCount<R>>,
 > = {
-	[K in Extract<keyof (TDefault & TExtra), ExtraKeys>]: K extends '$select'
+	[K in Extract<keyof TDefault | keyof TExtra, ExtraKeys>]: K extends '$select'
 		? MergeSelect<R, TDefault, TExtra>
 		: K extends '$top' | '$skip' | '$orderby'
 			? OverrideProp<TDefault, TExtra, K>
