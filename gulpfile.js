@@ -78,6 +78,8 @@ gulp.task('pack-browser', function () {
 		.exclude('fs')
 		.exclude('path')
 		.exclude('balena-settings-client')
+		.exclude('mime')
+		.exclude('fs/promises')
 		.bundle();
 
 	return bundle

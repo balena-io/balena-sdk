@@ -844,6 +844,8 @@ export interface Release {
 			| null;
 		release__has__tag_key?: Array<ReleaseTag['Read']>;
 		release_tag?: Array<ReleaseTag['Read']>;
+		release__has__asset_key?: Array<ReleaseAsset['Read']>;
+		release_asset?: Array<ReleaseAsset['Read']>;
 		image__is_part_of__release?: Array<ImageIsPartOfRelease['Read']>;
 		release_image?: Array<ImageIsPartOfRelease['Read']>;
 		contains__image?: Array<ImageIsPartOfRelease['Read']>;
@@ -1014,6 +1016,20 @@ export interface DeviceTypeAlias {
 		id: Types['Integer']['Read'];
 	};
 	Write: Record<string, never>;
+}
+
+export interface ReleaseAsset {
+	Read: {
+		release: { __id: Release['Read']['id'] } | [Release['Read']];
+		asset_key: Types['Short Text']['Read'];
+		id: Types['Integer']['Read'];
+		asset: Types['WebResource']['Read'] | null;
+	};
+	Write: {
+		release: Types['Integer']['Write'];
+		asset_key: Types['Short Text']['Write'];
+		asset: Types['WebResource']['Write'] | null;
+	};
 }
 
 export interface ApplicationMembershipRole {
@@ -1849,6 +1865,7 @@ export default interface $Model {
 	user__is_member_of__organization: OrganizationMembership;
 	user__has__public_key: UserHasPublicKey;
 	device_type__is_referenced_by__alias: DeviceTypeAlias;
+	release__has__asset_key: ReleaseAsset;
 	application_membership_role: ApplicationMembershipRole;
 	credit_bundle: CreditBundle;
 	delta: Delta;
@@ -1909,6 +1926,7 @@ export default interface $Model {
 	organization_membership: OrganizationMembership;
 	user_public_key: UserHasPublicKey;
 	device_type_alias: DeviceTypeAlias;
+	release_asset: ReleaseAsset;
 	team_application_access: TeamApplicationAccess;
 	team_membership: TeamMembership;
 	user_application_membership: UserIsMemberOfApplication;

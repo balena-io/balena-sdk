@@ -655,6 +655,8 @@ type ReleaseExpandablePropsExpectation =
 	| 'should_operate__device'
 	| 'should_manage__device'
 	| 'provides__device__installs__image'
+	| 'release_asset'
+	| 'release__has__asset_key'
 	| 'provides__image_install';
 
 // @ts-expect-error test case

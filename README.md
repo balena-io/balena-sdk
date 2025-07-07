@@ -40,6 +40,8 @@ In the browser the balena SDK doesn't use the following dependencies:
 * path
 * balena-settings-client
 * node-localstorage
+* fs/promises
+* mime
 
 For the future we're looking at ways to automatically exclude these in downstream bundles. See [#254](https://github.com/balena-io/balena-sdk/issues/254) for more information.
 
