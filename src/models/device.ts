@@ -105,8 +105,9 @@ export type DeviceMetrics = Pick<
 >;
 
 const DEFAULT_DAYS_OF_REQUESTED_HISTORY = 7;
-const SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION = 'vTODO';
-const SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION_ESR = 'vTODO-ESR';
+import { globalEnv } from '../util/global-env';
+const DEFAULT_SUPERVISOR_HUP_MIN_OS_VERSION = '999.1.1';
+const SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION_ESR = '2099.1.1';
 
 const getDeviceModel = function (
 	deps: InjectedDependenciesParam,
@@ -358,6 +359,13 @@ const getDeviceModel = function (
 				}),
 			{ primitive: true, promise: true },
 		);
+		const supervisorHupMinOsVersion =
+			globalEnv['SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION'] ??
+			DEFAULT_SUPERVISOR_HUP_MIN_OS_VERSION;
+		console.log(`Using targetOsVersion: ${targetOsVersion}`);
+		console.log(
+			`Using supervisorHupMinOsVersion: ${supervisorHupMinOsVersion}`,
+		);
 
 		const osUpdateHelper = await getOsUpdateHelper();
 
@@ -391,6 +399,7 @@ const getDeviceModel = function (
 							is_of__device_type: [dt],
 						},
 						targetOsVersion,
+						supervisorHupMinOsVersion,
 					);
 
 					// Validate target OS version is available for the device type.
@@ -409,13 +418,10 @@ const getDeviceModel = function (
 					}
 
 					// Mark device to skip action proxy based HUP
-					// if target OS version >= SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION
+					// if target OS version >= supervisorHupMinOsVersion
 					if (
 						// Non-ESR comparison
-						bSemver.compare(
-							targetOsVersion,
-							SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION,
-						) >= 0 ||
+						bSemver.compare(targetOsVersion, supervisorHupMinOsVersion) >= 0 ||
 						// ESR comparison
 						bSemver.compare(
 							targetOsVersion,
@@ -423,11 +429,16 @@ const getDeviceModel = function (
 						) >= 0
 					) {
 						toPinOSRelease.set(device.uuid, targetRelease.id);
+						console.log(
+							`Will pin device: ${device.uuid} to target: ${targetRelease.id}`,
+						);
+					} else {
+						console.log(`Will not pin device: ${device.uuid}`);
 					}
 				}
 
 				// Trigger OS update via actions proxy, or pin device to target OS release
-				// if current OS version >= SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION
+				// if current OS version >= supervisorHupMinOsVersion
 				await limitedMap(devices, async (device) => {
 					const targetReleaseId = toPinOSRelease.get(device.uuid);
 					if (targetReleaseId) {
@@ -439,12 +450,19 @@ const getDeviceModel = function (
 								should_be_operated_by__release: targetReleaseId,
 							},
 						});
+						console.log(
+							`Pinned device: ${device.id} to release: ${targetReleaseId}`,
+						);
 
+						// Must use 'triggered' for compatibility with actions proxy
 						results[device.uuid] = {
-							status: 'pinned',
+							status: 'triggered',
 						};
 					} else {
 						// Use actions proxy for HUP
+						console.log(
+							`About to startOsUpdate for device: ${device.uuid} to version: ${targetOsVersion}`,
+						);
 						results[device.uuid] = await osUpdateHelper.startOsUpdate(
 							device.uuid,
 							targetOsVersion,
@@ -452,6 +470,9 @@ const getDeviceModel = function (
 							options.runDetached === true ? 'v2' : 'v1',
 						);
 					}
+					console.log(
+						`Result for device: ${device.uuid} is: ${JSON.stringify(results[device.uuid])}`,
+					);
 				});
 			},
 		});
@@ -2228,6 +2249,7 @@ const getDeviceModel = function (
 				is_of__device_type: [Pick<DeviceType, 'slug'>];
 			},
 			targetOsVersion: string,
+			supervisorHupMinOsVersion: string,
 		): string {
 			if (!uuid) {
 				throw new Error('The uuid of the device is not available');
@@ -2265,13 +2287,11 @@ const getDeviceModel = function (
 			}
 
 			// If the os_version couldn't be parsed, rely on getHUPActionType to
-			// throw an error if <SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION.
+			// throw an error if < supervisorHupMinOsVersion.
 			// Otherwise, just continue as as we should allow pinning from an
 			// invalid current OS version to a valid target OS version (assuming
 			// target OS version is valid).
-			if (
-				!bSemver.gte(currentOsVersion, SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION)
-			) {
+			if (!bSemver.gte(currentOsVersion, supervisorHupMinOsVersion)) {
 				// It only matters that the device is online if we're
 				// HUP-ing using the actions proxy which requires a
 				// connection to the device.

@@ -5,6 +5,7 @@ let globalEnv: typeof global & {
 	BALENA_SDK_SHARED_OPTIONS?: SdkOptions;
 	BALENA_SDK_HAS_USED_SHARED_OPTIONS?: boolean;
 	BALENA_SDK_HAS_SET_SHARED_OPTIONS?: boolean;
+	SUPERVISOR_MANAGED_HUP_MIN_OS_VERSION?: string;
 };
 // Use window (web)/self (web worker)/global (node) as appropriate
 if (typeof window !== 'undefined') {

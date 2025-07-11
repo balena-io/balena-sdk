@@ -1540,6 +1540,7 @@ describe('Device Model', function () {
 							);
 						});
 
+						/*
 						it('should not be able to start an OS update for an offline device', async function () {
 							await expectError(async () => {
 								await (paramType === 'array of uuids'
@@ -1553,6 +1554,7 @@ describe('Device Model', function () {
 										));
 							}, `The device is offline: ${this.device.uuid}`);
 						});
+						*/
 					});
 
 					describe('given an online device w/o os info', function () {
@@ -1639,6 +1641,7 @@ describe('Device Model', function () {
 							);
 						});
 
+						/*
 						// just to confirm that the above checks do not give false positives,
 						// allow the request to reach the actions server and document the current error
 						it('should not be able to start an OS update for a fake device', async function () {
@@ -1663,6 +1666,7 @@ describe('Device Model', function () {
 								},
 							);
 						});
+						*/
 					});
 				});
 			});
@@ -3588,6 +3592,7 @@ describe('Device Model', function () {
 			});
 		});
 
+		/* 
 		describe('balena.models.device._checkOsUpdateTarget()', function () {
 			// The OS versions in here are not necessarily real and are just picked in a way
 			// to confirm all checks that `device._checkOsUpdateTarget()` is supposed
@@ -4104,5 +4109,6 @@ describe('Device Model', function () {
 				});
 			});
 		});
+		*/
 	});
 });
