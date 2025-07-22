@@ -13,10 +13,10 @@ import type * as BalenaSdk from '../../..';
 import { assertDeepMatchAndLength, expectError, timeSuite } from '../../util';
 
 const keyAlternatives = [
-	['id', (member: BalenaSdk.ApplicationMembership) => member.id],
+	['id', (member: BalenaSdk.UserIsMemberOfApplication['Read']) => member.id],
 	[
 		'alternate key',
-		(member: BalenaSdk.ApplicationMembership) =>
+		(member: BalenaSdk.UserIsMemberOfApplication['Read']) =>
 			_.mapValues(
 				_.pick(member, ['user', 'is_member_of__application']),
 				(obj: BalenaSdk.PineDeferred | [{ id: number }]): number =>
@@ -66,7 +66,6 @@ describe('Application Membership Model', function () {
 						await balena.models.application.membership.create({
 							application: ctx.application.id,
 							username: credentials.member.username,
-							// @ts-expect-error we are passing an invalid value
 							roleName: 'unknown role',
 						});
 					},
@@ -109,7 +108,7 @@ describe('Application Membership Model', function () {
 		});
 
 		describe('[mutating operations]', function () {
-			let membership: BalenaSdk.ApplicationMembership | undefined;
+			let membership: BalenaSdk.UserIsMemberOfApplication['Read'] | undefined;
 			afterEach(async function () {
 				await balena.models.application.membership.remove(membership!.id);
 			});
@@ -157,7 +156,7 @@ describe('Application Membership Model', function () {
 	});
 
 	describe('given a member application membership [contained scenario]', function () {
-		let membership: BalenaSdk.ApplicationMembership | undefined;
+		let membership: BalenaSdk.UserIsMemberOfApplication['Read'] | undefined;
 		beforeEach(async function () {
 			membership = await balena.models.application.membership.create({
 				application: this.application.id,
@@ -180,7 +179,7 @@ describe('Application Membership Model', function () {
 	});
 
 	describe('given a developer application membership [contained scenario]', function () {
-		let membership: BalenaSdk.ApplicationMembership | undefined;
+		let membership: BalenaSdk.UserIsMemberOfApplication['Read'] | undefined;
 		before(async function () {
 			membership = await balena.models.application.membership.create({
 				application: this.application.id,
@@ -211,14 +210,14 @@ describe('Application Membership Model', function () {
 			});
 
 			const roleChangeTest = (
-				rolenName: BalenaSdk.ApplicationMembershipRoles,
+				rolenName: string,
 				[title, keyGetter]: (typeof keyAlternatives)[number],
 			) => {
 				it(`should be able to change an application membership to "${rolenName}" by ${title}`, async function () {
 					const key = keyGetter(membership!);
 					await balena.models.application.membership.changeRole(key, rolenName);
 
-					membership = await balena.models.application.membership.get(
+					membership = (await balena.models.application.membership.get(
 						membership!.id,
 						{
 							$select: 'id',
@@ -234,7 +233,7 @@ describe('Application Membership Model', function () {
 								},
 							},
 						},
-					);
+					)) as BalenaSdk.UserIsMemberOfApplication['Read'];
 					expect(membership).to.have.nested.property('user[0].id');
 					expect(membership).to.have.nested.property(
 						'user[0].username',
@@ -269,7 +268,7 @@ describe('Application Membership Model', function () {
 	});
 
 	describe('given a membership [read operations]', function () {
-		let membership: BalenaSdk.ApplicationMembership | undefined;
+		let membership: BalenaSdk.UserIsMemberOfApplication['Read'] | undefined;
 		before(async function () {
 			ctx.username = credentials.member.username;
 			membership = await balena.models.application.membership.create({

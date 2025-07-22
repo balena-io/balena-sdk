@@ -2,7 +2,8 @@ import 'chai-samsam';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import { balena } from './integration/setup';
-import type * as BalenaSdk from '..';
+import type { Params } from 'pinejs-client-core';
+import type { BalenaModel } from '../es2017';
 
 export function assertExists(v: unknown): asserts v is NonNullable<typeof v> {
 	expect(v).to.exist;
@@ -53,8 +54,10 @@ export const assertDeepMatchAndLength = (a: unknown[], b: unknown[]) => {
 	expect(a).to.have.lengthOf(b.length);
 };
 
-export const describeExpandAssertions = <T extends object>(
-	params: BalenaSdk.PineParams<T>,
+export const describeExpandAssertions = <
+	T extends BalenaModel[keyof BalenaModel],
+>(
+	params: Params<T>,
 ) => {
 	const expand = params.options?.$expand;
 	if (expand == null) {
@@ -65,7 +68,9 @@ export const describeExpandAssertions = <T extends object>(
 	parallel(`expanding from ${params.resource}`, function () {
 		Object.keys(expand).forEach((key) => {
 			it(`should succeed to expand property ${key}`, async function () {
-				const [result] = await balena.pine.get<T>({
+				// @ts-expect-error - this typing is actually incomplete
+				// runtime errors will happen if params has an id or options has $count
+				const [result] = await balena.pine.get({
 					...params,
 					options: {
 						$select: 'id',
@@ -77,7 +82,8 @@ export const describeExpandAssertions = <T extends object>(
 							},
 						},
 					},
-				} as typeof params);
+				} as Omit<Params<T>, 'resource'> & { resource: keyof BalenaModel });
+
 				if (result) {
 					expect(result).to.have.property(key).that.is.an('array');
 				}

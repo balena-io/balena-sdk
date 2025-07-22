@@ -2,11 +2,10 @@ import * as errors from 'balena-errors';
 import chunk from 'lodash/chunk';
 import { groupByMap, mergePineOptions } from '.';
 import type {
-	PineOptionsStrict,
-	PineSelectableProps,
-	PineTypedResult,
-	PineFilter,
-} from '..';
+	ExpandableStringKeyOf,
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
 
 const NUMERIC_ID_CHUNK_SIZE = 200;
 const STRING_ID_CHUNK_SIZE = 50;
@@ -24,7 +23,7 @@ export function batchResourceOperationFactory<
 	AmbiguousResourceError,
 	chunkSize: chunkSizeParam,
 }: {
-	getAll: (options?: PineOptionsStrict<T>) => Promise<T[]>;
+	getAll: (options: ODataOptionsWithoutCount<T>) => Promise<T[]>;
 	NotFoundError: new (id: string | number) => Error;
 	AmbiguousResourceError: new (id: string | number) => Error;
 	chunkSize?: number | Partial<ChunkSizeOptions>;
@@ -40,13 +39,15 @@ export function batchResourceOperationFactory<
 					stringId: chunkSizeParam?.stringId ?? STRING_ID_CHUNK_SIZE,
 				};
 
-	type Item<TOpts> = {
-		id: number;
-		uuid: string;
-	} & (TOpts extends PineOptionsStrict<T> ? PineTypedResult<T, TOpts> : object);
+	type Item<TOpts extends ODataOptionsWithoutCount<T>> =
+		// We always $select the id
+		Pick<T, 'id'> &
+			// but we might or might not $select the uuid
+			Partial<Pick<T, 'uuid'>> &
+			NonNullable<OptionsToResponse<T, TOpts, number | string>>;
 
 	async function batchResourceOperation<
-		TOpts extends PineOptionsStrict<T>,
+		TOpts extends ODataOptionsWithoutCount<T>,
 	>(options: {
 		uuidOrIdOrArray: number | number[] | string | string[];
 		parameterName?: string;
@@ -55,15 +56,17 @@ export function batchResourceOperationFactory<
 		fn: (items: Array<Item<TOpts>>) => Promise<void>;
 	}): Promise<void>;
 	async function batchResourceOperation<
-		TOpts extends PineOptionsStrict<T>,
+		TOpts extends ODataOptionsWithoutCount<T>,
 	>(options: {
 		uuidOrIdOrArray: number | number[] | string | string[];
 		parameterName?: string;
 		options?: TOpts;
-		groupByNavigationPoperty: PineSelectableProps<T>;
+		groupByNavigationPoperty: ExpandableStringKeyOf<T>;
 		fn: (items: Array<Item<TOpts>>, ownerId: number) => Promise<void>;
 	}): Promise<void>;
-	async function batchResourceOperation<TOpts extends PineOptionsStrict<T>>({
+	async function batchResourceOperation<
+		TOpts extends ODataOptionsWithoutCount<T>,
+	>({
 		uuidOrIdOrArray,
 		parameterName = 'uuidOrIdOrArray',
 		options,
@@ -73,7 +76,7 @@ export function batchResourceOperationFactory<
 		uuidOrIdOrArray: number | number[] | string | string[];
 		parameterName?: string;
 		options?: TOpts;
-		groupByNavigationPoperty?: PineSelectableProps<T>;
+		groupByNavigationPoperty?: ExpandableStringKeyOf<T>;
 		fn:
 			| ((items: Array<Item<TOpts>>) => Promise<void>)
 			| ((items: Array<Item<TOpts>>, ownerId: number) => Promise<void>);
@@ -132,41 +135,40 @@ export function batchResourceOperationFactory<
 		const items: Array<
 			Item<TOpts> &
 				Partial<{
-					[groupByNavigationPoperty: string]: { __id: number };
+					// OptionalNavigationResource
+					[groupByNavigationPoperty: string]: { __id: number } | null;
 				}>
 		> = [];
 		for (const uuidOrIdOrArrayChunk of chunks) {
-			const resourceFilter: PineFilter<{ id: number; uuid: string }> =
-				Array.isArray(uuidOrIdOrArrayChunk)
-					? typeof uuidOrIdOrArrayChunk[0] === 'string'
-						? {
-								uuid: { $in: uuidOrIdOrArrayChunk as string[] },
-							}
-						: {
-								id: { $in: uuidOrIdOrArrayChunk as number[] },
-							}
-					: typeof uuidOrIdOrArrayChunk === 'string'
-						? {
-								uuid: { $startswith: uuidOrIdOrArrayChunk },
-							}
-						: {
-								id: uuidOrIdOrArrayChunk,
-							};
+			const resourceFilter = Array.isArray(uuidOrIdOrArrayChunk)
+				? typeof uuidOrIdOrArrayChunk[0] === 'string'
+					? ({
+							uuid: { $in: uuidOrIdOrArrayChunk as string[] },
+						} as const)
+					: ({
+							id: { $in: uuidOrIdOrArrayChunk as number[] },
+						} as const)
+				: typeof uuidOrIdOrArrayChunk === 'string'
+					? ({
+							uuid: { $startswith: uuidOrIdOrArrayChunk },
+						} as const)
+					: ({
+							id: uuidOrIdOrArrayChunk,
+						} as const);
 			const combinedOptions = mergePineOptions(
 				{
 					$select: [
 						'id',
 						...(Array.isArray(uuidOrIdOrArrayChunk) &&
 						typeof uuidOrIdOrArrayChunk[0] === 'string'
-							? ['uuid']
+							? (['uuid'] as const)
 							: []),
 						...(groupByNavigationPoperty ? [groupByNavigationPoperty] : []),
-					] as Array<PineSelectableProps<T>>,
-					$filter: resourceFilter as PineFilter<T>,
+					],
+					$filter: resourceFilter,
 				},
 				options,
-			) as PineOptionsStrict<T>;
-
+			);
 			items.push(...((await getAll(combinedOptions)) as typeof items));
 		}
 

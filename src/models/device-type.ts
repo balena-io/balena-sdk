@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { InjectedDependenciesParam, PineOptions } from '..';
+import type { InjectedDependenciesParam } from '..';
 import type { DeviceType } from '../types/models';
 import type { Partials, Contract } from '../types/contract';
 import { mergePineOptions } from '../util';
@@ -27,6 +27,10 @@ import {
 	aliases as contractAliases,
 	BalenaOS as BalenaOsContract,
 } from './balenaos-contract';
+import type {
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
 
 const handlebarsRuntimeOptions = {
 	helpers: {
@@ -146,17 +150,17 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * 	console.log('resolved alias:', deviceType);
 		 * });
 		 */
-		async get(
+		async get<T extends ODataOptionsWithoutCount<DeviceType['Read']>>(
 			idOrSlug: number | string,
-			options?: PineOptions<DeviceType>,
-		): Promise<DeviceType> {
-			options ??= {};
-
+			options?: T,
+		) {
 			if (idOrSlug == null) {
 				throw new errors.BalenaInvalidDeviceType(idOrSlug);
 			}
 
-			let deviceType: DeviceType | undefined;
+			let deviceType:
+				| OptionsToResponse<DeviceType['Read'], T, undefined>[number]
+				| undefined;
 			if (typeof idOrSlug === 'string') {
 				deviceType = (
 					await exports.getAll(
@@ -177,7 +181,7 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 								},
 							},
 							options,
-						),
+						) as T,
 					)
 				)[0];
 			} else {
@@ -218,14 +222,13 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * 	console.log(deviceTypes);
 		 * })
 		 */
-		async getAll(options?: PineOptions<DeviceType>): Promise<DeviceType[]> {
-			options ??= {};
-			const deviceTypes = await pine.get({
+		async getAll<T extends ODataOptionsWithoutCount<DeviceType['Read']>>(
+			options?: T,
+		) {
+			return await pine.get({
 				resource: 'device_type',
-				options: mergePineOptions({ $orderby: { name: 'asc' } }, options),
+				options: mergePineOptions({ $orderby: { name: 'asc' } }, options) as T,
 			});
-
-			return deviceTypes;
 		},
 
 		/**
@@ -252,10 +255,9 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * 	console.log(deviceTypes);
 		 * })
 		 */
-		async getAllSupported(
-			options?: PineOptions<DeviceType>,
-		): Promise<DeviceType[]> {
-			options ??= {};
+		async getAllSupported<
+			T extends ODataOptionsWithoutCount<DeviceType['Read']>,
+		>(options?: T) {
 			const deviceTypes = await exports.getAll(
 				mergePineOptions(
 					{
@@ -308,11 +310,12 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * 	console.log(deviceType);
 		 * });
 		 */
-		getBySlugOrName: async (
+		getBySlugOrName: async <
+			T extends ODataOptionsWithoutCount<DeviceType['Read']>,
+		>(
 			slugOrName: string,
-			options?: PineOptions<DeviceType>,
-		): Promise<DeviceType> => {
-			options ??= {};
+			options?: T,
+		) => {
 			const [deviceType] = await exports.getAll(
 				mergePineOptions(
 					{
@@ -320,7 +323,7 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 						$filter: { $or: { name: slugOrName, slug: slugOrName } },
 					},
 					options,
-				),
+				) as T,
 			);
 			if (deviceType == null) {
 				throw new errors.BalenaInvalidDeviceType(slugOrName);
@@ -404,7 +407,9 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 					`Could not find contract for device type ${deviceTypeSlug}`,
 				);
 			}
-			return interpolatedPartials(contract);
+			// @ts-expect-error - parsed contract will be a Contract
+			const $contract = contract as Contract;
+			return interpolatedPartials($contract);
 		},
 
 		/**
@@ -432,23 +437,36 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 * });
 		 */
 		getInstructions: async (
-			deviceTypeSlugOrContract: string | Contract,
+			deviceTypeSlugOrContract:
+				| string
+				| Contract
+				| NonNullable<DeviceType['Read']['contract']>,
 		): Promise<Record<'Linux' | 'MacOS' | 'Windows', string[]> | string[]> => {
-			let contract: DeviceType['contract'];
+			if (Array.isArray(deviceTypeSlugOrContract)) {
+				throw new errors.BalenaInvalidParameterError(
+					'deviceTypeSlugOrContract',
+					deviceTypeSlugOrContract,
+				);
+			}
+			let contract: Contract | null;
 			if (typeof deviceTypeSlugOrContract === 'string') {
-				({ contract } = await exports.getBySlugOrName(
+				const { contract: $contract } = await exports.getBySlugOrName(
 					deviceTypeSlugOrContract,
 					{
 						$select: 'contract',
 					},
-				));
+				);
+
+				// @ts-expect-error - parsed contract will be a Contract
+				contract = $contract as Contract;
+
 				if (!contract?.partials) {
 					throw new Error(
 						`Instruction partials not defined for ${deviceTypeSlugOrContract}`,
 					);
 				}
 			} else {
-				contract = deviceTypeSlugOrContract;
+				contract = deviceTypeSlugOrContract as Contract;
 			}
 			return getInstructionsFromContract(contract)!;
 		},
@@ -473,10 +491,15 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		getInstallMethod: async (
 			deviceTypeSlug: string,
 		): Promise<string | null> => {
-			const { contract } = await exports.getBySlugOrName(deviceTypeSlug, {
-				$select: 'contract',
-			});
-			if (contract) {
+			const { contract: $contract } = await exports.getBySlugOrName(
+				deviceTypeSlug,
+				{
+					$select: 'contract',
+				},
+			);
+			if ($contract) {
+				// @ts-expect-error - parsed contract will be a Contract
+				const contract = $contract as Contract;
 				return calculateInstallMethod(contract);
 			} else {
 				return null;

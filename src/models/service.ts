@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+	 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,9 +15,10 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import type { PineOptions, InjectedDependenciesParam } from '..';
+import type { InjectedDependenciesParam } from '..';
 import type { Service, ServiceEnvironmentVariable } from '../types/models';
 import { mergePineOptions } from '../util';
+import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
 
 const getServiceModel = ({
 	pine,
@@ -28,7 +29,7 @@ const getServiceModel = ({
 		// eslint-disable-next-line @typescript-eslint/no-require-imports
 		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
 
-	const varModel = buildDependentResource<ServiceEnvironmentVariable>(
+	const varModel = buildDependentResource(
 		{ pine },
 		{
 			resourceName: 'service_environment_variable',
@@ -78,7 +79,10 @@ const getServiceModel = ({
 
 	// Not exported for now, but we could document & export it in the future
 	// if there are external use cases for this.
-	const get = async (id: number, options: PineOptions<Service> = {}) => {
+	const get = async <T extends ODataOptionsWithoutCount<Service['Read']>>(
+		id: number,
+		options?: T,
+	) => {
 		const service = await pine.get({
 			resource: 'service',
 			id,
@@ -90,10 +94,9 @@ const getServiceModel = ({
 		return service;
 	};
 
-	async function getAllByApplication(
-		slugOrUuidOrId: string | number,
-		options: PineOptions<Service> = {},
-	): Promise<Service[]> {
+	async function getAllByApplication<
+		T extends ODataOptionsWithoutCount<Service['Read']>,
+	>(slugOrUuidOrId: string | number, options: T = {} as T) {
 		const { service } = await sdkInstance.models.application.get(
 			slugOrUuidOrId,
 			{
@@ -103,7 +106,7 @@ const getServiceModel = ({
 				},
 			},
 		);
-		return service!;
+		return service;
 	}
 
 	const exports = {
@@ -182,10 +185,9 @@ const getServiceModel = ({
 			 * 	console.log(vars);
 			 * });
 			 */
-			async getAllByApplication(
-				slugOrUuidOrId: string | number,
-				options: PineOptions<ServiceEnvironmentVariable> = {},
-			): Promise<ServiceEnvironmentVariable[]> {
+			async getAllByApplication<
+				T extends ODataOptionsWithoutCount<ServiceEnvironmentVariable['Read']>,
+			>(slugOrUuidOrId: string | number, options?: T) {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{

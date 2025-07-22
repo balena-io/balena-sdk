@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import { balena, givenLoggedInUser } from '../setup';
 import { assertExists, timeSuite } from '../../util';
+import type { Contract } from '../../../es2017';
 
 const RPI2_DEVICE_TYPE_NAME = 'Raspberry Pi 2';
 const RPI2_DEVICE_TYPE_SLUG = 'raspberry-pi2';
@@ -159,7 +160,10 @@ describe('Device Type model', function () {
 					{ $select: 'contract' },
 				);
 				assertExists(contract);
-				const result = await balena.models.deviceType.getInstructions(contract);
+				// @ts-expect-error - parsed contract will be a Contract
+				const $contract = contract as Contract;
+				const result =
+					await balena.models.deviceType.getInstructions($contract);
 				expect(result).to.be.an('Array');
 				expect(result).to.not.have.length(0);
 				expect(result).to.eql(instructions);
@@ -175,7 +179,8 @@ describe('Device Type model', function () {
 					return;
 				}
 				const instructions = await balena.models.deviceType.getInstructions(
-					dt.contract,
+					// @ts-expect-error - parsed contract will be a Contract
+					dt.contract as Contract,
 				);
 				if (instructions == null) {
 					return;

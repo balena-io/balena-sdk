@@ -16,27 +16,27 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import once from 'lodash/once';
-import type * as BalenaSdk from '..';
-import type {
-	InjectedDependenciesParam,
-	InjectedOptionsParam,
-	PineTypedResult,
-} from '..';
+import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { isId, mergePineOptions } from '../util';
-import type { Application, ReleaseTag, Release, User } from '../types/models';
+import type { ReleaseTag, Release, User, Image } from '../types/models';
 import type { BuilderUrlDeployOptions } from '../util/builder';
+import type {
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
 
 export interface ReleaseRawVersionApplicationPair {
 	application: string | number;
 	rawVersion: string;
 }
 
-export interface ReleaseWithImageDetails extends Release {
+type ReleaseRead = Release['Read'];
+export interface ReleaseWithImageDetails extends ReleaseRead {
 	images: Array<{
 		id: number;
 		service_name: string;
 	}>;
-	user: Pick<User, 'id' | 'username'> | undefined;
+	user: Pick<User['Read'], 'id' | 'username'> | undefined;
 }
 
 const getReleaseModel = function (
@@ -58,7 +58,7 @@ const getReleaseModel = function (
 		return new BuilderHelper(deps, opts);
 	});
 
-	const tagsModel = buildDependentResource<ReleaseTag>(
+	const tagsModel = buildDependentResource(
 		{ pine },
 		{
 			resourceName: 'release_tag',
@@ -104,10 +104,10 @@ const getReleaseModel = function (
 	 * 	console.log(release);
 	 * });
 	 */
-	async function get(
+	async function get<T extends ODataOptionsWithoutCount<Release['Read']>>(
 		commitOrIdOrRawVersion: string | number | ReleaseRawVersionApplicationPair,
-		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
-	): Promise<BalenaSdk.Release> {
+		options?: T,
+	): Promise<OptionsToResponse<Release['Read'], T, undefined>[number]> {
 		if (commitOrIdOrRawVersion == null) {
 			throw new errors.BalenaReleaseNotFound(commitOrIdOrRawVersion);
 		}
@@ -122,7 +122,7 @@ const getReleaseModel = function (
 			const release = await pine.get({
 				resource: 'release',
 				id: commitOrIdOrRawVersion,
-				options: mergePineOptions({}, options),
+				options,
 			});
 			if (release == null) {
 				throw new errors.BalenaReleaseNotFound(commitOrIdOrRawVersion);
@@ -151,7 +151,7 @@ const getReleaseModel = function (
 						$filter,
 					},
 					options,
-				),
+				) as T,
 			});
 			if (releases.length === 0) {
 				throw new errors.BalenaReleaseNotFound(
@@ -213,40 +213,49 @@ const getReleaseModel = function (
 	 * 	console.log(release.images[0].build_log);
 	 * });
 	 */
-	async function getWithImageDetails(
+	async function getWithImageDetails<
+		R extends ODataOptionsWithoutCount<Release['Read']>,
+		I extends ODataOptionsWithoutCount<Image['Read']>,
+	>(
 		commitOrIdOrRawVersion: string | number | ReleaseRawVersionApplicationPair,
 		options: {
-			release?: BalenaSdk.PineOptions<BalenaSdk.Release>;
-			image?: BalenaSdk.PineOptions<BalenaSdk.Image>;
+			release?: R;
+			image?: I;
 		} = {},
-	): Promise<BalenaSdk.ReleaseWithImageDetails> {
+	) {
 		const baseImageOptions = {
-			$select: 'id',
+			$select: ['id'],
 			$expand: {
 				is_a_build_of__service: {
 					$select: 'service_name',
 				},
 			},
-		} satisfies BalenaSdk.PineOptions<BalenaSdk.Image>;
+		} as const;
 
 		const baseReleaseOptions = {
 			$expand: {
 				release_image: {
 					$expand: {
-						image: mergePineOptions(baseImageOptions, options.image),
+						image: mergePineOptions(
+							baseImageOptions,
+							options.image,
+						) as typeof baseImageOptions,
 					},
 				},
 				is_created_by__user: {
 					$select: ['id', 'username'],
 				},
 			},
-		} satisfies BalenaSdk.PineOptions<BalenaSdk.Release>;
+		} as const;
 
-		const rawRelease = (await get(
+		const rawRelease = await get(
 			commitOrIdOrRawVersion,
-			mergePineOptions(baseReleaseOptions, options.release),
-		)) as PineTypedResult<Release, typeof baseReleaseOptions>;
-		const release = rawRelease as BalenaSdk.ReleaseWithImageDetails;
+			mergePineOptions(
+				baseReleaseOptions,
+				options.release,
+			) as typeof baseReleaseOptions,
+		);
+		const release = rawRelease as ReleaseWithImageDetails;
 
 		// Squash .release_image[x].image[0] into a simple array
 		const images = rawRelease.release_image.map(
@@ -256,7 +265,7 @@ const getReleaseModel = function (
 
 		release.images = images
 			.map(function ({ is_a_build_of__service, ...imageData }) {
-				const image: BalenaSdk.ReleaseWithImageDetails['images'][number] = {
+				const image = {
 					...imageData,
 					service_name: is_a_build_of__service[0].service_name,
 				};
@@ -291,10 +300,9 @@ const getReleaseModel = function (
 	 * 	console.log(releases);
 	 * });
 	 */
-	async function getAllByApplication(
-		slugOrUuidOrId: string | number,
-		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
-	): Promise<BalenaSdk.Release[]> {
+	async function getAllByApplication<
+		T extends ODataOptionsWithoutCount<Release['Read']>,
+	>(slugOrUuidOrId: string | number, options?: T) {
 		const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 			$select: 'id',
 		});
@@ -308,7 +316,7 @@ const getReleaseModel = function (
 					$orderby: { created_at: 'desc' },
 				},
 				options,
-			),
+			) as T,
 		});
 	}
 
@@ -334,10 +342,9 @@ const getReleaseModel = function (
 	 * 	console.log(releases);
 	 * });
 	 */
-	async function getLatestByApplication(
-		slugOrUuidOrId: string | number,
-		options: BalenaSdk.PineOptions<BalenaSdk.Release> = {},
-	): Promise<BalenaSdk.Release | undefined> {
+	async function getLatestByApplication<
+		T extends ODataOptionsWithoutCount<Release['Read']>,
+	>(slugOrUuidOrId: string | number, options?: T) {
 		const [release] = await getAllByApplication(
 			slugOrUuidOrId,
 			mergePineOptions(
@@ -348,7 +355,7 @@ const getReleaseModel = function (
 					},
 				},
 				options,
-			),
+			) as T,
 		);
 		return release;
 	}
@@ -390,11 +397,10 @@ const getReleaseModel = function (
 			},
 		} as const;
 
-		const { app_name, organization } =
-			(await sdkInstance.models.application.get(
-				slugOrUuidOrId,
-				appOptions,
-			)) as PineTypedResult<Application, typeof appOptions>;
+		const { app_name, organization } = await sdkInstance.models.application.get(
+			slugOrUuidOrId,
+			appOptions,
+		);
 		return await builderHelper().buildFromUrl(
 			organization[0].handle,
 			app_name,
@@ -433,7 +439,7 @@ const getReleaseModel = function (
 		commitOrIdOrRawVersion: string | number | ReleaseRawVersionApplicationPair,
 	): Promise<void> {
 		const { id } = await get(commitOrIdOrRawVersion, { $select: 'id' });
-		await pine.patch<Release>({
+		await pine.patch({
 			resource: 'release',
 			id,
 			body: {
@@ -485,7 +491,7 @@ const getReleaseModel = function (
 		isInvalidated: boolean,
 	): Promise<void> {
 		const { id } = await get(commitOrIdOrRawVersion, { $select: 'id' });
-		await pine.patch<Release>({
+		await pine.patch({
 			resource: 'release',
 			id,
 			body: {
@@ -521,7 +527,7 @@ const getReleaseModel = function (
 		noteOrNull: string | null,
 	): Promise<void> {
 		const { id } = await get(commitOrIdOrRawVersion, { $select: 'id' });
-		await pine.patch<Release>({
+		await pine.patch({
 			resource: 'release',
 			id,
 			body: {
@@ -556,7 +562,7 @@ const getReleaseModel = function (
 		knownIssueListOrNull: string | null,
 	): Promise<void> {
 		const { id } = await get(commitOrIdOrRawVersion, { $select: 'id' });
-		await pine.patch<Release>({
+		await pine.patch({
 			resource: 'release',
 			id,
 			body: {
@@ -592,10 +598,9 @@ const getReleaseModel = function (
 		 * 	console.log(tags);
 		 * });
 		 */
-		async getAllByApplication(
-			slugOrUuidOrId: string | number,
-			options: BalenaSdk.PineOptions<BalenaSdk.ReleaseTag> = {},
-		): Promise<BalenaSdk.ReleaseTag[]> {
+		async getAllByApplication<
+			T extends ODataOptionsWithoutCount<ReleaseTag['Read']>,
+		>(slugOrUuidOrId: string | number, options?: T) {
 			const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 				$select: 'id',
 			});
@@ -647,14 +652,16 @@ const getReleaseModel = function (
 		 * 	console.log(tags);
 		 * });
 		 */
-		async getAllByRelease(
+		async getAllByRelease<
+			T extends ODataOptionsWithoutCount<ReleaseTag['Read']>,
+		>(
 			commitOrIdOrRawVersion:
 				| string
 				| number
 				| ReleaseRawVersionApplicationPair,
-			options: BalenaSdk.PineOptions<BalenaSdk.ReleaseTag> = {},
-		): Promise<BalenaSdk.ReleaseTag[]> {
-			const releaseOpts = {
+			options?: T,
+		) {
+			const release = await get(commitOrIdOrRawVersion, {
 				$select: 'id',
 				$expand: {
 					release_tag: mergePineOptions(
@@ -662,12 +669,8 @@ const getReleaseModel = function (
 						options,
 					),
 				},
-			} as const;
+			});
 
-			const release = (await get(
-				commitOrIdOrRawVersion,
-				releaseOpts,
-			)) as PineTypedResult<Release, typeof releaseOpts>;
 			return release.release_tag;
 		},
 

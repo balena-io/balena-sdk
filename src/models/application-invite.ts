@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+	 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,29 +19,27 @@ import type {
 	InjectedDependenciesParam,
 	InjectedOptionsParam,
 	Application,
-	ApplicationInvite,
-	ApplicationMembershipRoles,
-	PineOptions,
-	PineSubmitBody,
-	PinePostResult,
+	BalenaModel,
 } from '..';
 import { mergePineOptions } from '../util';
+import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
 
 export interface ApplicationInviteOptions {
 	invitee: string;
-	roleName?: ApplicationMembershipRoles;
+	roleName?: string;
 	message?: string;
 }
 
 const RESOURCE = 'invitee__is_invited_to__application';
+type ApplicationInvite = BalenaModel[typeof RESOURCE];
 
 const getApplicationInviteModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
 	getApplication: (
 		slugOrUuidOrId: string | number,
-		options?: PineOptions<Application>,
-	) => Promise<Application>,
+		options?: ODataOptionsWithoutCount<Application['Read']>,
+	) => Promise<Application['Read']>,
 ) {
 	const { request, pine } = deps;
 	const { apiUrl } = opts;
@@ -66,12 +64,12 @@ const getApplicationInviteModel = function (
 		 * 	console.log(invites);
 		 * });
 		 */
-		getAll(
-			options: PineOptions<ApplicationInvite> = {},
-		): Promise<ApplicationInvite[]> {
+		getAll<T extends ODataOptionsWithoutCount<ApplicationInvite['Read']>>(
+			options?: T,
+		) {
 			return pine.get({
 				resource: RESOURCE,
-				options,
+				options: options,
 			});
 		},
 
@@ -100,10 +98,9 @@ const getApplicationInviteModel = function (
 		 * 	console.log(invites);
 		 * });
 		 */
-		async getAllByApplication(
-			slugOrUuidOrId: number | string,
-			options: PineOptions<ApplicationInvite> = {},
-		): Promise<ApplicationInvite[]> {
+		async getAllByApplication<
+			T extends ODataOptionsWithoutCount<ApplicationInvite['Read']>,
+		>(slugOrUuidOrId: number | string, options?: T) {
 			const { id } = await getApplication(slugOrUuidOrId, {
 				$select: 'id',
 			});
@@ -141,7 +138,7 @@ const getApplicationInviteModel = function (
 		async create(
 			slugOrUuidOrId: string | number,
 			{ invitee, roleName, message }: ApplicationInviteOptions,
-		): Promise<PinePostResult<ApplicationInvite>> {
+		) {
 			const [{ id }, roles] = await Promise.all([
 				getApplication(slugOrUuidOrId, { $select: 'id' }),
 				roleName
@@ -157,13 +154,11 @@ const getApplicationInviteModel = function (
 						})
 					: undefined,
 			]);
-			type ApplicationInviteBase = Omit<ApplicationInvite, 'invitee'>;
-			type ApplicationInvitePostBody = ApplicationInviteBase & {
-				invitee: string;
-			};
-			const body: PineSubmitBody<ApplicationInvitePostBody> = {
-				invitee,
+
+			const body: Partial<ApplicationInvite['Write']> = {
 				is_invited_to__application: id,
+				// @ts-expect-error this doesn't actually exist in the model and is a hooks thing :(
+				invitee,
 				message,
 			};
 			if (roles) {
@@ -174,10 +169,10 @@ const getApplicationInviteModel = function (
 				}
 				body.application_membership_role = roleId;
 			}
-			return (await pine.post<ApplicationInviteBase>({
+			return await pine.post({
 				resource: RESOURCE,
 				body,
-			})) as PinePostResult<ApplicationInvite>;
+			});
 		},
 
 		/**

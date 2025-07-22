@@ -14,13 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type {
-	CreditBundle,
-	InjectedDependenciesParam,
-	PineOptions,
-	PinePostResult,
-} from '..';
-import type { SubmitBody } from '../../typings/pinejs-client-core';
+import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
+import type { CreditBundle, InjectedDependenciesParam } from '..';
 import { mergePineOptions } from '../util';
 
 const getCreditBundleModel = function ({
@@ -56,17 +51,22 @@ const getCreditBundleModel = function ({
 		 *
 		 */
 
-		getAllByOrg: async (
+		getAllByOrg: async <
+			T extends ODataOptionsWithoutCount<CreditBundle['Read']>,
+		>(
 			organization: string | number,
-			options?: PineOptions<CreditBundle>,
-		): Promise<CreditBundle[]> => {
+			options?: T,
+		) => {
 			const orgId = await getOrgId(organization);
 			const creditBundles = await pine.get({
 				resource: 'credit_bundle',
-				options: mergePineOptions(options ?? {}, {
-					$filter: { belongs_to__organization: orgId },
-					$orderby: { created_at: 'desc' },
-				}),
+				options: mergePineOptions(
+					{
+						$filter: { belongs_to__organization: orgId },
+						$orderby: { created_at: 'desc' },
+					},
+					options,
+				),
 			});
 			return creditBundles;
 		},
@@ -96,16 +96,15 @@ const getCreditBundleModel = function ({
 			organization: string | number,
 			featureId: number,
 			creditsToPurchase: number,
-		): Promise<PinePostResult<CreditBundle>> => {
+		) => {
 			const orgId = await getOrgId(organization);
-			const body: SubmitBody<CreditBundle> = {
-				belongs_to__organization: orgId,
-				is_for__feature: featureId,
-				original_quantity: creditsToPurchase,
-			};
 			return await pine.post({
 				resource: 'credit_bundle',
-				body,
+				body: {
+					belongs_to__organization: orgId,
+					is_for__feature: featureId,
+					original_quantity: creditsToPurchase,
+				},
 			});
 		},
 	};
