@@ -279,8 +279,7 @@ export const TEST_ORGANIZATION_NAME =
 	'balena-sdk created test organization that will be deleted';
 export const TEST_TEAM_NAME =
 	'balena-sdk created test team that will be deleted';
-export const TEST_KEY_NAME_PREFIX =
-	'balena_sdk_created_test_key_that_will_be_deleted';
+export const TEST_KEY_NAME_PREFIX = 'balena_sdk_test_key_autodelete';
 
 async function resetTestOrgs() {
 	const orgs = await balena.pine.get({
