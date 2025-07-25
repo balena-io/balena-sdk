@@ -261,21 +261,50 @@ const getDeviceModel = function (
 	};
 
 	const set = async (
-		uuidOrIdOrArray: string | string[] | number | number[],
+		filterOrUuidOrIdOrArray:
+			| (PineFilter<Device> & { belongs_to__application: number })
+			| string
+			| string[]
+			| number
+			| number[],
 		body: SubmitBody<Device>,
 	): Promise<void> => {
+		if (
+			typeof filterOrUuidOrIdOrArray === 'object' &&
+			!Array.isArray(filterOrUuidOrIdOrArray) &&
+			!('belongs_to__application' in filterOrUuidOrIdOrArray)
+		) {
+			throw new Error('Filter must contain `belongs_to__application`.');
+		}
+
+		const patchRequest = async (
+			filter: PineFilter<Device>,
+			requestBody: SubmitBody<Device>,
+		) => {
+			await pine.patch<Device>({
+				resource: 'device',
+				options: {
+					$filter: filter,
+				},
+				body: requestBody,
+			});
+		};
+		if (
+			typeof filterOrUuidOrIdOrArray === 'object' &&
+			'belongs_to__application' in filterOrUuidOrIdOrArray
+		) {
+			await patchRequest(filterOrUuidOrIdOrArray, body);
+			return;
+		}
 		await batchDeviceOperation()({
-			uuidOrIdOrArray,
+			uuidOrIdOrArray: filterOrUuidOrIdOrArray,
 			fn: async (devices) => {
-				await pine.patch<Device>({
-					resource: 'device',
-					options: {
-						$filter: {
-							id: { $in: devices.map((d) => d.id) },
-						},
+				await patchRequest(
+					{
+						id: { $in: devices.map((d) => d.id) },
 					},
 					body,
-				});
+				);
 			},
 		});
 	};
@@ -1983,9 +2012,14 @@ const getDeviceModel = function (
 		 * @description Configures the device to run a particular release
 		 * and not get updated when the current application release changes.
 		 *
-		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
+		 * @param {Object|String|String[]|Number|Number[]} filterOrUuidOrIdOrArray - device $filter (object) or device uuid (string) or id (number) or array of full uuids or ids
 		 * @param {String|Number} fullReleaseHashOrId - the hash of a successful release (string) or id (number)
 		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.device.pinToRelease({belongs_to__application: 123}, 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
+		 * 	...
+		 * });
 		 *
 		 * @example
 		 * balena.models.device.pinToRelease('7cf02a6', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
@@ -1998,19 +2032,23 @@ const getDeviceModel = function (
 		 * });
 		 */
 		pinToRelease: async (
-			uuidOrIdOrArray: string | string[] | number | number[],
+			filterOrUuidOrIdOrArray:
+				| (PineFilter<Device> & { belongs_to__application: number })
+				| string
+				| string[]
+				| number
+				| number[],
 			fullReleaseHashOrId: string | number,
 		): Promise<void> => {
 			const getRelease = memoizee(
-				async (appId: number) => {
-					const releaseFilterProperty = isId(fullReleaseHashOrId)
-						? 'id'
-						: 'commit';
-					return await sdkInstance.models.release.get(fullReleaseHashOrId, {
+				async (appId: number): Promise<{ id: number }> => {
+					const filterKey =
+						typeof fullReleaseHashOrId === 'number' ? 'id' : 'commit';
+					return sdkInstance.models.release.get(fullReleaseHashOrId, {
 						$top: 1,
 						$select: 'id',
 						$filter: {
-							[releaseFilterProperty]: fullReleaseHashOrId,
+							[filterKey]: fullReleaseHashOrId,
 							status: 'success',
 							belongs_to__application: appId,
 						},
@@ -2019,21 +2057,28 @@ const getDeviceModel = function (
 				},
 				{ primitive: true, promise: true },
 			);
+
+			if (
+				typeof filterOrUuidOrIdOrArray === 'object' &&
+				'belongs_to__application' in filterOrUuidOrIdOrArray
+			) {
+				const { belongs_to__application } = filterOrUuidOrIdOrArray;
+				const release = await getRelease(belongs_to__application);
+				await set(filterOrUuidOrIdOrArray, {
+					is_pinned_on__release: release.id,
+				});
+				return;
+			}
+
 			await batchDeviceOperation()({
-				uuidOrIdOrArray,
+				uuidOrIdOrArray: filterOrUuidOrIdOrArray,
 				groupByNavigationPoperty: 'belongs_to__application',
 				fn: async (devices, appId) => {
 					const release = await getRelease(appId);
 					await pine.patch<Device>({
 						resource: 'device',
-						options: {
-							$filter: {
-								id: { $in: devices.map((d) => d.id) },
-							},
-						},
-						body: {
-							is_pinned_on__release: release.id,
-						},
+						options: { $filter: { id: { $in: devices.map((d) => d.id) } } },
+						body: { is_pinned_on__release: release.id },
 					});
 				},
 			});
@@ -2048,8 +2093,13 @@ const getDeviceModel = function (
 		 *
 		 * @description The device's current release will be updated with each new successfully built release.
 		 *
-		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
+		 * @param {Object|String|String[]|Number|Number[]} filterOrUuidOrIdOrArray - device $filter (object) or device uuid (string) or id (number) or array of full uuids or ids
 		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.device.trackApplicationRelease({belongs_to__application: 123}).then(function() {
+		 * 	...
+		 * });
 		 *
 		 * @example
 		 * balena.models.device.trackApplicationRelease('7cf02a6').then(function() {
@@ -2057,9 +2107,14 @@ const getDeviceModel = function (
 		 * });
 		 */
 		trackApplicationRelease: async (
-			uuidOrIdOrArray: string | string[] | number | number[],
+			filterOrUuidOrIdOrArray:
+				| (PineFilter<Device> & { belongs_to__application: number })
+				| string
+				| string[]
+				| number
+				| number[],
 		): Promise<void> => {
-			await set(uuidOrIdOrArray, {
+			await set(filterOrUuidOrIdOrArray, {
 				is_pinned_on__release: null,
 			});
 		},
