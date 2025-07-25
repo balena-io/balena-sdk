@@ -1,6 +1,7 @@
 import * as bSemver from 'balena-semver';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
+import { format } from 'date-fns/format';
 import {
 	balena,
 	credentials,
@@ -1090,7 +1091,7 @@ describe('OS model', function () {
 						ctx.application[prop],
 						{
 							version: DEFAULT_OS_VERSION,
-							provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-download-config-by-prop-${prop}`,
+							provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-confdl-by-${prop}`,
 						},
 					);
 					expect(config).to.have.property('applicationId');
@@ -1110,7 +1111,7 @@ describe('OS model', function () {
 						await balena.models.os.getConfig(ctx.application.id, {
 							version: 'v1+foo',
 							// Use a name prefix to make cleaning up the api key easier
-							provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-download-config-rejected-lte-1-2-0`,
+							provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-confdl-lte-1-2-0`,
 						});
 					},
 					(error) => {
@@ -1128,7 +1129,7 @@ describe('OS model', function () {
 						await balena.models.os.getConfig(ctx.application.id, {
 							version: '1.2.0',
 							// Use a name prefix to make cleaning up the api key easier
-							provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-download-config-rejected-lte-1-2-0`,
+							provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-confdl-lte-1-2-0`,
 						});
 					},
 					(error) => {
@@ -1151,7 +1152,7 @@ describe('OS model', function () {
 					netmask: '9.10.11.12',
 					version: '1.26.1',
 					// Use a name prefix to make cleaning up the api key easier
-					provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-download-config-1-26-1`,
+					provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-confdl-1-26-1`,
 				};
 				return balena.models.os
 					.getConfig(ctx.application.id, configOptions)
@@ -1183,7 +1184,7 @@ describe('OS model', function () {
 					netmask: '9.10.11.12',
 					version: '2.0.8+rev1.prod',
 					// Use a name prefix to make cleaning up the api key easier
-					provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-download-config-2-0-8-rev1`,
+					provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-confdl-2-0-8-rev1`,
 				};
 				return balena.models.os
 					.getConfig(ctx.application.id, configOptions)
@@ -1200,7 +1201,7 @@ describe('OS model', function () {
 			});
 
 			it('should be able to configure v2 image with a provisioning key name', async function () {
-				const provisioningKeyName = `${TEST_KEY_NAME_PREFIX}-provision-key-v2-${Date.now()}`;
+				const provisioningKeyName = `${TEST_KEY_NAME_PREFIX}-prov${format(new Date(), "yyyyMMdd'T'HHmmss")}`;
 				const configOptions = {
 					appUpdatePollInterval: 72,
 					network: 'wifi' as const,
@@ -1242,7 +1243,7 @@ describe('OS model', function () {
 					gateway: '5.6.7.8',
 					netmask: '9.10.11.12',
 					version: '2.11.8+rev1.prod',
-					provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-download-config-with-expiry-date`,
+					provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-confdl-expDate`,
 					provisioningKeyExpiryDate,
 				};
 
@@ -1268,7 +1269,7 @@ describe('OS model', function () {
 				await expectError(async () => {
 					await balena.models.os.getConfig(999999, {
 						version: DEFAULT_OS_VERSION,
-						provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-download-config-application-id-not-exists`,
+						provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-confdl-404-app-id`,
 					});
 				}, 'Application not found: 999999');
 			});
@@ -1277,7 +1278,7 @@ describe('OS model', function () {
 				await expectError(async () => {
 					await balena.models.os.getConfig('foobarbaz', {
 						version: DEFAULT_OS_VERSION,
-						provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-download-config-application-name-not-exists`,
+						provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-confdl-404-app-name`,
 					});
 				}, 'Application not found: foobarbaz');
 			});

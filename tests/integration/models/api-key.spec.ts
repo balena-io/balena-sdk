@@ -158,26 +158,23 @@ describe('API Key model', function () {
 		givenAnApplication(before);
 		givenADevice(before);
 
-		const ctx: {
-			namedUserApiKey?: BalenaSdk.ApiKey;
-			provisioningApiKey?: BalenaSdk.ApiKey;
-			deviceApiKey?: BalenaSdk.ApiKey;
-		} = {};
-
 		const testSet = [
 			['named user', 'namedUserApiKey'],
 			['provisioning', 'provisioningApiKey'],
 			['device', 'deviceApiKey'],
 		] as const;
 
+		const ctx: Partial<Record<(typeof testSet)[number][1], BalenaSdk.ApiKey>> =
+			{};
+
 		before(async function () {
 			await balena.models.apiKey.create({
-				name: `${TEST_KEY_NAME_PREFIX}_apiKeyToBeUpdated`,
+				name: `${TEST_KEY_NAME_PREFIX}_toUpdate`,
 				expiryDate: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
 				description: 'apiKeyDescriptionToBeUpdated',
 			});
 			const [apiKey] = await balena.models.apiKey.getAll({
-				$filter: { name: `${TEST_KEY_NAME_PREFIX}_apiKeyToBeUpdated` },
+				$filter: { name: `${TEST_KEY_NAME_PREFIX}_toUpdate` },
 			});
 			ctx.namedUserApiKey = apiKey;
 
@@ -258,7 +255,7 @@ describe('API Key model', function () {
 				});
 			});
 
-			const updatedApiKeyName = `${TEST_KEY_NAME_PREFIX}_updatedApiKeyName`;
+			const updatedApiKeyName = `${TEST_KEY_NAME_PREFIX}_updatedName`;
 
 			it('should be able to update the name of an api key', async function () {
 				await balena.models.apiKey.update(ctx.namedUserApiKey!.id, {
@@ -348,8 +345,8 @@ describe('API Key model', function () {
 				});
 			});
 
-			testSet.forEach(([title, ctxPropName]) => {
-				const newllyUpdatedApiKeyName = `${TEST_KEY_NAME_PREFIX}_newllyUpdatedApiKeyName_${title}`;
+			testSet.forEach(([title, ctxPropName], i) => {
+				const newllyUpdatedApiKeyName = `${TEST_KEY_NAME_PREFIX}_updated_${i}`;
 				it(`should be able to update the name & description of a(n) ${title} api key`, async function () {
 					await balena.models.apiKey.update(ctx[ctxPropName]!.id, {
 						name: newllyUpdatedApiKeyName,
