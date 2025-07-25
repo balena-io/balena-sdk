@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: Reduce the size of the api key names used in tests"
+      hash: 9cb4cf0ce344cf2fa2fc95626b7b875a624bcff3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://balena.fibery.io/Work/Project/API-Limit-the-size-of-JSON-fields-1723
+        see: https://balena.fibery.io/Work/Project/API-Limit-the-size-of-JSON-fields-1723
+      author: Thodoris Greasidis
+      nested: []
+  version: 21.7.4
+  title: ""
+  date: 2025-07-25T09:33:35.515Z
+- commits:
     - subject: Narrow down the fullUuid type assertion
       hash: 394624e70c430622722be8c319869eabd9c27a6f
       body: ""
