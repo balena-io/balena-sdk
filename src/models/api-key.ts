@@ -15,9 +15,13 @@ limitations under the License.
 */
 import * as errors from 'balena-errors';
 
-import type * as BalenaSdk from '..';
-import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
+import type {
+	ApiKey,
+	InjectedDependenciesParam,
+	InjectedOptionsParam,
+} from '..';
 import { mergePineOptions } from '../util';
+import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
 
 const getApiKeysModel = function (
 	{
@@ -111,9 +115,9 @@ const getApiKeysModel = function (
 		 * 	console.log(apiKeys);
 		 * });
 		 */
-		async getAll(
-			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
-		): Promise<BalenaSdk.ApiKey[]> {
+		async getAll<T extends ODataOptionsWithoutCount<ApiKey['Read']>>(
+			options?: T,
+		) {
 			return await pine.get({
 				resource: 'api_key',
 				options: mergePineOptions(
@@ -141,9 +145,9 @@ const getApiKeysModel = function (
 		 * 	console.log(apiKeys);
 		 * });
 		 */
-		async getAllNamedUserApiKeys(
-			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
-		): Promise<BalenaSdk.ApiKey[]> {
+		async getAllNamedUserApiKeys<
+			T extends ODataOptionsWithoutCount<ApiKey['Read']>,
+		>(options?: T) {
 			return await exports.getAll(
 				mergePineOptions(
 					{
@@ -179,23 +183,18 @@ const getApiKeysModel = function (
 		 * 	console.log(apiKeys);
 		 * });
 		 */
-		async getProvisioningApiKeysByApplication(
-			slugOrUuidOrId: string | number,
-			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
-		): Promise<BalenaSdk.ApiKey[]> {
-			const appOpts = {
-				$select: 'actor' as const,
-			};
-			const { actor } = (await sdkInstance.models.application.get(
-				slugOrUuidOrId,
-				appOpts,
-			)) as BalenaSdk.PineTypedResult<BalenaSdk.Application, typeof appOpts>;
+		async getProvisioningApiKeysByApplication<
+			T extends ODataOptionsWithoutCount<ApiKey['Read']>,
+		>(slugOrUuidOrId: string | number, options?: T) {
+			const app = await sdkInstance.models.application.get(slugOrUuidOrId, {
+				$select: 'actor',
+			});
 
 			return await exports.getAll(
 				mergePineOptions(
 					{
 						$filter: {
-							is_of__actor: actor.__id,
+							is_of__actor: app.actor.__id,
 						},
 					},
 					options,
@@ -220,17 +219,12 @@ const getApiKeysModel = function (
 		 * 	console.log(apiKeys);
 		 * });
 		 */
-		async getDeviceApiKeysByDevice(
-			uuidOrId: string | number,
-			options: BalenaSdk.PineOptions<BalenaSdk.ApiKey> = {},
-		): Promise<BalenaSdk.ApiKey[]> {
-			const deviceOpts = {
-				$select: 'actor' as const,
-			};
-			const { actor } = (await sdkInstance.models.device.get(
-				uuidOrId,
-				deviceOpts,
-			)) as BalenaSdk.PineTypedResult<BalenaSdk.Device, typeof deviceOpts>;
+		async getDeviceApiKeysByDevice<
+			T extends ODataOptionsWithoutCount<ApiKey['Read']>,
+		>(uuidOrId: string | number, options?: T) {
+			const { actor } = await sdkInstance.models.device.get(uuidOrId, {
+				$select: 'actor',
+			});
 
 			return await pine.get({
 				resource: 'api_key',
@@ -276,7 +270,7 @@ const getApiKeysModel = function (
 				description?: string | null;
 				expiryDate?: string | null;
 			},
-		): Promise<void> {
+		) {
 			if (!apiKeyInfo) {
 				throw new errors.BalenaInvalidParameterError('apiKeyInfo', apiKeyInfo);
 			}
@@ -291,7 +285,7 @@ const getApiKeysModel = function (
 				description: apiKeyInfo.description,
 				expiry_date: apiKeyInfo.expiryDate,
 			};
-			await pine.patch<BalenaSdk.ApiKey>({
+			await pine.patch({
 				resource: 'api_key',
 				id,
 				body,
@@ -311,7 +305,7 @@ const getApiKeysModel = function (
 		 * @example
 		 * balena.models.apiKey.revoke(123);
 		 */
-		async revoke(id: number): Promise<void> {
+		async revoke(id: number) {
 			await pine.delete({
 				resource: 'api_key',
 				id,

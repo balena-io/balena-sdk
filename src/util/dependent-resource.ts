@@ -20,59 +20,70 @@ key-value resources directly attached to a parent (e.g. tags, config variables).
 */
 
 import { isId, isUnauthorizedResponse, mergePineOptions } from '../util';
-import type { Pine, PineOptions } from '..';
-import type { Dictionary } from '../../typings/utils';
+import type { BalenaModel, PineClient } from '..';
+import type { Dictionary, StringKeyof } from '../../typings/utils';
+import type {
+	ExpandableStringKeyOf,
+	Filter,
+	ODataOptionsWithoutCount,
+} from 'pinejs-client-core';
 
-interface DependentResource {
-	id: number;
-	value: string;
-}
+type DependentResourceName = {
+	[K in StringKeyof<BalenaModel>]: BalenaModel[K] extends {
+		Read: {
+			id: number;
+			value: string;
+		};
+		Write: { value: string };
+	}
+		? K
+		: never;
+}[StringKeyof<BalenaModel>];
 
-export function buildDependentResource<T extends DependentResource>(
-	{ pine }: { pine: Pine },
+export function buildDependentResource<T extends DependentResourceName>(
+	{ pine }: { pine: PineClient },
 	{
 		resourceName,
 		resourceKeyField,
 		parentResourceName,
 		getResourceId,
 	}: {
-		resourceName: string; // e.g. device_tag
-		resourceKeyField: keyof T & string; // e.g. tag_key
-		parentResourceName: keyof T & string; // e.g. device
+		resourceName: T; // e.g. device_tag
+		resourceKeyField: StringKeyof<BalenaModel[T]['Read']>; // e.g. tag_key
+		parentResourceName: ExpandableStringKeyOf<BalenaModel[T]['Read']>; // e.g. device
 		getResourceId: (
 			uuidOrIdOrDict: string | number | Dictionary<unknown>,
 		) => Promise<number>; // e.g. getId(uuidOrIdOrDict)
 	},
 ) {
 	const exports = {
-		getAll(options?: PineOptions<T>): Promise<T[]> {
-			options ??= {};
-			return pine.get<T>({
+		getAll(options?: ODataOptionsWithoutCount<BalenaModel[T]['Read']>) {
+			return pine.get({
 				resource: resourceName,
 				options: mergePineOptions(
 					{
 						$orderby: {
 							[resourceKeyField]: 'asc',
-						} as PineOptions<T>['$orderby'],
+						} as const,
 					},
 					options,
 				),
 			});
 		},
-
 		async getAllByParent(
 			parentParam: string | number | Dictionary<unknown>,
-			options?: PineOptions<T>,
-		): Promise<T[]> {
-			options ??= {};
+			options?: ODataOptionsWithoutCount<BalenaModel[T]['Read']>,
+		) {
 			const id = await getResourceId(parentParam);
 			return await exports.getAll(
 				mergePineOptions(
 					{
-						$filter: { [parentResourceName]: id },
+						$filter: { [parentResourceName]: id } as Filter<
+							BalenaModel[T]['Read']
+						>,
 						$orderby: {
 							[resourceKeyField]: 'asc',
-						} as PineOptions<T>['$orderby'],
+						},
 					},
 					options,
 				),
@@ -84,8 +95,8 @@ export function buildDependentResource<T extends DependentResource>(
 			key: string,
 		): Promise<string | undefined> {
 			const id = await getResourceId(parentParam);
-			const [result] = await pine.get<DependentResource>({
-				resource: resourceName,
+			const [result] = await pine.get({
+				resource: resourceName satisfies DependentResourceName,
 				options: {
 					$select: 'value',
 					$filter: {
@@ -94,6 +105,7 @@ export function buildDependentResource<T extends DependentResource>(
 					},
 				},
 			});
+
 			if (result) {
 				return result.value;
 			}
@@ -115,7 +127,7 @@ export function buildDependentResource<T extends DependentResource>(
 				: await getResourceId(parentParam);
 			try {
 				await pine.upsert({
-					resource: resourceName,
+					resource: resourceName satisfies DependentResourceName,
 					id: {
 						[parentResourceName]: parentId,
 						[resourceKeyField]: key,
@@ -143,7 +155,7 @@ export function buildDependentResource<T extends DependentResource>(
 		): Promise<void> {
 			const parentId = await getResourceId(parentParam);
 			await pine.delete({
-				resource: resourceName,
+				resource: resourceName satisfies DependentResourceName,
 				options: {
 					$filter: {
 						[parentResourceName]: parentId,

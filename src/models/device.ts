@@ -17,24 +17,19 @@ limitations under the License.
 import type {
 	InjectedOptionsParam,
 	InjectedDependenciesParam,
-	PineOptions,
-	PineTypedResult,
-	PineFilter,
+	CurrentService,
 } from '..';
 import type {
 	Device,
 	DeviceServiceEnvironmentVariable,
-	DeviceVariable,
 	DeviceTag,
-	Application,
 	DeviceHistory,
+	DeviceConfigVariable,
+	DeviceEnvironmentVariable,
 } from '../types/models';
 import { DeviceOverallStatus as OverallStatus } from '../types/device-overall-status';
 import type * as DeviceState from '../types/device-state';
-import type {
-	CurrentServiceWithCommit,
-	DeviceWithServiceDetails,
-} from '../util/device-service-details';
+
 import type { OsUpdateActionResult } from '../util/device-actions/os-update';
 
 import * as url from 'url';
@@ -50,6 +45,7 @@ import {
 	mergePineOptions,
 	limitedMap,
 	groupByMap,
+	type MergePineOptions,
 } from '../util';
 
 import {
@@ -72,17 +68,17 @@ import {
 } from './device.supervisor-api.partial';
 
 import type {
-	SubmitBody,
-	SelectableProps,
-} from '../../typings/pinejs-client-core';
-import type {
 	AtLeast,
 	Dictionary,
 	ResolvableReturnType,
 } from '../../typings/utils';
 import type { DeviceType } from '../types/models';
-
 import { subDays } from 'date-fns/subDays';
+import type {
+	FilterObj,
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
 
 const MIN_OS_MC = '2.12.0';
 const OVERRIDE_LOCK_ENV_VAR = 'RESIN_OVERRIDE_LOCK';
@@ -92,7 +88,7 @@ export type { DeviceOverallStatus as OverallStatus } from '../types/device-overa
 export type { SupervisorStatus } from './device.supervisor-api.partial';
 
 export type DeviceMetrics = Pick<
-	Device,
+	Device['Read'],
 	| 'memory_usage'
 	| 'memory_total'
 	| 'storage_block_device'
@@ -103,6 +99,11 @@ export type DeviceMetrics = Pick<
 	| 'cpu_id'
 	| 'is_undervolted'
 >;
+
+export interface DateFilters {
+	fromDate?: Date;
+	toDate?: Date;
+}
 
 const DEFAULT_DAYS_OF_REQUESTED_HISTORY = 7;
 
@@ -139,7 +140,7 @@ const getDeviceModel = function (
 	const batchDeviceOperation = once(() =>
 		(
 			require('../util/request-batching') as typeof import('../util/request-batching')
-		).batchResourceOperationFactory<Device>({
+		).batchResourceOperationFactory<Device['Read']>({
 			getAll,
 			NotFoundError: errors.BalenaDeviceNotFound,
 			AmbiguousResourceError: errors.BalenaAmbiguousDevice,
@@ -156,7 +157,7 @@ const getDeviceModel = function (
 	});
 	/* eslint-enable @typescript-eslint/no-require-imports */
 
-	const tagsModel = buildDependentResource<DeviceTag>(
+	const tagsModel = buildDependentResource(
 		{ pine },
 		{
 			resourceName: 'device_tag',
@@ -174,7 +175,7 @@ const getDeviceModel = function (
 		},
 	);
 
-	const configVarModel = buildDependentResource<DeviceVariable>(
+	const configVarModel = buildDependentResource(
 		{ pine },
 		{
 			resourceName: 'device_config_variable',
@@ -192,7 +193,7 @@ const getDeviceModel = function (
 		},
 	);
 
-	const envVarModel = buildDependentResource<DeviceVariable>(
+	const envVarModel = buildDependentResource(
 		{ pine },
 		{
 			resourceName: 'device_environment_variable',
@@ -253,21 +254,18 @@ const getDeviceModel = function (
 					application_config_variable: [appConfig],
 				},
 			],
-		} = (await exports.get(uuidOrId, options)) as PineTypedResult<
-			Device,
-			typeof options
-		>;
+		} = await exports.get(uuidOrId, options);
 		return (deviceConfig ?? appConfig)?.value;
 	};
 
 	const set = async (
 		uuidOrIdOrArray: string | string[] | number | number[],
-		body: SubmitBody<Device>,
+		body: Partial<Device['Write']>,
 	): Promise<void> => {
 		await batchDeviceOperation()({
 			uuidOrIdOrArray,
 			fn: async (devices) => {
-				await pine.patch<Device>({
+				await pine.patch({
 					resource: 'device',
 					options: {
 						$filter: {
@@ -280,10 +278,7 @@ const getDeviceModel = function (
 		});
 	};
 
-	const historyTimeRangeFilterWithGuard = (
-		fromDate?: Date,
-		toDate?: Date,
-	): PineFilter<DeviceHistory> => {
+	const historyTimeRangeFilterWithGuard = (fromDate?: Date, toDate?: Date) => {
 		let fromDateFilter;
 		let toDateFilter;
 		if (fromDate != null) {
@@ -307,14 +302,16 @@ const getDeviceModel = function (
 		return timeRangeFilter;
 	};
 
-	async function getAll(options?: PineOptions<Device>): Promise<Device[]> {
-		options ??= {};
-
-		const devices = await pine.get({
+	async function getAll<T extends ODataOptionsWithoutCount<Device['Read']>>(
+		options?: T,
+	) {
+		return await pine.get({
 			resource: 'device',
-			options: mergePineOptions({ $orderby: { device_name: 'asc' } }, options),
+			options: mergePineOptions(
+				{ $orderby: { device_name: 'asc' } },
+				options,
+			) as T,
 		});
-		return devices as Device[];
 	}
 
 	async function startOsUpdate(
@@ -475,12 +472,9 @@ const getDeviceModel = function (
 		 * 	console.log(device);
 		 * })
 		 */
-		async getAllByApplication(
-			slugOrUuidOrId: string | number,
-			options?: PineOptions<Device>,
-		): Promise<Device[]> {
-			options ??= {};
-
+		async getAllByApplication<
+			T extends ODataOptionsWithoutCount<Device['Read']>,
+		>(slugOrUuidOrId: string | number, options?: T) {
 			const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 				$select: 'id',
 			});
@@ -524,12 +518,9 @@ const getDeviceModel = function (
 		 * 	console.log(device);
 		 * })
 		 */
-		async getAllByOrganization(
-			handleOrId: string | number,
-			options?: PineOptions<Device>,
-		): Promise<Device[]> {
-			options ??= {};
-
+		async getAllByOrganization<
+			T extends ODataOptionsWithoutCount<Device['Read']>,
+		>(handleOrId: string | number, options?: T) {
 			const { id } = await sdkInstance.models.organization.get(handleOrId, {
 				$select: 'id',
 			});
@@ -589,12 +580,10 @@ const getDeviceModel = function (
 		 * 	console.log(device);
 		 * })
 		 */
-		async get(
+		async get<T extends ODataOptionsWithoutCount<Device['Read']>>(
 			uuidOrId: string | number,
-			options?: PineOptions<Device>,
-		): Promise<Device> {
-			options ??= {};
-
+			options?: T,
+		) {
 			if (uuidOrId == null) {
 				throw new errors.BalenaDeviceNotFound(uuidOrId);
 			}
@@ -602,7 +591,9 @@ const getDeviceModel = function (
 				throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
 			}
 
-			let device;
+			let device:
+				| OptionsToResponse<Device['Read'], T, undefined>[number]
+				| undefined;
 			const isPotentiallyFullUuid = isFullUuid(uuidOrId);
 			if (isPotentiallyFullUuid || isId(uuidOrId)) {
 				device = await pine.get({
@@ -620,7 +611,7 @@ const getDeviceModel = function (
 							},
 						},
 						options,
-					),
+					) as T,
 				});
 				if (devices.length > 1) {
 					throw new errors.BalenaAmbiguousDevice(uuidOrId);
@@ -630,7 +621,7 @@ const getDeviceModel = function (
 			if (device == null) {
 				throw new errors.BalenaDeviceNotFound(uuidOrId);
 			}
-			return device as Device;
+			return device;
 		},
 
 		/**
@@ -662,20 +653,30 @@ const getDeviceModel = function (
 		 * 	console.log(device);
 		 * })
 		 */
-		async getWithServiceDetails(
-			uuidOrId: string | number,
-			options?: PineOptions<Device>,
-		): Promise<DeviceWithServiceDetails<CurrentServiceWithCommit>> {
-			options ??= {};
-
+		async getWithServiceDetails<
+			T extends ODataOptionsWithoutCount<Device['Read']>,
+		>(uuidOrId: string | number, options?: T) {
 			const device = await exports.get(
 				uuidOrId,
 				mergePineOptions(
-					{ $expand: getCurrentServiceDetailsPineExpand(true) },
+					{ $expand: getCurrentServiceDetailsPineExpand },
 					options,
-				),
+				) as { $expand: typeof getCurrentServiceDetailsPineExpand },
 			);
-			return generateCurrentServiceDetails(device);
+
+			return generateCurrentServiceDetails(device) as unknown as NonNullable<
+				OptionsToResponse<
+					Device['Read'],
+					MergePineOptions<
+						Device['Read'],
+						{ $expand: typeof getCurrentServiceDetailsPineExpand },
+						T
+					>,
+					typeof uuidOrId
+				>
+			> & {
+				current_services: Record<string, CurrentService[]>;
+			};
 		},
 
 		/**
@@ -694,14 +695,12 @@ const getDeviceModel = function (
 		 * 	console.log(devices);
 		 * });
 		 */
-		async getByName(
+		async getByName<T extends ODataOptionsWithoutCount<Device['Read']>>(
 			name: string,
-			options?: PineOptions<Device>,
-		): Promise<Device[]> {
-			options ??= {};
-
+			options?: T,
+		) {
 			const devices = await getAll(
-				mergePineOptions({ $filter: { device_name: name } }, options),
+				mergePineOptions({ $filter: { device_name: name } }, options) as T,
 			);
 			if (devices.length === 0) {
 				throw new errors.BalenaDeviceNotFound(name);
@@ -759,15 +758,10 @@ const getDeviceModel = function (
 		 * });
 		 */
 		getApplicationName: async (uuidOrId: string | number): Promise<string> => {
-			const deviceOptions = {
+			const device = await exports.get(uuidOrId, {
 				$select: 'id',
 				$expand: { belongs_to__application: { $select: 'app_name' } },
-			} as const;
-
-			const device = (await exports.get(
-				uuidOrId,
-				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
+			});
 			return device.belongs_to__application[0].app_name;
 		},
 
@@ -1136,7 +1130,7 @@ const getDeviceModel = function (
 				$select: 'id',
 				$expand: {
 					is_for__device_type: {
-						$select: 'is_of__cpu_architecture',
+						$select: 'id',
 						$expand: {
 							is_of__cpu_architecture: {
 								$select: 'slug',
@@ -1145,10 +1139,10 @@ const getDeviceModel = function (
 					},
 				},
 			} as const;
-			const application = (await sdkInstance.models.application.get(
+			const application = await sdkInstance.models.application.get(
 				applicationSlugOrUuidOrId,
 				applicationOptions,
-			)) as PineTypedResult<Application, typeof applicationOptions>;
+			);
 			const appCpuArchSlug =
 				application.is_for__device_type[0].is_of__cpu_architecture[0].slug;
 
@@ -1183,7 +1177,7 @@ const getDeviceModel = function (
 						}
 					}
 
-					await pine.patch<Device>({
+					await pine.patch({
 						resource: 'device',
 						options: {
 							$filter: {
@@ -1368,18 +1362,16 @@ const getDeviceModel = function (
 					sdkInstance.models.application.get(
 						applicationSlugOrUuidOrId,
 						applicationOptions,
-					) as Promise<PineTypedResult<Application, typeof applicationOptions>>,
+					),
 					typeof deviceTypeSlug === 'string'
-						? (sdkInstance.models.deviceType.get(deviceTypeSlug, {
+						? sdkInstance.models.deviceType.get(deviceTypeSlug, {
 								$select: 'slug',
 								$expand: {
 									is_of__cpu_architecture: {
 										$select: 'slug',
 									},
 								},
-							}) as Promise<
-								PineTypedResult<DeviceType, typeof deviceTypeOptions>
-							>)
+							})
 						: null,
 				]);
 			if (deviceType != null) {
@@ -1578,10 +1570,7 @@ const getDeviceModel = function (
 		 * balena.models.device.enableLocalMode(123);
 		 */
 		async enableLocalMode(uuidOrId: string | number): Promise<void> {
-			const selectedProps: Array<SelectableProps<Device>> = [
-				'id',
-				...LOCAL_MODE_SUPPORT_PROPERTIES,
-			];
+			const selectedProps = ['id', ...LOCAL_MODE_SUPPORT_PROPERTIES] as const;
 			const device = await exports.get(uuidOrId, { $select: selectedProps });
 			checkLocalModeSupported(device);
 			await exports.configVar.set(device.id, LOCAL_MODE_ENV_VAR, '1');
@@ -1823,7 +1812,6 @@ const getDeviceModel = function (
 			}
 
 			await set(uuidOrIdOrArray, {
-				// @ts-expect-error a number is valid to set but it will always be returned as an ISO string so the typings specify string rather than string | number
 				is_accessible_by_support_until__date: expiryTimestamp,
 			});
 		},
@@ -1871,7 +1859,7 @@ const getDeviceModel = function (
 		 * })
 		 */
 		lastOnline(
-			device: AtLeast<Device, 'last_connectivity_event' | 'is_online'>,
+			device: AtLeast<Device['Read'], 'last_connectivity_event' | 'is_online'>,
 		): string {
 			const lce = device.last_connectivity_event;
 
@@ -1905,7 +1893,7 @@ const getDeviceModel = function (
 		 * })
 		 */
 		getOsVersion: (
-			device: AtLeast<Device, 'os_variant' | 'os_version'>,
+			device: AtLeast<Device['Read'], 'os_variant' | 'os_version'>,
 		): string => getDeviceOsSemverWithVariant(device)!,
 
 		/**
@@ -1966,10 +1954,10 @@ const getDeviceModel = function (
 				},
 			} as const;
 
-			const { should_be_running__release } = (await exports.get(
+			const { should_be_running__release } = await exports.get(
 				uuidOrId,
 				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
+			);
 			return should_be_running__release[0]?.commit;
 		},
 
@@ -2024,7 +2012,7 @@ const getDeviceModel = function (
 				groupByNavigationPoperty: 'belongs_to__application',
 				fn: async (devices, appId) => {
 					const release = await getRelease(appId);
-					await pine.patch<Device>({
+					await pine.patch({
 						resource: 'device',
 						options: {
 							$filter: {
@@ -2140,7 +2128,7 @@ const getDeviceModel = function (
 						[...devicesByDeviceType.entries()].map(
 							async ([cpuArchId, devicesOfType]) => {
 								const release = await getRelease(cpuArchId);
-								await pine.patch<Device>({
+								await pine.patch({
 									resource: 'device',
 									options: {
 										$filter: {
@@ -2180,8 +2168,11 @@ const getDeviceModel = function (
 				is_online,
 				os_version,
 				os_variant,
-			}: Pick<Device, 'uuid' | 'is_online' | 'os_version' | 'os_variant'> & {
-				is_of__device_type: [Pick<DeviceType, 'slug'>];
+			}: Pick<
+				Device['Read'],
+				'uuid' | 'is_online' | 'os_version' | 'os_variant'
+			> & {
+				is_of__device_type: [Pick<DeviceType['Read'], 'slug'>];
 			},
 			targetOsVersion: string,
 		) {
@@ -2281,11 +2272,9 @@ const getDeviceModel = function (
 			 * 	console.log(tags);
 			 * });
 			 */
-			async getAllByApplication(
-				slugOrUuidOrId: string | number,
-				options?: PineOptions<DeviceTag>,
-			): Promise<DeviceTag[]> {
-				options ??= {};
+			async getAllByApplication<
+				T extends ODataOptionsWithoutCount<DeviceTag['Read']>,
+			>(slugOrUuidOrId: string | number, options?: T) {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -2422,12 +2411,9 @@ const getDeviceModel = function (
 			 * 	console.log(vars);
 			 * });
 			 */
-			async getAllByApplication(
-				slugOrUuidOrId: string | number,
-				options?: PineOptions<DeviceVariable>,
-			): Promise<DeviceVariable[]> {
-				options ??= {};
-
+			async getAllByApplication<
+				T extends ODataOptionsWithoutCount<DeviceConfigVariable['Read']>,
+			>(slugOrUuidOrId: string | number, options?: T) {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -2579,12 +2565,9 @@ const getDeviceModel = function (
 			 * 	console.log(vars);
 			 * });
 			 */
-			async getAllByApplication(
-				slugOrUuidOrId: string | number,
-				options?: PineOptions<DeviceVariable>,
-			): Promise<DeviceVariable[]> {
-				options ??= {};
-
+			async getAllByApplication<
+				T extends ODataOptionsWithoutCount<DeviceEnvironmentVariable['Read']>,
+			>(slugOrUuidOrId: string | number, options?: T) {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -2712,12 +2695,11 @@ const getDeviceModel = function (
 			 * 	console.log(vars);
 			 * });
 			 */
-			async getAllByDevice(
-				uuidOrId: string | number,
-				options?: PineOptions<DeviceServiceEnvironmentVariable>,
-			): Promise<DeviceServiceEnvironmentVariable[]> {
-				options ??= {};
-
+			async getAllByDevice<
+				T extends ODataOptionsWithoutCount<
+					DeviceServiceEnvironmentVariable['Read']
+				>,
+			>(uuidOrId: string | number, options?: T) {
 				const { id: deviceId } = await exports.get(uuidOrId, { $select: 'id' });
 				return await pine.get({
 					resource: 'device_service_environment_variable',
@@ -2759,12 +2741,11 @@ const getDeviceModel = function (
 			 * 	console.log(vars);
 			 * });
 			 */
-			async getAllByApplication(
-				slugOrUuidOrId: string | number,
-				options?: PineOptions<DeviceServiceEnvironmentVariable>,
-			): Promise<DeviceServiceEnvironmentVariable[]> {
-				options ??= {};
-
+			async getAllByApplication<
+				T extends ODataOptionsWithoutCount<
+					DeviceServiceEnvironmentVariable['Read']
+				>,
+			>(slugOrUuidOrId: string | number, options?: T) {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -2960,7 +2941,7 @@ const getDeviceModel = function (
 					throw new errors.BalenaAmbiguousDevice(uuidOrId);
 				}
 
-				await pine.upsert<DeviceServiceEnvironmentVariable>({
+				await pine.upsert({
 					resource: 'device_service_environment_variable',
 					id: {
 						service_install: serviceInstall.id,
@@ -3052,9 +3033,9 @@ const getDeviceModel = function (
 			 * @memberof balena.models.device.history
 			 *
 			 * @param {String|Number} uuidOrId - device uuid (32 / 62 digits string) or id (number)
-			 * @param {Object} [options] - options
-			 * @param {Date} [options.fromDate=subDays(new Date(), 7)] - history entries older or equal to this date - default now() - 7 days
-			 * @param {Date} [options.toDate] - history entries younger or equal to this date
+			 * @param {Date} [dateFilter.fromDate=subDays(new Date(), 7)] - history entries older or equal to this date - default now() - 7 days
+			 * @param {Date} [dateFilter.toDate] - history entries younger or equal to this date
+			 * @param {Object} [options] - extra pine options to use
 			 * @fulfil {Object[]} - device history
 			 * @returns {Promise}
 			 *
@@ -3072,16 +3053,26 @@ const getDeviceModel = function (
 			 * @example
 			 * // get all device history entries between now - 20 days and now - 10 days
 			 * balena.models.device.history.getAllByDevice(999999, { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10)})
+			 *
+			 * @example
+			 * // get all device history entries between now - 20 days and now - 10 days
+			 * balena.models.device.history.getAllByDevice(
+			 *  999999,
+			 *  { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10)},
+			 *  { $top: 10, $orderby: { id: 'desc' }}
+			 * )
 			 */
-			async getAllByDevice(
+			async getAllByDevice<
+				T extends ODataOptionsWithoutCount<DeviceHistory['Read']>,
+			>(
 				uuidOrId: string | number,
 				{
 					fromDate = subDays(new Date(), DEFAULT_DAYS_OF_REQUESTED_HISTORY),
 					toDate,
-					...options
-				}: PineOptions<DeviceHistory> & { fromDate?: Date; toDate?: Date } = {},
-			): Promise<DeviceHistory[]> {
-				let $filter: PineFilter<DeviceHistory> =
+				}: DateFilters = {},
+				options?: T,
+			) {
+				let $filter: FilterObj<DeviceHistory['Read']> =
 					historyTimeRangeFilterWithGuard(fromDate, toDate);
 
 				if (isId(uuidOrId)) {
@@ -3095,7 +3086,7 @@ const getDeviceModel = function (
 					throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
 				}
 
-				return await pine.get<DeviceHistory>({
+				return await pine.get({
 					resource: 'device_history',
 					options: mergePineOptions(
 						{
@@ -3114,9 +3105,9 @@ const getDeviceModel = function (
 			 * @memberof balena.models.device.history
 			 *
 			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
-			 * @param {Object} [options] - options
-			 * @param {Date} [options.fromDate=subDays(new Date(), 7)] - history entries older or equal to this date - default now() - 7 days
-			 * @param {Date} [options.toDate] - history entries younger or equal to this date
+			 * @param {Date} [dateFilter.fromDate=subDays(new Date(), 7)] - history entries older or equal to this date - default now() - 7 days
+			 * @param {Date} [dateFilter.toDate] - history entries younger or equal to this date
+			 * @param {Object} [options] - extra pine options to use
 			 * @fulfil {Object[]} - device history
 			 * @returns {Promise}
 			 *
@@ -3134,15 +3125,25 @@ const getDeviceModel = function (
 			 * // get all device history entries between now - 20 days and now - 10 days
 			 * balena.models.device.history.getAllByApplication(999999, { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10)})
 			 *
+			 * @example
+			 * // get all device history entries between now - 20 days and now - 10 days
+			 * balena.models.device.history.getAllByApplication(
+			 *   999999,
+			 *   { fromDate: subDays(new Date(), 20), toDate: subDays(new Date(), 10),
+			 *   { $top: 10, $orderby: { id: 'desc' }}
+			 * });
+			 *
 			 */
-			async getAllByApplication(
+			async getAllByApplication<
+				T extends ODataOptionsWithoutCount<DeviceHistory['Read']>,
+			>(
 				slugOrUuidOrId: string | number,
 				{
 					fromDate = subDays(new Date(), DEFAULT_DAYS_OF_REQUESTED_HISTORY),
 					toDate,
-					...options
-				}: PineOptions<DeviceHistory> & { fromDate?: Date; toDate?: Date } = {},
-			): Promise<DeviceHistory[]> {
+				}: DateFilters = {},
+				options?: T,
+			) {
 				const { id: applicationId } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -3150,7 +3151,7 @@ const getDeviceModel = function (
 					},
 				);
 
-				return await pine.get<DeviceHistory>({
+				return await pine.get({
 					resource: 'device_history',
 					options: mergePineOptions(
 						{

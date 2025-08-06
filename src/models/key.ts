@@ -15,9 +15,8 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import type * as BalenaSdk from '..';
-import type { InjectedDependenciesParam } from '..';
-import { mergePineOptions } from '../util';
+import type { UserHasPublicKey, InjectedDependenciesParam } from '..';
+import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
 
 const getKeyModel = function (deps: InjectedDependenciesParam) {
 	const {
@@ -42,12 +41,12 @@ const getKeyModel = function (deps: InjectedDependenciesParam) {
 	 * 	console.log(keys);
 	 * });
 	 */
-	function getAll(
-		options: BalenaSdk.PineOptions<BalenaSdk.SSHKey> = {},
-	): Promise<BalenaSdk.SSHKey[]> {
+	function getAll<T extends ODataOptionsWithoutCount<UserHasPublicKey['Read']>>(
+		options?: T,
+	) {
 		return pine.get({
 			resource: 'user__has__public_key',
-			options: mergePineOptions({}, options),
+			options,
 		});
 	}
 
@@ -67,7 +66,7 @@ const getKeyModel = function (deps: InjectedDependenciesParam) {
 	 * 	console.log(key);
 	 * });
 	 */
-	async function get(id: number): Promise<BalenaSdk.SSHKey> {
+	async function get(id: number) {
 		const key = await pine.get({
 			resource: 'user__has__public_key',
 			id,
@@ -91,8 +90,8 @@ const getKeyModel = function (deps: InjectedDependenciesParam) {
 	 * @example
 	 * balena.models.key.remove(51);
 	 */
-	function remove(id: number): Promise<string> {
-		return pine.delete<BalenaSdk.SSHKey>({
+	function remove(id: number): Promise<void> {
+		return pine.delete({
 			resource: 'user__has__public_key',
 			id,
 		});
@@ -116,10 +115,7 @@ const getKeyModel = function (deps: InjectedDependenciesParam) {
 	 * 	console.log(key);
 	 * });
 	 */
-	async function create(
-		title: string,
-		key: string,
-	): Promise<BalenaSdk.PinePostResult<BalenaSdk.SSHKey>> {
+	async function create(title: string, key: string) {
 		// Avoid ugly whitespaces
 		key = key.trim();
 

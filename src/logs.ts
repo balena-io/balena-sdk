@@ -17,8 +17,11 @@ limitations under the License.
 import { EventEmitter } from 'events';
 import { parse as ndjsonParse } from 'ndjson';
 import { globalEnv } from './util/global-env';
-import type { Device } from './types/models';
-import type { InjectedDependenciesParam, InjectedOptionsParam } from '.';
+import type {
+	Device,
+	InjectedDependenciesParam,
+	InjectedOptionsParam,
+} from '.';
 
 const AbortController: typeof window.AbortController =
 	'AbortController' in globalEnv
@@ -62,7 +65,7 @@ const getLogs = function (
 	opts: InjectedOptionsParam,
 ) {
 	const getLogsFromApi = async function (
-		device: Device,
+		device: Pick<Device['Read'], 'uuid'>,
 		options?: LogsOptions,
 	) {
 		const { body } = await request.send({
@@ -74,7 +77,7 @@ const getLogs = function (
 	};
 
 	const subscribeToApiLogs = function (
-		device: Device,
+		device: Pick<Device['Read'], 'uuid'>,
 		options?: LogsOptions,
 	): LogsSubscription {
 		options ??= {};

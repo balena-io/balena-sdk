@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { Pine } from './pine';
+import type { PineClient } from './pine';
 import type {
 	BalenaRequest,
 	BalenaRequestOptions,
@@ -23,7 +23,8 @@ import type {
 import { globalEnv } from './util/global-env';
 import type { BalenaRequestError } from 'balena-errors';
 
-export type { Pine, PineStrict } from './pine';
+export type { PineClient };
+export type * as Pine from 'pinejs-client-core';
 
 export * from './types/models';
 export * from './types/jwt';
@@ -32,26 +33,6 @@ export * from './types/user-invite';
 export * from './types/auth';
 
 export type { Interceptor };
-export type {
-	WithId,
-	PineDeferred,
-	NavigationResource,
-	OptionalNavigationResource,
-	ReverseNavigationResource,
-	ParamsObj as PineParams,
-	ParamsObjWithId as PineParamsWithId,
-	Filter as PineFilter,
-	Expand as PineExpand,
-	ODataOptions as PineOptions,
-	SubmitBody as PineSubmitBody,
-	ODataOptionsWithFilter as PineOptionsWithFilter,
-	ODataOptionsStrict as PineOptionsStrict,
-	SelectableProps as PineSelectableProps,
-	ExpandableProps as PineExpandableProps,
-	ExpandResultObject as PineExpandResultObject,
-	TypedResult as PineTypedResult,
-	PostResult as PinePostResult,
-} from '../typings/pinejs-client-core';
 
 export type { ApplicationMembershipCreationOptions } from './models/application-membership';
 export type { ApplicationInviteOptions } from './models/application-invite';
@@ -82,7 +63,6 @@ export type {
 	SupervisorStatus,
 } from './models/device';
 export type { ReleaseWithImageDetails } from './models/release';
-export type { OrganizationMembershipCreationOptions } from './models/organization-membership';
 export type { OrganizationInviteOptions } from './models/organization-invite';
 export type {
 	ImgConfigOptions,
@@ -96,7 +76,6 @@ export type { OsUpdateActionResult } from './util/device-actions/os-update';
 export type { BuilderUrlDeployOptions } from './util/builder';
 export type {
 	CurrentService,
-	CurrentServiceWithCommit,
 	DeviceWithServiceDetails,
 } from './util/device-service-details';
 export type {
@@ -117,7 +96,7 @@ export interface InjectedDependenciesParam {
 	};
 	request: BalenaRequest;
 	auth: import('balena-auth').default;
-	pine: Pine;
+	pine: PineClient;
 	pubsub: import('./util/pubsub').PubSub;
 }
 
@@ -179,7 +158,7 @@ export type BalenaSDK = {
 } & {
 	interceptors: Interceptor[];
 	request: BalenaRequest;
-	pine: Pine;
+	pine: PineClient;
 	utils: import('./util').BalenaUtils;
 	errors: typeof import('balena-errors');
 	version: string;
@@ -232,7 +211,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 	};
 	const BalenaAuth = (require('balena-auth') as typeof import('balena-auth'))
 		.default;
-	const { createPinejsClient } = require('./pine') as typeof import('./pine');
+	const { PinejsClient } = require('./pine') as typeof import('./pine');
 	const errors = require('balena-errors') as typeof import('balena-errors');
 	const { PubSub } = require('./util/pubsub') as typeof import('./util/pubsub');
 
@@ -285,7 +264,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 		})(request.send);
 	}
 	/* eslint-enable @typescript-eslint/no-require-imports */
-	const pine = createPinejsClient({}, { ...opts, auth, request });
+	const pine = new PinejsClient({}, { ...opts, auth, request });
 	const pubsub = new PubSub();
 
 	const sdk = {} as BalenaSDK;
@@ -386,22 +365,15 @@ export const getSdk = function ($opts?: SdkOptions) {
 	 *  { $expand: { device: { $select: ['id'] } } },
 	 *  { $expand: { device: { $select: ['name'] } } },
 	 * );
-	 *
-	 * @example
-	 * // Creating a new WebResourceFile in case 'File' API is not available.
-	 * new balena.utils.BalenaWebResourceFile(
-	 *   [fs.readFileSync('./file.tgz')],
-	 *   'file.tgz'
-	 * );
 	 */
 	Object.defineProperty(sdk, 'utils', {
 		enumerable: true,
 		configurable: true,
 		get() {
-			const { mergePineOptions, BalenaWebResourceFile } =
+			const { mergePineOptions } =
 				// eslint-disable-next-line @typescript-eslint/no-require-imports
 				require('./util') as typeof import('./util');
-			return { mergePineOptions, BalenaWebResourceFile };
+			return { mergePineOptions };
 		},
 	});
 

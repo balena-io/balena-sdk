@@ -15,14 +15,18 @@ import {
 	itShouldGetAllTagsByResource,
 } from './tags';
 import type * as tagsHelper from './tags';
+import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 const keyAlternatives = [
-	['id', (member: Pick<BalenaSdk.OrganizationMembership, 'id'>) => member.id],
+	[
+		'id',
+		(member: Pick<BalenaSdk.OrganizationMembership['Read'], 'id'>) => member.id,
+	],
 	[
 		'alternate key',
 		(
 			member: Pick<
-				BalenaSdk.OrganizationMembership,
+				BalenaSdk.OrganizationMembership['Read'],
 				'user' | 'is_member_of__organization'
 			>,
 		) =>
@@ -70,17 +74,12 @@ describe('Organization Membership Model', function () {
 						$select: 'username',
 					},
 				},
-			} satisfies BalenaSdk.PineOptions<BalenaSdk.OrganizationMembership>;
+			} as const;
 			const memberships =
-				(await balena.models.organization.membership.getAllByOrganization(
+				await balena.models.organization.membership.getAllByOrganization(
 					this.initialOrg.id,
 					opts,
-				)) as Array<
-					BalenaSdk.PineTypedResult<
-						BalenaSdk.OrganizationMembership,
-						typeof opts
-					>
-				>;
+				);
 			assertDeepMatchAndLength(
 				memberships.map((m) => m.user[0].username).sort(),
 				[credentials.username, credentials.member.username].sort(),
@@ -89,7 +88,7 @@ describe('Organization Membership Model', function () {
 	});
 
 	describe('given a membership [read operations]', function () {
-		let membership: BalenaSdk.OrganizationMembership | undefined;
+		let membership: BalenaSdk.OrganizationMembership['Read'] | undefined;
 		before(async function () {
 			membership = (
 				await balena.models.organization.membership.getAllByOrganization(
@@ -199,7 +198,7 @@ describe('Organization Membership Model', function () {
 		// TODO: re-add this test in the future, we need a way to accept email invites in order to add and remove a user during testing
 		describe.skip('given a member organization membership [contained scenario]', function () {
 			let membership:
-				| BalenaSdk.PinePostResult<BalenaSdk.OrganizationMembership>
+				| PickDeferred<BalenaSdk.OrganizationMembership['Read']>
 				| undefined;
 
 			describe('balena.models.organization.membership.remove()', function () {
@@ -218,8 +217,8 @@ describe('Organization Membership Model', function () {
 
 		describe('given an organization with two organization memberships [contained scenario]', function () {
 			let memberMembership:
-				| BalenaSdk.OrganizationMembership
-				| BalenaSdk.PinePostResult<BalenaSdk.OrganizationMembership>
+				| BalenaSdk.OrganizationMembership['Read']
+				| PickDeferred<BalenaSdk.OrganizationMembership['Read']>
 				| undefined;
 
 			before(async function () {
@@ -259,7 +258,7 @@ describe('Organization Membership Model', function () {
 				});
 
 				const roleChangeTest = (
-					rolenName: BalenaSdk.OrganizationMembershipRoles,
+					rolenName: string,
 					[title, keyGetter]: (typeof keyAlternatives)[number],
 				) => {
 					it(`should be able to change an organization membership to "${rolenName}" by ${title}`, async function () {
@@ -269,7 +268,7 @@ describe('Organization Membership Model', function () {
 							rolenName,
 						);
 
-						memberMembership = await balena.models.organization.membership.get(
+						memberMembership = (await balena.models.organization.membership.get(
 							memberMembership!.id,
 							{
 								$select: 'id',
@@ -285,7 +284,7 @@ describe('Organization Membership Model', function () {
 									},
 								},
 							},
-						);
+						)) as BalenaSdk.OrganizationMembership['Read'];
 						expect(memberMembership).to.have.nested.property(
 							'user[0].username',
 							credentials.member.username,

@@ -73,6 +73,7 @@ describe('Key Model', function () {
 					$select: ['public_key'],
 				});
 				expect(key.public_key).to.equal(PUBLIC_KEY);
+				// @ts-expect-error - test case
 				expect(key.title).to.be.undefined;
 			});
 		});

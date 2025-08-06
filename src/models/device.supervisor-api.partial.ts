@@ -14,16 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type {
-	InjectedOptionsParam,
-	InjectedDependenciesParam,
-	PineTypedResult,
-	PineOptions,
-} from '..';
-import type { Device } from '../types/models';
-
+import type { InjectedOptionsParam, InjectedDependenciesParam } from '..';
 import { withSupervisorLockedError } from '../util';
-
 import { ensureVersionCompatibility } from '../util/device-os-version';
 
 // The min version where /apps API endpoints are implemented is 1.8.0 but we'll
@@ -85,15 +77,10 @@ export const getSupervisorApiHelper = function (
 		 * balena.models.device.ping(123);
 		 */
 		ping: async (uuidOrId: string | number): Promise<void> => {
-			const deviceOptions = {
+			const device = await sdkInstance.models.device.get(uuidOrId, {
 				$select: 'id',
 				$expand: { belongs_to__application: { $select: 'id' } },
-			} as const;
-
-			const device = (await sdkInstance.models.device.get(
-				uuidOrId,
-				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
+			});
 			await request.send({
 				method: 'POST',
 				url: '/supervisor/ping',
@@ -159,14 +146,10 @@ export const getSupervisorApiHelper = function (
 		 */
 		restartApplication: (uuidOrId: string | number): Promise<void> =>
 			withSupervisorLockedError(async () => {
-				const deviceOptions = {
+				const device = await sdkInstance.models.device.get(uuidOrId, {
 					$select: ['id', 'supervisor_version'],
 					$expand: { belongs_to__application: { $select: 'id' } },
-				} satisfies PineOptions<Device>;
-				const device = (await sdkInstance.models.device.get(
-					uuidOrId,
-					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
+				});
 
 				const appId = device.belongs_to__application[0].id;
 				const { body } = await request.send({
@@ -251,16 +234,10 @@ export const getSupervisorApiHelper = function (
 		): Promise<void> =>
 			withSupervisorLockedError(async () => {
 				options ??= {};
-
-				const deviceOptions = {
+				const device = await sdkInstance.models.device.get(uuidOrId, {
 					$select: 'id',
 					$expand: { belongs_to__application: { $select: 'id' } },
-				} as const;
-
-				const device = (await sdkInstance.models.device.get(
-					uuidOrId,
-					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
+				});
 				await request.send({
 					method: 'POST',
 					url: '/supervisor/v1/shutdown',
@@ -296,14 +273,10 @@ export const getSupervisorApiHelper = function (
 		 */
 		purge: (uuidOrId: string | number): Promise<void> =>
 			withSupervisorLockedError(async () => {
-				const deviceOptions = {
+				const device = await sdkInstance.models.device.get(uuidOrId, {
 					$select: 'id',
 					$expand: { belongs_to__application: { $select: 'id' } },
-				} as const;
-				const device = (await sdkInstance.models.device.get(
-					uuidOrId,
-					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
+				});
 				await request.send({
 					method: 'POST',
 					url: '/supervisor/v1/purge',
@@ -345,16 +318,10 @@ export const getSupervisorApiHelper = function (
 			options: { force?: boolean },
 		): Promise<void> {
 			options ??= {};
-
-			const deviceOptions = {
+			const device = await sdkInstance.models.device.get(uuidOrId, {
 				$select: 'id',
 				$expand: { belongs_to__application: { $select: 'id' } },
-			} as const;
-
-			const device = (await sdkInstance.models.device.get(
-				uuidOrId,
-				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
+			});
 			await request.send({
 				method: 'POST',
 				url: '/supervisor/v1/update',
@@ -432,14 +399,10 @@ export const getSupervisorApiHelper = function (
 			uuidOrId: string | number,
 			imageId: number,
 		): Promise<void> => {
-			const deviceOptions = {
+			const device = await sdkInstance.models.device.get(uuidOrId, {
 				$select: ['id', 'supervisor_version'],
 				$expand: { belongs_to__application: { $select: 'id' } },
-			} satisfies PineOptions<Device>;
-			const device = (await sdkInstance.models.device.get(
-				uuidOrId,
-				deviceOptions,
-			)) as PineTypedResult<Device, typeof deviceOptions>;
+			});
 			ensureVersionCompatibility(
 				device.supervisor_version,
 				MIN_SUPERVISOR_MC_API,
@@ -485,14 +448,10 @@ export const getSupervisorApiHelper = function (
 		 */
 		stopService: (uuidOrId: string | number, imageId: number): Promise<void> =>
 			withSupervisorLockedError(async () => {
-				const deviceOptions = {
+				const device = await sdkInstance.models.device.get(uuidOrId, {
 					$select: ['id', 'supervisor_version'],
 					$expand: { belongs_to__application: { $select: 'id' } },
-				} satisfies PineOptions<Device>;
-				const device = (await sdkInstance.models.device.get(
-					uuidOrId,
-					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
+				});
 				ensureVersionCompatibility(
 					device.supervisor_version,
 					MIN_SUPERVISOR_MC_API,
@@ -541,14 +500,10 @@ export const getSupervisorApiHelper = function (
 			imageId: number,
 		): Promise<void> =>
 			withSupervisorLockedError(async () => {
-				const deviceOptions = {
+				const device = await sdkInstance.models.device.get(uuidOrId, {
 					$select: ['id', 'supervisor_version'],
 					$expand: { belongs_to__application: { $select: 'id' } },
-				} satisfies PineOptions<Device>;
-				const device = (await sdkInstance.models.device.get(
-					uuidOrId,
-					deviceOptions,
-				)) as PineTypedResult<Device, typeof deviceOptions>;
+				});
 				ensureVersionCompatibility(
 					device.supervisor_version,
 					MIN_SUPERVISOR_MC_API,

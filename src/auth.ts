@@ -456,6 +456,7 @@ const getAuth = function (
 			resource: 'user',
 			id,
 			body: {
+				// @ts-expect-error this actually exists but isn't part of the generated model but it is only on the update allow list and the allowlist atm needs it to also be in the Read as well
 				has_been_sent_verification_email: true,
 			},
 		});
