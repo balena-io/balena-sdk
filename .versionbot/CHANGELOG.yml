@@ -1,4 +1,63 @@
 - commits:
+    - subject: Change device_history methods with separate options
+      hash: 45b130c0278e348f45bed4b964615536bdfca91e
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Otavio Jacobi
+      nested: []
+    - subject: Make function calls strongly typed with mergePineOptions
+      hash: 8a00c046791fc1a5a1b82b314d2b5899940f3574
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Otavio Jacobi
+      nested: []
+    - subject: Bump pinejs-client-js to v8.3.0
+      hash: 49a2eb007d7884dc21a6e6b4ac4fbf09b526a30b
+      body: >
+        Update pinejs-client-js from 7.0.0 to 8.3.0
+
+
+        This is a fairly extensive change for all the SDK typings.
+
+        As a general rule, it is now using the incoming types from balena-api
+        rather than manually mantaing its own.
+
+
+        These types are in geral less strict than the previous types, however,
+        are in nature shared between server and client components, and thus any
+        improvement applies to the entire stack.
+
+
+        The bigger changes are:
+         - The resource typings (e.g. Application) now are presented as `Application['Read']` & `Application['Write']`
+         - The pinejs-client-js typings are all directly exposed inside the `BalenaSDK.Pine.*` scope
+         - PineTypedResult should be replaced with Pine.OptionsToResponse interface
+        Several other small changes apply, specially the ones from
+        pinejs-client-core (most noticeable drop of $filter with the format of
+        {a: b: c} for navigation resources and preferences for object format for
+        $orderby)
+      footer:
+        Change-type: major
+        change-type: major
+      author: Otavio Jacobi
+      nested: []
+    - subject: Drop WebResourceFile helper
+      hash: c909412dcd33a7e37668633f014bd6f331e39a67
+      body: |
+        File WebAPI is stable since node20 and should be used instead.
+      footer:
+        Change-type: major
+        change-type: major
+      author: Otavio Jacobi
+      nested: []
+  version: 22.0.0
+  title: ""
+  date: 2025-08-06T20:36:51.630Z
+- commits:
     - subject: "tests: Reduce the size of the api key names used in tests"
       hash: 9cb4cf0ce344cf2fa2fc95626b7b875a624bcff3
       body: ""
