@@ -37,6 +37,11 @@ const OPTIONS = {
 gulp.task('test', function (cb) {
 	require('dotenv').config();
 
+	// Only set NODE_OPTIONS for Node.js >= 22.18
+	const nodeVersion = process.versions.node.split('.').map(Number);
+	if (nodeVersion[0] > 22 || (nodeVersion[0] === 22 && nodeVersion[1] >= 18)) {
+		process.env.NODE_OPTIONS = '--no-experimental-strip-types';
+	}
 	const TEST_ONLY_ON_ENVIRONMENT = optionalVar('TEST_ONLY_ON_ENVIRONMENT');
 	if (TEST_ONLY_ON_ENVIRONMENT && TEST_ONLY_ON_ENVIRONMENT !== 'node') {
 		console.log(
