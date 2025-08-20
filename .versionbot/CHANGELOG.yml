@@ -1,4 +1,18 @@
 - commits:
+    - subject: Use NODE_OPTIONS=--no-experimental-strip-types for node 22.18
+      hash: ea09508f805e691e653f08fc587a4cd099ec84b8
+      body: |
+        See: https://github.com/nodejs/node/issues/59364
+        See: https://github.com/TypeStrong/ts-node/issues/2086
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Otavio Jacobi
+      nested: []
+  version: 22.0.1
+  title: ""
+  date: 2025-08-20T11:18:49.418Z
+- commits:
     - subject: Change device_history methods with separate options
       hash: 45b130c0278e348f45bed4b964615536bdfca91e
       body: ""
