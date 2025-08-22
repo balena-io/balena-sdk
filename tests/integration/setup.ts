@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-restricted-imports
+import * as _ from 'lodash';
 import { optionalVar, requiredVar } from '@balena/env-parsing';
 import * as chai from 'chai';
 import { expect } from 'chai';
@@ -563,9 +565,9 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 						service_name: 'db',
 					},
 				}),
-				// Register an old & new release of this application
 				(async () => {
-					return [
+					// Create an old & a new release in the application, one at a time
+					const releases = [
 						await balena.pine.post({
 							resource: 'release',
 							body: {
@@ -579,31 +581,45 @@ export function givenMulticontainerApplication(beforeFn: Mocha.HookFunction) {
 								start_timestamp: oldDate,
 							},
 						}),
-						await balena.pine
-							.post({
-								resource: 'release',
-								body: {
-									belongs_to__application: this.application.id,
-									is_created_by__user: userId,
-									commit: 'new-release-commit',
-									semver: '1.0.0',
-									status: 'success' as const,
-									source: 'cloud',
-									composition: {},
-									start_timestamp: now,
-								},
-							})
-							.then(({ id }) =>
-								balena.models.release.get(id, {
-									$select: [
-										'id',
-										'commit',
-										'raw_version',
-										'belongs_to__application',
-									],
-								}),
-							),
+						await balena.pine.post({
+							resource: 'release',
+							body: {
+								belongs_to__application: this.application.id,
+								is_created_by__user: userId,
+								commit: 'new-release-commit',
+								semver: '1.0.0',
+								status: 'success' as const,
+								source: 'cloud',
+								composition: {},
+								start_timestamp: now,
+							},
+						}),
 					];
+					// fetch the extra computed terms that need explicit $selects
+					const releasesExtraProps =
+						await balena.models.release.getAllByApplication(
+							this.application.id,
+							{
+								$select: ['id', 'raw_version'],
+								$filter: {
+									id: { $in: releases.map((r) => r.id) },
+								},
+							},
+						);
+					const releaseExtraPropsById = _.keyBy(
+						releasesExtraProps,
+						(r) => r.id,
+					);
+					for (const release of releases) {
+						const releaseExtraProps = releaseExtraPropsById[release.id];
+						if (releaseExtraProps == null) {
+							throw new Error(
+								`Failed to find newlly created release in the setup code`,
+							);
+						}
+						Object.assign(release, releaseExtraProps);
+					}
+					return releases;
 				})(),
 			],
 		);
