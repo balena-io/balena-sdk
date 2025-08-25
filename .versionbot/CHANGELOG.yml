@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add release_asset
+      hash: 7a393ca1811bafa7d8d672a62b99c140632cbe9a
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Otavio Jacobi
+      nested: []
+  version: 22.1.0
+  title: ""
+  date: 2025-08-25T13:38:14.484Z
+- commits:
     - subject: Use NODE_OPTIONS=--no-experimental-strip-types for node 22.18
       hash: ea09508f805e691e653f08fc587a4cd099ec84b8
       body: |
