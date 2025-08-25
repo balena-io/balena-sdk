@@ -58,6 +58,14 @@ const getReleaseModel = function (
 		return new BuilderHelper(deps, opts);
 	});
 
+	const assetsModel =
+		// eslint-disable-next-line @typescript-eslint/no-require-imports
+		(require('./release-asset') as typeof import('./release-asset')).default(
+			deps,
+			opts,
+			(...args: Parameters<typeof get>) => get(...args),
+		);
+
 	const tagsModel = buildDependentResource(
 		{ pine },
 		{
@@ -732,6 +740,7 @@ const getReleaseModel = function (
 		setNote,
 		setKnownIssueList,
 		tags,
+		asset: assetsModel,
 	};
 };
 
