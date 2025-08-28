@@ -67,7 +67,7 @@
   },
   "devDependencies": {
     "@balena/env-parsing": "^1.2.0",
-    "@balena/lint": "^9.0.1",
+    "@balena/lint": "9.3.3-build-fix-tsconfigRootDir-issue-8c78329b78507f0ed19fc80db422122fcbe988e8-1",
     "@types/chai": "^4.3.0",
     "@types/lodash": "^4.14.195",
     "@types/memoizee": "^0.4.12",
