@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add release assets docs
+      hash: 58b01845766891f40222532c2127066b9f699594
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Otavio Jacobi
+      nested: []
+  version: 22.1.1
+  title: ""
+  date: 2025-09-01T11:06:23.879Z
+- commits:
     - subject: Add release_asset
       hash: 7a393ca1811bafa7d8d672a62b99c140632cbe9a
       body: ""
