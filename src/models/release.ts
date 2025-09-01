@@ -729,6 +729,204 @@ const getReleaseModel = function (
 		remove: tagsModel.remove,
 	};
 
+	/**
+	 * @namespace asset
+	 * @memberof balena.models.release
+	 */
+	const asset = {
+		/**
+		 * @summary Get all release assets for a release
+		 * @name getAllByRelease
+		 * @public
+		 * @function
+		 * @memberof balena.models.release.asset
+		 *
+		 * @param {String|Number|Object} commitOrIdOrRawVersion - release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release
+		 * @param {Object} [options={}] - extra pine options to use
+		 * @fulfil {Object[]} - release assets
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.release.asset.getAllByRelease(123).then(function(assets) {
+		 * 	console.log(assets);
+		 * });
+		 *
+		 * @example
+		 * balena.models.release.asset.getAllByRelease('7cf02a6').then(function(assets) {
+		 * 	console.log(assets);
+		 * });
+		 *
+		 * @example
+		 * balena.models.release.asset.getAllByRelease({ application: 456, raw_version: '1.2.3' }).then(function(assets) {
+		 * 	console.log(assets);
+		 * });
+		 */
+		getAllByRelease: assetsModel.getAllByRelease,
+
+		/**
+		 * @summary Get a specific release asset
+		 * @name get
+		 * @public
+		 * @function
+		 * @memberof balena.models.release.asset
+		 *
+		 * @param {Number|Object} id - release asset ID or object specifying the unique release & asset_key pair
+		 * @param {Object} [options={}] - extra pine options to use
+		 * @fulfil {Object} - release asset
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.release.asset.get(123).then(function(asset) {
+		 * 	console.log(asset);
+		 * });
+		 *
+		 * @example
+		 * balena.models.release.asset.get({
+		 * 	asset_key: 'logo.png',
+		 * 	release: 123
+		 * }).then(function(asset) {
+		 * 	console.log(asset);
+		 * });
+		 */
+		get: assetsModel.get,
+
+		/**
+		 * @summary Download a release asset
+		 * @name download
+		 * @public
+		 * @function
+		 * @memberof balena.models.release.asset
+		 *
+		 * @param {Number|Object} id - release asset ID or object specifying the unique release & asset_key pair
+		 * @fulfil {NodeJS.ReadableStream} - download stream
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.release.asset.download(123).then(function(stream) {
+		 * 	stream.pipe(fs.createWriteStream('logo.png'));
+		 * });
+		 *
+		 * @example
+		 * balena.models.release.asset.download({
+		 * 	asset_key: 'logo.png',
+		 * 	release: 123
+		 * }).then(function(stream) {
+		 * 	stream.pipe(fs.createWriteStream('logo.png'));
+		 * });
+		 */
+		download: assetsModel.download,
+
+		/**
+		 * @summary Upload a release asset
+		 * @name upload
+		 * @public
+		 * @function
+		 * @memberof balena.models.release.asset
+		 *
+		 * @param {Object} uploadParams - upload parameters
+		 * @param {String|File} uploadParams.asset - asset file path (string, Node.js only) or File object (Node.js & browser). For File objects, use new File([content], filename, {type: mimeType})
+		 * @param {String} uploadParams.asset_key - unique key for the asset within the release
+		 * @param {Number} uploadParams.release - release ID
+		 * @param {Object} [options={}] - upload options
+		 * @param {Number} [options.chunkSize=5242880] - chunk size for multipart uploads (5MiB default)
+		 * @param {Number} [options.parallelUploads=5] - number of parallel uploads for multipart
+		 * @param {Boolean} [options.overwrite=false] - whether to overwrite existing asset
+		 * @param {Function} [options.onUploadProgress] - callback for upload progress
+		 * @fulfil {Object} - uploaded release asset
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * // Upload from file path (Node.js)
+		 * balena.models.release.asset.upload({
+		 * 	asset: '/path/to/logo.png',
+		 * 	asset_key: 'logo.png',
+		 * 	release: 123
+		 * }).then(function(asset) {
+		 * 	console.log('Asset uploaded:', asset);
+		 * });
+		 *
+		 * @example
+		 * // Upload with File API (Node.js and browser)
+		 * const content = Buffer.from('Hello, World!', 'utf-8');
+		 * const file = new File([content], 'readme.txt', { type: 'text/plain' });
+		 *
+		 * balena.models.release.asset.upload({
+		 * 	asset: file,
+		 * 	asset_key: 'readme.txt',
+		 * 	release: 123
+		 * }).then(function(asset) {
+		 * 	console.log('Asset uploaded:', asset);
+		 * });
+		 *
+		 * @example
+		 * // Upload large file with File API and progress tracking
+		 * const largeContent = new Uint8Array(10 * 1024 * 1024); // 10MB
+		 * const largeFile = new File([largeContent], 'data.bin', { type: 'application/octet-stream' });
+		 *
+		 * balena.models.release.asset.upload({
+		 * 	asset: largeFile,
+		 * 	asset_key: 'data.bin',
+		 * 	release: 123
+		 * }, {
+		 * 	chunkSize: 5 * 1024 * 1024, // 5MB chunks
+		 * 	parallelUploads: 3,
+		 * 	onUploadProgress: function(progress) {
+		 * 		const percent = (progress.uploaded / progress.total * 100).toFixed(2);
+		 * 		console.log(`Upload progress: ${percent}%`);
+		 * 	}
+		 * }).then(function(asset) {
+		 * 	console.log('Large file uploaded:', asset);
+		 * });
+		 *
+		 * @example
+		 * // Browser: Upload file from input element
+		 * const fileInput = document.getElementById('fileInput');
+		 * const file = fileInput.files[0]; // File object from input
+		 *
+		 * balena.models.release.asset.upload({
+		 * 	asset: file,
+		 * 	asset_key: file.name,
+		 * 	release: 123
+		 * }).then(function(asset) {
+		 * 	console.log('File uploaded from browser:', asset);
+		 * });
+		 *
+		 * @example
+		 * // Upload with overwrite option
+		 * balena.models.release.asset.upload({
+		 * 	asset: '/path/to/logo.png',
+		 * 	asset_key: 'logo.png',
+		 * 	release: 123
+		 * }, {
+		 * 	overwrite: true
+		 * }).then(function(asset) {
+		 * 	console.log('Asset uploaded/updated:', asset);
+		 * });
+		 */
+		upload: assetsModel.upload,
+
+		/**
+		 * @summary Remove a release asset
+		 * @name remove
+		 * @public
+		 * @function
+		 * @memberof balena.models.release.asset
+		 *
+		 * @param {Number|Object} id - release asset ID or object specifying the unique release & asset_key pair
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.release.asset.remove(123);
+		 *
+		 * @example
+		 * balena.models.release.asset.remove({
+		 * 	asset_key: 'logo.png',
+		 * 	release: 123
+		 * });
+		 */
+		remove: assetsModel.remove,
+	};
+
 	return {
 		get,
 		getAllByApplication,
@@ -740,7 +938,7 @@ const getReleaseModel = function (
 		setNote,
 		setKnownIssueList,
 		tags,
-		asset: assetsModel,
+		asset,
 	};
 };
 

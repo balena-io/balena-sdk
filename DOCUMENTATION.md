@@ -18,6 +18,8 @@ If you intend to do that, be sure to remove the following dependencies that are 
 * path
 * balena-settings-client
 * node-localstorage
+* fs/promises
+* mime
 
 ### Bundling with pkg
 
@@ -387,6 +389,12 @@ const sdk = fromSharedOptions();
                 * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
                 * [.set(commitOrIdOrRawVersion, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
                 * [.remove(commitOrIdOrRawVersion, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
+            * [.asset](#balena.models.release.asset) : <code>object</code>
+                * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.asset.getAllByRelease) ⇒ <code>Promise</code>
+                * [.get(id, [options])](#balena.models.release.asset.get) ⇒ <code>Promise</code>
+                * [.download(id)](#balena.models.release.asset.download) ⇒ <code>Promise</code>
+                * [.upload(uploadParams, [options])](#balena.models.release.asset.upload) ⇒ <code>Promise</code>
+                * [.remove(id)](#balena.models.release.asset.remove) ⇒ <code>Promise</code>
             * [.get(commitOrIdOrRawVersion, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
             * [.getWithImageDetails(commitOrIdOrRawVersion, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
             * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
@@ -792,6 +800,12 @@ balena.models.device.get(123).catch(function (error) {
             * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
             * [.set(commitOrIdOrRawVersion, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
             * [.remove(commitOrIdOrRawVersion, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
+        * [.asset](#balena.models.release.asset) : <code>object</code>
+            * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.asset.getAllByRelease) ⇒ <code>Promise</code>
+            * [.get(id, [options])](#balena.models.release.asset.get) ⇒ <code>Promise</code>
+            * [.download(id)](#balena.models.release.asset.download) ⇒ <code>Promise</code>
+            * [.upload(uploadParams, [options])](#balena.models.release.asset.upload) ⇒ <code>Promise</code>
+            * [.remove(id)](#balena.models.release.asset.remove) ⇒ <code>Promise</code>
         * [.get(commitOrIdOrRawVersion, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
         * [.getWithImageDetails(commitOrIdOrRawVersion, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
         * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
@@ -5734,6 +5748,12 @@ balena.models.config.getConfigVarSchema('raspberry-pi').then(function(options) {
         * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
         * [.set(commitOrIdOrRawVersion, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
         * [.remove(commitOrIdOrRawVersion, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
+    * [.asset](#balena.models.release.asset) : <code>object</code>
+        * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.asset.getAllByRelease) ⇒ <code>Promise</code>
+        * [.get(id, [options])](#balena.models.release.asset.get) ⇒ <code>Promise</code>
+        * [.download(id)](#balena.models.release.asset.download) ⇒ <code>Promise</code>
+        * [.upload(uploadParams, [options])](#balena.models.release.asset.upload) ⇒ <code>Promise</code>
+        * [.remove(id)](#balena.models.release.asset.remove) ⇒ <code>Promise</code>
     * [.get(commitOrIdOrRawVersion, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
     * [.getWithImageDetails(commitOrIdOrRawVersion, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
     * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
@@ -5859,6 +5879,219 @@ balena.models.release.tags.remove('7cf02a6', 'EDITOR');
 **Example**  
 ```js
 balena.models.release.tags.remove({application: 456, rawVersion: '0.0.0'}, 'EDITOR');
+```
+<a name="balena.models.release.asset"></a>
+
+##### release.asset : <code>object</code>
+**Kind**: static namespace of [<code>release</code>](#balena.models.release)  
+
+* [.asset](#balena.models.release.asset) : <code>object</code>
+    * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.asset.getAllByRelease) ⇒ <code>Promise</code>
+    * [.get(id, [options])](#balena.models.release.asset.get) ⇒ <code>Promise</code>
+    * [.download(id)](#balena.models.release.asset.download) ⇒ <code>Promise</code>
+    * [.upload(uploadParams, [options])](#balena.models.release.asset.upload) ⇒ <code>Promise</code>
+    * [.remove(id)](#balena.models.release.asset.remove) ⇒ <code>Promise</code>
+
+<a name="balena.models.release.asset.getAllByRelease"></a>
+
+###### asset.getAllByRelease(commitOrIdOrRawVersion, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>asset</code>](#balena.models.release.asset)  
+**Summary**: Get all release assets for a release  
+**Access**: public  
+**Fulfil**: <code>Object[]</code> - release assets  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| commitOrIdOrRawVersion | <code>String</code> \| <code>Number</code> \| <code>Object</code> |  | release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.release.asset.getAllByRelease(123).then(function(assets) {
+	console.log(assets);
+});
+```
+**Example**  
+```js
+balena.models.release.asset.getAllByRelease('7cf02a6').then(function(assets) {
+	console.log(assets);
+});
+```
+**Example**  
+```js
+balena.models.release.asset.getAllByRelease({ application: 456, raw_version: '1.2.3' }).then(function(assets) {
+	console.log(assets);
+});
+```
+<a name="balena.models.release.asset.get"></a>
+
+###### asset.get(id, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>asset</code>](#balena.models.release.asset)  
+**Summary**: Get a specific release asset  
+**Access**: public  
+**Fulfil**: <code>Object</code> - release asset  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| id | <code>Number</code> \| <code>Object</code> |  | release asset ID or object specifying the unique release & asset_key pair |
+| [options] | <code>Object</code> | <code>{}</code> | extra pine options to use |
+
+**Example**  
+```js
+balena.models.release.asset.get(123).then(function(asset) {
+	console.log(asset);
+});
+```
+**Example**  
+```js
+balena.models.release.asset.get({
+	asset_key: 'logo.png',
+	release: 123
+}).then(function(asset) {
+	console.log(asset);
+});
+```
+<a name="balena.models.release.asset.download"></a>
+
+###### asset.download(id) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>asset</code>](#balena.models.release.asset)  
+**Summary**: Download a release asset  
+**Access**: public  
+**Fulfil**: <code>NodeJS.ReadableStream</code> - download stream  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>Number</code> \| <code>Object</code> | release asset ID or object specifying the unique release & asset_key pair |
+
+**Example**  
+```js
+balena.models.release.asset.download(123).then(function(stream) {
+	stream.pipe(fs.createWriteStream('logo.png'));
+});
+```
+**Example**  
+```js
+balena.models.release.asset.download({
+	asset_key: 'logo.png',
+	release: 123
+}).then(function(stream) {
+	stream.pipe(fs.createWriteStream('logo.png'));
+});
+```
+<a name="balena.models.release.asset.upload"></a>
+
+###### asset.upload(uploadParams, [options]) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>asset</code>](#balena.models.release.asset)  
+**Summary**: Upload a release asset  
+**Access**: public  
+**Fulfil**: <code>Object</code> - uploaded release asset  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| uploadParams | <code>Object</code> |  | upload parameters |
+| uploadParams.asset | <code>String</code> \| <code>File</code> |  | asset file path (string, Node.js only) or File object (Node.js & browser). For File objects, use new File([content], filename, {type: mimeType}) |
+| uploadParams.asset_key | <code>String</code> |  | unique key for the asset within the release |
+| uploadParams.release | <code>Number</code> |  | release ID |
+| [options] | <code>Object</code> | <code>{}</code> | upload options |
+| [options.chunkSize] | <code>Number</code> | <code>5242880</code> | chunk size for multipart uploads (5MiB default) |
+| [options.parallelUploads] | <code>Number</code> | <code>5</code> | number of parallel uploads for multipart |
+| [options.overwrite] | <code>Boolean</code> | <code>false</code> | whether to overwrite existing asset |
+| [options.onUploadProgress] | <code>function</code> |  | callback for upload progress |
+
+**Example**  
+```js
+// Upload from file path (Node.js)
+balena.models.release.asset.upload({
+	asset: '/path/to/logo.png',
+	asset_key: 'logo.png',
+	release: 123
+}).then(function(asset) {
+	console.log('Asset uploaded:', asset);
+});
+```
+**Example**  
+```js
+// Upload with File API (Node.js and browser)
+const content = Buffer.from('Hello, World!', 'utf-8');
+const file = new File([content], 'readme.txt', { type: 'text/plain' });
+
+balena.models.release.asset.upload({
+	asset: file,
+	asset_key: 'readme.txt',
+	release: 123
+}).then(function(asset) {
+	console.log('Asset uploaded:', asset);
+});
+```
+**Example**  
+```js
+// Upload large file with File API and progress tracking
+const largeContent = new Uint8Array(10 * 1024 * 1024); // 10MB
+const largeFile = new File([largeContent], 'data.bin', { type: 'application/octet-stream' });
+
+balena.models.release.asset.upload({
+	asset: largeFile,
+	asset_key: 'data.bin',
+	release: 123
+}, {
+	chunkSize: 5 * 1024 * 1024, // 5MB chunks
+	parallelUploads: 3,
+	onUploadProgress: function(progress) {
+		const percent = (progress.uploaded / progress.total * 100).toFixed(2);
+		console.log(`Upload progress: ${percent}%`);
+	}
+}).then(function(asset) {
+	console.log('Large file uploaded:', asset);
+});
+```
+**Example**  
+```js
+// Browser: Upload file from input element
+const fileInput = document.getElementById('fileInput');
+const file = fileInput.files[0]; // File object from input
+
+balena.models.release.asset.upload({
+	asset: file,
+	asset_key: file.name,
+	release: 123
+}).then(function(asset) {
+	console.log('File uploaded from browser:', asset);
+});
+```
+**Example**  
+```js
+// Upload with overwrite option
+balena.models.release.asset.upload({
+	asset: '/path/to/logo.png',
+	asset_key: 'logo.png',
+	release: 123
+}, {
+	overwrite: true
+}).then(function(asset) {
+	console.log('Asset uploaded/updated:', asset);
+});
+```
+<a name="balena.models.release.asset.remove"></a>
+
+###### asset.remove(id) ⇒ <code>Promise</code>
+**Kind**: static method of [<code>asset</code>](#balena.models.release.asset)  
+**Summary**: Remove a release asset  
+**Access**: public  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>Number</code> \| <code>Object</code> | release asset ID or object specifying the unique release & asset_key pair |
+
+**Example**  
+```js
+balena.models.release.asset.remove(123);
+```
+**Example**  
+```js
+balena.models.release.asset.remove({
+	asset_key: 'logo.png',
+	release: 123
+});
 ```
 <a name="balena.models.release.get"></a>
 
