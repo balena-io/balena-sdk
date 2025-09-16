@@ -113,6 +113,7 @@ describe('Logs', function () {
 
 						// Wait for the expected number of logs (or more) to propagate
 						await waitFor(() => lines.length >= messages.length, {
+							timeout: LOG_PROPAGATION_TIMEOUT,
 							onTimeout: 'log',
 						});
 						resolve(null);
