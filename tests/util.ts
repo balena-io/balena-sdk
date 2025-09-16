@@ -110,9 +110,16 @@ export const timeSuite = function (beforeFn: Mocha.HookFunction) {
 };
 
 export async function delay(ms: number) {
-	await new Promise((resolve) => {
-		setTimeout(resolve, ms);
-	});
+	let timerId: ReturnType<typeof setTimeout> | undefined;
+	try {
+		await new Promise((resolve) => {
+			timerId = setTimeout(resolve, ms);
+		});
+	} finally {
+		if (timerId != null) {
+			clearTimeout(timerId);
+		}
+	}
 }
 
 // Wait for a condition to be true, throw if it doesn't happen in time

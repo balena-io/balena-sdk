@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import type * as BalenaSdk from '../../..';
-import { expectError, timeSuite } from '../../util';
+import { delay, expectError, timeSuite } from '../../util';
 
 import {
 	balena,
@@ -257,7 +257,7 @@ describe('Release Asset Model', function () {
 					},
 					{
 						onUploadProgress: async (progress) => {
-							await new Promise((resolve) => setTimeout(resolve, 10));
+							await delay(10);
 							progressReports.push({ ...progress });
 						},
 					},
