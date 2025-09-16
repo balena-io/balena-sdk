@@ -128,6 +128,7 @@ export async function waitFor(
 	options?: {
 		timeout?: number;
 		maxCount?: number;
+		onTimeout?: 'error' | 'log';
 	},
 ): Promise<void> {
 	const timeout = options?.timeout ?? 2000;
@@ -138,6 +139,10 @@ export async function waitFor(
 		if (await checkFn()) {
 			return;
 		}
+	}
+	if (options?.onTimeout === 'log') {
+		console.log('waitFor timed out before the condition was satisfied');
+		return;
 	}
 	throw new Error('waitFor timed out');
 }

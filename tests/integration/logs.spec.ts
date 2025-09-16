@@ -69,7 +69,7 @@ describe('Logs', function () {
 						lines = await balena.logs.history(this.device.uuid);
 						return lines.length >= 2;
 					},
-					{ timeout: LOG_PROPAGATION_TIMEOUT },
+					{ timeout: LOG_PROPAGATION_TIMEOUT, onTimeout: 'log' },
 				);
 				expect(lines.map((l) => l.message)).to.deep.equal([
 					'Old message',
@@ -112,7 +112,9 @@ describe('Logs', function () {
 						logSubscription.on('error', reject);
 
 						// Wait for the expected number of logs (or more) to propagate
-						await waitFor(() => lines.length >= messages.length);
+						await waitFor(() => lines.length >= messages.length, {
+							onTimeout: 'log',
+						});
 						resolve(null);
 					});
 				} finally {
@@ -185,6 +187,7 @@ describe('Logs', function () {
 					// Wait for all three logs to propagate
 					await waitFor(() => lines.length >= 3, {
 						timeout: LOG_PROPAGATION_TIMEOUT,
+						onTimeout: 'log',
 					});
 				} finally {
 					logs.unsubscribe();
