@@ -1,4 +1,24 @@
 - commits:
+    - subject: Update @balena/lint from 9.3.3 to 9.3.6
+      hash: c0d465cb7d775cf5588b1e55153a3545d1e3ebcc
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Update TypeScript to 5.9.2
+      hash: af4ecda09cbd610b478bbf771cedaa4a8f2b154b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 22.1.2
+  title: ""
+  date: 2025-09-16T16:16:24.293Z
+- commits:
     - subject: Add release assets docs
       hash: 58b01845766891f40222532c2127066b9f699594
       body: ""
