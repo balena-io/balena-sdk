@@ -1,4 +1,35 @@
 - commits:
+    - subject: "tests/logs: Increase the timeout for logs.subscribe() tests"
+      hash: 980518e5cf36f5e4e6eb552ff51fd996ccaa51b9
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "tests/logs: Improve logging of tests that timeout"
+      hash: 100798ebcabe430a7a9d2d8678435c97336a878b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Clear all created `setTimeout`s explicitly
+      hash: 668170da8d2825cc707729592a45b1e9e4df1e93
+      body: |
+        This avoids the tests hanging (even after a
+        successful run), and should also be fixing the
+        same issue for recent nodejs sdk consumers.
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 22.1.3
+  title: ""
+  date: 2025-09-18T14:44:49.905Z
+- commits:
     - subject: Update @balena/lint from 9.3.3 to 9.3.6
       hash: c0d465cb7d775cf5588b1e55153a3545d1e3ebcc
       body: ""
