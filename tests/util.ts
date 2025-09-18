@@ -110,9 +110,16 @@ export const timeSuite = function (beforeFn: Mocha.HookFunction) {
 };
 
 export async function delay(ms: number) {
-	await new Promise((resolve) => {
-		setTimeout(resolve, ms);
-	});
+	let timerId: ReturnType<typeof setTimeout> | undefined;
+	try {
+		await new Promise((resolve) => {
+			timerId = setTimeout(resolve, ms);
+		});
+	} finally {
+		if (timerId != null) {
+			clearTimeout(timerId);
+		}
+	}
 }
 
 // Wait for a condition to be true, throw if it doesn't happen in time
@@ -121,6 +128,7 @@ export async function waitFor(
 	options?: {
 		timeout?: number;
 		maxCount?: number;
+		onTimeout?: 'error' | 'log';
 	},
 ): Promise<void> {
 	const timeout = options?.timeout ?? 2000;
@@ -131,6 +139,10 @@ export async function waitFor(
 		if (await checkFn()) {
 			return;
 		}
+	}
+	if (options?.onTimeout === 'log') {
+		console.log('waitFor timed out before the condition was satisfied');
+		return;
 	}
 	throw new Error('waitFor timed out');
 }

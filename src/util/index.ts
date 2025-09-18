@@ -363,10 +363,18 @@ export const groupByMap = <K, V>(entries: V[], iteratee: (item: V) => K) => {
 	return result;
 };
 
-export const delay = (ms: number) =>
-	new Promise<void>((resolve) => {
-		setTimeout(resolve, ms);
-	});
+export async function delay(ms: number) {
+	let timerId: ReturnType<typeof setTimeout> | undefined;
+	try {
+		await new Promise((resolve) => {
+			timerId = setTimeout(resolve, ms);
+		});
+	} finally {
+		if (timerId != null) {
+			clearTimeout(timerId);
+		}
+	}
+}
 
 const DEFAULT_CONCURRENCY_LIMIT = 50;
 
