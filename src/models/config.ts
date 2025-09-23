@@ -58,8 +58,6 @@ export interface GaConfig {
 	id: string;
 }
 
-import union from 'lodash/union';
-
 const getConfigModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
@@ -197,10 +195,12 @@ const getConfigModel = function (
 			>
 		> => {
 			const manifest = await exports.getDeviceTypeManifestBySlug(deviceType);
-			return union<
-				| DeviceTypeJson.DeviceTypeOptions
-				| DeviceTypeJson.DeviceInitializationOptions
-			>(manifest.options, manifest.initialization?.options);
+			return Array.from(
+				new Set([
+					...(manifest.options ?? []),
+					...(manifest.initialization?.options ?? []),
+				]),
+			);
 		},
 
 		/**
