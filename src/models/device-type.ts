@@ -20,7 +20,6 @@ import type { Partials, Contract } from '../types/contract';
 import { mergePineOptions } from '../util';
 import * as errors from 'balena-errors';
 import * as Handlebars from 'handlebars';
-import cloneDeep from 'lodash/cloneDeep';
 
 // REPLACE ONCE HOST OS CONTRACTS ARE GENERATED THROUGH YOCTO
 import {
@@ -111,7 +110,7 @@ function getInstructionsFromContract(contract: Contract) {
 		deviceType: interpolatedPartials(contract),
 	};
 	const interpolatedHostOS = interpolatedPartials({
-		...cloneDeep(BalenaOsContract),
+		...structuredClone(BalenaOsContract),
 		...interpolatedDeviceType,
 	});
 
