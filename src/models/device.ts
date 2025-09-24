@@ -1363,7 +1363,6 @@ const getDeviceModel = function (
 						applicationSlugOrUuidOrId,
 						applicationOptions,
 					),
-					// eslint-disable-next-line @typescript-eslint/await-thenable -- Remove this once typescript-eslint re-allows Promise unions w/ non-Promises https://github.com/typescript-eslint/typescript-eslint/issues/11609
 					typeof deviceTypeSlug === 'string'
 						? sdkInstance.models.deviceType.get(deviceTypeSlug, {
 								$select: 'slug',

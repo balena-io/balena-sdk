@@ -273,7 +273,6 @@ const getApplicationMembershipModel = function (
 
 			const [{ id, organization }, roleId] = await Promise.all([
 				getApplication(application, appOptions),
-				// eslint-disable-next-line @typescript-eslint/await-thenable -- Remove this once typescript-eslint re-allows Promise unions w/ non-Promises https://github.com/typescript-eslint/typescript-eslint/issues/11609
 				roleName ? getRoleId(roleName) : undefined,
 			]);
 
