@@ -143,7 +143,6 @@ const getOrganizationInviteModel = function (
 		) {
 			const [{ id }, roles] = await Promise.all([
 				getOrganization(handleOrId, { $select: 'id' }),
-				// eslint-disable-next-line @typescript-eslint/await-thenable -- Remove this once typescript-eslint re-allows Promise unions w/ non-Promises https://github.com/typescript-eslint/typescript-eslint/issues/11609
 				roleName
 					? pine.get({
 							resource: 'organization_membership_role',
