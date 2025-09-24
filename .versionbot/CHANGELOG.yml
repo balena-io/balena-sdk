@@ -1,4 +1,18 @@
 - commits:
+    - subject: Remove no longer needed eslint-disable @typescript-eslint/await
+      hash: 91d81e980d644b0a58d19f16b20d4793e909157b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://github.com/typescript-eslint/typescript-eslint/pull/11611
+        see: https://github.com/typescript-eslint/typescript-eslint/pull/11611
+      author: Thodoris Greasidis
+      nested: []
+  version: 22.1.4
+  title: ""
+  date: 2025-09-24T12:14:11.739Z
+- commits:
     - subject: "tests/logs: Increase the timeout for logs.subscribe() tests"
       hash: 980518e5cf36f5e4e6eb552ff51fd996ccaa51b9
       body: ""
