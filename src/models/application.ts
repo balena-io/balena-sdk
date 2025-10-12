@@ -471,7 +471,6 @@ const getApplicationModel = function (
 			// We use this intermediate assignment not to hide any error with ts-expect-error
 			// if we directly assigned like `app.owns__device = app.owns__device.map(generateCurrentServiceDetails)`
 			const ownsDevice = app.owns__device.map(generateCurrentServiceDetails);
-			// @ts-expect-error - assigning to readonly property
 			app.owns__device = ownsDevice;
 
 			return app as unknown as NonNullable<

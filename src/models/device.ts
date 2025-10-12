@@ -675,7 +675,12 @@ const getDeviceModel = function (
 					typeof uuidOrId
 				>
 			> & {
+				/** @deprecated in favor of `current_services_by_app` that split system services from application services */
 				current_services: Record<string, CurrentService[]>;
+				current_services_by_app: Record<
+					string,
+					Record<string, CurrentService[]>
+				>;
 			};
 		},
 
