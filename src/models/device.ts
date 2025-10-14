@@ -73,7 +73,6 @@ import type {
 	ResolvableReturnType,
 } from '../../typings/utils';
 import type { DeviceType } from '../types/models';
-import { subDays } from 'date-fns/subDays';
 import type {
 	FilterObj,
 	ODataOptionsWithoutCount,
@@ -105,7 +104,7 @@ export interface DateFilters {
 	toDate?: Date;
 }
 
-const DEFAULT_DAYS_OF_REQUESTED_HISTORY = 7;
+const DEFAULT_DAYS_OF_REQUESTED_HISTORY_MS = 7 * 24 * 60 * 60 * 1000;
 
 const getDeviceModel = function (
 	deps: InjectedDependenciesParam,
@@ -3073,7 +3072,9 @@ const getDeviceModel = function (
 			>(
 				uuidOrId: string | number,
 				{
-					fromDate = subDays(new Date(), DEFAULT_DAYS_OF_REQUESTED_HISTORY),
+					fromDate = new Date(
+						Date.now() - DEFAULT_DAYS_OF_REQUESTED_HISTORY_MS,
+					),
 					toDate,
 				}: DateFilters = {},
 				options?: T,
@@ -3145,7 +3146,9 @@ const getDeviceModel = function (
 			>(
 				slugOrUuidOrId: string | number,
 				{
-					fromDate = subDays(new Date(), DEFAULT_DAYS_OF_REQUESTED_HISTORY),
+					fromDate = new Date(
+						Date.now() - DEFAULT_DAYS_OF_REQUESTED_HISTORY_MS,
+					),
 					toDate,
 				}: DateFilters = {},
 				options?: T,
