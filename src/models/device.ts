@@ -1845,6 +1845,7 @@ const getDeviceModel = function (
 			});
 		},
 
+		// TODO: Drop device.lastOnline in the next major and change date-fns to a dev dependency
 		/**
 		 * @summary Get a string showing when a device was last set as online
 		 * @name lastOnline
@@ -1855,6 +1856,7 @@ const getDeviceModel = function (
 		 * @description
 		 * If the device has never been online this method returns the string `Connecting...`.
 		 *
+		 * @deprecated Will be dropped in the next major
 		 * @param {Object} device - A device object
 		 * @returns {String}
 		 *
