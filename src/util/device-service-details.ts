@@ -49,6 +49,8 @@ export type DeviceWithServiceDetails = OptionsToResponse<
 	{ $expand: typeof getCurrentServiceDetailsPineExpand },
 	undefined
 >[number] & {
+	// TODO: Drop this in the next major
+	/** @deprecated in favor of `current_services_by_app` that split system services from application services */
 	current_services: {
 		[serviceName: string]: CurrentService[];
 	};
@@ -115,6 +117,7 @@ export const generateCurrentServiceDetails = (
 	// which could match service names
 
 	const byService: Record<string, CurrentService[]> = Object.create(null);
+
 	const byApp: Record<string, Record<string, CurrentService[]>> = Object.create(
 		null,
 	);
@@ -135,6 +138,7 @@ export const generateCurrentServiceDetails = (
 	}
 
 	const device = rawDevice as DeviceWithServiceDetails;
+	// TODO: Drop this in the next major
 	device.current_services = byService;
 	device.current_services_by_app = byApp;
 	return device;

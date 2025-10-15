@@ -186,6 +186,7 @@ await (async () => {
 // @ application.getWithDeviceServiceDetails
 await (async () => {
 	const app = await sdk.models.application.getWithDeviceServiceDetails(123);
+	// TODO: Drop this in the next major
 	const service = app.owns__device[0].current_services;
 	const servicesByApp = app.owns__device[0].current_services_by_app;
 	const test: Equals<
@@ -248,6 +249,7 @@ await (async () => {
 // @ device.getWithDeviceServiceDetails
 await (async () => {
 	const device = await sdk.models.device.getWithServiceDetails(123);
+	// TODO: Drop this in the next major
 	const service = device.current_services;
 	const servicesByApp = device.current_services_by_app;
 	const test: Equals<

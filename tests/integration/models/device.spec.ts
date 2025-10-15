@@ -3020,7 +3020,6 @@ describe('Device Model', function () {
 								__id: this.currentRelease.id,
 							},
 						});
-
 						expect(
 							Object.keys(deviceDetails.current_services).sort(),
 						).to.deep.equal(['__proto__', 'hasOwnProperty']);
@@ -3046,7 +3045,6 @@ describe('Device Model', function () {
 								},
 							],
 						);
-
 						expect(deviceDetails.current_services.__proto__).to.deep.match([
 							{
 								id: this.newDbInstall.id,
