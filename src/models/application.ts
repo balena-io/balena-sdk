@@ -1038,7 +1038,7 @@ const getApplicationModel = function (
 			const latestRelease = application.owns__release[0];
 			return (
 				application.should_track_latest_release &&
-				(!latestRelease || trackedRelease?.id === latestRelease.id)
+				(latestRelease?.id == null || trackedRelease?.id === latestRelease.id)
 			);
 		},
 
