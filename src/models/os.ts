@@ -955,9 +955,7 @@ const getOsModel = function (
 			hupActionHelper().isSupportedOsUpdate(deviceType, currentVersion, v),
 		);
 
-		const recommended = versions.filter((v) => !bSemver.prerelease(v))[0] as
-			| string
-			| undefined;
+		const recommended = versions.find((v) => !bSemver.prerelease(v));
 
 		return {
 			versions,
