@@ -1028,6 +1028,73 @@ describe('OS model', function () {
 				expect(versions).to.deep.equal(sortedVersions);
 			});
 
+			it('should only include non-ESR OS releases by default', async () => {
+				const { current, recommended, versions } =
+					await balena.models.os.getSupportedOsUpdateVersions(
+						'raspberrypi3',
+						'2.9.6+rev1.prod',
+					);
+				expect(current).to.equal('2.9.6+rev1.prod');
+				expect(bSemver.lt(recommended, '2000.0.0')).to.be.true;
+				expect(versions.filter((v) => bSemver.gt(v, '2000.0.0'))).to.deep.equal(
+					[],
+				);
+			});
+
+			it(`should only include non-ESR OS releases when the osType is 'default'`, async () => {
+				const { current, recommended, versions } =
+					await balena.models.os.getSupportedOsUpdateVersions(
+						'raspberrypi3',
+						'2.9.6+rev1.prod',
+						{
+							osType: 'default',
+						},
+					);
+				expect(current).to.equal('2.9.6+rev1.prod');
+				expect(bSemver.lt(recommended, '2000.0.0')).to.be.true;
+				expect(versions.filter((v) => bSemver.gt(v, '2000.0.0'))).to.deep.equal(
+					[],
+				);
+			});
+
+			it(`should only include ESR OS releases when the osType is 'esr'`, async () => {
+				const { current, recommended, versions } =
+					await balena.models.os.getSupportedOsUpdateVersions(
+						'raspberrypi3',
+						'2.9.6+rev1.prod',
+						{
+							osType: 'esr',
+						},
+					);
+				expect(current).to.equal('2.9.6+rev1.prod');
+				expect(bSemver.gt(recommended, '2000.0.0')).to.be.true;
+				expect(versions.filter((v) => bSemver.lt(v, '2000.0.0'))).to.deep.equal(
+					[],
+				);
+				expect(
+					versions.filter((v) => bSemver.gt(v, '2000.0.0')),
+				).to.have.length.greaterThan(0);
+			});
+
+			it('should include both default & ESR OS releases when the osType is null', async () => {
+				const { current, recommended, versions } =
+					await balena.models.os.getSupportedOsUpdateVersions(
+						'raspberrypi3',
+						'2.9.6+rev1.prod',
+						{
+							osType: null,
+						},
+					);
+				expect(current).to.equal('2.9.6+rev1.prod');
+				expect(bSemver.gt(recommended, '2000.0.0')).to.be.true;
+				expect(
+					versions.filter((v) => bSemver.lt(v, '2000.0.0')),
+				).to.have.length.greaterThan(0);
+				expect(
+					versions.filter((v) => bSemver.gt(v, '2000.0.0')),
+				).to.have.length.greaterThan(0);
+			});
+
 			it('should not include draft OS releases when the respective flag is not used', async () => {
 				const { current, recommended, versions } =
 					await balena.models.os.getSupportedOsUpdateVersions(
