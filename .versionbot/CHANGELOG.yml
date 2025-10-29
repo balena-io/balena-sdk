@@ -1,4 +1,42 @@
 - commits:
+    - subject: temporarily disable logs subscription test and adapt builder test
+      hash: 8f3b0fd393f01b0860694a5d5beb3d054cd83f41
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Andrea Rosci
+      nested: []
+    - subject: "fix: prevent linter from suggesting incorrect optional chaining
+        comparison"
+      hash: 559370898f767b7bd54afb94d0b4c04c6c023794
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Andrea Rosci
+      nested: []
+    - subject: deprecate `current_services` in favour of `current_services_by_app`
+      hash: 06f63d8433b64955cdefcd84ef8cdb18af95018f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Andrea Rosci
+      nested: []
+    - subject: add `current_services_by_app` to group services by application;
+        deprecate `current_services`
+      hash: 71a59e7111e7ca5ecda178351c74a3bf9407785f
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Andrea Rosci
+      nested: []
+  version: 22.2.0
+  title: ""
+  date: 2025-10-29T14:59:15.364Z
+- commits:
     - subject: Remove no longer needed eslint-disable @typescript-eslint/await
       hash: 91d81e980d644b0a58d19f16b20d4793e909157b
       body: ""
