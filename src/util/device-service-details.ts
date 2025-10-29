@@ -34,6 +34,11 @@ export const getCurrentServiceDetailsPineExpand = {
 			},
 			is_provided_by__release: {
 				$select: ['id', 'commit', 'raw_version'],
+				$expand: {
+					belongs_to__application: {
+						$select: ['slug'],
+					},
+				},
 			},
 		},
 	},
@@ -44,8 +49,13 @@ export type DeviceWithServiceDetails = OptionsToResponse<
 	{ $expand: typeof getCurrentServiceDetailsPineExpand },
 	undefined
 >[number] & {
+	// TODO: Drop this in the next major
+	/** @deprecated in favor of `current_services_by_app` that split system services from application services */
 	current_services: {
 		[serviceName: string]: CurrentService[];
+	};
+	current_services_by_app: {
+		[slug: string]: Record<string, CurrentService[]>;
 	};
 };
 
@@ -102,41 +112,34 @@ export const generateCurrentServiceDetails = (
 		undefined
 	>[number],
 ): DeviceWithServiceDetails => {
-	const installs = rawDevice.image_install.map(getSingleInstallSummary);
-
-	// Essentially a groupBy(installs, 'service_name')
-	// but try making it a bit faster for the sake of large fleets.
+	// Essentially a groupBy operation, but try making it a bit faster for the sake of large fleets.
 	// Uses Object.create(null) so that there are no inherited properties
 	// which could match service names
-	const currentServicesGroupedByName: Record<string, CurrentService[]> =
-		Object.create(null);
-	for (const containerWithServiceName of installs) {
-		const { service_name } = containerWithServiceName;
-		let serviceContainerGroup: CurrentService[];
-		if (currentServicesGroupedByName[service_name] == null) {
-			serviceContainerGroup = [];
-			currentServicesGroupedByName[service_name] = serviceContainerGroup;
-		} else {
-			serviceContainerGroup = currentServicesGroupedByName[service_name];
-		}
 
-		const container: CurrentService & Partial<WithServiceName> =
-			containerWithServiceName;
+	const byService: Record<string, CurrentService[]> = Object.create(null);
 
-		// remove the extra property that we added for the grouping
-		delete container.service_name;
-		serviceContainerGroup.push(container);
-	}
+	const byApp: Record<string, Record<string, CurrentService[]>> = Object.create(
+		null,
+	);
 
-	for (const serviceName in currentServicesGroupedByName) {
-		if (currentServicesGroupedByName[serviceName]) {
-			currentServicesGroupedByName[serviceName].sort((a, b) => {
-				return b.install_date.localeCompare(a.install_date);
-			});
-		}
+	for (const ii of rawDevice.image_install.sort((a, b) =>
+		b.install_date.localeCompare(a.install_date),
+	)) {
+		const appSlug =
+			ii.is_provided_by__release?.[0]?.belongs_to__application?.[0]?.slug;
+
+		const summary = getSingleInstallSummary(ii);
+		const { service_name, ...container } = summary;
+
+		(byService[service_name] ??= []).push(container);
+
+		const appGroup = (byApp[appSlug] ??= Object.create(null));
+		(appGroup[service_name] ??= []).push(container);
 	}
 
 	const device = rawDevice as DeviceWithServiceDetails;
-	device.current_services = currentServicesGroupedByName;
+	// TODO: Drop this in the next major
+	device.current_services = byService;
+	device.current_services_by_app = byApp;
 	return device;
 };

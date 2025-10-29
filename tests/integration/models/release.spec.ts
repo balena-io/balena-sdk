@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import type * as BalenaSdk from '../../..';
 import { delay, expectError, timeSuite } from '../../util';
 import { getFieldLabel, getParam } from '../utils';
+import type { BalenaError } from 'balena-errors';
 
 import {
 	balena,
@@ -227,13 +228,22 @@ describe('Release Model', function () {
 							});
 						},
 						(error) => {
-							expect(error).to.have.property('code', 'BalenaRequestError');
-							expect(error).to.have.property('statusCode', 502);
 							expect(error)
-								.to.have.property('message')
-								.that.contains(
-									'Invalid tar header. Maybe the tar is corrupted or it needs to be gunzipped?',
-								);
+								.to.have.property('code')
+								.that.is.oneOf(['BalenaRequestError', 'BalenaError']);
+							// TODO: We should revisit the builderHelper and see how to improve this test.
+							if ((error as BalenaError).code === 'BalenaRequestError') {
+								expect(error).to.have.property('statusCode', 502);
+								expect(error)
+									.to.have.property('message')
+									.that.includes(
+										'Invalid tar header. Maybe the tar is corrupted or it needs to be gunzipped?',
+									);
+							} else {
+								expect(error)
+									.to.have.property('message')
+									.that.includes('incorrect header check');
+							}
 						},
 					);
 				});

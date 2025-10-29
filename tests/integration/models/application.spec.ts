@@ -1452,41 +1452,46 @@ describe('Application Model', function () {
 				this.currentRelease.id,
 			);
 
+			const services = {
+				web: [
+					{
+						id: this.newWebInstall.id,
+						service_id: this.webService.id,
+						image_id: this.newWebImage.id,
+						...(expectCommit && { commit: 'new-release-commit' }),
+						status: 'Downloading',
+						download_progress: 50,
+					},
+					{
+						id: this.oldWebInstall.id,
+						service_id: this.webService.id,
+						image_id: this.oldWebImage.id,
+						...(expectCommit && { commit: 'old-release-commit' }),
+						status: 'Running',
+						download_progress: null,
+					},
+				],
+				db: [
+					{
+						id: this.newDbInstall.id,
+						service_id: this.dbService.id,
+						image_id: this.newDbImage.id,
+						...(expectCommit && { commit: 'new-release-commit' }),
+						status: 'Running',
+						download_progress: null,
+					},
+				],
+			};
+
 			const deviceExpectation = {
 				device_name: this.device.device_name,
 				uuid: this.device.uuid,
 				is_running__release: {
 					__id: this.currentRelease.id,
 				},
-				current_services: {
-					web: [
-						{
-							id: this.newWebInstall.id,
-							service_id: this.webService.id,
-							image_id: this.newWebImage.id,
-							...(expectCommit && { commit: 'new-release-commit' }),
-							status: 'Downloading',
-							download_progress: 50,
-						},
-						{
-							id: this.oldWebInstall.id,
-							service_id: this.webService.id,
-							image_id: this.oldWebImage.id,
-							...(expectCommit && { commit: 'old-release-commit' }),
-							status: 'Running',
-							download_progress: null,
-						},
-					],
-					db: [
-						{
-							id: this.newDbInstall.id,
-							service_id: this.dbService.id,
-							image_id: this.newDbImage.id,
-							...(expectCommit && { commit: 'new-release-commit' }),
-							status: 'Running',
-							download_progress: null,
-						},
-					],
+				current_services: services,
+				current_services_by_app: {
+					[this.application.slug]: services,
 				},
 			};
 
@@ -1526,7 +1531,11 @@ describe('Application Model', function () {
 
 			// Augmented properties
 			// Should filter out deleted image installs
+			// TODO: Drop this in the next major
 			expect(deviceDetails.current_services.db).to.have.lengthOf(1);
+			expect(
+				deviceDetails.current_services_by_app[this.application.slug].db,
+			).to.have.lengthOf(1);
 		};
 
 		describe('balena.models.application.getWithDeviceServiceDetails()', function () {

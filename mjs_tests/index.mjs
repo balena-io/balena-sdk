@@ -2,6 +2,13 @@ import 'mjs-mocha';
 import chai from 'chai';
 const { expect } = chai;
 
+const IGNORED_EXPORT_KEYS = new Set([
+	'default',
+	'__esModule',
+	'module',
+	'module.exports',
+]);
+
 describe('mjs imports', function () {
 	it('should support using default imports', async function () {
 		await import('./import_default.mjs');
@@ -19,14 +26,15 @@ describe('mjs imports', function () {
 			it('should include all exported methods', async function () {
 				const sdkExports = await loader();
 				const es2017Build = await import('../es2017/index.js');
-				Object.keys(es2017Build)
-					.filter(
-						(exportedKey) =>
-							exportedKey !== 'default' && !exportedKey.startsWith('__'),
-					)
-					.forEach((exportedKey) => {
-						expect(sdkExports).to.have.property(exportedKey);
-					});
+				expect(Object.keys(sdkExports).sort()).to.deep.equal(
+					Object.keys(es2017Build)
+						.filter(
+							(exportedKey) =>
+								!IGNORED_EXPORT_KEYS.has(exportedKey) &&
+								!exportedKey.startsWith('__'),
+						)
+						.sort(),
+				);
 			});
 
 			it('should be able to use a method', async function () {

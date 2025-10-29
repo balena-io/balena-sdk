@@ -2249,41 +2249,45 @@ describe('Device Model', function () {
 				it('should retrieve the current service details', async function () {
 					const deviceDetails =
 						await balena.models.device.getWithServiceDetails(this.device.id);
+					const services = {
+						web: [
+							{
+								id: this.newWebInstall.id,
+								service_id: this.webService.id,
+								image_id: this.newWebImage.id,
+								commit: 'new-release-commit',
+								status: 'Downloading',
+								download_progress: 50,
+							},
+							{
+								id: this.oldWebInstall.id,
+								service_id: this.webService.id,
+								image_id: this.oldWebImage.id,
+								commit: 'old-release-commit',
+								status: 'Running',
+								download_progress: null,
+							},
+						],
+						db: [
+							{
+								id: this.newDbInstall.id,
+								service_id: this.dbService.id,
+								image_id: this.newDbImage.id,
+								commit: 'new-release-commit',
+								status: 'Running',
+								download_progress: null,
+							},
+						],
+					};
 					expect(deviceDetails).to.deep.match({
 						device_name: this.device.device_name,
 						uuid: this.device.uuid,
 						is_running__release: {
 							__id: this.currentRelease.id,
 						},
-						current_services: {
-							web: [
-								{
-									id: this.newWebInstall.id,
-									service_id: this.webService.id,
-									image_id: this.newWebImage.id,
-									commit: 'new-release-commit',
-									status: 'Downloading',
-									download_progress: 50,
-								},
-								{
-									id: this.oldWebInstall.id,
-									service_id: this.webService.id,
-									image_id: this.oldWebImage.id,
-									commit: 'old-release-commit',
-									status: 'Running',
-									download_progress: null,
-								},
-							],
-							db: [
-								{
-									id: this.newDbInstall.id,
-									service_id: this.dbService.id,
-									image_id: this.newDbImage.id,
-									commit: 'new-release-commit',
-									status: 'Running',
-									download_progress: null,
-								},
-							],
+						current_services: services,
+						current_services_by_app: {
+							[this.application.slug]: services,
 						},
 					});
 
@@ -2319,9 +2323,23 @@ describe('Device Model', function () {
 					// Augmented properties
 					// Should filter out deleted image installs
 					expect(deviceDetails.current_services.db).to.have.lengthOf(1);
+					expect(
+						deviceDetails.current_services_by_app[this.application.slug].db,
+					).to.have.lengthOf(1);
 					const currentServices =
 						_.flatten(Object.values(deviceDetails.current_services)) ?? [];
+					const currentServicesByApp =
+						_.flatten(
+							Object.values(
+								deviceDetails.current_services_by_app[this.application.slug],
+							),
+						) ?? [];
 					currentServices.forEach((currentService) => {
+						expect(currentService).to.have.property('commit');
+						expect(currentService).to.have.property('raw_version');
+						expect(currentService).to.have.property('release_id');
+					});
+					currentServicesByApp.forEach((currentService) => {
 						expect(currentService).to.have.property('commit');
 						expect(currentService).to.have.property('raw_version');
 						expect(currentService).to.have.property('release_id');
@@ -2341,6 +2359,8 @@ describe('Device Model', function () {
 					// @ts-expect-error - test case
 					expect(deviceDetails.device_name).to.be.undefined;
 					expect(deviceDetails.current_services).not.to.be.undefined;
+					expect(deviceDetails.current_services_by_app[this.application.slug])
+						.not.to.be.undefined;
 					expect(deviceDetails.belongs_to__application[0]).to.deep.match({
 						id: this.application.id,
 						app_name: this.application.app_name,
@@ -3000,7 +3020,6 @@ describe('Device Model', function () {
 								__id: this.currentRelease.id,
 							},
 						});
-
 						expect(
 							Object.keys(deviceDetails.current_services).sort(),
 						).to.deep.equal(['__proto__', 'hasOwnProperty']);
@@ -3026,9 +3045,48 @@ describe('Device Model', function () {
 								},
 							],
 						);
+						expect(deviceDetails.current_services.__proto__).to.deep.match([
+							{
+								id: this.newDbInstall.id,
+								service_id: this.dbService.id,
+								image_id: this.newDbImage.id,
+								commit: 'new-release-commit',
+								status: 'Running',
+								download_progress: null,
+							},
+						]);
+
+						expect(
+							Object.keys(
+								deviceDetails.current_services_by_app[this.application.slug],
+							).sort(),
+						).to.deep.equal(['__proto__', 'hasOwnProperty']);
+
+						expect(
+							deviceDetails.current_services_by_app[this.application.slug]
+								.hasOwnProperty,
+						).to.deep.match([
+							{
+								id: this.newWebInstall.id,
+								service_id: this.webService.id,
+								image_id: this.newWebImage.id,
+								commit: 'new-release-commit',
+								status: 'Downloading',
+								download_progress: 50,
+							},
+							{
+								id: this.oldWebInstall.id,
+								service_id: this.webService.id,
+								image_id: this.oldWebImage.id,
+								commit: 'old-release-commit',
+								status: 'Running',
+								download_progress: null,
+							},
+						]);
 
 						return expect(
-							deviceDetails.current_services.__proto__,
+							deviceDetails.current_services_by_app[this.application.slug]
+								.__proto__,
 						).to.deep.match([
 							{
 								id: this.newDbInstall.id,
