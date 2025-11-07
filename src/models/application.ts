@@ -468,8 +468,6 @@ const getApplicationModel = function (
 
 			const app = await exports.get(slugOrUuidOrId, serviceOptions);
 
-			// We use this intermediate assignment not to hide any error with ts-expect-error
-			// if we directly assigned like `app.owns__device = app.owns__device.map(generateCurrentServiceDetails)`
 			const ownsDevice = app.owns__device.map(generateCurrentServiceDetails);
 			app.owns__device = ownsDevice;
 
