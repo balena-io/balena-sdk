@@ -1,7 +1,6 @@
 import * as bSemver from 'balena-semver';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
-import { format } from 'date-fns/format';
 import {
 	balena,
 	credentials,
@@ -1339,7 +1338,8 @@ describe('OS model', function () {
 			});
 
 			it('should be able to configure v2 image with a provisioning key name', async function () {
-				const provisioningKeyName = `${TEST_KEY_NAME_PREFIX}-prov${format(new Date(), "yyyyMMdd'T'HHmmss")}`;
+				// Shrink the date suffix to the form of yyyyMMdd'T'HHmmss so that it fits on the max allowed field size
+				const provisioningKeyName = `${TEST_KEY_NAME_PREFIX}-prov${new Date().toISOString().replace(/[:-]|\.\d+Z/g, '')}`;
 				const configOptions = {
 					appUpdatePollInterval: 72,
 					network: 'wifi' as const,
