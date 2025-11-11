@@ -186,13 +186,7 @@ await (async () => {
 // @ application.getWithDeviceServiceDetails
 await (async () => {
 	const app = await sdk.models.application.getWithDeviceServiceDetails(123);
-	// TODO: Drop this in the next major
-	const service = app.owns__device[0].current_services;
 	const servicesByApp = app.owns__device[0].current_services_by_app;
-	const test: Equals<
-		typeof service,
-		Record<string, BalenaSdk.CurrentService[]>
-	> = EqualsTrue;
 	const servicesByAppTest: Equals<
 		typeof servicesByApp,
 		Record<string, Record<string, BalenaSdk.CurrentService[]>>
@@ -242,20 +236,13 @@ await (async () => {
 	aNumber = appWithNestedExpand.owns__release[0].id;
 	aNumber = appWithNestedExpand.application_type[0].id;
 	aString = appWithNestedExpand.application_type[0].slug;
-	console.log(service, test);
 	console.log(servicesByApp, servicesByAppTest);
 })();
 
 // @ device.getWithDeviceServiceDetails
 await (async () => {
 	const device = await sdk.models.device.getWithServiceDetails(123);
-	// TODO: Drop this in the next major
-	const service = device.current_services;
 	const servicesByApp = device.current_services_by_app;
-	const test: Equals<
-		typeof service,
-		Record<string, BalenaSdk.CurrentService[]>
-	> = EqualsTrue;
 	const servicesByAppTest: Equals<
 		typeof servicesByApp,
 		Record<string, Record<string, BalenaSdk.CurrentService[]>>
@@ -290,7 +277,6 @@ await (async () => {
 		appWithNestedExpand.image_install[0].installs__image[0]
 			.is_stored_at__image_location;
 	console.log(servicesByApp, servicesByAppTest);
-	console.log(service, test);
 })();
 
 // mergePineOptions typing
