@@ -2,9 +2,6 @@
 import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
-import { subYears } from 'date-fns/subYears';
-import { subDays } from 'date-fns/subDays';
-import { addDays } from 'date-fns/addDays';
 
 import {
 	balena,
@@ -2530,6 +2527,9 @@ describe('Device Model', function () {
 					});
 				}
 
+				const DAY_MS = 24 * 60 * 60 * 1000;
+				const YEAR_MS = 365 * DAY_MS;
+
 				for (const testSet of [
 					{
 						method: 'getAllByApplication',
@@ -2541,8 +2541,8 @@ describe('Device Model', function () {
 						const result = await historyModel[testSet.method](
 							this[testSet.model]['id'],
 							{
-								fromDate: subDays(new Date(), 1),
-								toDate: addDays(new Date(), 1),
+								fromDate: new Date(Date.now() - 1 * DAY_MS),
+								toDate: new Date(Date.now() + 1 * DAY_MS),
 							},
 						);
 						testDeviceHistory(result, this.application, this.device);
@@ -2552,8 +2552,8 @@ describe('Device Model', function () {
 						const result = await historyModel[testSet.method](
 							this[testSet.model]['id'],
 							{
-								fromDate: subDays(new Date(), 1),
-								toDate: addDays(new Date(), 1),
+								fromDate: new Date(Date.now() - 1 * DAY_MS),
+								toDate: new Date(Date.now() + 1 * DAY_MS),
 							},
 							{ $top: 1 },
 						);
@@ -2564,8 +2564,8 @@ describe('Device Model', function () {
 						const result = await historyModel[testSet.method](
 							this[testSet.model]['id'],
 							{
-								fromDate: subYears(new Date(), 2),
-								toDate: subYears(new Date(), 1),
+								fromDate: new Date(Date.now() - 2 * YEAR_MS),
+								toDate: new Date(Date.now() - 1 * YEAR_MS),
 							},
 						);
 						expect(result).to.be.empty;
@@ -2575,8 +2575,8 @@ describe('Device Model', function () {
 						const result = await historyModel[testSet.method](
 							this[testSet.model]['id'],
 							{
-								fromDate: subDays(new Date(), 1),
-								toDate: addDays(new Date(), 1),
+								fromDate: new Date(Date.now() - 1 * DAY_MS),
+								toDate: new Date(Date.now() + 1 * DAY_MS),
 							},
 							{
 								$top: 1,
@@ -3233,43 +3233,6 @@ describe('Device Model', function () {
 			it('should throw when a device uuid is not provided', () => {
 				// @ts-expect-error invalid parameter
 				expect(() => balena.models.device.getDashboardUrl()).to.throw();
-			});
-		});
-
-		describe('balena.models.device.lastOnline()', function () {
-			it('should return the string "Connecting..." if the device has no `last_connectivity_event`', () => {
-				expect(
-					balena.models.device.lastOnline({
-						last_connectivity_event: null,
-						is_online: false,
-					}),
-				).to.equal('Connecting...');
-			});
-
-			it('should return the correct time string if the device is online', function () {
-				const mockDevice = {
-					last_connectivity_event: new Date(
-						Date.now() - 1000 * 60 * 5,
-					).toUTCString(),
-					is_online: true,
-				};
-
-				return expect(balena.models.device.lastOnline(mockDevice)).to.equal(
-					'Connected (for 5 minutes)',
-				);
-			});
-
-			it('should return the correct time string if the device is offline', function () {
-				const mockDevice = {
-					last_connectivity_event: new Date(
-						Date.now() - 1000 * 60 * 5,
-					).toUTCString(),
-					is_online: false,
-				};
-
-				return expect(balena.models.device.lastOnline(mockDevice)).to.equal(
-					'5 minutes ago',
-				);
 			});
 		});
 

@@ -132,9 +132,6 @@ const getDeviceModel = function (
 				require('../util/device-actions/os-update/utils') as typeof import('../util/device-actions/os-update/utils')
 			).hupActionHelper,
 	);
-	const dateUtils = once(
-		() => require('../util/date') as typeof import('../util/date'),
-	);
 
 	const batchDeviceOperation = once(() =>
 		(
@@ -1863,43 +1860,6 @@ const getDeviceModel = function (
 			await set(uuidOrIdOrArray, {
 				is_accessible_by_support_until__date: null,
 			});
-		},
-
-		// TODO: Drop device.lastOnline in the next major and change date-fns to a dev dependency
-		/**
-		 * @summary Get a string showing when a device was last set as online
-		 * @name lastOnline
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @description
-		 * If the device has never been online this method returns the string `Connecting...`.
-		 *
-		 * @deprecated Will be dropped in the next major
-		 * @param {Object} device - A device object
-		 * @returns {String}
-		 *
-		 * @example
-		 * balena.models.device.get('7cf02a6').then(function(device) {
-		 * 	balena.models.device.lastOnline(device);
-		 * })
-		 */
-		lastOnline(
-			device: AtLeast<Device['Read'], 'last_connectivity_event' | 'is_online'>,
-		): string {
-			const lce = device.last_connectivity_event;
-
-			if (!lce) {
-				return 'Connecting...';
-			}
-
-			const { timeSince } = dateUtils();
-			if (device.is_online) {
-				return `Connected (for ${timeSince(lce, false)})`;
-			}
-
-			return timeSince(lce);
 		},
 
 		/**

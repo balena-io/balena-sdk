@@ -16,7 +16,7 @@ module.exports = [
 			jest: true,
 		},
 		rules: {
-			'no-restricted-imports': ['error', 'date-fns', 'lodash'],
+			'no-restricted-imports': ['error', 'lodash'],
 		},
 	}),
 ];
