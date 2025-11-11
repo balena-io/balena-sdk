@@ -5574,7 +5574,7 @@ that is _not_ pre-release, can be `null`
 | currentVersion | <code>String</code> |  | semver-compatible version for the starting OS version |
 | [options] | <code>Object</code> |  | Extra options to filter the OS releases by |
 | [options.includeDraft] | <code>Boolean</code> | <code>false</code> | Whether pre-releases should be included in the results |
-| [options.osType] | <code>String</code> \| <code>Null</code> | <code>&#x27;default&#x27;</code> | Can be one of 'default', 'esr' or null to include all types |
+| [options.osType] | <code>String</code> \| <code>Null</code> | <code>Null</code> | Can be one of 'default', 'esr' or null which includes all types |
 
 **Example**  
 ```js
