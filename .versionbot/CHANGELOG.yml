@@ -1,4 +1,35 @@
 - commits:
+    - subject: "os.getSupportedOsUpdateVersions: Add support for including ESR versions"
+      hash: 34519469b546fe1fa46c6c4cd99ac1cf1f17f5ed
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        See: https://balena.fibery.io/Work/Project/2009
+        see: https://balena.fibery.io/Work/Project/2009
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "tsconfig: Remove trailing comma so that it is a be a valid JSON"
+      hash: 0cb511167e104253f2bebcbd88f788415d605592
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "os.getSupportedOsUpdateVersions: Replace an Array.filter with
+        Array.find"
+      hash: 1cb7742c649a7a83d94751c39d1d54103a9fef1b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 22.3.0
+  title: ""
+  date: 2025-11-11T14:56:28.123Z
+- commits:
     - subject: Deprecate the device.lastOnline method
       hash: 61c3865e45396466af1a12bb3f0f1be66a63664b
       body: ""
