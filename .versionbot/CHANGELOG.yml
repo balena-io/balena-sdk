@@ -1,4 +1,24 @@
 - commits:
+    - subject: Deprecate the device.lastOnline method
+      hash: 61c3865e45396466af1a12bb3f0f1be66a63664b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Reduce the usage of date-fns
+      hash: fcf6abe3f3b0bf1c17587bde95e98bd2356870e3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 22.2.2
+  title: ""
+  date: 2025-11-11T14:21:27.391Z
+- commits:
     - subject: Update pinejs-client-core to 8.4.0
       hash: d51719ca9b3190f9341053ff5bef414a1471895b
       body: |
