@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 import * as bSemver from 'balena-semver';
+import * as errors from 'balena-errors';
 import once from 'lodash/once';
 
 import { isNotFoundResponse, onlyIf, mergePineOptions } from '../util';
@@ -921,6 +922,7 @@ const getOsModel = function (
 	 * @param {String} currentVersion - semver-compatible version for the starting OS version
 	 * @param {Object} [options] - Extra options to filter the OS releases by
 	 * @param {Boolean} [options.includeDraft=false] - Whether pre-releases should be included in the results
+	 * @param {Boolean|Null} [options.osType='default'] - Can be one of 'default', 'esr' or null to include all types
 	 * @fulfil {Object[]|Object} - An array of OsVersion objects when a single device type slug is provided,
 	 * or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.
 	 * @fulfil {Object} - the versions information, of the following structure:
@@ -939,30 +941,58 @@ const getOsModel = function (
 	const getSupportedOsUpdateVersions = async (
 		deviceType: string,
 		currentVersion: string,
-		options?: { includeDraft?: boolean },
+		{
+			// TODO: Stop defaulting to 'default' on the next major
+			osType = OsTypes.DEFAULT,
+			...options
+		}: {
+			osType?: 'default' | 'esr' | null;
+			includeDraft?: boolean;
+		} = {},
 	): Promise<OsUpdateVersions> => {
+		const currentSemver = bSemver.parse(currentVersion);
+		if (currentSemver == null) {
+			throw new errors.BalenaInvalidParameterError(
+				'currentVersion',
+				currentVersion,
+			);
+		}
 		deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
-		const allVersions = (await getAvailableOsVersions(deviceType, options))
-			.filter((v) => v.osType === OsTypes.DEFAULT)
-			.map((v) => v.raw_version);
+		const allOsReleases = await getAvailableOsVersions(deviceType, options);
 		// use bSemver.compare to find the current version in the OS list
 		// to benefit from the baked-in normalization
-		const current = allVersions.find(
-			(v) => bSemver.compare(v, currentVersion) === 0,
+		const current = allOsReleases.find(
+			(r) => bSemver.compare(r.raw_version, currentVersion) === 0,
 		);
 
-		const versions = allVersions.filter((v) =>
-			hupActionHelper().isSupportedOsUpdate(deviceType, currentVersion, v),
+		const targetOsReleases =
+			osType != null
+				? allOsReleases.filter((r) => r.osType === osType)
+				: allOsReleases;
+		const compatibleReleases = targetOsReleases.filter(
+			(r) =>
+				hupActionHelper().isSupportedOsUpdate(
+					deviceType,
+					currentVersion,
+					r.raw_version,
+				) &&
+				(r.basedOnVersion == null ||
+					currentSemver.major > 2000 ||
+					hupActionHelper().isSupportedOsUpdate(
+						deviceType,
+						currentVersion,
+						r.basedOnVersion,
+					)),
 		);
 
-		const recommended = versions.filter((v) => !bSemver.prerelease(v))[0] as
-			| string
-			| undefined;
+		const versions = compatibleReleases.map((r) => r.raw_version);
+
+		const recommended = versions.find((v) => !bSemver.prerelease(v));
 
 		return {
 			versions,
 			recommended,
-			current,
+			current: current?.raw_version,
 		};
 	};
 
