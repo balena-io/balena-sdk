@@ -942,8 +942,7 @@ const getOsModel = function (
 		deviceType: string,
 		currentVersion: string,
 		{
-			// TODO: Stop defaulting to 'default' on the next major
-			osType = OsTypes.DEFAULT,
+			osType,
 			...options
 		}: {
 			osType?: 'default' | 'esr' | null;
@@ -957,6 +956,12 @@ const getOsModel = function (
 				currentVersion,
 			);
 		}
+		const isEsr = currentSemver.major > 2000;
+		// TODO: Remove this defaulting in the next major
+		if (osType === undefined) {
+			osType = isEsr ? OsTypes.ESR : OsTypes.DEFAULT;
+		}
+
 		deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
 		const allOsReleases = await getAvailableOsVersions(deviceType, options);
 		// use bSemver.compare to find the current version in the OS list
@@ -977,7 +982,7 @@ const getOsModel = function (
 					r.raw_version,
 				) &&
 				(r.basedOnVersion == null ||
-					currentSemver.major > 2000 ||
+					isEsr ||
 					hupActionHelper().isSupportedOsUpdate(
 						deviceType,
 						currentVersion,
