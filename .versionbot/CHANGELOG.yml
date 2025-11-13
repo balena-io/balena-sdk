@@ -1,4 +1,16 @@
 - commits:
+    - subject: Replace some lodash usage with native JS alternatives
+      hash: 944fc904b1b5b9387ff81985b2fafdc244a6d2fc
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 22.4.1
+  title: ""
+  date: 2025-11-13T14:40:51.859Z
+- commits:
     - subject: "os.getSupportedOsUpdateVersions: List ESR versions when an ESR version
         is provided & no osType is specified"
       hash: 5ed9cf21398fc83d5041be5f83b2862af3ddf8be
