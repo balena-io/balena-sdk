@@ -1131,6 +1131,74 @@ describe('OS model', function () {
 				);
 				expect(draftVersions).to.have.length.greaterThan(0);
 			});
+
+			it('should only include ESR OS releases as supported hup targets when an ESR version is passed and the osType is not provided', async () => {
+				const { current, recommended, versions } =
+					await balena.models.os.getSupportedOsUpdateVersions(
+						'raspberrypi3',
+						'2021.07.1.prod',
+					);
+				expect(current).to.equal('2021.07.1.prod');
+				expect(bSemver.gt(recommended, '2021.07.1')).to.be.true;
+				expect(
+					versions.filter((v) => bSemver.lte(v, '2021.07.1')),
+				).to.deep.equal([]);
+				expect(
+					versions.filter((v) => bSemver.gt(v, '2021.07.1')),
+				).to.have.length.greaterThan(0);
+			});
+
+			it('should only include ESR OS releases as supported hup targets when an ESR version is passed and the osType is null', async () => {
+				const { current, recommended, versions } =
+					await balena.models.os.getSupportedOsUpdateVersions(
+						'raspberrypi3',
+						'2021.07.1.prod',
+						{
+							osType: null,
+						},
+					);
+				expect(current).to.equal('2021.07.1.prod');
+				expect(bSemver.gt(recommended, '2021.07.1')).to.be.true;
+				expect(
+					versions.filter((v) => bSemver.lte(v, '2021.07.1')),
+				).to.deep.equal([]);
+				expect(
+					versions.filter((v) => bSemver.gt(v, '2021.07.1')),
+				).to.have.length.greaterThan(0);
+			});
+
+			it(`should return no supported hup targets when an ESR version is passed and the osType is 'default'`, async () => {
+				const { current, recommended, versions } =
+					await balena.models.os.getSupportedOsUpdateVersions(
+						'raspberrypi3',
+						'2021.07.1.prod',
+						{
+							osType: 'default',
+						},
+					);
+				expect(current).to.equal('2021.07.1.prod');
+				expect(recommended).to.equal(undefined);
+				expect(versions).to.deep.equal([]);
+			});
+
+			it(`should only include ESR OS releases as supported hup targets when an ESR version is passed and the osType is 'esr'`, async () => {
+				const { current, recommended, versions } =
+					await balena.models.os.getSupportedOsUpdateVersions(
+						'raspberrypi3',
+						'2021.07.1.prod',
+						{
+							osType: 'esr',
+						},
+					);
+				expect(current).to.equal('2021.07.1.prod');
+				expect(bSemver.gt(recommended, '2021.07.1')).to.be.true;
+				expect(
+					versions.filter((v) => bSemver.lte(v, '2021.07.1')),
+				).to.deep.equal([]);
+				expect(
+					versions.filter((v) => bSemver.gt(v, '2021.07.1')),
+				).to.have.length.greaterThan(0);
+			});
 		});
 	});
 
