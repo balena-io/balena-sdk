@@ -1,4 +1,18 @@
 - commits:
+    - subject: Stop using Browserify in favor of Webpack
+      hash: a29dc5eb6127cda3b96423463ea078184dc0c4b8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://balena.fibery.io/Work/Project/2025
+        see: https://balena.fibery.io/Work/Project/2025
+      author: Thodoris Greasidis
+      nested: []
+  version: 22.3.1
+  title: ""
+  date: 2025-11-13T09:50:55.646Z
+- commits:
     - subject: "os.getSupportedOsUpdateVersions: Add support for including ESR versions"
       hash: 34519469b546fe1fa46c6c4cd99ac1cf1f17f5ed
       body: ""
