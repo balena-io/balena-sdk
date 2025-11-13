@@ -293,6 +293,85 @@ await (async () => {
 	console.log(service, test);
 })();
 
+// @ os.getAllOsVersions
+await (async () => {
+	const osVersionsSingleNoOptions =
+		await sdk.models.os.getAllOsVersions('raspberrypi3');
+	aNumber = osVersionsSingleNoOptions[0].id;
+	aString = osVersionsSingleNoOptions[0].raw_version;
+	aString = osVersionsSingleNoOptions[0].strippedVersion;
+	aString = osVersionsSingleNoOptions[0].osType;
+	// @ts-expect-error - test case
+	aAny = osVersionsSingleNoOptions[0].belongs_to__application;
+
+	const osVersionsMultipleNoOptions = await sdk.models.os.getAllOsVersions([
+		'raspberrypi3',
+		'fincm3',
+	]);
+	aNumber = osVersionsMultipleNoOptions['raspberrypi3'][0].id;
+	aString = osVersionsMultipleNoOptions['fincm3'][0].raw_version;
+	aString = osVersionsMultipleNoOptions['raspberrypi3'][0].strippedVersion;
+	aString = osVersionsMultipleNoOptions['fincm3'][0].osType;
+	// @ts-expect-error - test case
+	aAny = osVersionsMultipleNoOptions['raspberrypi3'][0].belongs_to__application;
+
+	const osVersionsSingleWithOptions = await sdk.models.os.getAllOsVersions(
+		'raspberrypi3',
+		{
+			$filter: {
+				revision: 0,
+			},
+		},
+	);
+	aNumber = osVersionsSingleWithOptions[0].id;
+	aString = osVersionsSingleWithOptions[0].raw_version;
+	aString = osVersionsSingleWithOptions[0].strippedVersion;
+	// test case - not selected but should be there from the merge
+	aAny = osVersionsSingleWithOptions[0].phase;
+	// test case - not selected but should be there from the merge
+	aAny = osVersionsSingleWithOptions[0].osType;
+	// @ts-expect-error - test case
+	aAny = osVersionsSingleWithOptions[0].belongs_to__application;
+
+	const osVersionsMultipleWithOptions = await sdk.models.os.getAllOsVersions(
+		['raspberrypi3', 'fincm3'],
+		{
+			$select: ['id', 'raw_version', 'variant'],
+			$filter: {
+				is_invalidated: false,
+			},
+		},
+	);
+	aNumber = osVersionsMultipleWithOptions['raspberrypi3'][0].id;
+	aString = osVersionsMultipleWithOptions['fincm3'][0].raw_version;
+	aString = osVersionsMultipleWithOptions['raspberrypi3'][0].variant;
+	// test case - not selected but should be there from the merge
+	aAny = osVersionsMultipleWithOptions['fincm3'][0].phase;
+	// @ts-expect-error - test case
+	aAny = osVersionsMultipleWithOptions['fincm3'][0].belongs_to__application;
+
+	// Test with $expand options
+	const osVersionsWithExpand = await sdk.models.os.getAllOsVersions(
+		'raspberrypi3',
+		{
+			$select: ['id', 'raw_version'],
+			$expand: {
+				release_tag: {
+					$select: ['tag_key', 'value'],
+				},
+			},
+		},
+	);
+	aNumber = osVersionsWithExpand[0].id;
+	aString = osVersionsWithExpand[0].raw_version;
+	aString = osVersionsWithExpand[0].release_tag[0].tag_key;
+	aString = osVersionsWithExpand[0].release_tag[0].value;
+	// test case - not selected but should be there from the merge
+	aAny = osVersionsWithExpand[0].variant;
+	// @ts-expect-error - test case
+	aAny = osVersionsWithExpand[0].belongs_to__application;
+})();
+
 // mergePineOptions typing
 (() => {
 	const emptyProperty = mergePineOptions({}, {});
