@@ -364,7 +364,7 @@ const getDeviceModel = function (
 			options: {
 				$select: [
 					'uuid',
-					'is_online',
+					'is_connected_to_vpn',
 					'os_version',
 					'supervisor_version',
 					'os_variant',
@@ -825,10 +825,10 @@ const getDeviceModel = function (
 		 * });
 		 */
 		isOnline: async (uuidOrId: string | number): Promise<boolean> => {
-			const { is_online } = await exports.get(uuidOrId, {
-				$select: 'is_online',
+			const { is_connected_to_vpn } = await exports.get(uuidOrId, {
+				$select: 'is_connected_to_vpn',
 			});
-			return is_online;
+			return is_connected_to_vpn;
 		},
 
 		/**
@@ -860,10 +860,10 @@ const getDeviceModel = function (
 		getLocalIPAddresses: async (
 			uuidOrId: string | number,
 		): Promise<string[]> => {
-			const { is_online, ip_address } = await exports.get(uuidOrId, {
-				$select: ['is_online', 'ip_address'],
+			const { is_connected_to_vpn, ip_address } = await exports.get(uuidOrId, {
+				$select: ['is_connected_to_vpn', 'ip_address'],
 			});
-			if (!is_online) {
+			if (!is_connected_to_vpn) {
 				throw new Error(`The device is offline: ${uuidOrId}`);
 			}
 			return (ip_address ?? '').split(' ');
@@ -2172,12 +2172,12 @@ const getDeviceModel = function (
 			{
 				uuid,
 				is_of__device_type,
-				is_online,
+				is_connected_to_vpn,
 				os_version,
 				os_variant,
 			}: Pick<
 				Device['Read'],
-				'uuid' | 'is_online' | 'os_version' | 'os_variant'
+				'uuid' | 'is_connected_to_vpn' | 'os_version' | 'os_variant'
 			> & {
 				is_of__device_type: [Pick<DeviceType['Read'], 'slug'>];
 			},
@@ -2185,10 +2185,6 @@ const getDeviceModel = function (
 		) {
 			if (!uuid) {
 				throw new Error('The uuid of the device is not available');
-			}
-
-			if (!is_online) {
-				throw new Error(`The device is offline: ${uuid}`);
 			}
 
 			if (!os_version) {
@@ -2209,6 +2205,10 @@ const getDeviceModel = function (
 				throw new Error(
 					`The os variant of the device is not available: ${uuid}`,
 				);
+			}
+
+			if (!is_connected_to_vpn) {
+				throw new Error(`The device is offline: ${uuid}`);
 			}
 
 			const currentOsVersion =
