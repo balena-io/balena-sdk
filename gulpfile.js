@@ -2,15 +2,8 @@
 const gulp = require('gulp');
 const gulpMocha = require('gulp-mocha');
 const replace = require('gulp-replace');
-const browserify = require('browserify');
-const uglifyJs = require('uglify-js');
-const uglifyComposer = require('gulp-uglify/composer');
-const source = require('vinyl-source-stream');
-const buffer = require('vinyl-buffer');
 const minimist = require('minimist');
 const { optionalVar } = require('@balena/env-parsing');
-
-const minify = uglifyComposer(uglifyJs, console);
 
 const packageJSON = require('./package.json');
 
@@ -20,13 +13,8 @@ const cliOptions = minimist(process.argv.slice(2), {
 });
 
 const OPTIONS = {
-	config: {
-		browserLibraryName: 'balena-sdk',
-	},
 	files: {
 		tests: ['tests/**/*.spec.js', 'tests/**/*.spec.ts'],
-		browserEntry: 'index.js',
-		browserMinifiedOutput: 'balena-browser.min.js',
 	},
 	directories: {
 		doc: 'doc/',
@@ -68,23 +56,3 @@ gulp.task('inject-version', () =>
 		.pipe(replace('__REPLACE_WITH_PACKAGE_JSON_VERSION__', packageJSON.version))
 		.pipe(gulp.dest(`${OPTIONS.directories.build}/util/`)),
 );
-
-gulp.task('pack-browser', function () {
-	const bundle = browserify({
-		entries: OPTIONS.files.browserEntry,
-		basedir: OPTIONS.directories.build,
-		standalone: OPTIONS.config.browserLibraryName,
-	})
-		.exclude('fs')
-		.exclude('path')
-		.exclude('balena-settings-client')
-		.exclude('mime')
-		.exclude('fs/promises')
-		.bundle();
-
-	return bundle
-		.pipe(source(OPTIONS.files.browserMinifiedOutput))
-		.pipe(buffer())
-		.pipe(minify())
-		.pipe(gulp.dest(OPTIONS.directories.build));
-});
