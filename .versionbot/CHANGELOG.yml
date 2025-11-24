@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/setup-node action to v6
+      hash: 80e2ae32d1d6f30cb82688e7e8b71bd29a922893
+      body: |
+        Update actions/setup-node from 4 to 6
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 22.4.3
+  title: ""
+  date: 2025-11-24T16:48:55.469Z
+- commits:
     - subject: Update sinon to v20
       hash: 17ab71d9fac594517c3bf7e54bf961c753886a06
       body: |
