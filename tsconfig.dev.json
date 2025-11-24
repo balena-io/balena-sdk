@@ -6,6 +6,7 @@
         "skipLibCheck": true,
     },
     "include": [
+        "scripts/*.js",
         "typings/**/*",
         "tests/**/*",
         "typing_tests/**/*",
