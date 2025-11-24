@@ -8,6 +8,17 @@ import { getInitialOrganization } from './utils';
 chai.use(chaiSamsam);
 
 export const IS_BROWSER = typeof window !== 'undefined' && window !== null;
+const CURRENT_ENVIRONMENT = IS_BROWSER ? 'browser' : 'node';
+const TEST_ONLY_ON_ENVIRONMENT = optionalVar('TEST_ONLY_ON_ENVIRONMENT');
+if (
+	TEST_ONLY_ON_ENVIRONMENT &&
+	TEST_ONLY_ON_ENVIRONMENT !== CURRENT_ENVIRONMENT
+) {
+	console.log(`TEST_ONLY_ON_ENVIRONMENT is set to ${TEST_ONLY_ON_ENVIRONMENT}`);
+	console.log(`Skipping ${CURRENT_ENVIRONMENT} tests`);
+	process.exit(0);
+}
+
 export const apiVersion = 'v7';
 
 export let balenaSdkExports: typeof BalenaSdk;

@@ -218,7 +218,6 @@ describe('Organization Membership Model', function () {
 		describe('given an organization with two organization memberships [contained scenario]', function () {
 			let memberMembership:
 				| BalenaSdk.OrganizationMembership['Read']
-				| PickDeferred<BalenaSdk.OrganizationMembership['Read']>
 				| undefined;
 
 			before(async function () {
