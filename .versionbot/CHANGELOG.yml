@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update sinon to v20
+      hash: 17ab71d9fac594517c3bf7e54bf961c753886a06
+      body: |
+        Update @types/sinon from 17.0.4 to 20.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 22.4.2
+  title: ""
+  date: 2025-11-24T16:02:01.628Z
+- commits:
     - subject: Replace some lodash usage with native JS alternatives
       hash: 944fc904b1b5b9387ff81985b2fafdc244a6d2fc
       body: ""
