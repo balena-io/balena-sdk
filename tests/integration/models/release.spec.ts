@@ -619,6 +619,38 @@ describe('Release Model', function () {
 			});
 		});
 
+		describe('balena.models.release.setReleaseVersion()', function () {
+			uniquePropertyNames.forEach((field) => {
+				const fieldLabel = getFieldLabel(field);
+				it(`should set the semver using the release ${fieldLabel}`, async () => {
+					const release = ctx.currentRelease;
+					const semverParam = getParam(field, release);
+					const semver = '1.2.3';
+					await balena.models.release.setReleaseVersion(semverParam, semver);
+					const updatedRelease = await balena.models.release.get(release.id, {
+						$select: ['id', 'semver'],
+					});
+					expect(updatedRelease).to.deep.match({
+						id: release.id,
+						semver,
+					});
+				});
+
+				it(`should throw when setting invalid semver using the release ${fieldLabel}`, async () => {
+					const release = ctx.currentRelease;
+					const semverParam = getParam(field, release);
+					const semver = 'in.va.lid';
+					const promise = balena.models.release.setReleaseVersion(
+						semverParam,
+						semver,
+					);
+					await expect(promise).to.be.rejectedWith(
+						"Invalid parameter: in.va.lid is not a valid value for parameter 'semver'",
+					);
+				});
+			});
+		});
+
 		describe('balena.models.release.tags', function () {
 			const appTagTestOptions: tagsHelper.Options = {
 				model: balena.models.release.tags,
