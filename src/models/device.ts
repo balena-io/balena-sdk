@@ -2824,7 +2824,19 @@ const getDeviceModel = function (
 				serviceNameOrId: string | number,
 				key: string,
 			): Promise<string | undefined> {
-				const { id: deviceId } = await exports.get(uuidOrId, { $select: 'id' });
+				const deviceOptions = {
+					$select: 'id',
+					$expand: { belongs_to__application: { $select: 'id' } },
+				} as const;
+
+				const {
+					id: deviceId,
+					belongs_to__application: [{ id: appId }],
+				} = (await sdkInstance.models.device.get(
+					uuidOrId,
+					deviceOptions,
+				)) as PineTypedResult<Device, typeof deviceOptions>;
+
 				const [variable] = await pine.get({
 					resource: 'device_service_environment_variable',
 					options: {
@@ -2845,6 +2857,7 @@ const getDeviceModel = function (
 																$expr: {
 																	is: {
 																		service_name: serviceNameOrId,
+																		application: appId,
 																	},
 																},
 															},
@@ -2897,31 +2910,25 @@ const getDeviceModel = function (
 			): Promise<void> {
 				value = String(value);
 
-				let deviceFilter;
-				if (isId(uuidOrId)) {
-					deviceFilter = uuidOrId;
-				} else if (isFullUuid(uuidOrId)) {
-					deviceFilter = {
-						$any: {
-							$alias: 'd',
-							$expr: {
-								d: {
-									uuid: uuidOrId,
-								},
-							},
-						},
-					};
-				} else {
-					const device = await exports.get(uuidOrId, { $select: 'id' });
-					deviceFilter = device.id;
-				}
+				const deviceOptions = {
+					$select: 'id',
+					$expand: { belongs_to__application: { $select: 'id' } },
+				} as const;
+
+				const {
+					id: deviceId,
+					belongs_to__application: [{ id: appId }],
+				} = (await sdkInstance.models.device.get(
+					uuidOrId,
+					deviceOptions,
+				)) as PineTypedResult<Device, typeof deviceOptions>;
 
 				const serviceInstalls = await pine.get({
 					resource: 'service_install',
 					options: {
 						$select: 'id',
 						$filter: {
-							device: deviceFilter,
+							device: deviceId,
 							installs__service:
 								typeof serviceNameOrId === 'number'
 									? serviceNameOrId
@@ -2931,6 +2938,7 @@ const getDeviceModel = function (
 												$expr: {
 													s: {
 														service_name: serviceNameOrId,
+														application: appId,
 													},
 												},
 											},
@@ -2992,7 +3000,19 @@ const getDeviceModel = function (
 				serviceNameOrId: string | number,
 				key: string,
 			): Promise<void> {
-				const { id: deviceId } = await exports.get(uuidOrId, { $select: 'id' });
+				const deviceOptions = {
+					$select: 'id',
+					$expand: { belongs_to__application: { $select: 'id' } },
+				} as const;
+
+				const {
+					id: deviceId,
+					belongs_to__application: [{ id: appId }],
+				} = (await sdkInstance.models.device.get(
+					uuidOrId,
+					deviceOptions,
+				)) as PineTypedResult<Device, typeof deviceOptions>;
+
 				await pine.delete({
 					resource: 'device_service_environment_variable',
 					options: {
@@ -3012,6 +3032,7 @@ const getDeviceModel = function (
 																$expr: {
 																	is: {
 																		service_name: serviceNameOrId,
+																		application: appId,
 																	},
 																},
 															},
