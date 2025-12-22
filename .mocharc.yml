@@ -1,0 +1,19 @@
+# Specify which files to load as the test suite
+spec: 'tests/**/*.spec.ts'
+
+# Use the spec reporter
+reporter: 'spec'
+
+# Set the maximum test duration in milliseconds (300 seconds)
+timeout: 300000
+
+# Consider tests slower than this duration in milliseconds
+slow: 1000
+
+# Number of times to retry failed tests
+retries: 2
+
+# Global requires/setup files to be loaded before the tests
+require:
+  - 'dotenv/config'
+  - 'ts-node/register/transpile-only'

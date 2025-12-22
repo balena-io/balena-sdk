@@ -121,15 +121,14 @@ export interface OsUpdateVersions {
 	current: string | undefined;
 }
 
-export interface OsDownloadOptions
-	extends Pick<
-		ImgConfigOptions,
-		| 'developmentMode'
-		| 'appUpdatePollInterval'
-		| 'network'
-		| 'wifiKey'
-		| 'wifiSsid'
-	> {
+export interface OsDownloadOptions extends Pick<
+	ImgConfigOptions,
+	| 'developmentMode'
+	| 'appUpdatePollInterval'
+	| 'network'
+	| 'wifiKey'
+	| 'wifiSsid'
+> {
 	deviceType: string;
 	version?: string;
 	appId?: number;
