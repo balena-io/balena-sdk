@@ -1,4 +1,32 @@
 - commits:
+    - subject: Drop gulp from the dev dependencies
+      hash: 2612a173182f3c53c1e66dc0a03439f5e74839cd
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Update @balena/lint to 9.3.12
+      hash: f7380404f19c0160a42ccd6f822483112200a50b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "tests: Type fixes for newer pinejs-client-core version"
+      hash: d1594aac9481ff0c7320a0239be024d0404e4eab
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 22.4.4
+  title: ""
+  date: 2025-12-22T14:23:53.693Z
+- commits:
     - subject: Update actions/setup-node action to v6
       hash: 80e2ae32d1d6f30cb82688e7e8b71bd29a922893
       body: |
