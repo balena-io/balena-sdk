@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
+import { upperFirst, camelCase, sortBy, startCase } from 'es-toolkit';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import type { Dictionary } from '../../../typings/utils';
@@ -14,7 +13,7 @@ type ResourceTagBase = {
 };
 
 const getAllByResourcePropNameProvider = (resourceName: string) =>
-	`getAllBy${_.upperFirst(_.camelCase(resourceName))}`;
+	`getAllBy${upperFirst(camelCase(resourceName))}`;
 
 const getAllByResourceFactory = function (
 	model: TagModelBase,
@@ -84,7 +83,7 @@ export const itShouldGetAllTagsByResource = function (opts: Options) {
 				async () => {
 					await getAllByResource(999999);
 				},
-				`${_.startCase(resourceName)} not found: 999999`,
+				`${startCase(resourceName)} not found: 999999`,
 			);
 		});
 
@@ -116,7 +115,7 @@ export const itShouldGetAllTagsByResource = function (opts: Options) {
 					async () => {
 						await getAllByResource(getAllByResourceParam);
 					},
-					`${_.startCase(resourceName)} not found: ${
+					`${startCase(resourceName)} not found: ${
 						typeof getAllByResourceParam === 'object'
 							? `unique pair ${Object.keys(getAllByResourceParam).join(
 									' & ',
@@ -182,7 +181,7 @@ export const itShouldSetGetAndRemoveTags = function (opts: Options) {
 						async () => {
 							await model.set(999999, 'EDITOR', 'vim');
 						},
-						`${_.startCase(resourceName)} not found: `,
+						`${startCase(resourceName)} not found: `,
 					);
 				},
 			);
@@ -312,7 +311,7 @@ export const itShouldSetGetAndRemoveTags = function (opts: Options) {
 		parallel(`${modelNamespace}.${getAllByResourceMethodName}()`, function () {
 			it('should retrieve all the tags by ', async function () {
 				let tags = await getAllByResource(ctx.resource.id);
-				tags = _.sortBy(tags, 'tag_key');
+				tags = sortBy(tags, ['tag_key']);
 				expect(tags.length).to.be.gte(2);
 				// exclude tags that the user can access b/c of public apps
 				const tagsOfUsersResource = tags.filter(
@@ -342,7 +341,7 @@ export const itShouldSetGetAndRemoveTags = function (opts: Options) {
 			it('should be able to update a tag without affecting the rest', async function () {
 				await model.set(ctx.resource.id, 'EDITOR', 'emacs');
 				let tags = await getAllByResource(ctx.resource.id);
-				tags = _.sortBy(tags, 'tag_key');
+				tags = sortBy(tags, ['tag_key']);
 				expect(tags).to.have.length(2);
 				expect(tags[0].tag_key).to.equal('EDITOR');
 				expect(tags[0].value).to.equal('emacs');

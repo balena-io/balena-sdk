@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
+import { sortBy } from 'es-toolkit';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import {
@@ -59,10 +58,7 @@ describe('Service Model', function () {
 					.then((services) => {
 						expect(services).to.have.lengthOf(2);
 
-						const sortedServices = _.sortBy(
-							services,
-							(service) => service.service_name,
-						);
+						const sortedServices = sortBy(services, ['service_name']);
 						expect(sortedServices).to.deep.match([
 							{
 								service_name: 'db',
@@ -164,10 +160,10 @@ describe('Service Model', function () {
 						),
 					]);
 					const result = await varModel.getAllByService(param);
-					expect(_.find(result, { name: `A_${serviceParamSlug}` }))
+					expect(result.find((r: any) => r.name === `A_${serviceParamSlug}`))
 						.to.be.an('object')
 						.that.has.property('value', `a_${serviceParamSlug}`);
-					expect(_.find(result, { name: `B_${serviceParamSlug}` }))
+					expect(result.find((r: any) => r.name === `B_${serviceParamSlug}`))
 						.to.be.an('object')
 						.that.has.property('value', `b_${serviceParamSlug}`);
 					await Promise.all([
@@ -194,12 +190,16 @@ describe('Service Model', function () {
 						this.application.id,
 					);
 					expect(
-						_.find(result, { name: `A_BY_APPLICATION_${serviceParamSlug}` }),
+						result.find(
+							(r: any) => r.name === `A_BY_APPLICATION_${serviceParamSlug}`,
+						),
 					)
 						.to.be.an('object')
 						.that.has.property('value', `a_${serviceParamSlug}`);
 					expect(
-						_.find(result, { name: `B_BY_APPLICATION_${serviceParamSlug}` }),
+						result.find(
+							(r: any) => r.name === `B_BY_APPLICATION_${serviceParamSlug}`,
+						),
 					)
 						.to.be.an('object')
 						.that.has.property('value', `b_${serviceParamSlug}`);

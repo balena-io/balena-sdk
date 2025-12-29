@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
+import { sortBy } from 'es-toolkit';
 import type * as BalenaSdk from '../../..';
 import { delay, expectError, timeSuite } from '../../util';
 import { getFieldLabel, getParam } from '../utils';
@@ -468,10 +467,7 @@ describe('Release Model', function () {
 
 						// Need to sort explicitly because releases were both created
 						// at almost exactly the same time (just now, in test setup)
-						const sortedReleases = _.sortBy(
-							releases,
-							(release) => release.start_timestamp,
-						);
+						const sortedReleases = sortBy(releases, ['start_timestamp']);
 						expect(sortedReleases).to.deep.match([
 							{
 								status: 'success',

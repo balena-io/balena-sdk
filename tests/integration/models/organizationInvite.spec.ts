@@ -9,8 +9,7 @@ import {
 } from '../setup';
 import { timeSuite, assertDeepMatchAndLength, expectError } from '../../util';
 import type * as BalenaSdk from '../../..';
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
+import { keyBy } from 'es-toolkit';
 const TEST_EMAIL = 'user.test@example.org';
 const TEST_MESSAGE = 'Hey!, Join my org on balenaCloud';
 const TEST_ROLE = 'member';
@@ -171,7 +170,7 @@ describe('Organization Invite Model', function () {
 							resource: 'organization_membership_role',
 							options: { $select: ['id', 'name'] },
 						});
-						this.orgRoleMap = _.keyBy(roles, 'name');
+						this.orgRoleMap = keyBy(roles, (r) => r.name);
 						roles.forEach((role) => {
 							expect(role).to.be.an('object');
 							expect(role).to.have.property('id').that.is.a('number');
