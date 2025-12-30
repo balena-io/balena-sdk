@@ -932,7 +932,7 @@ describe('OS model', function () {
 						await balena.models.os.isSupportedOsUpdate(
 							'raspberrypi3',
 							'2.0.0+rev0.prod',
-							'2.2.0+rev2.prod',
+							'2.16.0+rev2.prod',
 						),
 					).to.equal(false);
 				});
@@ -943,8 +943,8 @@ describe('OS model', function () {
 					expect(
 						await balena.models.os.isSupportedOsUpdate(
 							'raspberrypi3',
-							'2.0.0+rev1.prod',
-							'2.1.0+rev1.prod',
+							'2.9.6+rev1.prod',
+							'2.15.99+rev1.prod',
 						),
 					).to.equal(false);
 				});
@@ -955,8 +955,8 @@ describe('OS model', function () {
 					expect(
 						await balena.models.os.isSupportedOsUpdate(
 							'raspberrypi3',
-							'2.0.0+rev1.dev',
-							'2.2.0+rev2.prod',
+							'2.14.0+rev1.dev',
+							'2.16.0+rev2.prod',
 						),
 					).to.equal(false);
 				});
@@ -967,8 +967,8 @@ describe('OS model', function () {
 					expect(
 						await balena.models.os.isSupportedOsUpdate(
 							'raspberrypi3',
-							'2.0.0+rev1.prod',
-							'2.1.0+rev1.dev',
+							'2.14.0+rev1.prod',
+							'2.16.0+rev1.dev',
 						),
 					).to.equal(false);
 				});
@@ -976,10 +976,12 @@ describe('OS model', function () {
 
 			describe('given a supported os update path', () => {
 				[
-					['2.0.0+rev1.prod', '2.2.0+rev2.prod'],
-					['2.8.0+rev1.dev', '2.10.0+rev2.dev'],
-					['2.2.0+rev2.prod', '2.88.4'],
-					['2.2.0+rev2.dev', '2.88.4'],
+					['2.14.0+rev1.prod', '2.16.0+rev2.prod'],
+					// 2.14.0+rev1.dev isn't supported b/c it's considered lower than 2.14.0+rev1,
+					// which is the minimum supported version
+					['2.14.0+rev2.dev', '2.16.0+rev2.dev'],
+					['2.14.0+rev2.prod', '2.88.4'],
+					['2.14.0+rev2.dev', '2.88.4'],
 				].forEach(([current, target]) => {
 					it(`should return true when updating ${current} -> ${target}`, async () => {
 						expect(
@@ -1001,9 +1003,22 @@ describe('OS model', function () {
 				await expectError(async () => {
 					await balena.models.os.getSupportedOsUpdateVersions(
 						'foo-bar-baz',
-						'2.9.6+rev1.prod',
+						'2.14.0+rev1.prod',
 					);
 				}, 'Invalid device type: foo-bar-baz');
+			});
+		});
+
+		describe('given a valid device slug and an unsupported current OS version', () => {
+			it('should return no compatible upgrade target versions', async function () {
+				const { current, recommended, versions } =
+					await balena.models.os.getSupportedOsUpdateVersions(
+						'raspberrypi3',
+						'2.9.6+rev1.prod',
+					);
+				expect(current).to.equal('2.9.6+rev1.prod');
+				expect(recommended).to.be.undefined;
+				expect(versions).to.deep.equal([]);
 			});
 		});
 
@@ -1012,9 +1027,9 @@ describe('OS model', function () {
 				const { current, recommended, versions } =
 					await balena.models.os.getSupportedOsUpdateVersions(
 						'raspberrypi3',
-						'2.9.6+rev1.prod',
+						'2.15.1+rev1.prod',
 					);
-				expect(current).to.equal('2.9.6+rev1.prod');
+				expect(current).to.equal('2.15.1+rev1.prod');
 				expect(recommended).to.be.a('string');
 				expect(versions).to.be.an('array');
 				expect(versions).to.not.have.length(0);
@@ -1032,9 +1047,9 @@ describe('OS model', function () {
 				const { current, recommended, versions } =
 					await balena.models.os.getSupportedOsUpdateVersions(
 						'raspberrypi3',
-						'2.9.6+rev1.prod',
+						'2.15.1+rev1.prod',
 					);
-				expect(current).to.equal('2.9.6+rev1.prod');
+				expect(current).to.equal('2.15.1+rev1.prod');
 				expect(bSemver.lt(recommended, '2000.0.0')).to.be.true;
 				expect(versions.filter((v) => bSemver.gt(v, '2000.0.0'))).to.deep.equal(
 					[],
@@ -1045,12 +1060,12 @@ describe('OS model', function () {
 				const { current, recommended, versions } =
 					await balena.models.os.getSupportedOsUpdateVersions(
 						'raspberrypi3',
-						'2.9.6+rev1.prod',
+						'2.15.1+rev1.prod',
 						{
 							osType: 'default',
 						},
 					);
-				expect(current).to.equal('2.9.6+rev1.prod');
+				expect(current).to.equal('2.15.1+rev1.prod');
 				expect(bSemver.lt(recommended, '2000.0.0')).to.be.true;
 				expect(versions.filter((v) => bSemver.gt(v, '2000.0.0'))).to.deep.equal(
 					[],
@@ -1061,12 +1076,12 @@ describe('OS model', function () {
 				const { current, recommended, versions } =
 					await balena.models.os.getSupportedOsUpdateVersions(
 						'raspberrypi3',
-						'2.9.6+rev1.prod',
+						'2.15.1+rev1.prod',
 						{
 							osType: 'esr',
 						},
 					);
-				expect(current).to.equal('2.9.6+rev1.prod');
+				expect(current).to.equal('2.15.1+rev1.prod');
 				expect(bSemver.gt(recommended, '2000.0.0')).to.be.true;
 				expect(versions.filter((v) => bSemver.lt(v, '2000.0.0'))).to.deep.equal(
 					[],
@@ -1080,12 +1095,12 @@ describe('OS model', function () {
 				const { current, recommended, versions } =
 					await balena.models.os.getSupportedOsUpdateVersions(
 						'raspberrypi3',
-						'2.9.6+rev1.prod',
+						'2.15.1+rev1.prod',
 						{
 							osType: null,
 						},
 					);
-				expect(current).to.equal('2.9.6+rev1.prod');
+				expect(current).to.equal('2.15.1+rev1.prod');
 				expect(bSemver.gt(recommended, '2000.0.0')).to.be.true;
 				expect(
 					versions.filter((v) => bSemver.lt(v, '2000.0.0')),
@@ -1099,9 +1114,9 @@ describe('OS model', function () {
 				const { current, recommended, versions } =
 					await balena.models.os.getSupportedOsUpdateVersions(
 						'raspberrypi3',
-						'2.9.6+rev1.prod',
+						'2.15.1+rev1.prod',
 					);
-				expect(current).to.equal('2.9.6+rev1.prod');
+				expect(current).to.equal('2.15.1+rev1.prod');
 				expect(recommended).to.be.a('string');
 				expect(versions).to.be.an('array');
 				expect(versions).to.not.have.length(0);
@@ -1118,10 +1133,10 @@ describe('OS model', function () {
 				const { current, recommended, versions } =
 					await balena.models.os.getSupportedOsUpdateVersions(
 						'raspberrypi3',
-						'2.9.6+rev1.prod',
+						'2.15.1+rev1.prod',
 						{ includeDraft: true },
 					);
-				expect(current).to.equal('2.9.6+rev1.prod');
+				expect(current).to.equal('2.15.1+rev1.prod');
 				expect(recommended).to.be.a('string');
 				expect(versions).to.be.an('array');
 				expect(versions).to.not.have.length(0);

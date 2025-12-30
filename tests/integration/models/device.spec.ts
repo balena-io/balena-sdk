@@ -3630,7 +3630,8 @@ describe('Device Model', function () {
 			it('should throw when the device is offline', () => {
 				[
 					['Resin OS 1.21.0', '', '1.28.0'],
-					['Resin OS 1.30.1', '', '2.5.0+rev1'],
+					['Resin OS 1.30.1', '', '2.16.0+rev1'],
+					['Resin OS 2.14.0+rev1', '', '2.16.0+rev1'],
 					['balenaOS 2.26.0+rev1', 'prod', '2.29.2+rev1.prod'],
 				].forEach(function ([osVersion, osVariant, targetOsVersion]) {
 					return expect(() => {
@@ -3693,7 +3694,7 @@ describe('Device Model', function () {
 					['balenaOS 2.26.0+rev1', 'dev'],
 					['balenaOS 2.28.0+rev1', 'dev'],
 				].forEach(function ([osVersion, osVariant]) {
-					return expect(() => {
+					expect(() => {
 						_checkOsUpdateTarget(
 							{
 								uuid,
@@ -3713,57 +3714,14 @@ describe('Device Model', function () {
 			describe('v1 -> v1 hup', () => {
 				['raspberrypi3', 'intel-nuc'].forEach((deviceType) => {
 					describe(`given a ${deviceType}`, function () {
-						it('should throw when current os version is < 1.8.0', () => {
+						it('should throw when current os version is v1', () => {
 							[
 								['Resin OS 1.2.1', ''],
-								['Resin OS 1.6.0', ''],
 								['Resin OS 1.7.2', ''],
-							].forEach(function ([osVersion, osVariant]) {
-								return expect(() => {
-									_checkOsUpdateTarget(
-										{
-											uuid,
-											is_of__device_type: [{ slug: deviceType }],
-											is_connected_to_vpn: true,
-											os_version: osVersion,
-											os_variant: osVariant,
-										},
-										'1.26.0',
-									);
-								}).to.throw('Current OS version must be >= 1.8.0');
-							});
-						});
-
-						it('should throw when the target os version is below the min supported v1 version', () => {
-							[
 								['Resin OS 1.8.0', ''],
-								['Resin OS 1.10.0', ''],
-								['Resin OS 1.19.0', ''],
 								['Resin OS 1.21.0', ''],
 							].forEach(function ([osVersion, osVariant]) {
-								return expect(() => {
-									_checkOsUpdateTarget(
-										{
-											uuid,
-											is_of__device_type: [{ slug: deviceType }],
-											is_connected_to_vpn: true,
-											os_version: osVersion,
-											os_variant: osVariant,
-										},
-										'1.25.0',
-									);
-								}).to.throw('Target OS version must be >= 1.26.0');
-							});
-						});
-
-						it('should not throw when it is a valid v1 -> v1 hup', () => {
-							[
-								['Resin OS 1.8.0', ''],
-								['Resin OS 1.10.0', ''],
-								['Resin OS 1.19.0', ''],
-								['Resin OS 1.21.0', ''],
-							].forEach(function ([osVersion, osVariant]) {
-								return expect(() => {
+								expect(() => {
 									_checkOsUpdateTarget(
 										{
 											uuid,
@@ -3774,7 +3732,7 @@ describe('Device Model', function () {
 										},
 										'1.28.0',
 									);
-								}).to.not.throw();
+								}).to.throw('Current OS version must be >= 2.14.0+rev1');
 							});
 						});
 					});
@@ -3783,171 +3741,13 @@ describe('Device Model', function () {
 
 			describe('v1 -> v2 hup', function () {
 				describe('given a raspberrypi3', function () {
-					it('should throw when current os version is < 1.8.0', () => {
+					it('should throw when current os version is v1', () => {
 						[
 							['Resin OS 1.2.1', ''],
-							['Resin OS 1.6.0', ''],
 							['Resin OS 1.7.2', ''],
-						].forEach(function ([osVersion, osVariant]) {
-							return expect(() => {
-								_checkOsUpdateTarget(
-									{
-										uuid,
-										is_of__device_type: [{ slug: 'raspberrypi3' }],
-										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
-									},
-									'2.5.0+rev1',
-								);
-							}).to.throw('Current OS version must be >= 1.8.0');
-						});
-					});
-
-					it('should not throw when it is a valid v1 -> v2 hup', () => {
-						[
 							['Resin OS 1.8.0', ''],
-							['Resin OS 1.10.0', ''],
-							['Resin OS 1.19.0', ''],
 							['Resin OS 1.21.0', ''],
-							['Resin OS 1.26.1', ''],
 							['Resin OS 1.30.1', ''],
-						].forEach(function ([osVersion, osVariant]) {
-							return expect(() => {
-								_checkOsUpdateTarget(
-									{
-										uuid,
-										is_of__device_type: [{ slug: 'raspberrypi3' }],
-										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
-									},
-									'2.5.0+rev1',
-								);
-							}).to.not.throw();
-						});
-					});
-				});
-
-				describe('given a beaglebone-black', function () {
-					it('should throw when current os version is < 1.30.1', () => {
-						[
-							['Resin OS 1.2.1', ''],
-							['Resin OS 1.6.0', ''],
-							['Resin OS 1.7.2', ''],
-							['Resin OS 1.8.0', ''],
-							['Resin OS 1.10.0', ''],
-							['Resin OS 1.19.0', ''],
-							['Resin OS 1.21.0', ''],
-							['Resin OS 1.26.1', ''],
-						].forEach(function ([osVersion, osVariant]) {
-							return expect(() => {
-								_checkOsUpdateTarget(
-									{
-										uuid,
-										is_of__device_type: [{ slug: 'beaglebone-black' }],
-										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
-									},
-									'2.5.0+rev1',
-								);
-							}).to.throw('Current OS version must be >= 1.30.1');
-						});
-					});
-
-					it('should not throw when it is a valid v1 -> v2 hup', () => {
-						[['Resin OS 1.30.1', '']].forEach(function ([
-							osVersion,
-							osVariant,
-						]) {
-							return expect(() => {
-								_checkOsUpdateTarget(
-									{
-										uuid,
-										is_of__device_type: [{ slug: 'beaglebone-black' }],
-										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
-									},
-									'2.5.0+rev1',
-								);
-							}).to.not.throw();
-						});
-					});
-				});
-			});
-
-			describe('v2 -> v2 hup', function () {
-				describe('given a raspberrypi3', function () {
-					it('should throw when current os version is < 2.0.0+rev1', () => {
-						[['Resin OS 2.0.0.rev0 (prod)', 'prod']].forEach(function ([
-							osVersion,
-							osVariant,
-						]) {
-							return expect(() => {
-								_checkOsUpdateTarget(
-									{
-										uuid,
-										is_of__device_type: [{ slug: 'raspberrypi3' }],
-										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
-									},
-									'2.1.0+rev1.prod',
-								);
-							}).to.throw('Current OS version must be >= 2.0.0+rev1');
-						});
-					});
-
-					it('should not throw when it is a valid v2 -> v2 hup', () => {
-						[
-							['Resin OS 2.0.0.rev1 (prod)', 'prod'],
-							['Resin OS 2.0.0.rev1 (prod)', ''],
-							['Resin OS 2.0.0+rev2', 'prod'],
-							['Resin OS 2.0.0+rev2 (prod)', 'prod'],
-							['Resin OS 2.0.0+rev2 (prod)', ''],
-							['Resin OS 2.0.0+rev3', 'prod'],
-							['Resin OS 2.0.0+rev3 (prod)', 'prod'],
-							['Resin OS 2.0.0+rev3 (prod)', ''],
-							['Resin OS 2.0.0+rev4 (prod)', 'prod'],
-							['Resin OS 2.0.0+rev4 (prod)', ''],
-							['Resin OS 2.0.0+rev5 (prod)', 'prod'],
-							['Resin OS 2.0.1.rev1', ''],
-							['Resin OS 2.0.2+rev2', ''],
-							['Resin OS 2.0.3+rev1', 'prod'],
-							['Resin OS 2.0.4+rev1', 'prod'],
-							['Resin OS 2.0.4+rev2', 'prod'],
-							['Resin OS 2.0.5+rev1', 'prod'],
-							['Resin OS 2.0.6+rev1', 'prod'],
-							['Resin OS 2.0.6+rev2', 'prod'],
-							['Resin OS 2.0.6+rev2', ''],
-							['Resin OS 2.1.0+rev1', 'prod'],
-							['Resin OS 2.2.0+rev1', 'prod'],
-							['Resin OS 2.9.7+rev1', 'prod'],
-							['Resin OS 2.12.0+rev1', 'prod'],
-							['Resin OS 2.12.1+rev1', 'prod'],
-							['balenaOS 2.26.0+rev1', 'prod'],
-						].forEach(function ([osVersion, osVariant]) {
-							return expect(() => {
-								_checkOsUpdateTarget(
-									{
-										uuid,
-										is_of__device_type: [{ slug: 'raspberrypi3' }],
-										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
-									},
-									'2.29.2+rev1.prod',
-								);
-							}).to.not.throw();
-						});
-					});
-
-					it('should throw when updating to a pre-release version with an older server', () => {
-						[
-							['balenaOS 2.29.2-1704382618288+rev1', 'prod'],
-							['balenaOS 2.29.2+rev1', 'prod'],
 						].forEach(function ([osVersion, osVariant]) {
 							expect(() => {
 								_checkOsUpdateTarget(
@@ -3958,160 +3758,185 @@ describe('Device Model', function () {
 										os_version: osVersion,
 										os_variant: osVariant,
 									},
-									'2.28.0-1704382553234+rev1.prod',
+									'2.16.0+rev1',
 								);
-							}).to.throw('OS downgrades are not allowed');
+							}).to.throw('Current OS version must be >= 2.14.0+rev1');
 						});
-					});
-
-					it('should not throw when updating to a pre-release version with a newer base server', () => {
-						expect(() => {
-							_checkOsUpdateTarget(
-								{
-									uuid,
-									is_of__device_type: [{ slug: 'raspberrypi3' }],
-									is_connected_to_vpn: true,
-									os_version: 'balenaOS 2.28.0+rev1',
-									os_variant: 'prod',
-								},
-								'2.29.2-1704382618288+rev1.prod',
-							);
-						}).to.not.throw();
-					});
-
-					it('should not throw when updating a device that is running a pre-release version to a version with a newer base server', () => {
-						expect(() => {
-							_checkOsUpdateTarget(
-								{
-									uuid,
-									is_of__device_type: [{ slug: 'raspberrypi3' }],
-									is_connected_to_vpn: true,
-									os_version: 'balenaOS 2.28.0-1704382553234',
-									os_variant: 'prod',
-								},
-								'2.29.2+rev1.prod',
-							);
-						}).to.not.throw();
-					});
-
-					it('should not throw when updating a device that is running a pre-release version updating to a pre-release version with a newer base server', () => {
-						expect(() => {
-							_checkOsUpdateTarget(
-								{
-									uuid,
-									is_of__device_type: [{ slug: 'raspberrypi3' }],
-									is_connected_to_vpn: true,
-									os_version: 'balenaOS 2.28.0-1704382553234',
-									os_variant: 'prod',
-								},
-								'2.29.2-1704382618288+rev1.prod',
-							);
-						}).to.not.throw();
 					});
 				});
+			});
 
-				describe('given a jetson-tx2', function () {
-					it('should throw when current os version is < 2.7.4', () => {
-						[
-							['Resin OS 2.0.0.rev1 (prod)', 'prod'],
-							['Resin OS 2.0.0.rev1 (prod)', ''],
-							['Resin OS 2.0.0+rev2', 'prod'],
-							['Resin OS 2.0.0+rev2 (prod)', 'prod'],
-							['Resin OS 2.0.0+rev2 (prod)', ''],
-							['Resin OS 2.0.0.rev1 (prod)', 'prod'],
-							['Resin OS 2.0.0.rev1 (prod)', ''],
-							['Resin OS 2.0.0+rev2', 'prod'],
-							['Resin OS 2.0.0+rev2 (prod)', 'prod'],
-							['Resin OS 2.0.0+rev2 (prod)', ''],
-							['Resin OS 2.0.0+rev3', 'prod'],
-							['Resin OS 2.0.0+rev3 (prod)', 'prod'],
-							['Resin OS 2.0.0+rev3 (prod)', ''],
-							['Resin OS 2.0.0+rev4 (prod)', 'prod'],
-							['Resin OS 2.0.0+rev4 (prod)', ''],
-							['Resin OS 2.0.0+rev5 (prod)', 'prod'],
-							['Resin OS 2.0.1.rev1', ''],
-							['Resin OS 2.0.2+rev2', ''],
-							['Resin OS 2.0.3+rev1', 'prod'],
-							['Resin OS 2.0.4+rev1', 'prod'],
-							['Resin OS 2.0.4+rev2', 'prod'],
-							['Resin OS 2.0.5+rev1', 'prod'],
-							['Resin OS 2.0.6+rev1', 'prod'],
-							['Resin OS 2.0.6+rev2', 'prod'],
-							['Resin OS 2.0.6+rev2', ''],
-							['Resin OS 2.1.0+rev1', 'prod'],
-							['Resin OS 2.2.0+rev1', 'prod'],
-							['Resin OS 2.3.0+rev1', 'prod'],
-							['Resin OS 2.3.0+rev2', 'prod'],
-							['Resin OS 2.4.1+rev1', 'prod'],
-							['Resin OS 2.4.2+rev1', 'prod'],
-							['Resin OS 2.6.0+rev1', 'prod'],
-							['Resin OS 2.7.2+rev1', 'prod'],
-						].forEach(function ([osVersion, osVariant]) {
-							return expect(() => {
-								_checkOsUpdateTarget(
-									{
-										uuid,
-										is_of__device_type: [{ slug: 'jetson-tx2' }],
-										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
-									},
-									'2.29.2+rev1.prod',
-								);
-							}).to.throw('Current OS version must be >= 2.7.4');
+			describe('v2 -> v2 hup', function () {
+				for (const deviceTypeSlug of ['raspberrypi3', 'jetson-tx2']) {
+					describe(`given a ${deviceTypeSlug}`, function () {
+						it('should throw when current os version is < 2.14.0+rev1', () => {
+							[
+								['Resin OS 2.0.0.rev0 (prod)', 'prod'],
+								['Resin OS 2.0.0.rev1 (prod)', 'prod'],
+								['Resin OS 2.0.0.rev1 (prod)', ''],
+								['Resin OS 2.0.0+rev2', 'prod'],
+								['Resin OS 2.0.1.rev1', ''],
+								['Resin OS 2.0.3+rev1', 'prod'],
+								['Resin OS 2.0.6+rev2', 'prod'],
+								['Resin OS 2.0.6+rev2', ''],
+								['Resin OS 2.1.0+rev1', 'prod'],
+								['Resin OS 2.2.0+rev1', 'prod'],
+								['Resin OS 2.9.7+rev1', 'prod'],
+								['Resin OS 2.12.0+rev1', 'prod'],
+								['Resin OS 2.12.1+rev1', 'prod'],
+							].forEach(function ([osVersion, osVariant]) {
+								expect(() => {
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceTypeSlug }],
+											is_connected_to_vpn: true,
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										'2.29.2+rev1.prod',
+									);
+								}).to.throw('Current OS version must be >= 2.14.0+rev1');
+							});
 						});
-					});
 
-					it('should not throw when it is a valid v2 -> v2 prod variant hup', () => {
-						[
-							['Resin OS 2.7.4+rev1', 'prod'],
-							['Resin OS 2.7.4+rev2', 'prod'],
-							['Resin OS 2.7.5+rev1', 'prod'],
-							['Resin OS 2.7.5+rev2', 'prod'],
-							['Resin OS 2.7.6+rev1', 'prod'],
-							['Resin OS 2.7.8+rev1', 'prod'],
-							['Resin OS 2.7.8+rev2', 'prod'],
-							['Resin OS 2.9.7+rev1', 'prod'],
-							['Resin OS 2.12.0+rev1', 'prod'],
-							['Resin OS 2.12.1+rev1', 'prod'],
-							['balenaOS 2.26.0+rev1', 'prod'],
-						].forEach(function ([osVersion, osVariant]) {
-							return expect(() => {
+						it('should not throw when it is a valid v2 -> v2 hup', () => {
+							[
+								['Resin OS 2.14.0+rev1', 'prod'],
+								['Resin OS 2.15.1+rev1', 'prod'],
+								['Resin OS 2.16.0+rev1', 'prod'],
+								['balenaOS 2.26.0+rev1', 'prod'],
+							].forEach(function ([osVersion, osVariant]) {
+								return expect(() => {
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceTypeSlug }],
+											is_connected_to_vpn: true,
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										'2.29.2+rev1.prod',
+									);
+								}).to.not.throw();
+							});
+						});
+
+						// pre-release versions
+
+						it('should throw when updating to a pre-release version with an older server', () => {
+							[
+								['balenaOS 2.29.2-1704382618288+rev1', 'prod'],
+								['balenaOS 2.29.2+rev1', 'prod'],
+							].forEach(function ([osVersion, osVariant]) {
+								expect(() => {
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceTypeSlug }],
+											is_connected_to_vpn: true,
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										'2.28.0-1704382553234+rev1.prod',
+									);
+								}).to.throw('OS downgrades are not allowed');
+							});
+						});
+
+						it('should not throw when updating to a pre-release version with a newer base server', () => {
+							expect(() => {
 								_checkOsUpdateTarget(
 									{
 										uuid,
-										is_of__device_type: [{ slug: 'jetson-tx2' }],
+										is_of__device_type: [{ slug: deviceTypeSlug }],
 										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
+										os_version: 'balenaOS 2.28.0+rev1',
+										os_variant: 'prod',
+									},
+									'2.29.2-1704382618288+rev1.prod',
+								);
+							}).to.not.throw();
+						});
+
+						it('should not throw when updating a device that is running a pre-release version to a version with a newer base server', () => {
+							expect(() => {
+								_checkOsUpdateTarget(
+									{
+										uuid,
+										is_of__device_type: [{ slug: deviceTypeSlug }],
+										is_connected_to_vpn: true,
+										os_version: 'balenaOS 2.28.0-1704382553234',
+										os_variant: 'prod',
 									},
 									'2.29.2+rev1.prod',
 								);
 							}).to.not.throw();
 						});
-					});
 
-					it('should not throw when it is a valid v2 -> v2 dev variant hup', () => {
-						[
-							['Resin OS 2.7.4+rev1.dev', 'dev'],
-							['Resin OS 2.9.7+rev2.dev', 'dev'],
-							['balenaOS 2.26.0+rev1.dev', 'dev'],
-						].forEach(function ([osVersion, osVariant]) {
-							return expect(() => {
+						it('should not throw when updating a device that is running a pre-release version updating to a pre-release version with a newer base server', () => {
+							expect(() => {
 								_checkOsUpdateTarget(
 									{
 										uuid,
-										is_of__device_type: [{ slug: 'jetson-tx2' }],
+										is_of__device_type: [{ slug: deviceTypeSlug }],
 										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
+										os_version: 'balenaOS 2.28.0-1704382553234',
+										os_variant: 'prod',
 									},
-									'2.29.2+rev1.dev',
+									'2.29.2-1704382618288+rev1.prod',
 								);
 							}).to.not.throw();
 						});
+
+						// dev variant
+
+						it('should throw when it is an invalid v2 -> v2 dev variant hup b/c the current os version is < 2.14.0+rev1', () => {
+							[
+								['Resin OS 2.7.4+rev1.dev', 'dev'],
+								['Resin OS 2.9.7+rev2.dev', 'dev'],
+								// 2.14.0+rev1.dev isn't supported b/c it's considered lower than 2.14.0+rev1,
+								// which is the minimum supported version
+								['Resin OS 2.14.0+rev1.dev', 'dev'],
+							].forEach(function ([osVersion, osVariant]) {
+								expect(() => {
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceTypeSlug }],
+											is_connected_to_vpn: true,
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										'2.29.2+rev1.dev',
+									);
+								}).to.throw('Current OS version must be >= 2.14.0+rev1');
+							});
+						});
+
+						it('should not throw when it is a valid v2 -> v2 dev variant hup', () => {
+							[
+								['Resin OS 2.14.0+rev2.dev', 'dev'],
+								['Resin OS 2.15.1+rev1.dev', 'dev'],
+								['Resin OS 2.16.0+rev1.dev', 'dev'],
+								['balenaOS 2.26.0+rev1.dev', 'dev'],
+							].forEach(function ([osVersion, osVariant]) {
+								expect(() => {
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceTypeSlug }],
+											is_connected_to_vpn: true,
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										'2.29.2+rev1.dev',
+									);
+								}).to.not.throw();
+							});
+						});
 					});
-				});
+				}
 			});
 		});
 	});
