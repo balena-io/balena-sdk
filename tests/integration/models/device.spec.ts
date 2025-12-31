@@ -1217,7 +1217,7 @@ describe('Device Model', function () {
 					is_online: true,
 					...testDeviceOsInfo,
 					os_variant: 'prod',
-					last_connectivity_event: '2019-05-13T16:14',
+					last_vpn_event: '2019-05-13T16:14',
 				});
 
 				describe('balena.models.device.getLocalModeSupport()', () => {
@@ -1268,7 +1268,7 @@ describe('Device Model', function () {
 					is_online: true,
 					...testDeviceOsInfo,
 					os_variant: 'dev',
-					last_connectivity_event: '2019-05-13T16:14',
+					last_vpn_event: '2019-05-13T16:14',
 				});
 
 				describe('balena.models.device.getLocalModeSupport()', () => {
@@ -2639,7 +2639,7 @@ describe('Device Model', function () {
 			givenADevice(before, {
 				is_online: true,
 				...testDeviceOsInfo,
-				last_connectivity_event: '2019-05-13T16:14',
+				last_vpn_event: '2019-05-13T16:14',
 				api_heartbeat_state: 'online',
 			});
 
@@ -3282,10 +3282,10 @@ describe('Device Model', function () {
 		});
 
 		describe('balena.models.device.lastOnline()', function () {
-			it('should return the string "Connecting..." if the device has no `last_connectivity_event`', () => {
+			it('should return the string "Connecting..." if the device has no `last_vpn_event`', () => {
 				expect(
 					balena.models.device.lastOnline({
-						last_connectivity_event: null,
+						last_vpn_event: null,
 						is_online: false,
 					}),
 				).to.equal('Connecting...');
@@ -3293,9 +3293,7 @@ describe('Device Model', function () {
 
 			it('should return the correct time string if the device is online', function () {
 				const mockDevice = {
-					last_connectivity_event: new Date(
-						Date.now() - 1000 * 60 * 5,
-					).toUTCString(),
+					last_vpn_event: new Date(Date.now() - 1000 * 60 * 5).toUTCString(),
 					is_online: true,
 				};
 
@@ -3306,9 +3304,7 @@ describe('Device Model', function () {
 
 			it('should return the correct time string if the device is offline', function () {
 				const mockDevice = {
-					last_connectivity_event: new Date(
-						Date.now() - 1000 * 60 * 5,
-					).toUTCString(),
+					last_vpn_event: new Date(Date.now() - 1000 * 60 * 5).toUTCString(),
 					is_online: false,
 				};
 
@@ -3326,7 +3322,7 @@ describe('Device Model', function () {
 						os_variant: 'dev',
 						os_version: 'Resin OS 2.7.8+rev1',
 						supervisor_version: '',
-						last_connectivity_event: '2019-05-13T16:14',
+						last_vpn_event: '2019-05-13T16:14',
 					}),
 				).to.deep.equal({
 					supported: false,
@@ -3334,14 +3330,14 @@ describe('Device Model', function () {
 				});
 			});
 
-			it('should identify a device w/o a last_connectivity_event as not supported', () => {
+			it('should identify a device w/o a last_vpn_event as not supported', () => {
 				expect(
 					balena.models.device.getLocalModeSupport({
 						is_online: true,
 						os_variant: 'dev',
 						os_version: 'Resin OS 2.7.8+rev1',
 						supervisor_version: '6.4.2',
-						last_connectivity_event: null,
+						last_vpn_event: null,
 					}),
 				).to.deep.equal({
 					supported: false,
@@ -3356,7 +3352,7 @@ describe('Device Model', function () {
 						os_variant: 'dev',
 						os_version: null,
 						supervisor_version: '6.4.2',
-						last_connectivity_event: '2019-05-13T16:14',
+						last_vpn_event: '2019-05-13T16:14',
 					}),
 				).to.deep.equal({
 					supported: false,
@@ -3371,7 +3367,7 @@ describe('Device Model', function () {
 						os_variant: 'dev',
 						os_version: 'ResinOS 2.7.8.9+rev1',
 						supervisor_version: '6.4.2',
-						last_connectivity_event: '2019-05-13T16:14',
+						last_vpn_event: '2019-05-13T16:14',
 					}),
 				).to.deep.equal({
 					supported: false,
@@ -3386,7 +3382,7 @@ describe('Device Model', function () {
 						os_variant: '',
 						os_version: 'Resin OS 1.26.0',
 						supervisor_version: '6.4.2',
-						last_connectivity_event: '2019-05-13T16:14',
+						last_vpn_event: '2019-05-13T16:14',
 					}),
 				).to.deep.equal({
 					supported: false,
@@ -3401,7 +3397,7 @@ describe('Device Model', function () {
 						os_variant: 'dev',
 						os_version: 'Resin OS 2.0.0+rev1',
 						supervisor_version: '3.99.99',
-						last_connectivity_event: '2019-05-13T16:14',
+						last_vpn_event: '2019-05-13T16:14',
 					}),
 				).to.deep.equal({
 					supported: false,
@@ -3416,7 +3412,7 @@ describe('Device Model', function () {
 						os_variant: '',
 						os_version: 'Resin OS 2.7.8+rev1',
 						supervisor_version: '6.4.2',
-						last_connectivity_event: '2019-05-13T16:14',
+						last_vpn_event: '2019-05-13T16:14',
 					}),
 				).to.deep.equal({
 					supported: false,
@@ -3431,7 +3427,7 @@ describe('Device Model', function () {
 						os_variant: 'prod',
 						os_version: 'Resin OS 2.7.8+rev1',
 						supervisor_version: '6.4.2',
-						last_connectivity_event: '2019-05-13T16:14',
+						last_vpn_event: '2019-05-13T16:14',
 					}),
 				).to.deep.equal({
 					supported: false,
@@ -3446,7 +3442,7 @@ describe('Device Model', function () {
 						os_variant: 'dev',
 						os_version: 'Resin OS 2.7.8+rev1',
 						supervisor_version: '6.4.2',
-						last_connectivity_event: '2019-05-13T16:14',
+						last_vpn_event: '2019-05-13T16:14',
 					}),
 				).to.deep.equal({
 					supported: true,

@@ -3,13 +3,13 @@ import type { Device } from '../types/models';
 
 export const isProvisioned = (
 	device: Partial<
-		Pick<Device['Read'], 'supervisor_version' | 'last_connectivity_event'>
+		Pick<Device['Read'], 'supervisor_version' | 'last_vpn_event'>
 	>,
 ) => {
 	return (
 		device.supervisor_version != null &&
 		device.supervisor_version.length > 0 &&
-		device.last_connectivity_event != null
+		device.last_vpn_event != null
 	);
 };
 

@@ -12,7 +12,7 @@ export const LOCAL_MODE_SUPPORT_PROPERTIES = [
 	'os_version',
 	'os_variant',
 	'supervisor_version',
-	'last_connectivity_event',
+	'last_vpn_event',
 ] as const;
 
 export const checkLocalModeSupported = (
