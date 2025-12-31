@@ -21,7 +21,10 @@ import type {
 } from '..';
 import * as errors from 'balena-errors';
 import { mergePineOptions } from '../util';
-import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
+import type {
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
 
 const getTeamApplicationAccessModel = function (
 	deps: InjectedDependenciesParam,
@@ -68,7 +71,10 @@ const getTeamApplicationAccessModel = function (
 	 */
 	const getAllByTeam = async function <
 		T extends ODataOptionsWithoutCount<TeamApplicationAccess['Read']>,
-	>(teamId: number, options?: T) {
+	>(
+		teamId: number,
+		options?: T,
+	): Promise<OptionsToResponse<TeamApplicationAccess['Read'], T, undefined>> {
 		const team = await sdkInstance.models.team.get(teamId, { $select: 'id' });
 
 		return sdkInstance.pine.get({
@@ -80,7 +86,7 @@ const getTeamApplicationAccessModel = function (
 					},
 				},
 				options,
-			),
+			) as T,
 		});
 	};
 
@@ -106,7 +112,12 @@ const getTeamApplicationAccessModel = function (
 	 */
 	const get = async function <
 		T extends ODataOptionsWithoutCount<TeamApplicationAccess['Read']>,
-	>(teamApplicationAccessId: number, options?: T) {
+	>(
+		teamApplicationAccessId: number,
+		options?: T,
+	): Promise<
+		OptionsToResponse<TeamApplicationAccess['Read'], T, undefined>[number]
+	> {
 		const teamApplicationAccess = await sdkInstance.pine.get({
 			resource: 'team_application_access',
 			id: teamApplicationAccessId,

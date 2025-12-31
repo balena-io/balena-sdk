@@ -18,7 +18,10 @@ import * as errors from 'balena-errors';
 import type { InjectedDependenciesParam } from '..';
 import type { Service, ServiceEnvironmentVariable } from '../types/models';
 import { mergePineOptions } from '../util';
-import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
+import type {
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
 
 const getServiceModel = ({
 	pine,
@@ -82,7 +85,7 @@ const getServiceModel = ({
 	const get = async <T extends ODataOptionsWithoutCount<Service['Read']>>(
 		id: number,
 		options?: T,
-	) => {
+	): Promise<OptionsToResponse<Service['Read'], T, undefined>[number]> => {
 		const service = await pine.get({
 			resource: 'service',
 			id,
@@ -96,7 +99,10 @@ const getServiceModel = ({
 
 	async function getAllByApplication<
 		T extends ODataOptionsWithoutCount<Service['Read']>,
-	>(slugOrUuidOrId: string | number, options: T = {} as T) {
+	>(
+		slugOrUuidOrId: string | number,
+		options: T = {} as T,
+	): Promise<OptionsToResponse<Service['Read'], T, undefined>> {
 		const { service } = await sdkInstance.models.application.get(
 			slugOrUuidOrId,
 			{
@@ -187,7 +193,12 @@ const getServiceModel = ({
 			 */
 			async getAllByApplication<
 				T extends ODataOptionsWithoutCount<ServiceEnvironmentVariable['Read']>,
-			>(slugOrUuidOrId: string | number, options?: T) {
+			>(
+				slugOrUuidOrId: string | number,
+				options?: T,
+			): Promise<
+				OptionsToResponse<ServiceEnvironmentVariable['Read'], T, undefined>
+			> {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -212,7 +223,7 @@ const getServiceModel = ({
 							$orderby: { name: 'asc' },
 						},
 						options,
-					),
+					) as T,
 				);
 			},
 

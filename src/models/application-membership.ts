@@ -94,7 +94,12 @@ const getApplicationMembershipModel = function (
 		 */
 		async get<
 			T extends ODataOptionsWithoutCount<ApplicationMembership['Read']>,
-		>(membershipId: ResourceKey, options?: T) {
+		>(
+			membershipId: ResourceKey,
+			options?: T,
+		): Promise<
+			OptionsToResponse<ApplicationMembership['Read'], T, undefined>[number]
+		> {
 			if (
 				typeof membershipId !== 'number' &&
 				typeof membershipId !== 'object'
@@ -145,7 +150,10 @@ const getApplicationMembershipModel = function (
 		 */
 		async getAllByApplication<
 			T extends ODataOptionsWithoutCount<ApplicationMembership['Read']>,
-		>(slugOrUuidOrId: number | string, options?: T) {
+		>(
+			slugOrUuidOrId: number | string,
+			options?: T,
+		): Promise<OptionsToResponse<ApplicationMembership['Read'], T, undefined>> {
 			const { id } = await getApplication(slugOrUuidOrId, {
 				$select: 'id',
 			});
@@ -154,7 +162,7 @@ const getApplicationMembershipModel = function (
 				options: mergePineOptions(
 					{ $filter: { is_member_of__application: id } },
 					options,
-				),
+				) as T,
 			});
 		},
 
@@ -185,7 +193,10 @@ const getApplicationMembershipModel = function (
 		 */
 		async getAllByUser<
 			T extends ODataOptionsWithoutCount<ApplicationMembership['Read']>,
-		>(usernameOrId: number | string, options?: T) {
+		>(
+			usernameOrId: number | string,
+			options?: T,
+		): Promise<OptionsToResponse<ApplicationMembership['Read'], T, undefined>> {
 			if (
 				typeof usernameOrId !== 'number' &&
 				typeof usernameOrId !== 'string'
@@ -216,7 +227,7 @@ const getApplicationMembershipModel = function (
 						},
 					},
 					options,
-				),
+				) as T,
 			});
 		},
 

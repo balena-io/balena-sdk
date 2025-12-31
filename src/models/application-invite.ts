@@ -22,7 +22,10 @@ import type {
 	BalenaModel,
 } from '..';
 import { mergePineOptions } from '../util';
-import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
+import type {
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
 
 export interface ApplicationInviteOptions {
 	invitee: string;
@@ -66,7 +69,7 @@ const getApplicationInviteModel = function (
 		 */
 		getAll<T extends ODataOptionsWithoutCount<ApplicationInvite['Read']>>(
 			options?: T,
-		) {
+		): Promise<OptionsToResponse<ApplicationInvite['Read'], T, undefined>> {
 			return pine.get({
 				resource: RESOURCE,
 				options: options,
@@ -100,7 +103,10 @@ const getApplicationInviteModel = function (
 		 */
 		async getAllByApplication<
 			T extends ODataOptionsWithoutCount<ApplicationInvite['Read']>,
-		>(slugOrUuidOrId: number | string, options?: T) {
+		>(
+			slugOrUuidOrId: number | string,
+			options?: T,
+		): Promise<OptionsToResponse<ApplicationInvite['Read'], T, undefined>> {
 			const { id } = await getApplication(slugOrUuidOrId, {
 				$select: 'id',
 			});
@@ -108,7 +114,7 @@ const getApplicationInviteModel = function (
 				mergePineOptions(
 					{ $filter: { is_invited_to__application: id } },
 					options,
-				),
+				) as T,
 			);
 		},
 

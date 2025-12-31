@@ -303,7 +303,7 @@ const getDeviceModel = function (
 
 	async function getAll<T extends ODataOptionsWithoutCount<Device['Read']>>(
 		options?: T,
-	) {
+	): Promise<OptionsToResponse<Device['Read'], T, undefined>> {
 		return await pine.get({
 			resource: 'device',
 			options: mergePineOptions(
@@ -473,12 +473,18 @@ const getDeviceModel = function (
 		 */
 		async getAllByApplication<
 			T extends ODataOptionsWithoutCount<Device['Read']>,
-		>(slugOrUuidOrId: string | number, options?: T) {
+		>(
+			slugOrUuidOrId: string | number,
+			options?: T,
+		): Promise<OptionsToResponse<Device['Read'], T, undefined>> {
 			const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 				$select: 'id',
 			});
 			return await getAll(
-				mergePineOptions({ $filter: { belongs_to__application: id } }, options),
+				mergePineOptions(
+					{ $filter: { belongs_to__application: id } },
+					options,
+				) as T,
 			);
 		},
 
@@ -519,7 +525,10 @@ const getDeviceModel = function (
 		 */
 		async getAllByOrganization<
 			T extends ODataOptionsWithoutCount<Device['Read']>,
-		>(handleOrId: string | number, options?: T) {
+		>(
+			handleOrId: string | number,
+			options?: T,
+		): Promise<OptionsToResponse<Device['Read'], T, undefined>> {
 			const { id } = await sdkInstance.models.organization.get(handleOrId, {
 				$select: 'id',
 			});
@@ -540,7 +549,7 @@ const getDeviceModel = function (
 						},
 					},
 					options,
-				),
+				) as T,
 			);
 		},
 
@@ -582,7 +591,7 @@ const getDeviceModel = function (
 		async get<T extends ODataOptionsWithoutCount<Device['Read']>>(
 			uuidOrId: string | number,
 			options?: T,
-		) {
+		): Promise<OptionsToResponse<Device['Read'], T, undefined>[number]> {
 			if (uuidOrId == null) {
 				throw new errors.BalenaDeviceNotFound(uuidOrId);
 			}
@@ -654,7 +663,30 @@ const getDeviceModel = function (
 		 */
 		async getWithServiceDetails<
 			T extends ODataOptionsWithoutCount<Device['Read']>,
-		>(uuidOrId: string | number, options?: T) {
+		>(
+			uuidOrId: string | number,
+			options?: T,
+		): Promise<
+			NonNullable<
+				OptionsToResponse<
+					Device['Read'],
+					MergePineOptions<
+						Device['Read'],
+						{ $expand: typeof getCurrentServiceDetailsPineExpand },
+						T
+					>,
+					typeof uuidOrId
+				>
+			> & {
+				// TODO: Drop this in the next major
+				/** @deprecated in favor of `current_services_by_app` that split system services from application services */
+				current_services: Record<string, CurrentService[]>;
+				current_services_by_app: Record<
+					string,
+					Record<string, CurrentService[]>
+				>;
+			}
+		> {
 			const device = await exports.get(
 				uuidOrId,
 				mergePineOptions(
@@ -703,7 +735,7 @@ const getDeviceModel = function (
 		async getByName<T extends ODataOptionsWithoutCount<Device['Read']>>(
 			name: string,
 			options?: T,
-		) {
+		): Promise<OptionsToResponse<Device['Read'], T, undefined>> {
 			const devices = await getAll(
 				mergePineOptions({ $filter: { device_name: name } }, options) as T,
 			);
@@ -2281,7 +2313,10 @@ const getDeviceModel = function (
 			 */
 			async getAllByApplication<
 				T extends ODataOptionsWithoutCount<DeviceTag['Read']>,
-			>(slugOrUuidOrId: string | number, options?: T) {
+			>(
+				slugOrUuidOrId: string | number,
+				options?: T,
+			): Promise<OptionsToResponse<DeviceTag['Read'], T, undefined>> {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -2301,7 +2336,7 @@ const getDeviceModel = function (
 							},
 						},
 						options,
-					),
+					) as T,
 				);
 			},
 
@@ -2420,7 +2455,12 @@ const getDeviceModel = function (
 			 */
 			async getAllByApplication<
 				T extends ODataOptionsWithoutCount<DeviceConfigVariable['Read']>,
-			>(slugOrUuidOrId: string | number, options?: T) {
+			>(
+				slugOrUuidOrId: string | number,
+				options?: T,
+			): Promise<
+				OptionsToResponse<DeviceConfigVariable['Read'], T, undefined>
+			> {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -2445,7 +2485,7 @@ const getDeviceModel = function (
 							$orderby: { name: 'asc' },
 						},
 						options,
-					),
+					) as T,
 				);
 			},
 
@@ -2574,7 +2614,12 @@ const getDeviceModel = function (
 			 */
 			async getAllByApplication<
 				T extends ODataOptionsWithoutCount<DeviceEnvironmentVariable['Read']>,
-			>(slugOrUuidOrId: string | number, options?: T) {
+			>(
+				slugOrUuidOrId: string | number,
+				options?: T,
+			): Promise<
+				OptionsToResponse<DeviceEnvironmentVariable['Read'], T, undefined>
+			> {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -2599,7 +2644,7 @@ const getDeviceModel = function (
 							$orderby: { name: 'asc' },
 						},
 						options,
-					),
+					) as T,
 				);
 			},
 
@@ -2706,7 +2751,16 @@ const getDeviceModel = function (
 				T extends ODataOptionsWithoutCount<
 					DeviceServiceEnvironmentVariable['Read']
 				>,
-			>(uuidOrId: string | number, options?: T) {
+			>(
+				uuidOrId: string | number,
+				options?: T,
+			): Promise<
+				OptionsToResponse<
+					DeviceServiceEnvironmentVariable['Read'],
+					T,
+					undefined
+				>
+			> {
 				const { id: deviceId } = await exports.get(uuidOrId, { $select: 'id' });
 				return await pine.get({
 					resource: 'device_service_environment_variable',
@@ -2722,7 +2776,7 @@ const getDeviceModel = function (
 							},
 						},
 						options,
-					),
+					) as T,
 				});
 			},
 
@@ -2752,7 +2806,16 @@ const getDeviceModel = function (
 				T extends ODataOptionsWithoutCount<
 					DeviceServiceEnvironmentVariable['Read']
 				>,
-			>(slugOrUuidOrId: string | number, options?: T) {
+			>(
+				slugOrUuidOrId: string | number,
+				options?: T,
+			): Promise<
+				OptionsToResponse<
+					DeviceServiceEnvironmentVariable['Read'],
+					T,
+					undefined
+				>
+			> {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -2787,7 +2850,7 @@ const getDeviceModel = function (
 							$orderby: { name: 'asc' },
 						},
 						options,
-					),
+					) as T,
 				});
 			},
 
@@ -3080,7 +3143,7 @@ const getDeviceModel = function (
 					toDate,
 				}: DateFilters = {},
 				options?: T,
-			) {
+			): Promise<OptionsToResponse<DeviceHistory['Read'], T, undefined>> {
 				let $filter: FilterObj<DeviceHistory['Read']> =
 					historyTimeRangeFilterWithGuard(fromDate, toDate);
 
@@ -3102,7 +3165,7 @@ const getDeviceModel = function (
 							$filter,
 						},
 						options,
-					),
+					) as T,
 				});
 			},
 
@@ -3154,7 +3217,7 @@ const getDeviceModel = function (
 					toDate,
 				}: DateFilters = {},
 				options?: T,
-			) {
+			): Promise<OptionsToResponse<DeviceHistory['Read'], T, undefined>> {
 				const { id: applicationId } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -3172,7 +3235,7 @@ const getDeviceModel = function (
 							},
 						},
 						options,
-					),
+					) as T,
 				});
 			},
 		},

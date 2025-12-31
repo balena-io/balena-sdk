@@ -23,7 +23,10 @@ import type {
 	BalenaModel,
 } from '..';
 import { mergePineOptions } from '../util';
-import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
+import type {
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
 
 export interface OrganizationInviteOptions {
 	invitee: string;
@@ -68,7 +71,7 @@ const getOrganizationInviteModel = function (
 		 */
 		getAll<T extends ODataOptionsWithoutCount<OrganizationInvite['Read']>>(
 			options?: T,
-		) {
+		): Promise<OptionsToResponse<OrganizationInvite['Read'], T, undefined>> {
 			return pine.get({
 				resource: RESOURCE,
 				options,
@@ -102,7 +105,10 @@ const getOrganizationInviteModel = function (
 		 */
 		async getAllByOrganization<
 			T extends ODataOptionsWithoutCount<OrganizationInvite['Read']>,
-		>(handleOrId: number | string, options?: T) {
+		>(
+			handleOrId: number | string,
+			options?: T,
+		): Promise<OptionsToResponse<OrganizationInvite['Read'], T, undefined>> {
 			const { id } = await getOrganization(handleOrId, {
 				$select: 'id',
 			});
@@ -110,7 +116,7 @@ const getOrganizationInviteModel = function (
 				mergePineOptions(
 					{ $filter: { is_invited_to__organization: id } },
 					options,
-				),
+				) as T,
 			);
 		},
 

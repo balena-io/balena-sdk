@@ -588,17 +588,17 @@ describe('Application Model', function () {
 			});
 
 			describe('balena.models.application.generateProvisioningKey()', function () {
-				const getProvisioningKeys = async function (appNameOrSlug, options?) {
-					const provisioningKeys =
-						await balena.models.apiKey.getProvisioningApiKeysByApplication(
-							appNameOrSlug,
-							options,
-						);
+				const getProvisioningKeys: typeof balena.models.apiKey.getProvisioningApiKeysByApplication =
+					async function (...params) {
+						const provisioningKeys =
+							await balena.models.apiKey.getProvisioningApiKeysByApplication(
+								...params,
+							);
 
-					expect(provisioningKeys).to.be.an('array');
+						expect(provisioningKeys).to.be.an('array');
 
-					return provisioningKeys;
-				};
+						return provisioningKeys;
+					};
 
 				applicationRetrievalFields.forEach((prop) => {
 					it(`should be able to generate a provisioning key by ${prop}`, function () {

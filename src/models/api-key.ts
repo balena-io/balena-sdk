@@ -21,7 +21,10 @@ import type {
 	InjectedOptionsParam,
 } from '..';
 import { mergePineOptions } from '../util';
-import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
+import type {
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
 
 const getApiKeysModel = function (
 	{
@@ -117,7 +120,7 @@ const getApiKeysModel = function (
 		 */
 		async getAll<T extends ODataOptionsWithoutCount<ApiKey['Read']>>(
 			options?: T,
-		) {
+		): Promise<OptionsToResponse<ApiKey['Read'], T, undefined>> {
 			return await pine.get({
 				resource: 'api_key',
 				options: mergePineOptions(
@@ -125,7 +128,7 @@ const getApiKeysModel = function (
 						$orderby: { name: 'asc' },
 					},
 					options,
-				),
+				) as T,
 			});
 		},
 
@@ -147,7 +150,7 @@ const getApiKeysModel = function (
 		 */
 		async getAllNamedUserApiKeys<
 			T extends ODataOptionsWithoutCount<ApiKey['Read']>,
-		>(options?: T) {
+		>(options?: T): Promise<OptionsToResponse<ApiKey['Read'], T, undefined>> {
 			return await exports.getAll(
 				mergePineOptions(
 					{
@@ -162,7 +165,7 @@ const getApiKeysModel = function (
 						},
 					},
 					options,
-				),
+				) as T,
 			);
 		},
 
@@ -185,7 +188,10 @@ const getApiKeysModel = function (
 		 */
 		async getProvisioningApiKeysByApplication<
 			T extends ODataOptionsWithoutCount<ApiKey['Read']>,
-		>(slugOrUuidOrId: string | number, options?: T) {
+		>(
+			slugOrUuidOrId: string | number,
+			options?: T,
+		): Promise<OptionsToResponse<ApiKey['Read'], T, undefined>> {
 			const app = await sdkInstance.models.application.get(slugOrUuidOrId, {
 				$select: 'actor',
 			});
@@ -198,7 +204,7 @@ const getApiKeysModel = function (
 						},
 					},
 					options,
-				),
+				) as T,
 			);
 		},
 
@@ -221,7 +227,10 @@ const getApiKeysModel = function (
 		 */
 		async getDeviceApiKeysByDevice<
 			T extends ODataOptionsWithoutCount<ApiKey['Read']>,
-		>(uuidOrId: string | number, options?: T) {
+		>(
+			uuidOrId: string | number,
+			options?: T,
+		): Promise<OptionsToResponse<ApiKey['Read'], T, undefined>> {
 			const { actor } = await sdkInstance.models.device.get(uuidOrId, {
 				$select: 'actor',
 			});
@@ -236,7 +245,7 @@ const getApiKeysModel = function (
 						$orderby: { name: 'asc' },
 					},
 					options,
-				),
+				) as T,
 			});
 		},
 

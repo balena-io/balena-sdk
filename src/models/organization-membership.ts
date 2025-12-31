@@ -25,6 +25,7 @@ import type {
 import { mergePineOptions } from '../util';
 import type {
 	ODataOptionsWithoutCount,
+	OptionsToResponse,
 	ResourceAlternateKey,
 } from 'pinejs-client-core';
 
@@ -112,7 +113,12 @@ const getOrganizationMembershipModel = function (
 		 */
 		async get<
 			T extends ODataOptionsWithoutCount<OrganizationMembership['Read']>,
-		>(membershipId: ResourceKey, options?: T) {
+		>(
+			membershipId: ResourceKey,
+			options?: T,
+		): Promise<
+			OptionsToResponse<OrganizationMembership['Read'], T, undefined>[number]
+		> {
 			if (
 				typeof membershipId !== 'number' &&
 				typeof membershipId !== 'object'
@@ -163,7 +169,12 @@ const getOrganizationMembershipModel = function (
 		 */
 		async getAllByOrganization<
 			T extends ODataOptionsWithoutCount<OrganizationMembership['Read']>,
-		>(handleOrId: number | string, options?: T) {
+		>(
+			handleOrId: number | string,
+			options?: T,
+		): Promise<
+			OptionsToResponse<OrganizationMembership['Read'], T, undefined>
+		> {
 			const { id } = await getOrganization(handleOrId, {
 				$select: 'id',
 			});
@@ -172,7 +183,7 @@ const getOrganizationMembershipModel = function (
 				options: mergePineOptions(
 					{ $filter: { is_member_of__organization: id } },
 					options,
-				),
+				) as T,
 			});
 		},
 
@@ -203,7 +214,12 @@ const getOrganizationMembershipModel = function (
 		 */
 		async getAllByUser<
 			T extends ODataOptionsWithoutCount<OrganizationMembership['Read']>,
-		>(usernameOrId: number | string, options?: T) {
+		>(
+			usernameOrId: number | string,
+			options?: T,
+		): Promise<
+			OptionsToResponse<OrganizationMembership['Read'], T, undefined>
+		> {
 			if (
 				typeof usernameOrId !== 'number' &&
 				typeof usernameOrId !== 'string'
@@ -234,7 +250,7 @@ const getOrganizationMembershipModel = function (
 						},
 					},
 					options,
-				),
+				) as T,
 			});
 		},
 
@@ -331,7 +347,12 @@ const getOrganizationMembershipModel = function (
 			 */
 			async getAllByOrganization<
 				T extends ODataOptionsWithoutCount<OrganizationMembershipTag['Read']>,
-			>(handleOrId: string | number, options?: T) {
+			>(
+				handleOrId: string | number,
+				options?: T,
+			): Promise<
+				OptionsToResponse<OrganizationMembershipTag['Read'], T, undefined>
+			> {
 				const { id } = await getOrganization(handleOrId, {
 					$select: 'id',
 				});
@@ -348,7 +369,7 @@ const getOrganizationMembershipModel = function (
 							},
 						},
 						options,
-					),
+					) as T,
 				);
 			},
 

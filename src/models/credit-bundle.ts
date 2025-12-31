@@ -14,7 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
+import type {
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
 import type { CreditBundle, InjectedDependenciesParam } from '..';
 import { mergePineOptions } from '../util';
 
@@ -56,7 +59,7 @@ const getCreditBundleModel = function ({
 		>(
 			organization: string | number,
 			options?: T,
-		) => {
+		): Promise<OptionsToResponse<CreditBundle['Read'], T, undefined>> => {
 			const orgId = await getOrgId(organization);
 			const creditBundles = await pine.get({
 				resource: 'credit_bundle',
@@ -66,7 +69,7 @@ const getCreditBundleModel = function ({
 						$orderby: { created_at: 'desc' },
 					},
 					options,
-				),
+				) as T,
 			});
 			return creditBundles;
 		},

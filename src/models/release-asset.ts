@@ -287,11 +287,14 @@ const getReleaseAssetModel = function (
 				| number
 				| ReleaseRawVersionApplicationPair,
 			options?: T,
-		) {
+		): Promise<OptionsToResponse<ReleaseAsset['Read'], T, undefined>> {
 			const release = await getRelease(commitOrIdOrRawVersion, {
 				$select: 'id',
 				$expand: {
-					release_asset: mergePineOptions({ $orderby: { id: 'asc' } }, options),
+					release_asset: mergePineOptions(
+						{ $orderby: { id: 'asc' } },
+						options,
+					) as T,
 				},
 			});
 
@@ -300,7 +303,7 @@ const getReleaseAssetModel = function (
 		async get<T extends ODataOptionsWithoutCount<ReleaseAsset['Read']>>(
 			id: ReleaseAssetId,
 			options?: T,
-		) {
+		): Promise<OptionsToResponse<ReleaseAsset['Read'], T, undefined>[number]> {
 			const releaseAssetId = await getId(id);
 			const releaseAsset = await pine.get({
 				resource: 'release_asset',

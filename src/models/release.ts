@@ -310,7 +310,10 @@ const getReleaseModel = function (
 	 */
 	async function getAllByApplication<
 		T extends ODataOptionsWithoutCount<Release['Read']>,
-	>(slugOrUuidOrId: string | number, options?: T) {
+	>(
+		slugOrUuidOrId: string | number,
+		options?: T,
+	): Promise<OptionsToResponse<Release['Read'], T, undefined>> {
 		const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 			$select: 'id',
 		});
@@ -352,7 +355,10 @@ const getReleaseModel = function (
 	 */
 	async function getLatestByApplication<
 		T extends ODataOptionsWithoutCount<Release['Read']>,
-	>(slugOrUuidOrId: string | number, options?: T) {
+	>(
+		slugOrUuidOrId: string | number,
+		options?: T,
+	): Promise<OptionsToResponse<Release['Read'], T, undefined>[number]> {
 		const [release] = await getAllByApplication(
 			slugOrUuidOrId,
 			mergePineOptions(
@@ -608,7 +614,10 @@ const getReleaseModel = function (
 		 */
 		async getAllByApplication<
 			T extends ODataOptionsWithoutCount<ReleaseTag['Read']>,
-		>(slugOrUuidOrId: string | number, options?: T) {
+		>(
+			slugOrUuidOrId: string | number,
+			options?: T,
+		): Promise<OptionsToResponse<ReleaseTag['Read'], T, undefined>> {
 			const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 				$select: 'id',
 			});
@@ -629,7 +638,7 @@ const getReleaseModel = function (
 						},
 					},
 					options,
-				),
+				) as T,
 			);
 		},
 
@@ -668,14 +677,14 @@ const getReleaseModel = function (
 				| number
 				| ReleaseRawVersionApplicationPair,
 			options?: T,
-		) {
+		): Promise<OptionsToResponse<ReleaseTag['Read'], T, undefined>> {
 			const release = await get(commitOrIdOrRawVersion, {
 				$select: 'id',
 				$expand: {
 					release_tag: mergePineOptions(
 						{ $orderby: { tag_key: 'asc' } },
 						options,
-					),
+					) as T,
 				},
 			});
 

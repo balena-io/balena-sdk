@@ -16,7 +16,11 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import type { UserHasPublicKey, InjectedDependenciesParam } from '..';
-import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
+import type {
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
+import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 const getKeyModel = function (deps: InjectedDependenciesParam) {
 	const {
@@ -43,7 +47,7 @@ const getKeyModel = function (deps: InjectedDependenciesParam) {
 	 */
 	function getAll<T extends ODataOptionsWithoutCount<UserHasPublicKey['Read']>>(
 		options?: T,
-	) {
+	): Promise<OptionsToResponse<UserHasPublicKey['Read'], T, undefined>> {
 		return pine.get({
 			resource: 'user__has__public_key',
 			options,
@@ -66,7 +70,9 @@ const getKeyModel = function (deps: InjectedDependenciesParam) {
 	 * 	console.log(key);
 	 * });
 	 */
-	async function get(id: number) {
+	async function get(
+		id: number,
+	): Promise<PickDeferred<UserHasPublicKey['Read']>> {
 		const key = await pine.get({
 			resource: 'user__has__public_key',
 			id,
