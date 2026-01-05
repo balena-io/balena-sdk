@@ -77,7 +77,7 @@ const getTeamApplicationAccessModel = function (
 	): Promise<OptionsToResponse<TeamApplicationAccess['Read'], T, undefined>> {
 		const team = await sdkInstance.models.team.get(teamId, { $select: 'id' });
 
-		return sdkInstance.pine.get({
+		return (await sdkInstance.pine.get({
 			resource: 'team_application_access',
 			options: mergePineOptions(
 				{
@@ -86,8 +86,8 @@ const getTeamApplicationAccessModel = function (
 					},
 				},
 				options,
-			) as T,
-		});
+			),
+		})) as OptionsToResponse<TeamApplicationAccess['Read'], T, undefined>;
 	};
 
 	/**

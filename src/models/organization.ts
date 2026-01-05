@@ -99,20 +99,20 @@ const getOrganizationModel = function (
 	 * 	console.log(organizations);
 	 * });
 	 */
-	const getAll = function <
+	const getAll = async function <
 		T extends ODataOptionsWithoutCount<Organization['Read']>,
 	>(
 		options?: T,
 	): Promise<OptionsToResponse<Organization['Read'], T, undefined>> {
-		return pine.get({
+		return (await pine.get({
 			resource: 'organization',
 			options: mergePineOptions(
 				{
 					$orderby: { name: 'asc' },
 				},
 				options,
-			) as T,
-		});
+			),
+		})) as OptionsToResponse<Organization['Read'], T, undefined>;
 	};
 
 	/**

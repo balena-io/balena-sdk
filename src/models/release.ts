@@ -152,15 +152,15 @@ const getReleaseModel = function (
 					commit: { $startswith: commitOrIdOrRawVersion },
 				};
 			}
-			const releases = await pine.get({
+			const releases = (await pine.get({
 				resource: 'release',
 				options: mergePineOptions(
 					{
 						$filter,
 					},
 					options,
-				) as T,
-			});
+				),
+			})) as OptionsToResponse<Release['Read'], T, undefined>;
 			if (releases.length === 0) {
 				throw new errors.BalenaReleaseNotFound(
 					typeof commitOrIdOrRawVersion === 'string'
@@ -313,11 +313,11 @@ const getReleaseModel = function (
 	>(
 		slugOrUuidOrId: string | number,
 		options?: T,
-	): Promise<OptionsToResponse<Release['Read'], T, undefined>> {
+	): Promise<NoInfer<OptionsToResponse<Release['Read'], T, undefined>>> {
 		const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 			$select: 'id',
 		});
-		return await pine.get({
+		return (await pine.get({
 			resource: 'release',
 			options: mergePineOptions(
 				{
@@ -327,8 +327,8 @@ const getReleaseModel = function (
 					$orderby: { created_at: 'desc' },
 				},
 				options,
-			) as T,
-		});
+			),
+		})) as OptionsToResponse<Release['Read'], T, undefined>;
 	}
 
 	/**
@@ -359,7 +359,7 @@ const getReleaseModel = function (
 		slugOrUuidOrId: string | number,
 		options?: T,
 	): Promise<OptionsToResponse<Release['Read'], T, undefined>[number]> {
-		const [release] = await getAllByApplication(
+		const [release] = (await getAllByApplication(
 			slugOrUuidOrId,
 			mergePineOptions(
 				{
@@ -369,8 +369,8 @@ const getReleaseModel = function (
 					},
 				},
 				options,
-			) as T,
-		);
+			),
+		)) as OptionsToResponse<Release['Read'], T, undefined>;
 		return release;
 	}
 
@@ -621,7 +621,7 @@ const getReleaseModel = function (
 			const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 				$select: 'id',
 			});
-			return await tagsModel.getAll(
+			return (await tagsModel.getAll(
 				mergePineOptions(
 					{
 						$filter: {
@@ -638,8 +638,8 @@ const getReleaseModel = function (
 						},
 					},
 					options,
-				) as T,
-			);
+				),
+			)) as OptionsToResponse<ReleaseTag['Read'], T, undefined>;
 		},
 
 		/**
@@ -684,11 +684,15 @@ const getReleaseModel = function (
 					release_tag: mergePineOptions(
 						{ $orderby: { tag_key: 'asc' } },
 						options,
-					) as T,
+					),
 				},
 			});
 
-			return release.release_tag;
+			return release.release_tag as OptionsToResponse<
+				ReleaseTag['Read'],
+				T,
+				undefined
+			>;
 		},
 
 		/**

@@ -291,14 +291,15 @@ const getReleaseAssetModel = function (
 			const release = await getRelease(commitOrIdOrRawVersion, {
 				$select: 'id',
 				$expand: {
-					release_asset: mergePineOptions(
-						{ $orderby: { id: 'asc' } },
-						options,
-					) as T,
+					release_asset: mergePineOptions({ $orderby: { id: 'asc' } }, options),
 				},
 			});
 
-			return release.release_asset;
+			return release.release_asset as OptionsToResponse<
+				ReleaseAsset['Read'],
+				T,
+				undefined
+			>;
 		},
 		async get<T extends ODataOptionsWithoutCount<ReleaseAsset['Read']>>(
 			id: ReleaseAssetId,

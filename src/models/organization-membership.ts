@@ -178,13 +178,13 @@ const getOrganizationMembershipModel = function (
 			const { id } = await getOrganization(handleOrId, {
 				$select: 'id',
 			});
-			return await pine.get({
+			return (await pine.get({
 				resource: RESOURCE,
 				options: mergePineOptions(
 					{ $filter: { is_member_of__organization: id } },
 					options,
-				) as T,
-			});
+				),
+			})) as OptionsToResponse<OrganizationMembership['Read'], T, undefined>;
 		},
 
 		/**
@@ -229,7 +229,7 @@ const getOrganizationMembershipModel = function (
 					usernameOrId,
 				);
 			}
-			return await pine.get({
+			return (await pine.get({
 				resource: RESOURCE,
 				options: mergePineOptions(
 					{
@@ -250,8 +250,8 @@ const getOrganizationMembershipModel = function (
 						},
 					},
 					options,
-				) as T,
-			});
+				),
+			})) as OptionsToResponse<OrganizationMembership['Read'], T, undefined>;
 		},
 
 		/**
@@ -356,7 +356,7 @@ const getOrganizationMembershipModel = function (
 				const { id } = await getOrganization(handleOrId, {
 					$select: 'id',
 				});
-				return await tagsModel.getAll(
+				return (await tagsModel.getAll(
 					mergePineOptions(
 						{
 							$filter: {
@@ -369,8 +369,12 @@ const getOrganizationMembershipModel = function (
 							},
 						},
 						options,
-					) as T,
-				);
+					),
+				)) as OptionsToResponse<
+					OrganizationMembershipTag['Read'],
+					T,
+					undefined
+				>;
 			},
 
 			/**

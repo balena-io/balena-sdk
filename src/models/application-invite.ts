@@ -110,12 +110,12 @@ const getApplicationInviteModel = function (
 			const { id } = await getApplication(slugOrUuidOrId, {
 				$select: 'id',
 			});
-			return await exports.getAll(
+			return (await exports.getAll(
 				mergePineOptions(
 					{ $filter: { is_invited_to__application: id } },
 					options,
-				) as T,
-			);
+				),
+			)) as OptionsToResponse<ApplicationInvite['Read'], T, undefined>;
 		},
 
 		/**

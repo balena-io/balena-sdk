@@ -121,15 +121,15 @@ const getApiKeysModel = function (
 		async getAll<T extends ODataOptionsWithoutCount<ApiKey['Read']>>(
 			options?: T,
 		): Promise<OptionsToResponse<ApiKey['Read'], T, undefined>> {
-			return await pine.get({
+			return (await pine.get({
 				resource: 'api_key',
 				options: mergePineOptions(
 					{
 						$orderby: { name: 'asc' },
 					},
 					options,
-				) as T,
-			});
+				),
+			})) as OptionsToResponse<ApiKey['Read'], T, undefined>;
 		},
 
 		/**
@@ -151,7 +151,7 @@ const getApiKeysModel = function (
 		async getAllNamedUserApiKeys<
 			T extends ODataOptionsWithoutCount<ApiKey['Read']>,
 		>(options?: T): Promise<OptionsToResponse<ApiKey['Read'], T, undefined>> {
-			return await exports.getAll(
+			return (await exports.getAll(
 				mergePineOptions(
 					{
 						$filter: {
@@ -165,8 +165,8 @@ const getApiKeysModel = function (
 						},
 					},
 					options,
-				) as T,
-			);
+				),
+			)) as OptionsToResponse<ApiKey['Read'], T, undefined>;
 		},
 
 		/**
@@ -196,7 +196,7 @@ const getApiKeysModel = function (
 				$select: 'actor',
 			});
 
-			return await exports.getAll(
+			return (await exports.getAll(
 				mergePineOptions(
 					{
 						$filter: {
@@ -204,8 +204,8 @@ const getApiKeysModel = function (
 						},
 					},
 					options,
-				) as T,
-			);
+				),
+			)) as OptionsToResponse<ApiKey['Read'], T, undefined>;
 		},
 
 		/**
@@ -235,7 +235,7 @@ const getApiKeysModel = function (
 				$select: 'actor',
 			});
 
-			return await pine.get({
+			return (await pine.get({
 				resource: 'api_key',
 				options: mergePineOptions(
 					{
@@ -245,8 +245,8 @@ const getApiKeysModel = function (
 						$orderby: { name: 'asc' },
 					},
 					options,
-				) as T,
-			});
+				),
+			})) as OptionsToResponse<ApiKey['Read'], T, undefined>;
 		},
 
 		/**

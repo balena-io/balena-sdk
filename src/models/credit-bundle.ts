@@ -61,7 +61,7 @@ const getCreditBundleModel = function ({
 			options?: T,
 		): Promise<OptionsToResponse<CreditBundle['Read'], T, undefined>> => {
 			const orgId = await getOrgId(organization);
-			const creditBundles = await pine.get({
+			const creditBundles = (await pine.get({
 				resource: 'credit_bundle',
 				options: mergePineOptions(
 					{
@@ -69,8 +69,8 @@ const getCreditBundleModel = function ({
 						$orderby: { created_at: 'desc' },
 					},
 					options,
-				) as T,
-			});
+				),
+			})) as OptionsToResponse<CreditBundle['Read'], T, undefined>;
 			return creditBundles;
 		},
 

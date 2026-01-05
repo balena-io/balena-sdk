@@ -112,12 +112,12 @@ const getOrganizationInviteModel = function (
 			const { id } = await getOrganization(handleOrId, {
 				$select: 'id',
 			});
-			return await exports.getAll(
+			return (await exports.getAll(
 				mergePineOptions(
 					{ $filter: { is_invited_to__organization: id } },
 					options,
-				) as T,
-			);
+				),
+			)) as OptionsToResponse<OrganizationInvite['Read'], T, undefined>;
 		},
 
 		/**

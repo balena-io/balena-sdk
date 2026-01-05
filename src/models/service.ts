@@ -205,7 +205,7 @@ const getServiceModel = ({
 						$select: 'id',
 					},
 				);
-				return varModel.getAll(
+				return (await varModel.getAll(
 					mergePineOptions(
 						{
 							$filter: {
@@ -223,8 +223,12 @@ const getServiceModel = ({
 							$orderby: { name: 'asc' },
 						},
 						options,
-					) as T,
-				);
+					),
+				)) as OptionsToResponse<
+					ServiceEnvironmentVariable['Read'],
+					T,
+					undefined
+				>;
 			},
 
 			/**

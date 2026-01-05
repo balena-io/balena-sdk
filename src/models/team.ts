@@ -109,7 +109,7 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 			{ $select: 'id' },
 		);
 
-		return pine.get({
+		return (await pine.get({
 			resource: 'team',
 			options: mergePineOptions(
 				{
@@ -127,8 +127,8 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 					},
 				},
 				options,
-			) as T,
-		});
+			),
+		})) as OptionsToResponse<Team['Read'], T, undefined>;
 	};
 
 	/**

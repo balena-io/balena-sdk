@@ -157,13 +157,13 @@ const getApplicationMembershipModel = function (
 			const { id } = await getApplication(slugOrUuidOrId, {
 				$select: 'id',
 			});
-			return await pine.get({
+			return (await pine.get({
 				resource: RESOURCE,
 				options: mergePineOptions(
 					{ $filter: { is_member_of__application: id } },
 					options,
-				) as T,
-			});
+				),
+			})) as OptionsToResponse<ApplicationMembership['Read'], T, undefined>;
 		},
 
 		/**
@@ -206,7 +206,7 @@ const getApplicationMembershipModel = function (
 					usernameOrId,
 				);
 			}
-			return await pine.get({
+			return (await pine.get({
 				resource: RESOURCE,
 				options: mergePineOptions(
 					{
@@ -227,8 +227,8 @@ const getApplicationMembershipModel = function (
 						},
 					},
 					options,
-				) as T,
-			});
+				),
+			})) as OptionsToResponse<ApplicationMembership['Read'], T, undefined>;
 		},
 
 		/**

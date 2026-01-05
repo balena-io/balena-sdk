@@ -237,7 +237,7 @@ const getApplicationModel = function (
 			options?: T,
 			context?: 'directly_accessible',
 		): Promise<OptionsToResponse<Application['Read'], T, undefined>> {
-			const apps = await pine.get({
+			const apps = (await pine.get({
 				resource: 'application',
 				options: mergePineOptions(
 					{
@@ -247,8 +247,8 @@ const getApplicationModel = function (
 						$orderby: { app_name: 'asc' },
 					},
 					options,
-				) as T,
-			});
+				),
+			})) as OptionsToResponse<Application['Read'], T, undefined>;
 			return apps;
 		},
 
@@ -305,7 +305,7 @@ const getApplicationModel = function (
 					$select: 'id',
 				},
 			);
-			const apps = await pine.get({
+			const apps = (await pine.get({
 				resource: 'application',
 				options: mergePineOptions(
 					{
@@ -315,8 +315,8 @@ const getApplicationModel = function (
 						$orderby: { app_name: 'asc' },
 					},
 					options,
-				) as T,
-			});
+				),
+			})) as OptionsToResponse<Application['Read'], T, undefined>;
 			return apps;
 		},
 
@@ -362,17 +362,17 @@ const getApplicationModel = function (
 				| OptionsToResponse<Application['Read'], T, undefined>[number]
 				| undefined;
 			if (isId(slugOrUuidOrId)) {
-				application = await pine.get({
+				application = (await pine.get({
 					resource: 'application',
 					id: slugOrUuidOrId,
 					options: mergePineOptions(
 						accessFilter != null ? { $filter: accessFilter } : {},
 						options,
 					) as T,
-				});
+				})) as OptionsToResponse<Application['Read'], T, undefined>[number];
 			} else if (typeof slugOrUuidOrId === 'string') {
 				const lowerCaseSlugOrUuid = slugOrUuidOrId.toLowerCase();
-				const applications = await pine.get({
+				const applications = (await pine.get({
 					resource: 'application',
 					options: mergePineOptions(
 						{
@@ -385,8 +385,8 @@ const getApplicationModel = function (
 							},
 						},
 						options,
-					) as T,
-				});
+					),
+				})) as OptionsToResponse<Application['Read'], T, undefined>;
 				if (applications.length > 1) {
 					throw new errors.BalenaAmbiguousApplication(slugOrUuidOrId);
 				}
@@ -518,7 +518,7 @@ const getApplicationModel = function (
 					? isDirectlyAccessibleByUserFilter
 					: null;
 
-			const applications = await pine.get({
+			const applications = (await pine.get({
 				resource: 'application',
 				options: mergePineOptions(
 					{
@@ -528,8 +528,8 @@ const getApplicationModel = function (
 						},
 					},
 					options,
-				) as T,
-			});
+				),
+			})) as OptionsToResponse<Application['Read'], T, undefined>;
 			if (applications.length === 0) {
 				throw new errors.BalenaApplicationNotFound(appName);
 			}
