@@ -16,7 +16,10 @@ limitations under the License.
 
 import * as errors from 'balena-errors';
 import type { Image, InjectedDependenciesParam } from '..';
-import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
+import type {
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
 
 const getImageModel = function (deps: InjectedDependenciesParam) {
 	const { pine } = deps;
@@ -41,7 +44,7 @@ const getImageModel = function (deps: InjectedDependenciesParam) {
 		async get<T extends ODataOptionsWithoutCount<Image['Read']>>(
 			id: number,
 			options?: T,
-		) {
+		): Promise<OptionsToResponse<Image['Read'], T, undefined>[number]> {
 			const image = await pine.get({
 				resource: 'image',
 				id,

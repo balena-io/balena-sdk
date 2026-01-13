@@ -236,8 +236,8 @@ const getApplicationModel = function (
 		async getAll<T extends ODataOptionsWithoutCount<Application['Read']>>(
 			options?: T,
 			context?: 'directly_accessible',
-		) {
-			const apps = await pine.get({
+		): Promise<OptionsToResponse<Application['Read'], T, undefined>> {
+			const apps = (await pine.get({
 				resource: 'application',
 				options: mergePineOptions(
 					{
@@ -248,7 +248,7 @@ const getApplicationModel = function (
 					},
 					options,
 				),
-			});
+			})) as OptionsToResponse<Application['Read'], T, undefined>;
 			return apps;
 		},
 
@@ -270,7 +270,9 @@ const getApplicationModel = function (
 		 */
 		async getAllDirectlyAccessible<
 			T extends ODataOptionsWithoutCount<Application['Read']>,
-		>(options?: T) {
+		>(
+			options?: T,
+		): Promise<OptionsToResponse<Application['Read'], T, undefined>> {
 			return await exports.getAll(options, 'directly_accessible');
 		},
 
@@ -293,14 +295,17 @@ const getApplicationModel = function (
 		 */
 		async getAllByOrganization<
 			T extends ODataOptionsWithoutCount<Application['Read']>,
-		>(orgHandleOrId: number | string, options?: T) {
+		>(
+			orgHandleOrId: number | string,
+			options?: T,
+		): Promise<OptionsToResponse<Application['Read'], T, undefined>> {
 			const { id: orgId } = await sdkInstance.models.organization.get(
 				orgHandleOrId,
 				{
 					$select: 'id',
 				},
 			);
-			const apps = await pine.get({
+			const apps = (await pine.get({
 				resource: 'application',
 				options: mergePineOptions(
 					{
@@ -311,7 +316,7 @@ const getApplicationModel = function (
 					},
 					options,
 				),
-			});
+			})) as OptionsToResponse<Application['Read'], T, undefined>;
 			return apps;
 		},
 
@@ -347,7 +352,7 @@ const getApplicationModel = function (
 			slugOrUuidOrId: string | number,
 			options?: T,
 			context?: 'directly_accessible',
-		) {
+		): Promise<OptionsToResponse<Application['Read'], T, undefined>[number]> {
 			const accessFilter =
 				context === 'directly_accessible'
 					? isDirectlyAccessibleByUserFilter
@@ -357,17 +362,17 @@ const getApplicationModel = function (
 				| OptionsToResponse<Application['Read'], T, undefined>[number]
 				| undefined;
 			if (isId(slugOrUuidOrId)) {
-				application = await pine.get({
+				application = (await pine.get({
 					resource: 'application',
 					id: slugOrUuidOrId,
 					options: mergePineOptions(
 						accessFilter != null ? { $filter: accessFilter } : {},
 						options,
 					) as T,
-				});
+				})) as OptionsToResponse<Application['Read'], T, undefined>[number];
 			} else if (typeof slugOrUuidOrId === 'string') {
 				const lowerCaseSlugOrUuid = slugOrUuidOrId.toLowerCase();
-				const applications = await pine.get({
+				const applications = (await pine.get({
 					resource: 'application',
 					options: mergePineOptions(
 						{
@@ -380,8 +385,8 @@ const getApplicationModel = function (
 							},
 						},
 						options,
-					) as T,
-				});
+					),
+				})) as OptionsToResponse<Application['Read'], T, undefined>;
 				if (applications.length > 1) {
 					throw new errors.BalenaAmbiguousApplication(slugOrUuidOrId);
 				}
@@ -417,7 +422,10 @@ const getApplicationModel = function (
 		 */
 		async getDirectlyAccessible<
 			T extends ODataOptionsWithoutCount<Application['Read']>,
-		>(slugOrUuidOrId: string | number, options?: T) {
+		>(
+			slugOrUuidOrId: string | number,
+			options?: T,
+		): Promise<OptionsToResponse<Application['Read'], T, undefined>[number]> {
 			return await exports.get(slugOrUuidOrId, options, 'directly_accessible');
 		},
 
@@ -504,13 +512,13 @@ const getApplicationModel = function (
 			appName: string,
 			options?: T,
 			context?: 'directly_accessible',
-		) {
+		): Promise<OptionsToResponse<Application['Read'], T, undefined>[number]> {
 			const accessFilter =
 				context === 'directly_accessible'
 					? isDirectlyAccessibleByUserFilter
 					: null;
 
-			const applications = await pine.get({
+			const applications = (await pine.get({
 				resource: 'application',
 				options: mergePineOptions(
 					{
@@ -520,8 +528,8 @@ const getApplicationModel = function (
 						},
 					},
 					options,
-				) as T,
-			});
+				),
+			})) as OptionsToResponse<Application['Read'], T, undefined>;
 			if (applications.length === 0) {
 				throw new errors.BalenaApplicationNotFound(appName);
 			}

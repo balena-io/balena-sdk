@@ -26,6 +26,7 @@ import type {
 	ExpandableStringKeyOf,
 	Filter,
 	ODataOptionsWithoutCount,
+	OptionsToResponse,
 } from 'pinejs-client-core';
 
 type DependentResourceName = {
@@ -57,7 +58,9 @@ export function buildDependentResource<T extends DependentResourceName>(
 	},
 ) {
 	const exports = {
-		getAll(options?: ODataOptionsWithoutCount<BalenaModel[T]['Read']>) {
+		getAll<O extends ODataOptionsWithoutCount<BalenaModel[T]['Read']>>(
+			options?: O,
+		): Promise<OptionsToResponse<BalenaModel[T]['Read'], O, undefined>> {
 			return pine.get({
 				resource: resourceName,
 				options: mergePineOptions(
@@ -67,13 +70,15 @@ export function buildDependentResource<T extends DependentResourceName>(
 						} as const,
 					},
 					options,
-				),
+				) as O,
 			});
 		},
-		async getAllByParent(
+		async getAllByParent<
+			O extends ODataOptionsWithoutCount<BalenaModel[T]['Read']>,
+		>(
 			parentParam: string | number | Dictionary<unknown>,
-			options?: ODataOptionsWithoutCount<BalenaModel[T]['Read']>,
-		) {
+			options?: O,
+		): Promise<OptionsToResponse<BalenaModel[T]['Read'], O, undefined>> {
 			const id = await getResourceId(parentParam);
 			return await exports.getAll(
 				mergePineOptions(
@@ -86,7 +91,7 @@ export function buildDependentResource<T extends DependentResourceName>(
 						},
 					},
 					options,
-				),
+				) as O,
 			);
 		},
 

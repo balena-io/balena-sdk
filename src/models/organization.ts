@@ -22,7 +22,10 @@ import type {
 	Organization,
 } from '..';
 import { isId, mergePineOptions } from '../util';
-import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
+import type {
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
 
 const getOrganizationModel = function (
 	deps: InjectedDependenciesParam,
@@ -96,10 +99,12 @@ const getOrganizationModel = function (
 	 * 	console.log(organizations);
 	 * });
 	 */
-	const getAll = function <
+	const getAll = async function <
 		T extends ODataOptionsWithoutCount<Organization['Read']>,
-	>(options?: T) {
-		return pine.get({
+	>(
+		options?: T,
+	): Promise<OptionsToResponse<Organization['Read'], T, undefined>> {
+		return (await pine.get({
 			resource: 'organization',
 			options: mergePineOptions(
 				{
@@ -107,7 +112,7 @@ const getOrganizationModel = function (
 				},
 				options,
 			),
-		});
+		})) as OptionsToResponse<Organization['Read'], T, undefined>;
 	};
 
 	/**
@@ -134,7 +139,10 @@ const getOrganizationModel = function (
 	 */
 	const get = async function <
 		T extends ODataOptionsWithoutCount<Organization['Read']>,
-	>(handleOrId: string | number, options?: T) {
+	>(
+		handleOrId: string | number,
+		options?: T,
+	): Promise<OptionsToResponse<Organization['Read'], T, undefined>[number]> {
 		if (handleOrId == null) {
 			throw new errors.BalenaInvalidParameterError('handleOrId', handleOrId);
 		}

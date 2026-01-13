@@ -152,15 +152,15 @@ const getReleaseModel = function (
 					commit: { $startswith: commitOrIdOrRawVersion },
 				};
 			}
-			const releases = await pine.get({
+			const releases = (await pine.get({
 				resource: 'release',
 				options: mergePineOptions(
 					{
 						$filter,
 					},
 					options,
-				) as T,
-			});
+				),
+			})) as OptionsToResponse<Release['Read'], T, undefined>;
 			if (releases.length === 0) {
 				throw new errors.BalenaReleaseNotFound(
 					typeof commitOrIdOrRawVersion === 'string'
@@ -310,11 +310,14 @@ const getReleaseModel = function (
 	 */
 	async function getAllByApplication<
 		T extends ODataOptionsWithoutCount<Release['Read']>,
-	>(slugOrUuidOrId: string | number, options?: T) {
+	>(
+		slugOrUuidOrId: string | number,
+		options?: T,
+	): Promise<NoInfer<OptionsToResponse<Release['Read'], T, undefined>>> {
 		const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 			$select: 'id',
 		});
-		return await pine.get({
+		return (await pine.get({
 			resource: 'release',
 			options: mergePineOptions(
 				{
@@ -324,8 +327,8 @@ const getReleaseModel = function (
 					$orderby: { created_at: 'desc' },
 				},
 				options,
-			) as T,
-		});
+			),
+		})) as OptionsToResponse<Release['Read'], T, undefined>;
 	}
 
 	/**
@@ -352,8 +355,11 @@ const getReleaseModel = function (
 	 */
 	async function getLatestByApplication<
 		T extends ODataOptionsWithoutCount<Release['Read']>,
-	>(slugOrUuidOrId: string | number, options?: T) {
-		const [release] = await getAllByApplication(
+	>(
+		slugOrUuidOrId: string | number,
+		options?: T,
+	): Promise<OptionsToResponse<Release['Read'], T, undefined>[number]> {
+		const [release] = (await getAllByApplication(
 			slugOrUuidOrId,
 			mergePineOptions(
 				{
@@ -363,8 +369,8 @@ const getReleaseModel = function (
 					},
 				},
 				options,
-			) as T,
-		);
+			),
+		)) as OptionsToResponse<Release['Read'], T, undefined>;
 		return release;
 	}
 
@@ -608,11 +614,14 @@ const getReleaseModel = function (
 		 */
 		async getAllByApplication<
 			T extends ODataOptionsWithoutCount<ReleaseTag['Read']>,
-		>(slugOrUuidOrId: string | number, options?: T) {
+		>(
+			slugOrUuidOrId: string | number,
+			options?: T,
+		): Promise<OptionsToResponse<ReleaseTag['Read'], T, undefined>> {
 			const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 				$select: 'id',
 			});
-			return await tagsModel.getAll(
+			return (await tagsModel.getAll(
 				mergePineOptions(
 					{
 						$filter: {
@@ -630,7 +639,7 @@ const getReleaseModel = function (
 					},
 					options,
 				),
-			);
+			)) as OptionsToResponse<ReleaseTag['Read'], T, undefined>;
 		},
 
 		/**
@@ -668,7 +677,7 @@ const getReleaseModel = function (
 				| number
 				| ReleaseRawVersionApplicationPair,
 			options?: T,
-		) {
+		): Promise<OptionsToResponse<ReleaseTag['Read'], T, undefined>> {
 			const release = await get(commitOrIdOrRawVersion, {
 				$select: 'id',
 				$expand: {
@@ -679,7 +688,11 @@ const getReleaseModel = function (
 				},
 			});
 
-			return release.release_tag;
+			return release.release_tag as OptionsToResponse<
+				ReleaseTag['Read'],
+				T,
+				undefined
+			>;
 		},
 
 		/**

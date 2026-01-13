@@ -303,14 +303,11 @@ const getDeviceModel = function (
 
 	async function getAll<T extends ODataOptionsWithoutCount<Device['Read']>>(
 		options?: T,
-	) {
-		return await pine.get({
+	): Promise<OptionsToResponse<Device['Read'], T, undefined>> {
+		return (await pine.get({
 			resource: 'device',
-			options: mergePineOptions(
-				{ $orderby: { device_name: 'asc' } },
-				options,
-			) as T,
-		});
+			options: mergePineOptions({ $orderby: { device_name: 'asc' } }, options),
+		})) as OptionsToResponse<Device['Read'], T, undefined>;
 	}
 
 	async function startOsUpdate(
@@ -473,13 +470,16 @@ const getDeviceModel = function (
 		 */
 		async getAllByApplication<
 			T extends ODataOptionsWithoutCount<Device['Read']>,
-		>(slugOrUuidOrId: string | number, options?: T) {
+		>(
+			slugOrUuidOrId: string | number,
+			options?: T,
+		): Promise<OptionsToResponse<Device['Read'], T, undefined>> {
 			const { id } = await sdkInstance.models.application.get(slugOrUuidOrId, {
 				$select: 'id',
 			});
-			return await getAll(
+			return (await getAll(
 				mergePineOptions({ $filter: { belongs_to__application: id } }, options),
-			);
+			)) as OptionsToResponse<Device['Read'], T, undefined>;
 		},
 
 		/**
@@ -519,11 +519,14 @@ const getDeviceModel = function (
 		 */
 		async getAllByOrganization<
 			T extends ODataOptionsWithoutCount<Device['Read']>,
-		>(handleOrId: string | number, options?: T) {
+		>(
+			handleOrId: string | number,
+			options?: T,
+		): Promise<OptionsToResponse<Device['Read'], T, undefined>> {
 			const { id } = await sdkInstance.models.organization.get(handleOrId, {
 				$select: 'id',
 			});
-			return await getAll(
+			return (await getAll(
 				mergePineOptions(
 					{
 						$filter: {
@@ -541,7 +544,7 @@ const getDeviceModel = function (
 					},
 					options,
 				),
-			);
+			)) as OptionsToResponse<Device['Read'], T, undefined>;
 		},
 
 		/**
@@ -582,7 +585,7 @@ const getDeviceModel = function (
 		async get<T extends ODataOptionsWithoutCount<Device['Read']>>(
 			uuidOrId: string | number,
 			options?: T,
-		) {
+		): Promise<OptionsToResponse<Device['Read'], T, undefined>[number]> {
 			if (uuidOrId == null) {
 				throw new errors.BalenaDeviceNotFound(uuidOrId);
 			}
@@ -601,7 +604,7 @@ const getDeviceModel = function (
 					options,
 				});
 			} else {
-				const devices = await pine.get({
+				const devices = (await pine.get({
 					resource: 'device',
 					options: mergePineOptions(
 						{
@@ -610,8 +613,8 @@ const getDeviceModel = function (
 							},
 						},
 						options,
-					) as T,
-				});
+					),
+				})) as OptionsToResponse<Device['Read'], T, undefined>;
 				if (devices.length > 1) {
 					throw new errors.BalenaAmbiguousDevice(uuidOrId);
 				}
@@ -654,7 +657,30 @@ const getDeviceModel = function (
 		 */
 		async getWithServiceDetails<
 			T extends ODataOptionsWithoutCount<Device['Read']>,
-		>(uuidOrId: string | number, options?: T) {
+		>(
+			uuidOrId: string | number,
+			options?: T,
+		): Promise<
+			NonNullable<
+				OptionsToResponse<
+					Device['Read'],
+					MergePineOptions<
+						Device['Read'],
+						{ $expand: typeof getCurrentServiceDetailsPineExpand },
+						T
+					>,
+					typeof uuidOrId
+				>
+			> & {
+				// TODO: Drop this in the next major
+				/** @deprecated in favor of `current_services_by_app` that split system services from application services */
+				current_services: Record<string, CurrentService[]>;
+				current_services_by_app: Record<
+					string,
+					Record<string, CurrentService[]>
+				>;
+			}
+		> {
 			const device = await exports.get(
 				uuidOrId,
 				mergePineOptions(
@@ -703,10 +729,10 @@ const getDeviceModel = function (
 		async getByName<T extends ODataOptionsWithoutCount<Device['Read']>>(
 			name: string,
 			options?: T,
-		) {
-			const devices = await getAll(
-				mergePineOptions({ $filter: { device_name: name } }, options) as T,
-			);
+		): Promise<OptionsToResponse<Device['Read'], T, undefined>> {
+			const devices = (await getAll(
+				mergePineOptions({ $filter: { device_name: name } }, options),
+			)) as OptionsToResponse<Device['Read'], T, undefined>;
 			if (devices.length === 0) {
 				throw new errors.BalenaDeviceNotFound(name);
 			}
@@ -2281,14 +2307,17 @@ const getDeviceModel = function (
 			 */
 			async getAllByApplication<
 				T extends ODataOptionsWithoutCount<DeviceTag['Read']>,
-			>(slugOrUuidOrId: string | number, options?: T) {
+			>(
+				slugOrUuidOrId: string | number,
+				options?: T,
+			): Promise<OptionsToResponse<DeviceTag['Read'], T, undefined>> {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
 						$select: 'id',
 					},
 				);
-				return await tagsModel.getAll(
+				return (await tagsModel.getAll(
 					mergePineOptions(
 						{
 							$filter: {
@@ -2302,7 +2331,7 @@ const getDeviceModel = function (
 						},
 						options,
 					),
-				);
+				)) as OptionsToResponse<DeviceTag['Read'], T, undefined>;
 			},
 
 			/**
@@ -2420,14 +2449,19 @@ const getDeviceModel = function (
 			 */
 			async getAllByApplication<
 				T extends ODataOptionsWithoutCount<DeviceConfigVariable['Read']>,
-			>(slugOrUuidOrId: string | number, options?: T) {
+			>(
+				slugOrUuidOrId: string | number,
+				options?: T,
+			): Promise<
+				OptionsToResponse<DeviceConfigVariable['Read'], T, undefined>
+			> {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
 						$select: 'id',
 					},
 				);
-				return await configVarModel.getAll(
+				return (await configVarModel.getAll(
 					mergePineOptions(
 						{
 							$filter: {
@@ -2446,7 +2480,7 @@ const getDeviceModel = function (
 						},
 						options,
 					),
-				);
+				)) as OptionsToResponse<DeviceConfigVariable['Read'], T, undefined>;
 			},
 
 			/**
@@ -2574,14 +2608,19 @@ const getDeviceModel = function (
 			 */
 			async getAllByApplication<
 				T extends ODataOptionsWithoutCount<DeviceEnvironmentVariable['Read']>,
-			>(slugOrUuidOrId: string | number, options?: T) {
+			>(
+				slugOrUuidOrId: string | number,
+				options?: T,
+			): Promise<
+				OptionsToResponse<DeviceEnvironmentVariable['Read'], T, undefined>
+			> {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
 						$select: 'id',
 					},
 				);
-				return await envVarModel.getAll(
+				return (await envVarModel.getAll(
 					mergePineOptions(
 						{
 							$filter: {
@@ -2600,7 +2639,11 @@ const getDeviceModel = function (
 						},
 						options,
 					),
-				);
+				)) as OptionsToResponse<
+					DeviceEnvironmentVariable['Read'],
+					T,
+					undefined
+				>;
 			},
 
 			/**
@@ -2706,9 +2749,18 @@ const getDeviceModel = function (
 				T extends ODataOptionsWithoutCount<
 					DeviceServiceEnvironmentVariable['Read']
 				>,
-			>(uuidOrId: string | number, options?: T) {
+			>(
+				uuidOrId: string | number,
+				options?: T,
+			): Promise<
+				OptionsToResponse<
+					DeviceServiceEnvironmentVariable['Read'],
+					T,
+					undefined
+				>
+			> {
 				const { id: deviceId } = await exports.get(uuidOrId, { $select: 'id' });
-				return await pine.get({
+				return (await pine.get({
 					resource: 'device_service_environment_variable',
 					options: mergePineOptions(
 						{
@@ -2723,7 +2775,11 @@ const getDeviceModel = function (
 						},
 						options,
 					),
-				});
+				})) as OptionsToResponse<
+					DeviceServiceEnvironmentVariable['Read'],
+					T,
+					undefined
+				>;
 			},
 
 			/**
@@ -2752,14 +2808,23 @@ const getDeviceModel = function (
 				T extends ODataOptionsWithoutCount<
 					DeviceServiceEnvironmentVariable['Read']
 				>,
-			>(slugOrUuidOrId: string | number, options?: T) {
+			>(
+				slugOrUuidOrId: string | number,
+				options?: T,
+			): Promise<
+				OptionsToResponse<
+					DeviceServiceEnvironmentVariable['Read'],
+					T,
+					undefined
+				>
+			> {
 				const { id } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
 						$select: 'id',
 					},
 				);
-				return await pine.get({
+				return (await pine.get({
 					resource: 'device_service_environment_variable',
 					options: mergePineOptions(
 						{
@@ -2788,7 +2853,11 @@ const getDeviceModel = function (
 						},
 						options,
 					),
-				});
+				})) as OptionsToResponse<
+					DeviceServiceEnvironmentVariable['Read'],
+					T,
+					undefined
+				>;
 			},
 
 			/**
@@ -3080,7 +3149,7 @@ const getDeviceModel = function (
 					toDate,
 				}: DateFilters = {},
 				options?: T,
-			) {
+			): Promise<OptionsToResponse<DeviceHistory['Read'], T, undefined>> {
 				let $filter: FilterObj<DeviceHistory['Read']> =
 					historyTimeRangeFilterWithGuard(fromDate, toDate);
 
@@ -3095,7 +3164,7 @@ const getDeviceModel = function (
 					throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
 				}
 
-				return await pine.get({
+				return (await pine.get({
 					resource: 'device_history',
 					options: mergePineOptions(
 						{
@@ -3103,7 +3172,7 @@ const getDeviceModel = function (
 						},
 						options,
 					),
-				});
+				})) as OptionsToResponse<DeviceHistory['Read'], T, undefined>;
 			},
 
 			/**
@@ -3154,7 +3223,7 @@ const getDeviceModel = function (
 					toDate,
 				}: DateFilters = {},
 				options?: T,
-			) {
+			): Promise<OptionsToResponse<DeviceHistory['Read'], T, undefined>> {
 				const { id: applicationId } = await sdkInstance.models.application.get(
 					slugOrUuidOrId,
 					{
@@ -3162,7 +3231,7 @@ const getDeviceModel = function (
 					},
 				);
 
-				return await pine.get({
+				return (await pine.get({
 					resource: 'device_history',
 					options: mergePineOptions(
 						{
@@ -3173,7 +3242,7 @@ const getDeviceModel = function (
 						},
 						options,
 					),
-				});
+				})) as OptionsToResponse<DeviceHistory['Read'], T, undefined>;
 			},
 		},
 	};

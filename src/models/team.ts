@@ -17,7 +17,10 @@ limitations under the License.
 import type { InjectedDependenciesParam, Team } from '..';
 import * as errors from 'balena-errors';
 import { isId, mergePineOptions } from '../util';
-import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
+import type {
+	ODataOptionsWithoutCount,
+	OptionsToResponse,
+} from 'pinejs-client-core';
 
 const getTeamModel = function (deps: InjectedDependenciesParam) {
 	const { pine, sdkInstance } = deps;
@@ -97,13 +100,16 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 	 */
 	const getAllByOrganization = async function <
 		T extends ODataOptionsWithoutCount<Team['Read']>,
-	>(organizationSlugOrId: string | number, options?: T) {
+	>(
+		organizationSlugOrId: string | number,
+		options?: T,
+	): Promise<OptionsToResponse<Team['Read'], T, undefined>> {
 		const organization = await sdkInstance.models.organization.get(
 			organizationSlugOrId,
 			{ $select: 'id' },
 		);
 
-		return pine.get({
+		return (await pine.get({
 			resource: 'team',
 			options: mergePineOptions(
 				{
@@ -122,7 +128,7 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 				},
 				options,
 			),
-		});
+		})) as OptionsToResponse<Team['Read'], T, undefined>;
 	};
 
 	/**
@@ -146,7 +152,7 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 	const get = async function <T extends ODataOptionsWithoutCount<Team['Read']>>(
 		teamId: number,
 		options?: T,
-	) {
+	): Promise<OptionsToResponse<Team['Read'], T, undefined>[number]> {
 		if (teamId == null) {
 			throw new errors.BalenaInvalidParameterError('teamId', teamId);
 		}
