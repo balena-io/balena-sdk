@@ -1,4 +1,24 @@
 - commits:
+    - subject: Remove `as T` from mergePineOptions calls to have proper type checking
+      hash: 21a6c607f9309a45d416b563eff41b8d31ac8ec1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Explicitly type the return type of most methods
+      hash: 6e12a39a8752afcd66e3b90d1d0774758f24b684
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 22.4.6
+  title: ""
+  date: 2026-01-13T23:06:29.181Z
+- commits:
     - subject: Use the device.is_connected_to_vpn instead of is_online where possible
       hash: 834bef87b2a5bac00d38670cb802370301c5d121
       body: ""
