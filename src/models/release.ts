@@ -149,7 +149,7 @@ const getReleaseModel = function (
 				};
 			} else {
 				$filter = {
-					commit: { $startswith: commitOrIdOrRawVersion },
+					commit: commitOrIdOrRawVersion,
 				};
 			}
 			const releases = (await pine.get({
