@@ -194,7 +194,7 @@ const getLogs = function (
 		 * @returns {Promise<LogSubscription>}
 		 *
 		 * @example
-		 * balena.logs.subscribe('7cf02a6').then(function(logs) {
+		 * balena.logs.subscribe('7cf02a69e4d34c9da573914963cf54fd').then(function(logs) {
 		 * 	logs.on('line', function(line) {
 		 * 		console.log(line);
 		 * 	});
@@ -247,7 +247,7 @@ const getLogs = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.logs.history('7cf02a6').then(function(lines) {
+		 * balena.logs.history('7cf02a69e4d34c9da573914963cf54fd').then(function(lines) {
 		 * 	lines.forEach(function(line) {
 		 * 		console.log(line);
 		 * 	});
@@ -262,7 +262,7 @@ const getLogs = function (
 		 *
 		 * @example
 		 * const oneDayAgoTimestamp = Date.now() - 24*60*60*1000;
-		 * balena.logs.history('7cf02a6', { start: oneDayAgoTimestamp }).then(function(lines) {
+		 * balena.logs.history('7cf02a69e4d34c9da573914963cf54fd', { start: oneDayAgoTimestamp }).then(function(lines) {
 		 * 	lines.forEach(function(line) {
 		 * 		console.log(line);
 		 * 	});
@@ -270,7 +270,7 @@ const getLogs = function (
 		 *
 		 * @example
 		 * const oneDayAgoIsoDateString = new Date(Date.now() - 24*60*60*1000).toISOString();
-		 * balena.logs.history('7cf02a6', { start: oneDayAgoIsoDateString }).then(function(lines) {
+		 * balena.logs.history('7cf02a69e4d34c9da573914963cf54fd', { start: oneDayAgoIsoDateString }).then(function(lines) {
 		 * 	lines.forEach(function(line) {
 		 * 		console.log(line);
 		 * 	});

@@ -2332,7 +2332,7 @@ balena.models.device.tags.getAllByApplication(999999).then(function(tags) {
 
 **Example**  
 ```js
-balena.models.device.tags.getAllByDevice('7cf02a6').then(function(tags) {
+balena.models.device.tags.getAllByDevice('7cf02a69e4d34c9da573914963cf54fd').then(function(tags) {
 	console.log(tags);
 });
 ```
@@ -2357,7 +2357,7 @@ balena.models.device.tags.getAllByDevice(123).then(function(tags) {
 
 **Example**  
 ```js
-balena.models.device.tags.set('7cf02a6', 'EDITOR', 'vim');
+balena.models.device.tags.set('7cf02a69e4d34c9da573914963cf54fd', 'EDITOR', 'vim');
 ```
 **Example**  
 ```js
@@ -2377,7 +2377,7 @@ balena.models.device.tags.set(123, 'EDITOR', 'vim');
 
 **Example**  
 ```js
-balena.models.device.tags.remove('7cf02a6', 'EDITOR');
+balena.models.device.tags.remove('7cf02a69e4d34c9da573914963cf54fd', 'EDITOR');
 ```
 <a name="balena.models.device.configVar"></a>
 
@@ -2406,7 +2406,7 @@ balena.models.device.tags.remove('7cf02a6', 'EDITOR');
 
 **Example**  
 ```js
-balena.models.device.configVar.getAllByDevice('7cf02a6').then(function(vars) {
+balena.models.device.configVar.getAllByDevice('7cf02a69e4d34c9da573914963cf54fd').then(function(vars) {
 	console.log(vars);
 });
 ```
@@ -2456,7 +2456,7 @@ balena.models.device.configVar.getAllByApplication(999999).then(function(vars) {
 
 **Example**  
 ```js
-balena.models.device.configVar.get('7cf02a6', 'BALENA_VAR').then(function(value) {
+balena.models.device.configVar.get('7cf02a69e4d34c9da573914963cf54fd', 'BALENA_VAR').then(function(value) {
 	console.log(value);
 });
 ```
@@ -2481,7 +2481,7 @@ balena.models.device.configVar.get(999999, 'BALENA_VAR').then(function(value) {
 
 **Example**  
 ```js
-balena.models.device.configVar.set('7cf02a6', 'BALENA_VAR', 'newvalue').then(function() {
+balena.models.device.configVar.set('7cf02a69e4d34c9da573914963cf54fd', 'BALENA_VAR', 'newvalue').then(function() {
 	...
 });
 ```
@@ -2505,7 +2505,7 @@ balena.models.device.configVar.set(999999, 'BALENA_VAR', 'newvalue').then(functi
 
 **Example**  
 ```js
-balena.models.device.configVar.remove('7cf02a6', 'BALENA_VAR').then(function() {
+balena.models.device.configVar.remove('7cf02a69e4d34c9da573914963cf54fd', 'BALENA_VAR').then(function() {
 	...
 });
 ```
@@ -2542,7 +2542,7 @@ balena.models.device.configVar.remove(999999, 'BALENA_VAR').then(function() {
 
 **Example**  
 ```js
-balena.models.device.envVar.getAllByDevice('7cf02a6').then(function(vars) {
+balena.models.device.envVar.getAllByDevice('7cf02a69e4d34c9da573914963cf54fd').then(function(vars) {
 	console.log(vars);
 });
 ```
@@ -2592,7 +2592,7 @@ balena.models.device.envVar.getAllByApplication(999999).then(function(vars) {
 
 **Example**  
 ```js
-balena.models.device.envVar.get('7cf02a6', 'VAR').then(function(value) {
+balena.models.device.envVar.get('7cf02a69e4d34c9da573914963cf54fd', 'VAR').then(function(value) {
 	console.log(value);
 });
 ```
@@ -2617,7 +2617,7 @@ balena.models.device.envVar.get(999999, 'VAR').then(function(value) {
 
 **Example**  
 ```js
-balena.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue').then(function() {
+balena.models.device.envVar.set('7cf02a69e4d34c9da573914963cf54fd', 'VAR', 'newvalue').then(function() {
 	...
 });
 ```
@@ -2641,7 +2641,7 @@ balena.models.device.envVar.set(999999, 'VAR', 'newvalue').then(function() {
 
 **Example**  
 ```js
-balena.models.device.envVar.remove('7cf02a6', 'VAR').then(function() {
+balena.models.device.envVar.remove('7cf02a69e4d34c9da573914963cf54fd', 'VAR').then(function() {
 	...
 });
 ```
@@ -2678,7 +2678,7 @@ balena.models.device.envVar.remove(999999, 'VAR').then(function() {
 
 **Example**  
 ```js
-balena.models.device.serviceVar.getAllByDevice('7cf02a6').then(function(vars) {
+balena.models.device.serviceVar.getAllByDevice('7cf02a69e4d34c9da573914963cf54fd').then(function(vars) {
 	console.log(vars);
 });
 ```
@@ -2729,13 +2729,13 @@ balena.models.device.serviceVar.getAllByApplication(999999).then(function(vars) 
 
 **Example**  
 ```js
-balena.models.device.serviceVar.get('7cf02a6', 123, 'VAR').then(function(value) {
+balena.models.device.serviceVar.get('7cf02a69e4d34c9da573914963cf54fd', 123, 'VAR').then(function(value) {
 	console.log(value);
 });
 ```
 **Example**  
 ```js
-balena.models.device.serviceVar.get('7cf02a6', 'myservice', 'VAR').then(function(value) {
+balena.models.device.serviceVar.get('7cf02a69e4d34c9da573914963cf54fd', 'myservice', 'VAR').then(function(value) {
 	console.log(value);
 });
 ```
@@ -2761,13 +2761,13 @@ balena.models.device.serviceVar.get(999999, 123, 'VAR').then(function(value) {
 
 **Example**  
 ```js
-balena.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override').then(function() {
+balena.models.device.serviceVar.set('7cf02a69e4d34c9da573914963cf54fd', 123, 'VAR', 'override').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-balena.models.device.serviceVar.set('7cf02a6', 'myservice', 'VAR', 'override').then(function() {
+balena.models.device.serviceVar.set('7cf02a69e4d34c9da573914963cf54fd', 'myservice', 'VAR', 'override').then(function() {
 	...
 });
 ```
@@ -2792,13 +2792,13 @@ balena.models.device.serviceVar.set(999999, 123, 'VAR', 'override').then(functio
 
 **Example**  
 ```js
-balena.models.device.serviceVar.remove('7cf02a6', 123, 'VAR').then(function() {
+balena.models.device.serviceVar.remove('7cf02a69e4d34c9da573914963cf54fd', 123, 'VAR').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-balena.models.device.serviceVar.remove('7cf02a6', 'myservice', 'VAR').then(function() {
+balena.models.device.serviceVar.remove('7cf02a69e4d34c9da573914963cf54fd', 'myservice', 'VAR').then(function() {
 	...
 });
 ```
@@ -3018,7 +3018,7 @@ you have to explicitly define them in a `$select` in the extra options:
 
 **Example**  
 ```js
-balena.models.device.get('7cf02a6').then(function(device) {
+balena.models.device.get('7cf02a69e4d34c9da573914963cf54fd').then(function(device) {
 	console.log(device);
 })
 ```
@@ -3030,7 +3030,7 @@ balena.models.device.get(123).then(function(device) {
 ```
 **Example**  
 ```js
-balena.models.device.get('7cf02a6', { $select: ['overall_status', 'overall_progress'] }).then(function(device) {
+balena.models.device.get('7cf02a69e4d34c9da573914963cf54fd', { $select: ['overall_status', 'overall_progress'] }).then(function(device) {
 	console.log(device);
 })
 ```
@@ -3055,7 +3055,7 @@ including their associated commit
 
 **Example**  
 ```js
-balena.models.device.getWithServiceDetails('7cf02a6').then(function(device) {
+balena.models.device.getWithServiceDetails('7cf02a69e4d34c9da573914963cf54fd').then(function(device) {
 	console.log(device);
 })
 ```
@@ -3097,7 +3097,7 @@ balena.models.device.getByName('MyDevice').then(function(devices) {
 
 **Example**  
 ```js
-balena.models.device.getName('7cf02a6').then(function(deviceName) {
+balena.models.device.getName('7cf02a69e4d34c9da573914963cf54fd').then(function(deviceName) {
 	console.log(deviceName);
 });
 ```
@@ -3121,7 +3121,7 @@ balena.models.device.getName(123).then(function(deviceName) {
 
 **Example**  
 ```js
-balena.models.device.getApplicationName('7cf02a6').then(function(applicationName) {
+balena.models.device.getApplicationName('7cf02a69e4d34c9da573914963cf54fd').then(function(applicationName) {
 	console.log(applicationName);
 });
 ```
@@ -3145,7 +3145,7 @@ balena.models.device.getApplicationName(123).then(function(applicationName) {
 
 **Example**  
 ```js
-balena.models.device.has('7cf02a6').then(function(hasDevice) {
+balena.models.device.has('7cf02a69e4d34c9da573914963cf54fd').then(function(hasDevice) {
 	console.log(hasDevice);
 });
 ```
@@ -3169,7 +3169,7 @@ balena.models.device.has(123).then(function(hasDevice) {
 
 **Example**  
 ```js
-balena.models.device.isOnline('7cf02a6').then(function(isOnline) {
+balena.models.device.isOnline('7cf02a69e4d34c9da573914963cf54fd').then(function(isOnline) {
 	console.log('Is device online?', isOnline);
 });
 ```
@@ -3194,7 +3194,7 @@ balena.models.device.isOnline(123).then(function(isOnline) {
 
 **Example**  
 ```js
-balena.models.device.getLocalIPAddresses('7cf02a6').then(function(localIPAddresses) {
+balena.models.device.getLocalIPAddresses('7cf02a69e4d34c9da573914963cf54fd').then(function(localIPAddresses) {
 	localIPAddresses.forEach(function(localIP) {
 		console.log(localIP);
 	});
@@ -3222,7 +3222,7 @@ balena.models.device.getLocalIPAddresses(123).then(function(localIPAddresses) {
 
 **Example**  
 ```js
-balena.models.device.getMACAddresses('7cf02a6').then(function(macAddresses) {
+balena.models.device.getMACAddresses('7cf02a69e4d34c9da573914963cf54fd').then(function(macAddresses) {
 	macAddresses.forEach(function(mac) {
 		console.log(mac);
 	});
@@ -3250,7 +3250,7 @@ balena.models.device.getMACAddresses(123).then(function(macAddresses) {
 
 **Example**  
 ```js
-balena.models.device.getMetrics('7cf02a6').then(function(deviceMetrics) {
+balena.models.device.getMetrics('7cf02a69e4d34c9da573914963cf54fd').then(function(deviceMetrics) {
 	console.log(deviceMetrics);
 });
 ```
@@ -3273,7 +3273,7 @@ balena.models.device.getMetrics(123).then(function(deviceMetrics) {
 
 **Example**  
 ```js
-balena.models.device.remove('7cf02a6');
+balena.models.device.remove('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -3292,7 +3292,7 @@ balena.models.device.remove(123);
 
 **Example**  
 ```js
-balena.models.device.deactivate('7cf02a6');
+balena.models.device.deactivate('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -3312,7 +3312,7 @@ balena.models.device.deactivate(123);
 
 **Example**  
 ```js
-balena.models.device.rename('7cf02a6', 'NewName');
+balena.models.device.rename('7cf02a69e4d34c9da573914963cf54fd', 'NewName');
 ```
 **Example**  
 ```js
@@ -3332,7 +3332,7 @@ balena.models.device.rename(123, 'NewName');
 
 **Example**  
 ```js
-balena.models.device.setNote('7cf02a6', 'My useful note');
+balena.models.device.setNote('7cf02a69e4d34c9da573914963cf54fd', 'My useful note');
 ```
 **Example**  
 ```js
@@ -3352,7 +3352,7 @@ balena.models.device.setNote(123, 'My useful note');
 
 **Example**  
 ```js
-balena.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456 });
+balena.models.device.setCustomLocation('7cf02a69e4d34c9da573914963cf54fd', { latitude: 123, longitude: 456 });
 ```
 **Example**  
 ```js
@@ -3371,7 +3371,7 @@ balena.models.device.setCustomLocation(123, { latitude: 123, longitude: 456 });
 
 **Example**  
 ```js
-balena.models.device.unsetCustomLocation('7cf02a6');
+balena.models.device.unsetCustomLocation('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -3391,7 +3391,7 @@ balena.models.device.unsetCustomLocation(123);
 
 **Example**  
 ```js
-balena.models.device.move('7cf02a6', 'myorganization/myapp');
+balena.models.device.move('7cf02a69e4d34c9da573914963cf54fd', 'myorganization/myapp');
 ```
 **Example**  
 ```js
@@ -3415,7 +3415,7 @@ balena.models.device.move(123, 456);
 
 **Example**  
 ```js
-balena.models.device.getSupervisorTargetState('7cf02a6').then(function(state) {
+balena.models.device.getSupervisorTargetState('7cf02a69e4d34c9da573914963cf54fd').then(function(state) {
 	console.log(state);
 });
 ```
@@ -3445,7 +3445,7 @@ balena.models.device.getSupervisorTargetState(123, 3).then(function(state) {
 
 **Example**  
 ```js
-balena.models.device.getSupervisorTargetStateForApp('7cf02a6').then(function(state) {
+balena.models.device.getSupervisorTargetStateForApp('7cf02a69e4d34c9da573914963cf54fd').then(function(state) {
 	console.log(state);
 });
 ```
@@ -3457,7 +3457,7 @@ balena.models.device.getSupervisorTargetStateForApp(123).then(function(state) {
 ```
 **Example**  
 ```js
-balena.models.device.getSupervisorTargetStateForApp(123, '7cf02a6').then(function(state) {
+balena.models.device.getSupervisorTargetStateForApp(123, '7cf02a69e4d34c9da573914963cf54fd').then(function(state) {
 	console.log(state);
 });
 ```
@@ -3524,7 +3524,7 @@ balena.models.device.register(123, uuid).then(function(registrationInfo) {
 
 **Example**  
 ```js
-balena.models.device.generateDeviceKey('7cf02a6').then(function(deviceApiKey) {
+balena.models.device.generateDeviceKey('7cf02a69e4d34c9da573914963cf54fd').then(function(deviceApiKey) {
 	console.log(deviceApiKey);
 });
 ```
@@ -3548,7 +3548,7 @@ balena.models.device.generateDeviceKey(123).then(function(deviceApiKey) {
 
 **Example**  
 ```js
-balena.models.device.hasDeviceUrl('7cf02a6').then(function(hasDeviceUrl) {
+balena.models.device.hasDeviceUrl('7cf02a69e4d34c9da573914963cf54fd').then(function(hasDeviceUrl) {
 	if (hasDeviceUrl) {
 		console.log('The device has device URL enabled');
 	}
@@ -3576,7 +3576,7 @@ balena.models.device.hasDeviceUrl(123).then(function(hasDeviceUrl) {
 
 **Example**  
 ```js
-balena.models.device.getDeviceUrl('7cf02a6').then(function(url) {
+balena.models.device.getDeviceUrl('7cf02a69e4d34c9da573914963cf54fd').then(function(url) {
 	console.log(url);
 });
 ```
@@ -3599,7 +3599,7 @@ balena.models.device.getDeviceUrl(123).then(function(url) {
 
 **Example**  
 ```js
-balena.models.device.enableDeviceUrl('7cf02a6');
+balena.models.device.enableDeviceUrl('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -3618,7 +3618,7 @@ balena.models.device.enableDeviceUrl(123);
 
 **Example**  
 ```js
-balena.models.device.disableDeviceUrl('7cf02a6');
+balena.models.device.disableDeviceUrl('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -3637,7 +3637,7 @@ balena.models.device.disableDeviceUrl(123);
 
 **Example**  
 ```js
-balena.models.device.enableLocalMode('7cf02a6');
+balena.models.device.enableLocalMode('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -3656,7 +3656,7 @@ balena.models.device.enableLocalMode(123);
 
 **Example**  
 ```js
-balena.models.device.disableLocalMode('7cf02a6');
+balena.models.device.disableLocalMode('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -3676,7 +3676,7 @@ balena.models.device.disableLocalMode(123);
 
 **Example**  
 ```js
-balena.models.device.isInLocalMode('7cf02a6').then(function(isInLocalMode) {
+balena.models.device.isInLocalMode('7cf02a69e4d34c9da573914963cf54fd').then(function(isInLocalMode) {
 	if (isInLocalMode) {
 		console.log('The device has local mode enabled');
 	}
@@ -3704,7 +3704,7 @@ balena.models.device.isInLocalMode(123).then(function(isInLocalMode) {
 
 **Example**  
 ```js
-balena.models.device.get('7cf02a6').then(function(device) {
+balena.models.device.get('7cf02a69e4d34c9da573914963cf54fd').then(function(device) {
 	balena.models.device.getLocalModeSupport(device);
 })
 ```
@@ -3721,7 +3721,7 @@ balena.models.device.get('7cf02a6').then(function(device) {
 
 **Example**  
 ```js
-balena.models.device.enableLockOverride('7cf02a6');
+balena.models.device.enableLockOverride('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -3740,7 +3740,7 @@ balena.models.device.enableLockOverride(123);
 
 **Example**  
 ```js
-balena.models.device.disableLockOverride('7cf02a6');
+balena.models.device.disableLockOverride('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -3759,7 +3759,7 @@ balena.models.device.disableLockOverride(123);
 
 **Example**  
 ```js
-balena.models.device.hasLockOverride('7cf02a6');
+balena.models.device.hasLockOverride('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -3784,7 +3784,7 @@ in case that you need to retrieve more device fields than just the status.
 
 **Example**  
 ```js
-balena.models.device.getStatus('7cf02a6').then(function(status) {
+balena.models.device.getStatus('7cf02a69e4d34c9da573914963cf54fd').then(function(status) {
 	console.log(status);
 });
 ```
@@ -3813,7 +3813,7 @@ in case that you need to retrieve more device fields than just the progress.
 
 **Example**  
 ```js
-balena.models.device.getProgress('7cf02a6').then(function(progress) {
+balena.models.device.getProgress('7cf02a69e4d34c9da573914963cf54fd').then(function(progress) {
 	console.log(progress);
 });
 ```
@@ -3837,7 +3837,7 @@ balena.models.device.getProgress(123).then(function(progress) {
 
 **Example**  
 ```js
-balena.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000);
+balena.models.device.grantSupportAccess('7cf02a69e4d34c9da573914963cf54fd', Date.now() + 3600 * 1000);
 ```
 **Example**  
 ```js
@@ -3856,7 +3856,7 @@ balena.models.device.grantSupportAccess(123, Date.now() + 3600 * 1000);
 
 **Example**  
 ```js
-balena.models.device.revokeSupportAccess('7cf02a6');
+balena.models.device.revokeSupportAccess('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -3875,7 +3875,7 @@ balena.models.device.revokeSupportAccess(123);
 
 **Example**  
 ```js
-balena.models.device.get('7cf02a6').then(function(device) {
+balena.models.device.get('7cf02a69e4d34c9da573914963cf54fd').then(function(device) {
 	console.log(device.os_version); // => 'balenaOS 2.26.0+rev1'
 	console.log(device.os_variant); // => 'prod'
 	balena.models.device.getOsVersion(device); // => '2.26.0+rev1.prod'
@@ -3895,7 +3895,7 @@ balena.models.device.get('7cf02a6').then(function(device) {
 
 **Example**  
 ```js
-balena.models.device.isTrackingApplicationRelease('7cf02a6').then(function(isEnabled) {
+balena.models.device.isTrackingApplicationRelease('7cf02a69e4d34c9da573914963cf54fd').then(function(isEnabled) {
 	console.log(isEnabled);
 });
 ```
@@ -3913,13 +3913,13 @@ balena.models.device.isTrackingApplicationRelease('7cf02a6').then(function(isEna
 
 **Example**  
 ```js
-balena.models.device.getTargetReleaseHash('7cf02a6').then(function(release) {
+balena.models.device.getTargetReleaseHash('7cf02a69e4d34c9da573914963cf54fd').then(function(release) {
 	console.log(release);
 });
 ```
 **Example**  
 ```js
-balena.models.device.getTargetReleaseHash('7cf02a6', function(release) {
+balena.models.device.getTargetReleaseHash('7cf02a69e4d34c9da573914963cf54fd', function(release) {
 	console.log(release);
 });
 ```
@@ -3940,7 +3940,7 @@ and not get updated when the current application release changes.
 
 **Example**  
 ```js
-balena.models.device.pinToRelease('7cf02a6', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
+balena.models.device.pinToRelease('7cf02a69e4d34c9da573914963cf54fd', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
 	...
 });
 ```
@@ -3965,7 +3965,7 @@ The device's current release will be updated with each new successfully built re
 
 **Example**  
 ```js
-balena.models.device.trackApplicationRelease('7cf02a6').then(function() {
+balena.models.device.trackApplicationRelease('7cf02a69e4d34c9da573914963cf54fd').then(function() {
 	...
 });
 ```
@@ -3985,7 +3985,7 @@ Configures the device to run a particular supervisor release.
 
 **Example**  
 ```js
-balena.models.device.setSupervisorRelease('7cf02a6', '10.8.0').then(function() {
+balena.models.device.setSupervisorRelease('7cf02a69e4d34c9da573914963cf54fd', '10.8.0').then(function() {
 	...
 });
 ```
@@ -4031,7 +4031,7 @@ This is useful to signal that the supervisor is alive and responding.
 
 **Example**  
 ```js
-balena.models.device.ping('7cf02a6');
+balena.models.device.ping('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -4050,7 +4050,7 @@ balena.models.device.ping(123);
 
 **Example**  
 ```js
-balena.models.device.identify('7cf02a6');
+balena.models.device.identify('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -4073,7 +4073,7 @@ the device itself.
 
 **Example**  
 ```js
-balena.models.device.restartApplication('7cf02a6');
+balena.models.device.restartApplication('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -4094,7 +4094,7 @@ balena.models.device.restartApplication(123);
 
 **Example**  
 ```js
-balena.models.device.reboot('7cf02a6');
+balena.models.device.reboot('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -4115,7 +4115,7 @@ balena.models.device.reboot(123);
 
 **Example**  
 ```js
-balena.models.device.shutdown('7cf02a6');
+balena.models.device.shutdown('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -4136,7 +4136,7 @@ This function clears the user application's `/data` directory.
 
 **Example**  
 ```js
-balena.models.device.purge('7cf02a6');
+balena.models.device.purge('7cf02a69e4d34c9da573914963cf54fd');
 ```
 **Example**  
 ```js
@@ -4157,7 +4157,7 @@ balena.models.device.purge(123);
 
 **Example**  
 ```js
-balena.models.device.update('7cf02a6', {
+balena.models.device.update('7cf02a69e4d34c9da573914963cf54fd', {
 	force: true
 });
 ```
@@ -4180,7 +4180,7 @@ balena.models.device.update(123, {
 
 **Example**  
 ```js
-balena.models.device.getSupervisorState('7cf02a6').then(function(state) {
+balena.models.device.getSupervisorState('7cf02a69e4d34c9da573914963cf54fd').then(function(state) {
 	console.log(state);
 });
 ```
@@ -4204,7 +4204,7 @@ balena.models.device.getSupervisorState(123).then(function(state) {
 
 **Example**  
 ```js
-balena.models.device.startService('7cf02a6', 123).then(function() {
+balena.models.device.startService('7cf02a69e4d34c9da573914963cf54fd', 123).then(function() {
 	...
 });
 ```
@@ -4228,7 +4228,7 @@ balena.models.device.startService(1, 123).then(function() {
 
 **Example**  
 ```js
-balena.models.device.stopService('7cf02a6', 123).then(function() {
+balena.models.device.stopService('7cf02a69e4d34c9da573914963cf54fd', 123).then(function() {
 	...
 });
 ```
@@ -4252,7 +4252,7 @@ balena.models.device.stopService(1, 123).then(function() {
 
 **Example**  
 ```js
-balena.models.device.restartService('7cf02a6', 123).then(function() {
+balena.models.device.restartService('7cf02a69e4d34c9da573914963cf54fd', 123).then(function() {
 	...
 });
 ```
@@ -4592,7 +4592,7 @@ balena.models.apiKey.getProvisioningApiKeysByApplication('myorganization/myapp')
 
 **Example**  
 ```js
-balena.models.apiKey.getDeviceApiKeysByDevice('7cf02a6').then(function(apiKeys) {
+balena.models.apiKey.getDeviceApiKeysByDevice('7cf02a69e4d34c9da573914963cf54fd').then(function(apiKeys) {
 	console.log(apiKeys);
 });
 ```
@@ -7240,7 +7240,7 @@ can be used to listen for logs as they appear, line by line.
 
 **Example**  
 ```js
-balena.logs.subscribe('7cf02a6').then(function(logs) {
+balena.logs.subscribe('7cf02a69e4d34c9da573914963cf54fd').then(function(logs) {
 	logs.on('line', function(line) {
 		console.log(line);
 	});
@@ -7273,7 +7273,7 @@ Get an array of the latest log messages for a given device.
 
 **Example**  
 ```js
-balena.logs.history('7cf02a6').then(function(lines) {
+balena.logs.history('7cf02a69e4d34c9da573914963cf54fd').then(function(lines) {
 	lines.forEach(function(line) {
 		console.log(line);
 	});
@@ -7290,7 +7290,7 @@ balena.logs.history(123).then(function(lines) {
 **Example**  
 ```js
 const oneDayAgoTimestamp = Date.now() - 24*60*60*1000;
-balena.logs.history('7cf02a6', { start: oneDayAgoTimestamp }).then(function(lines) {
+balena.logs.history('7cf02a69e4d34c9da573914963cf54fd', { start: oneDayAgoTimestamp }).then(function(lines) {
 	lines.forEach(function(line) {
 		console.log(line);
 	});
@@ -7299,7 +7299,7 @@ balena.logs.history('7cf02a6', { start: oneDayAgoTimestamp }).then(function(line
 **Example**  
 ```js
 const oneDayAgoIsoDateString = new Date(Date.now() - 24*60*60*1000).toISOString();
-balena.logs.history('7cf02a6', { start: oneDayAgoIsoDateString }).then(function(lines) {
+balena.logs.history('7cf02a69e4d34c9da573914963cf54fd', { start: oneDayAgoIsoDateString }).then(function(lines) {
 	lines.forEach(function(line) {
 		console.log(line);
 	});
