@@ -150,7 +150,7 @@ export function batchResourceOperationFactory<
 						} as const)
 				: typeof uuidOrIdOrArrayChunk === 'string'
 					? ({
-							uuid: { $startswith: uuidOrIdOrArrayChunk },
+							uuid: uuidOrIdOrArrayChunk,
 						} as const)
 					: ({
 							id: uuidOrIdOrArrayChunk,

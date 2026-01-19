@@ -328,10 +328,12 @@ describe('Device Model', function () {
 						return expect(device.id).to.equal(ctx.device.id);
 					});
 
-					it('should be rejected if the device name does not exist', async function () {
+					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.get('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.get(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -346,11 +348,13 @@ describe('Device Model', function () {
 						}, `Invalid parameter:  is not a valid value for parameter 'uuidOrId'`);
 					});
 
-					it('should be able to use a shorter uuid', async function () {
-						const device = await balena.models.device.get(
-							ctx.device.uuid.slice(0, 8),
+					it('should be rejected when a short uuid is provided', async function () {
+						await expectError(
+							async () => {
+								await balena.models.device.get(ctx.device.uuid.slice(0, 8));
+							},
+							`Invalid parameter: ${ctx.device.uuid.slice(0, 8)} is not a valid value for parameter 'uuidOrId'`,
 						);
-						return expect(device.id).to.equal(ctx.device.id);
 					});
 
 					it('should support arbitrary pinejs options', async function () {
@@ -412,8 +416,10 @@ describe('Device Model', function () {
 
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.getName('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.getName(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -435,8 +441,10 @@ describe('Device Model', function () {
 
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.getApplicationName('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.getApplicationName(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -461,7 +469,9 @@ describe('Device Model', function () {
 					});
 
 					it('should eventually be false if the device uuid does not exist', async function () {
-						const result = await balena.models.device.has('asdfghjkl');
+						const result = await balena.models.device.has(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
 						expect(result).to.be.false;
 					});
 
@@ -483,8 +493,10 @@ describe('Device Model', function () {
 
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.isOnline('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.isOnline(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -507,8 +519,10 @@ describe('Device Model', function () {
 
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.getLocalIPAddresses('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.getLocalIPAddresses(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -521,8 +535,10 @@ describe('Device Model', function () {
 				parallel('balena.models.device.getMACAddresses()', function () {
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.getMACAddresses('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.getMACAddresses(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -544,8 +560,10 @@ describe('Device Model', function () {
 				parallel('balena.models.device.getMetrics()', function () {
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.getMetrics('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.getMetrics(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -644,14 +662,29 @@ describe('Device Model', function () {
 				describe('balena.models.device.rename()', function () {
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.rename('asdfghjkl', 'Foo Bar');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.rename(
+								'a2df0000025c4223b4efe2b66f3e370a',
+								'Foo Bar',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
 						await expectError(async () => {
 							await balena.models.device.rename(999999, 'Foo Bar');
 						}, 'Device not found: 999999');
+					});
+
+					it('should be rejected when a short uuid is provided', async function () {
+						await expectError(
+							async () => {
+								await balena.models.device.rename(
+									this.device.uuid.slice(0, 7),
+									'FooBarDeviceByShortUuid',
+								);
+							},
+							`Device not found: ${this.device.uuid.slice(0, 7)}`,
+						);
 					});
 
 					describe('[contained scenario]', function () {
@@ -671,15 +704,6 @@ describe('Device Model', function () {
 							);
 							const name = await balena.models.device.getName(this.device.id);
 							return expect(name).to.equal('FooBarDeviceById');
-						});
-
-						it('should be able to rename the device using a shorter uuid', async function () {
-							await balena.models.device.rename(
-								this.device.uuid.slice(0, 7),
-								'FooBarDeviceByShortUuid',
-							);
-							const name = await balena.models.device.getName(this.device.uuid);
-							return expect(name).to.equal('FooBarDeviceByShortUuid');
 						});
 					});
 				});
@@ -711,11 +735,14 @@ describe('Device Model', function () {
 
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.setCustomLocation('asdfghjkl', {
-								latitude: 43.383333,
-								longitude: 2.383333,
-							});
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.setCustomLocation(
+								'a2df0000025c4223b4efe2b66f3e370a',
+								{
+									latitude: 43.383333,
+									longitude: 2.383333,
+								},
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -756,8 +783,10 @@ describe('Device Model', function () {
 
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.unsetCustomLocation('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.unsetCustomLocation(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -770,8 +799,11 @@ describe('Device Model', function () {
 				describe('balena.models.device.setNote()', function () {
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.setNote('asdfghjkl', 'My note');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.setNote(
+								'a2df0000025c4223b4efe2b66f3e370a',
+								'My note',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -943,10 +975,12 @@ describe('Device Model', function () {
 						expect(deviceKeys[0]).to.have.property('expiry_date', tomorrowDate);
 					});
 
-					it('should be rejected if the device name does not exist', async function () {
+					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.generateDeviceKey('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.generateDeviceKey(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -955,12 +989,15 @@ describe('Device Model', function () {
 						}, 'Device not found: 999999');
 					});
 
-					it('should be able to use a shorter uuid', async function () {
-						const deviceApiKey = await balena.models.device.generateDeviceKey(
-							this.device.uuid.slice(0, 8),
+					it('should be rejected when a short uuid is provided', async function () {
+						await expectError(
+							async () => {
+								await balena.models.device.generateDeviceKey(
+									this.device.uuid.slice(0, 8),
+								);
+							},
+							`Invalid parameter: ${this.device.uuid.slice(0, 8)} is not a valid value for parameter 'uuidOrId'`,
 						);
-						expect(deviceApiKey).to.be.a('string');
-						return expect(deviceApiKey).to.have.length(32);
 					});
 				});
 			});
@@ -968,8 +1005,10 @@ describe('Device Model', function () {
 			describe('balena.models.device.remove()', function () {
 				it('should be rejected if the device uuid does not exist', async function () {
 					await expectError(async () => {
-						await balena.models.device.remove('asdfghjkl');
-					}, 'Device not found: asdfghjkl');
+						await balena.models.device.remove(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
+					}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it('should be rejected if the device id does not exist', async function () {
@@ -1003,12 +1042,13 @@ describe('Device Model', function () {
 						}, `Invalid parameter:  is not a valid value for parameter 'uuidOrIdOrArray'`);
 					});
 
-					it('should be able to remove the device using a shorter uuid', async function () {
-						await balena.models.device.remove(this.device.uuid.slice(0, 7));
-						const devices = await balena.models.device.getAllByApplication(
-							this.application.id,
+					it('should be rejected when a short uuid is provided', async function () {
+						await expectError(
+							async () => {
+								await balena.models.device.remove(this.device.uuid.slice(0, 7));
+							},
+							`Device not found: ${this.device.uuid.slice(0, 7)}`,
 						);
-						return expect(devices).to.deep.equal([]);
 					});
 				});
 			});
@@ -1018,8 +1058,10 @@ describe('Device Model', function () {
 
 				it('should be rejected if the device uuid does not exist', async function () {
 					await expectError(async () => {
-						await balena.models.device.hasDeviceUrl('asdfghjkl');
-					}, 'Device not found: asdfghjkl');
+						await balena.models.device.hasDeviceUrl(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
+					}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it('should be rejected if the device id does not exist', async function () {
@@ -1061,8 +1103,10 @@ describe('Device Model', function () {
 				describe('given a newly created device', function () {
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.getDeviceUrl('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.getDeviceUrl(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -1087,11 +1131,15 @@ describe('Device Model', function () {
 						return balena.models.device.enableDeviceUrl(this.device.id);
 					});
 
-					it('should eventually return the correct device url given a shorter uuid', async function () {
-						const deviceUrl = await balena.models.device.getDeviceUrl(
-							this.device.uuid.slice(0, 7),
+					it('should be rejected when a short uuid is provided', async function () {
+						await expectError(
+							async () => {
+								await balena.models.device.getDeviceUrl(
+									this.device.uuid.slice(0, 7),
+								);
+							},
+							`Invalid parameter: ${this.device.uuid.slice(0, 7)} is not a valid value for parameter 'uuidOrId'`,
 						);
-						return expect(deviceUrl).to.match(/[a-z0-9]{32}/);
 					});
 
 					it('should eventually return the correct device url given an id', async function () {
@@ -1122,8 +1170,10 @@ describe('Device Model', function () {
 			describe('balena.models.device.enableDeviceUrl()', function () {
 				it('should be rejected if the device uuid does not exist', async function () {
 					await expectError(async () => {
-						await balena.models.device.enableDeviceUrl('asdfghjkl');
-					}, 'Device not found: asdfghjkl');
+						await balena.models.device.enableDeviceUrl(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
+					}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it('should be rejected if the device id does not exist', async function () {
@@ -1135,6 +1185,17 @@ describe('Device Model', function () {
 				describe('given the device url is disabled', function () {
 					givenADevice(beforeEach);
 
+					it('should be rejected when a short uuid is provided', async function () {
+						await expectError(
+							async () => {
+								await balena.models.device.enableDeviceUrl(
+									this.device.uuid.slice(0, 7),
+								);
+							},
+							`Device not found: ${this.device.uuid.slice(0, 7)}`,
+						);
+					});
+
 					['id', 'uuid'].forEach((prop) => {
 						it(`should be able to enable web access using a ${prop}`, async function () {
 							await balena.models.device.enableDeviceUrl(this.device[prop]);
@@ -1144,24 +1205,18 @@ describe('Device Model', function () {
 							expect(hasDeviceUrl).to.be.true;
 						});
 					});
-
-					it('should be able to enable web access using a shorter uuid', async function () {
-						await balena.models.device.enableDeviceUrl(
-							this.device.uuid.slice(0, 7),
-						);
-						const hasDeviceUrl = await balena.models.device.hasDeviceUrl(
-							this.device.id,
-						);
-						expect(hasDeviceUrl).to.be.true;
-					});
 				});
 			});
 
 			describe('balena.models.device.disableDeviceUrl()', function () {
+				givenADevice(before);
+
 				it('should be rejected if the device uuid does not exist', async function () {
 					await expectError(async () => {
-						await balena.models.device.disableDeviceUrl('asdfghjkl');
-					}, 'Device not found: asdfghjkl');
+						await balena.models.device.disableDeviceUrl(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
+					}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it('should be rejected if the device id does not exist', async function () {
@@ -1170,9 +1225,18 @@ describe('Device Model', function () {
 					}, 'Device not found: 999999');
 				});
 
-				describe('given device url is enabled', function () {
-					givenADevice(before);
+				it('should be rejected when a short uuid is provided', async function () {
+					await expectError(
+						async () => {
+							await balena.models.device.disableDeviceUrl(
+								this.device.uuid.slice(0, 7),
+							);
+						},
+						`Device not found: ${this.device.uuid.slice(0, 7)}`,
+					);
+				});
 
+				describe('given device url is enabled', function () {
 					beforeEach(async function () {
 						await balena.models.device.enableDeviceUrl(this.device.id);
 						const hasDeviceUrl = await balena.models.device.hasDeviceUrl(
@@ -1191,16 +1255,6 @@ describe('Device Model', function () {
 
 					it('should be able to disable web access using an id', async function () {
 						await balena.models.device.disableDeviceUrl(this.device.id);
-						const hasDeviceUrl = await balena.models.device.hasDeviceUrl(
-							this.device.id,
-						);
-						expect(hasDeviceUrl).to.be.false;
-					});
-
-					it('should be able to disable web access using a shorter uuid', async function () {
-						await balena.models.device.disableDeviceUrl(
-							this.device.uuid.slice(0, 7),
-						);
 						const hasDeviceUrl = await balena.models.device.hasDeviceUrl(
 							this.device.id,
 						);
@@ -1291,7 +1345,9 @@ describe('Device Model', function () {
 
 							it(`should be rejected if a device with that ${deviceParam} does not exist`, async function () {
 								const deviceParamValue =
-									deviceParam === 'id' ? 999999 : 'asdfghjkl';
+									deviceParam === 'id'
+										? 999999
+										: 'a2df0000025c4223b4efe2b66f3e370a';
 								await expectError(async () => {
 									await balena.models.device.isInLocalMode(deviceParamValue);
 								}, `Device not found: ${deviceParamValue}`);
@@ -1311,7 +1367,9 @@ describe('Device Model', function () {
 
 							it(`should be rejected if a device with that ${deviceParam} does not exist`, async function () {
 								const deviceParamValue =
-									deviceParam === 'id' ? 999999 : 'asdfghjkl';
+									deviceParam === 'id'
+										? 999999
+										: 'a2df0000025c4223b4efe2b66f3e370a';
 								await expectError(async () => {
 									await balena.models.device.enableLocalMode(deviceParamValue);
 								}, `Device not found: ${deviceParamValue}`);
@@ -1331,7 +1389,9 @@ describe('Device Model', function () {
 
 							it(`should be rejected if a device with that ${deviceParam} does not exist`, async function () {
 								const deviceParamValue =
-									deviceParam === 'id' ? 999999 : 'asdfghjkl';
+									deviceParam === 'id'
+										? 999999
+										: 'a2df0000025c4223b4efe2b66f3e370a';
 								await expectError(async () => {
 									await balena.models.device.disableLocalMode(deviceParamValue);
 								}, `Device not found: ${deviceParamValue}`);
@@ -1490,22 +1550,22 @@ describe('Device Model', function () {
 				describe(`balena.models.device.startOsUpdate() called with ${paramType}`, function () {
 					givenADevice(before);
 					describe('given an offline device w/o os info', function () {
-						it('should be rejected if the device does not exist and using using short uuid', async function () {
+						it('should be rejected when using a short uuid', async function () {
 							await expectError(
 								async () => {
 									await (paramType === 'array of uuids'
 										? balena.models.device.startOsUpdate(
-												['asdfghjkl'],
+												['a2df000'],
 												'2.29.2+rev1.prod',
 											)
 										: balena.models.device.startOsUpdate(
-												'asdfghjkl',
+												'a2df000',
 												'2.29.2+rev1.prod',
 											));
 								},
 								paramType === 'array of uuids'
-									? `Invalid parameter: asdfghjkl is not a valid value for parameter 'uuidOrIdOrArray'`
-									: 'Device not found: asdfghjkl',
+									? `Invalid parameter: a2df000 is not a valid value for parameter 'uuidOrIdOrArray'`
+									: 'Device not found: a2df000',
 							);
 						});
 
@@ -1513,14 +1573,14 @@ describe('Device Model', function () {
 							await expectError(async () => {
 								await (paramType === 'array of uuids'
 									? balena.models.device.startOsUpdate(
-											['asdfghjkld8047d2ae2546389241ea0a'],
+											['asdfghjkl25c4223b4efe2b66f3e370a'],
 											'2.29.2+rev1.prod',
 										)
 									: balena.models.device.startOsUpdate(
-											'asdfghjkld8047d2ae2546389241ea0a',
+											'asdfghjkl25c4223b4efe2b66f3e370a',
 											'2.29.2+rev1.prod',
 										));
-							}, 'Device not found: asdfghjkld8047d2ae2546389241ea0a');
+							}, 'Device not found: asdfghjkl25c4223b4efe2b66f3e370a');
 						});
 
 						it('should not be able to start an OS update without providing a targetOsVersion parameter', async function () {
@@ -1862,8 +1922,10 @@ describe('Device Model', function () {
 
 				it('should be rejected if the device does not exist', async function () {
 					await expectError(async () => {
-						await balena.models.device.getSupervisorTargetState('asdfghjkl');
-					}, 'Device not found: asdfghjkl');
+						await balena.models.device.getSupervisorTargetState(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
+					}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it(`should reflect the device's target state`, async function () {
@@ -1918,9 +1980,9 @@ describe('Device Model', function () {
 				it('should be rejected if the fleet does not exist', async function () {
 					await expectError(async () => {
 						await balena.models.device.getSupervisorTargetStateForApp(
-							'asdfghjkl',
+							'a2df0000025c4223b4efe2b66f3e370a',
 						);
-					}, 'Application not found: asdfghjkl');
+					}, 'Application not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it(`should give a device's target state (v3) for a _generic_ device of a fleet`, async function () {
@@ -1968,8 +2030,10 @@ describe('Device Model', function () {
 
 				it('should be rejected if the device does not exist', async function () {
 					await expectError(async () => {
-						await balena.models.device.getSupervisorState('asdfghjkl');
-					}, 'Device not found: asdfghjkl');
+						await balena.models.device.getSupervisorState(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
+					}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it('should be rejected if the device exists but is inaccessible', async function () {
@@ -2098,9 +2162,10 @@ describe('Device Model', function () {
 			});
 
 			describe('balena.models.device.get()', function () {
-				it('should return the device given the shorter uuid as a string', async function () {
-					const device = await balena.models.device.get(this.shortUuid);
-					return expect(device.id).to.equal(this.deviceInfo.id);
+				it('should be rejected when a short uuid is provided', async function () {
+					await expectError(async () => {
+						await balena.models.device.get(this.shortUuid);
+					}, `Invalid parameter: ${this.shortUuid} is not a valid value for parameter 'uuidOrId'`);
 				});
 
 				it('should fail to find the device given the shorter uuid as a number', async function () {
@@ -2126,28 +2191,18 @@ describe('Device Model', function () {
 			});
 
 			describe('balena.models.device.get()', () => {
-				it('should be rejected with an error if there is an ambiguation between shorter uuids', async function () {
-					await expectError(
-						async () => {
-							await balena.models.device.get(this.uuidRoot);
-						},
-						(error) => {
-							expect(error).to.have.property('code', 'BalenaAmbiguousDevice');
-						},
-					);
+				it('should be rejected when a short uuid is provided', async function () {
+					await expectError(async () => {
+						await balena.models.device.get(this.uuidRoot);
+					}, `Invalid parameter: ${this.uuidRoot} is not a valid value for parameter 'uuidOrId'`);
 				});
 			});
 
 			describe('balena.models.device.has()', () => {
-				it('should be rejected with an error for an ambiguous shorter uuid', async function () {
-					await expectError(
-						async () => {
-							await balena.models.device.has(this.uuidRoot);
-						},
-						(error) => {
-							expect(error).to.have.property('code', 'BalenaAmbiguousDevice');
-						},
-					);
+				it('should be rejected when a short uuid is provided', async function () {
+					await expectError(async () => {
+						await balena.models.device.has(this.uuidRoot);
+					}, `Invalid parameter: ${this.uuidRoot} is not a valid value for parameter 'uuidOrId'`);
 				});
 			});
 		});
@@ -2160,10 +2215,12 @@ describe('Device Model', function () {
 			givenADevice(before);
 
 			describe('balena.models.device.getWithServiceDetails()', function () {
-				it('should be rejected if the device name does not exist', async function () {
+				it('should be rejected if the device uuid does not exist', async function () {
 					await expectError(async () => {
-						await balena.models.device.getWithServiceDetails('asdfghjkl');
-					}, 'Device not found: asdfghjkl');
+						await balena.models.device.getWithServiceDetails(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
+					}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it('should be rejected if the device id does not exist', async function () {
@@ -2172,11 +2229,15 @@ describe('Device Model', function () {
 					}, 'Device not found: 999999');
 				});
 
-				it('should be able to use a shorter uuid', async function () {
-					const device = await balena.models.device.getWithServiceDetails(
-						this.device.uuid.slice(0, 8),
+				it('should be rejected when a short uuid is provided', async function () {
+					await expectError(
+						async () => {
+							await balena.models.device.getWithServiceDetails(
+								this.device.uuid.slice(0, 8),
+							);
+						},
+						`Invalid parameter: ${this.device.uuid.slice(0, 8)} is not a valid value for parameter 'uuidOrId'`,
 					);
-					expect(device.id).to.equal(this.device.id);
 				});
 
 				['id', 'uuid'].forEach((prop) => {
@@ -2437,20 +2498,23 @@ describe('Device Model', function () {
 					]);
 				});
 
-				it('can set and then retrieve a device service var by short uuid', async function () {
+				it('should rejected when trying to set or retrieve a device service var by short uuid', async function () {
 					const shortUUID = this.device['uuid'].slice(0, 6);
-					await varModel.set(
-						shortUUID,
-						this.webService.id,
-						'EDITOR_BY_SHORT_UUID',
-						'vim',
-					);
-					const result = await varModel.get(
-						shortUUID,
-						this.webService.id,
-						'EDITOR_BY_SHORT_UUID',
-					);
-					return expect(result).to.equal('vim');
+					await expectError(async () => {
+						await varModel.set(
+							shortUUID,
+							this.webService.id,
+							'EDITOR_BY_SHORT_UUID',
+							'vim',
+						);
+					}, `Invalid parameter: ${shortUUID} is not a valid value for parameter 'uuidOrId'`);
+					await expectError(async () => {
+						await varModel.get(
+							shortUUID,
+							this.webService.id,
+							'EDITOR_BY_SHORT_UUID',
+						);
+					}, `Invalid parameter: ${shortUUID} is not a valid value for parameter 'uuidOrId'`);
 				});
 			});
 
@@ -2480,8 +2544,10 @@ describe('Device Model', function () {
 			describe('balena.models.device.deactivate()', function () {
 				it('should be rejected if the device uuid does not exist', async function () {
 					await expectError(async () => {
-						await balena.models.device.deactivate('asdfghjkl');
-					}, 'Device not found: asdfghjkl');
+						await balena.models.device.deactivate(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
+					}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it('should be rejected if the device id does not exist', async function () {
@@ -3084,16 +3150,15 @@ describe('Device Model', function () {
 					});
 				});
 
-				it('should be able to move a device using shorter uuids', async function () {
-					await balena.models.device.move(
-						this.deviceInfo.uuid.slice(0, 7),
-						this.applicationSameDT.id,
-					);
-					const applicationName = await balena.models.device.getApplicationName(
-						this.deviceInfo.id,
-					);
-					return expect(applicationName).to.equal(
-						this.applicationSameDT.app_name,
+				it('should be rejected when a short uuid is provided', async function () {
+					await expectError(
+						async () => {
+							await balena.models.device.move(
+								this.deviceInfo.uuid.slice(0, 7),
+								this.applicationSameDT.id,
+							);
+						},
+						`Device not found: ${this.deviceInfo.uuid.slice(0, 7)}`,
 					);
 				});
 			});

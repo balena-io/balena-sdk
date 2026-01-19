@@ -77,6 +77,7 @@ import type {
 	FilterObj,
 	ODataOptionsWithoutCount,
 	OptionsToResponse,
+	ResourceId,
 } from 'pinejs-client-core';
 
 const MIN_OS_MC = '2.12.0';
@@ -586,37 +587,22 @@ const getDeviceModel = function (
 			if (uuidOrId == null) {
 				throw new errors.BalenaDeviceNotFound(uuidOrId);
 			}
-			if (uuidOrId === '') {
-				throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
+
+			let resourceId: ResourceId<Device['Read']>;
+			if (isId(uuidOrId)) {
+				resourceId = uuidOrId;
+			} else {
+				if (!isFullUuid(uuidOrId)) {
+					throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
+				}
+				resourceId = { uuid: uuidOrId };
 			}
 
-			let device:
-				| OptionsToResponse<Device['Read'], T, undefined>[number]
-				| undefined;
-			const isPotentiallyFullUuid = isFullUuid(uuidOrId);
-			if (isPotentiallyFullUuid || isId(uuidOrId)) {
-				device = await pine.get({
-					resource: 'device',
-					id: isPotentiallyFullUuid ? { uuid: uuidOrId } : uuidOrId,
-					options,
-				});
-			} else {
-				const devices = (await pine.get({
-					resource: 'device',
-					options: mergePineOptions(
-						{
-							$filter: {
-								uuid: { $startswith: uuidOrId },
-							},
-						},
-						options,
-					),
-				})) as OptionsToResponse<Device['Read'], T, undefined>;
-				if (devices.length > 1) {
-					throw new errors.BalenaAmbiguousDevice(uuidOrId);
-				}
-				device = devices[0];
-			}
+			const device = await pine.get({
+				resource: 'device',
+				id: resourceId,
+				options,
+			});
 			if (device == null) {
 				throw new errors.BalenaDeviceNotFound(uuidOrId);
 			}
@@ -2923,7 +2909,10 @@ const getDeviceModel = function (
 				let deviceFilter;
 				if (isId(uuidOrId)) {
 					deviceFilter = uuidOrId;
-				} else if (isFullUuid(uuidOrId)) {
+				} else {
+					if (!isFullUuid(uuidOrId)) {
+						throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
+					}
 					deviceFilter = {
 						$any: {
 							$alias: 'd',
@@ -2934,9 +2923,6 @@ const getDeviceModel = function (
 							},
 						},
 					};
-				} else {
-					const device = await exports.get(uuidOrId, { $select: 'id' });
-					deviceFilter = device.id;
 				}
 
 				const serviceInstalls = await pine.get({
@@ -3109,13 +3095,14 @@ const getDeviceModel = function (
 
 				if (isId(uuidOrId)) {
 					$filter = { ...$filter, tracks__device: uuidOrId };
-				} else if (isFullUuid(uuidOrId)) {
+				} else {
+					if (!isFullUuid(uuidOrId)) {
+						throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
+					}
 					$filter = {
 						...$filter,
 						uuid: uuidOrId,
 					};
-				} else {
-					throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
 				}
 
 				return (await pine.get({

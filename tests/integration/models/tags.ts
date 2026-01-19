@@ -104,13 +104,14 @@ export const itShouldGetAllTagsByResource = function (opts: Options) {
 							const resource = resources?.[properties[i][0]];
 							getAllByResourceParam[properties[i][1]] =
 								(typeof resource === 'object' ? resource.__id : resource) ??
-								'123456789';
+								'a2df0000025c4223b4efe2b66f3e370a';
 						} else {
-							getAllByResourceParam[properties[i][1]] = '123456789';
+							getAllByResourceParam[properties[i][1]] =
+								'a2df0000025c4223b4efe2b66f3e370a';
 						}
 					}
 				} else {
-					getAllByResourceParam = '123456789';
+					getAllByResourceParam = 'a2df0000025c4223b4efe2b66f3e370a';
 				}
 				await expectError(
 					async () => {
@@ -121,7 +122,7 @@ export const itShouldGetAllTagsByResource = function (opts: Options) {
 							? `unique pair ${Object.keys(getAllByResourceParam).join(
 									' & ',
 								)}: ${Object.values(getAllByResourceParam).join(' & ')}`
-							: 123456789
+							: getAllByResourceParam
 					}`,
 				);
 			});
