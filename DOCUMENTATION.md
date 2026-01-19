@@ -5800,7 +5800,7 @@ balena.models.release.tags.getAllByRelease(123).then(function(tags) {
 ```
 **Example**  
 ```js
-balena.models.release.tags.getAllByRelease('7cf02a6').then(function(tags) {
+balena.models.release.tags.getAllByRelease('7cf02a69e4d34c9da573914963cf54fd').then(function(tags) {
 	console.log(tags);
 });
 ```
@@ -5829,7 +5829,7 @@ balena.models.release.tags.set(123, 'EDITOR', 'vim');
 ```
 **Example**  
 ```js
-balena.models.release.tags.set('7cf02a6', 'EDITOR', 'vim');
+balena.models.release.tags.set('7cf02a69e4d34c9da573914963cf54fd', 'EDITOR', 'vim');
 ```
 **Example**  
 ```js
@@ -5853,7 +5853,7 @@ balena.models.release.tags.remove(123, 'EDITOR');
 ```
 **Example**  
 ```js
-balena.models.release.tags.remove('7cf02a6', 'EDITOR');
+balena.models.release.tags.remove('7cf02a69e4d34c9da573914963cf54fd', 'EDITOR');
 ```
 **Example**  
 ```js
@@ -5892,7 +5892,7 @@ balena.models.release.asset.getAllByRelease(123).then(function(assets) {
 ```
 **Example**  
 ```js
-balena.models.release.asset.getAllByRelease('7cf02a6').then(function(assets) {
+balena.models.release.asset.getAllByRelease('7cf02a69e4d34c9da573914963cf54fd').then(function(assets) {
 	console.log(assets);
 });
 ```
@@ -6093,7 +6093,7 @@ balena.models.release.get(123).then(function(release) {
 ```
 **Example**  
 ```js
-balena.models.release.get('7cf02a6').then(function(release) {
+balena.models.release.get('7cf02a69e4d34c9da573914963cf54fd').then(function(release) {
 	console.log(release);
 });
 ```
@@ -6131,7 +6131,7 @@ balena.models.release.getWithImageDetails(123).then(function(release) {
 ```
 **Example**  
 ```js
-balena.models.release.getWithImageDetails('7cf02a6').then(function(release) {
+balena.models.release.getWithImageDetails('7cf02a69e4d34c9da573914963cf54fd').then(function(release) {
 	console.log(release);
 });
 ```
@@ -6245,7 +6245,7 @@ balena.models.release.finalize(123).then(function() {
 ```
 **Example**  
 ```js
-balena.models.release.finalize('7cf02a6').then(function() {
+balena.models.release.finalize('7cf02a69e4d34c9da573914963cf54fd').then(function() {
 	console.log('finalized!');
 });
 ```
@@ -6276,7 +6276,7 @@ balena.models.release.setIsInvalidated(123, true).then(function() {
 ```
 **Example**  
 ```js
-balena.models.release.setIsInvalidated('7cf02a6', true).then(function() {
+balena.models.release.setIsInvalidated('7cf02a69e4d34c9da573914963cf54fd', true).then(function() {
 	console.log('invalidated!');
 });
 ```
@@ -6294,7 +6294,7 @@ balena.models.release.setIsInvalidated(123, false).then(function() {
 ```
 **Example**  
 ```js
-balena.models.release.setIsInvalidated('7cf02a6', false).then(function() {
+balena.models.release.setIsInvalidated('7cf02a69e4d34c9da573914963cf54fd', false).then(function() {
 	console.log('validated!');
 });
 ```
@@ -6312,7 +6312,7 @@ balena.models.release.setIsInvalidated('7cf02a6', false).then(function() {
 
 **Example**  
 ```js
-balena.models.release.setNote('7cf02a6', 'My useful note');
+balena.models.release.setNote('7cf02a69e4d34c9da573914963cf54fd', 'My useful note');
 ```
 **Example**  
 ```js
@@ -6336,7 +6336,7 @@ balena.models.release.setNote({ application: 456, rawVersion: '0.0.0' }, 'My use
 
 **Example**  
 ```js
-balena.models.release.setKnownIssueList('7cf02a6', 'This is an issue');
+balena.models.release.setKnownIssueList('7cf02a69e4d34c9da573914963cf54fd', 'This is an issue');
 ```
 **Example**  
 ```js
