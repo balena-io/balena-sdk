@@ -9,6 +9,10 @@ on:
     types: [opened, synchronize, closed]
     branches: [main, master]
 
+permissions:
+  id-token: write  # https://docs.npmjs.com/trusted-publishers
+  contents: read
+
 jobs:
   flowzone:
     name: Flowzone
