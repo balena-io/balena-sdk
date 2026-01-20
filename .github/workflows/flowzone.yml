@@ -12,6 +12,7 @@ on:
 permissions:
   id-token: write  # https://docs.npmjs.com/trusted-publishers
   contents: read
+  packages: read
 
 jobs:
   flowzone:
