@@ -1,9 +1,8 @@
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
+import { startCase, differenceWith, isEqual, omit } from 'es-toolkit';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import type * as BalenaSdk from '../../..';
-import { expectError, timeSuite } from '../../util';
+import { assertExists, expectError, timeSuite } from '../../util';
 import type * as tagsHelper from './tags';
 
 import {
@@ -189,7 +188,7 @@ describe('Application Model', function () {
 				organizationRetrievalFields.forEach((prop) => {
 					it(`should be able to create an application using the user's initial organization ${prop}`, async function () {
 						await balena.models.application.create({
-							name: `${TEST_APPLICATION_NAME_PREFIX}_FooBarByOrg${_.startCase(prop)}`,
+							name: `${TEST_APPLICATION_NAME_PREFIX}_FooBarByOrg${startCase(prop)}`,
 							deviceType: 'raspberrypi',
 							organization: this.initialOrg[prop],
 						});
@@ -610,7 +609,7 @@ describe('Application Model', function () {
 								).toISOString(),
 							})
 							.then(function (key) {
-								expect(_.isString(key)).to.be.true;
+								expect(typeof key === 'string').to.be.true;
 								return expect(key).to.have.length(32);
 							});
 					});
@@ -638,10 +637,10 @@ describe('Application Model', function () {
 							this.application[prop],
 						);
 
-						const provisionKeys = _.differenceWith(
+						const provisionKeys = differenceWith(
 							updatedProvisioningKeys,
 							provisioningKeys,
-							_.isEqual,
+							isEqual,
 						);
 
 						expect(provisionKeys).to.have.lengthOf(1);
@@ -673,10 +672,10 @@ describe('Application Model', function () {
 							this.application[prop],
 						);
 
-						const provisionKeys = _.differenceWith(
+						const provisionKeys = differenceWith(
 							updatedProvisioningKeys,
 							provisioningKeys,
-							_.isEqual,
+							isEqual,
 						);
 
 						expect(provisionKeys).to.have.lengthOf(1);
@@ -709,10 +708,10 @@ describe('Application Model', function () {
 							this.application[prop],
 						);
 
-						const provisionKeys = _.differenceWith(
+						const provisionKeys = differenceWith(
 							updatedProvisioningKeys,
 							provisioningKeys,
-							_.isEqual,
+							isEqual,
 						);
 
 						expect(provisionKeys).to.have.lengthOf(1);
@@ -777,9 +776,10 @@ describe('Application Model', function () {
 					const app = await balena.models.application.get(this.application.id, {
 						$select: 'is_accessible_by_support_until__date',
 					});
-					expect(
-						Date.parse(app.is_accessible_by_support_until__date!),
-					).to.equal(expiryTime);
+					assertExists(app.is_accessible_by_support_until__date);
+					expect(Date.parse(app.is_accessible_by_support_until__date)).to.equal(
+						expiryTime,
+					);
 				});
 			});
 
@@ -892,11 +892,13 @@ describe('Application Model', function () {
 								);
 							})
 							.then(function (result) {
-								expect(_.find(result, { name: `BALENA_A_${appParamUpper}` }))
+								expect(
+									result.find((r: any) => r === `BALENA_A_${appParamUpper}`),
+								)
 									.to.be.an('object')
 									.that.has.property('value', 'a');
 								return expect(
-									_.find(result, { name: `BALENA_B_${appParamUpper}` }),
+									result.find((r: any) => r === `BALENA_B_${appParamUpper}`),
 								)
 									.to.be.an('object')
 									.that.has.property('value', 'b');
@@ -978,10 +980,10 @@ describe('Application Model', function () {
 								);
 							})
 							.then(function (result) {
-								expect(_.find(result, { name: `A_BY_${appParam}` }))
+								expect(result.find((r: any) => r === `A_BY_${appParam}`))
 									.to.be.an('object')
 									.that.has.property('value', 'a');
-								return expect(_.find(result, { name: `B_BY_${appParam}` }))
+								return expect(result.find((r: any) => r === `B_BY_${appParam}`))
 									.to.be.an('object')
 									.that.has.property('value', 'b');
 							})
@@ -1062,10 +1064,10 @@ describe('Application Model', function () {
 								);
 							})
 							.then(function (result) {
-								expect(_.find(result, { name: `A_BY_${appParam}` }))
+								expect(result.find((r: any) => r === `A_BY_${appParam}`))
 									.to.be.an('object')
 									.that.has.property('value', 'a');
-								return expect(_.find(result, { name: `B_BY_${appParam}` }))
+								return expect(result.find((r: any) => r === `B_BY_${appParam}`))
 									.to.be.an('object')
 									.that.has.property('value', 'b');
 							})
@@ -1442,8 +1444,8 @@ describe('Application Model', function () {
 			// Commit is empty on newly created application, so ignoring it
 			const omittedFields = ['owns__device', 'should_be_running__release'];
 
-			expect(_.omit(application, omittedFields)).to.deep.equal(
-				_.omit(this.application, omittedFields),
+			expect(omit(application, omittedFields)).to.deep.equal(
+				omit(this.application, omittedFields),
 			);
 
 			// Check the app's target release after the release got created

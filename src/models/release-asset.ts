@@ -11,7 +11,7 @@ import type {
 import { limitedMap, mergePineOptions } from '../util';
 import type { ReleaseRawVersionApplicationPair } from './release';
 import { BalenaError } from 'balena-errors';
-import once from 'lodash/once';
+import { once } from 'es-toolkit';
 
 type WriteReleaseAssetParams = Omit<ReleaseAsset['Write'], 'asset'> & {
 	asset: File | string;

@@ -1,6 +1,4 @@
 import type * as _fs from 'fs';
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
 import { expect } from 'chai';
 import {
 	balena,
@@ -152,7 +150,9 @@ describe('Billing Model', function () {
 					.then((invoices) => {
 						this.firstInvoiceNumber = invoices[0]?.invoice_number;
 					})
-					.catch(_.noop);
+					.catch(() => {
+						// do nothing
+					});
 			});
 
 			it('should not be able to download any invoice', async function () {
@@ -216,7 +216,9 @@ describe('Billing Model', function () {
 						(accountInfo != null ? accountInfo.account_state : undefined) ===
 						'active';
 				})
-				.catch(_.noop);
+				.catch(() => {
+					// do nothing
+				});
 		});
 
 		givenInitialOrganization(before);
@@ -452,7 +454,9 @@ describe('Billing Model', function () {
 					.then((invoices) => {
 						this.firstInvoiceNumber = invoices[0]?.invoice_number;
 					})
-					.catch(_.noop);
+					.catch(() => {
+						// do nothing
+					});
 			});
 
 			if (IS_BROWSER) {

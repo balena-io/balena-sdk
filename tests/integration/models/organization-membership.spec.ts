@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
+import { mapValues, pick, keyBy } from 'es-toolkit';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import {
@@ -9,7 +8,12 @@ import {
 	givenLoggedInUser,
 } from '../setup';
 import type * as BalenaSdk from '../../..';
-import { assertDeepMatchAndLength, expectError, timeSuite } from '../../util';
+import {
+	assertDeepMatchAndLength,
+	assertExists,
+	expectError,
+	timeSuite,
+} from '../../util';
 import {
 	itShouldSetGetAndRemoveTags,
 	itShouldGetAllTagsByResource,
@@ -30,8 +34,8 @@ const keyAlternatives = [
 				'user' | 'is_member_of__organization'
 			>,
 		) =>
-			_.mapValues(
-				_.pick(member, ['user', 'is_member_of__organization']),
+			mapValues(
+				pick(member, ['user', 'is_member_of__organization']),
 				(obj: BalenaSdk.PineDeferred | [{ id: number }]): number =>
 					'__id' in obj ? obj.__id : obj[0].id,
 			),
@@ -54,7 +58,7 @@ describe('Organization Membership Model', function () {
 			resource: 'organization_membership_role',
 			options: { $select: ['id', 'name'] },
 		});
-		this.orgRoleMap = _.keyBy(roles, 'name');
+		this.orgRoleMap = keyBy(roles, (role) => role.name);
 		roles.forEach((role) => {
 			expect(role).to.be.an('object');
 			expect(role).to.have.property('id').that.is.a('number');
@@ -118,7 +122,8 @@ describe('Organization Membership Model', function () {
 
 			keyAlternatives.forEach(([title, keyGetter]) => {
 				it(`should be able to retrieve a membership by ${title}`, async function () {
-					const key = keyGetter(membership!);
+					assertExists(membership);
+					const key = keyGetter(membership);
 					const result = await balena.models.organization.membership.get(key, {
 						$select: 'id',
 						$expand: {
@@ -204,11 +209,12 @@ describe('Organization Membership Model', function () {
 			describe('balena.models.organization.membership.remove()', function () {
 				keyAlternatives.forEach(([title, keyGetter]) => {
 					it(`should be able to remove a member by ${title}`, async function () {
-						const key = keyGetter(membership!);
+						assertExists(membership);
+						const key = keyGetter(membership);
 						await balena.models.organization.membership.remove(key);
 
 						await expectError(async () => {
-							await balena.models.organization.membership.get(membership!.id);
+							await balena.models.organization.membership.get(membership.id);
 						}, 'Organization Membership not found');
 					});
 				});
@@ -261,14 +267,15 @@ describe('Organization Membership Model', function () {
 					[title, keyGetter]: (typeof keyAlternatives)[number],
 				) => {
 					it(`should be able to change an organization membership to "${rolenName}" by ${title}`, async function () {
-						const key = keyGetter(memberMembership!);
+						assertExists(memberMembership);
+						const key = keyGetter(memberMembership);
 						await balena.models.organization.membership.changeRole(
 							key,
 							rolenName,
 						);
 
 						memberMembership = (await balena.models.organization.membership.get(
-							memberMembership!.id,
+							memberMembership.id,
 							{
 								$select: 'id',
 								$expand: {

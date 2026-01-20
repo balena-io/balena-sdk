@@ -22,7 +22,7 @@ import type {
 
 import * as url from 'url';
 
-import once from 'lodash/once';
+import { once } from 'es-toolkit';
 import * as errors from 'balena-errors';
 
 import {

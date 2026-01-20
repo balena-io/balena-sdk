@@ -1,5 +1,5 @@
 import * as errors from 'balena-errors';
-import chunk from 'lodash/chunk';
+import { chunk } from 'es-toolkit';
 import { groupByMap, mergePineOptions } from '.';
 import type {
 	ExpandableStringKeyOf,

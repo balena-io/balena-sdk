@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
+import { isPlainObject } from 'es-toolkit';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import { balena } from '../setup';
@@ -41,8 +40,8 @@ describe('Config Model', function () {
 		parallel('', function () {
 			it('should return all the configuration', () => {
 				return balena.models.config.getAll().then(function (config) {
-					expect(_.isPlainObject(config)).to.be.true;
-					expect(_.isEmpty(config)).to.be.false;
+					expect(isPlainObject(config)).to.be.true;
+					expect(Object.keys(config).length === 0).to.be.false;
 				});
 			});
 
@@ -82,7 +81,7 @@ describe('Config Model', function () {
 		it('should become the manifest if the slug is valid', async () => {
 			const manifest =
 				await balena.models.config.getDeviceTypeManifestBySlug('raspberry-pi');
-			expect(_.isPlainObject(manifest)).to.be.true;
+			expect(isPlainObject(manifest)).to.be.true;
 			expect(manifest.slug).to.exist;
 			expect(manifest.name).to.exist;
 			return expect(manifest.options).to.exist;

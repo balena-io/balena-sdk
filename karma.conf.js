@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-const _ = require('lodash');
+const { omitBy } = require('es-toolkit');
 const getKarmaConfig = require('balena-config-karma');
 const packageJSON = require('./package.json');
 
@@ -70,8 +70,8 @@ module.exports = function (config) {
 		asyncWebAssembly: true,
 	};
 	// do not pre-process the browser build
-	karmaConfig.preprocessors = _.omitBy(
-		karmaConfig.preprocessors,
+	karmaConfig.preprocessors = omitBy(
+		/** @type {Record<string, unknown>} */(karmaConfig.preprocessors),
 		(_value, key) => key.startsWith('es2017/') || key.startsWith('es2018/'),
 	);
 	karmaConfig.client = {

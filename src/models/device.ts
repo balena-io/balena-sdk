@@ -34,7 +34,7 @@ import type { OsUpdateActionResult } from '../util/device-actions/os-update';
 
 import * as url from 'url';
 
-import once from 'lodash/once';
+import { once } from 'es-toolkit';
 import * as bSemver from 'balena-semver';
 import * as errors from 'balena-errors';
 import memoizee from 'memoizee';
