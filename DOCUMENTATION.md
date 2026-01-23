@@ -365,7 +365,7 @@ const sdk = fromSharedOptions();
             * [.rename(teamId, newName)](#balena.models.team.rename) ⇒ <code>Promise</code>
             * [.remove(teamId)](#balena.models.team.remove) ⇒ <code>Promise</code>
         * [.os](#balena.models.os) : <code>object</code>
-            * [.getAvailableOsVersions(deviceTypes, [options])](#balena.models.os.getAvailableOsVersions) ⇒ <code>Promise</code>
+            * [.getAvailableOsVersions(deviceTypes, [pineOptions], [extraOptions])](#balena.models.os.getAvailableOsVersions) ⇒ <code>Promise</code>
             * [.getAllOsVersions(deviceTypes, [options])](#balena.models.os.getAllOsVersions) ⇒ <code>Promise</code>
             * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
             * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
@@ -775,7 +775,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.rename(teamId, newName)](#balena.models.team.rename) ⇒ <code>Promise</code>
         * [.remove(teamId)](#balena.models.team.remove) ⇒ <code>Promise</code>
     * [.os](#balena.models.os) : <code>object</code>
-        * [.getAvailableOsVersions(deviceTypes, [options])](#balena.models.os.getAvailableOsVersions) ⇒ <code>Promise</code>
+        * [.getAvailableOsVersions(deviceTypes, [pineOptions], [extraOptions])](#balena.models.os.getAvailableOsVersions) ⇒ <code>Promise</code>
         * [.getAllOsVersions(deviceTypes, [options])](#balena.models.os.getAllOsVersions) ⇒ <code>Promise</code>
         * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
         * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
@@ -5309,7 +5309,7 @@ balena.models.team.remove(123);
 **Kind**: static namespace of [<code>models</code>](#balena.models)  
 
 * [.os](#balena.models.os) : <code>object</code>
-    * [.getAvailableOsVersions(deviceTypes, [options])](#balena.models.os.getAvailableOsVersions) ⇒ <code>Promise</code>
+    * [.getAvailableOsVersions(deviceTypes, [pineOptions], [extraOptions])](#balena.models.os.getAvailableOsVersions) ⇒ <code>Promise</code>
     * [.getAllOsVersions(deviceTypes, [options])](#balena.models.os.getAllOsVersions) ⇒ <code>Promise</code>
     * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
     * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
@@ -5323,7 +5323,7 @@ balena.models.team.remove(123);
 
 <a name="balena.models.os.getAvailableOsVersions"></a>
 
-##### os.getAvailableOsVersions(deviceTypes, [options]) ⇒ <code>Promise</code>
+##### os.getAvailableOsVersions(deviceTypes, [pineOptions], [extraOptions]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Get the supported OS versions for the provided device type(s)  
 **Access**: public  
@@ -5333,8 +5333,9 @@ or a dictionary of OsVersion objects by device type slug when an array of device
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | deviceTypes | <code>String</code> \| <code>Array.&lt;String&gt;</code> |  | device type slug or array of slugs |
-| [options] | <code>Object</code> |  | Extra pine options & draft filter to use |
-| [options.includeDraft] | <code>Boolean</code> | <code>false</code> | Whether pre-releases should be included in the results |
+| [pineOptions] | <code>Object</code> |  | Extra pine options to use |
+| [extraOptions] | <code>Object</code> |  | Extra convenience options to use |
+| [extraOptions.includeDraft] | <code>Boolean</code> | <code>false</code> | Whether pre-releases should be included in the results |
 
 **Example**  
 ```js
