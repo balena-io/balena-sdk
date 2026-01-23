@@ -342,7 +342,7 @@ const getDeviceModel = function (
 		);
 		const getAvailableOsVersions = memoizee(
 			async (slug: string, includeDraft: boolean) =>
-				await sdkInstance.models.os.getAvailableOsVersions(slug, {
+				await sdkInstance.models.os.getAvailableOsVersions(slug, undefined, {
 					includeDraft,
 				}),
 			{ primitive: true, promise: true },
