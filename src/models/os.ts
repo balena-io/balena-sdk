@@ -391,29 +391,25 @@ const getOsModel = function (
 		},
 	);
 
-	async function getAvailableOsVersions(
-		deviceType: string,
-		options?: { includeDraft?: boolean },
-	): Promise<OsVersion[]>;
-	async function getAvailableOsVersions(
-		deviceTypes: string[],
-		options?: { includeDraft?: boolean },
-	): Promise<Dictionary<OsVersion[]>>;
 	// We define the includeDraft-only overloads separately in order to avoid,
 	// "Expression produces a union type that is too complex to represent." errors.
+	async function getAvailableOsVersions<DT extends string | string[]>(
+		deviceType: DT,
+		pineOptions?: undefined,
+		extraOptions?: { includeDraft?: boolean },
+	): Promise<DT extends string ? OsVersion[] : Dictionary<OsVersion[]>>;
 	async function getAvailableOsVersions<
+		DT extends string | string[],
 		TP extends ODataOptionsWithoutCount<Release['Read']>,
 	>(
-		deviceType: string,
-		options: TP & { includeDraft?: boolean },
-	): Promise<OsVersionResponse<TP>>;
-
-	async function getAvailableOsVersions<
-		TP extends ODataOptionsWithoutCount<Release['Read']>,
-	>(
-		deviceTypes: string[],
-		options: TP & { includeDraft?: boolean },
-	): Promise<Dictionary<OsVersionResponse<TP>>>;
+		deviceType: DT,
+		pineOptions: TP,
+		extraOptions?: { includeDraft?: boolean },
+	): Promise<
+		DT extends string
+			? OsVersionResponse<TP>
+			: Dictionary<OsVersionResponse<TP>>
+	>;
 	/**
 	 * @summary Get the supported OS versions for the provided device type(s)
 	 * @name getAvailableOsVersions
@@ -422,8 +418,9 @@ const getOsModel = function (
 	 * @memberof balena.models.os
 	 *
 	 * @param {String|String[]} deviceTypes - device type slug or array of slugs
-	 * @param {Object} [options] - Extra pine options & draft filter to use
-	 * @param {Boolean} [options.includeDraft=false] - Whether pre-releases should be included in the results
+	 * @param {Object} [pineOptions] - Extra pine options to use
+	 * @param {Object} [extraOptions] - Extra convenience options to use
+	 * @param {Boolean} [extraOptions.includeDraft=false] - Whether pre-releases should be included in the results
 	 * @fulfil {Object[]|Object} - An array of OsVersion objects when a single device type slug is provided,
 	 * or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.
 	 * @returns {Promise}
@@ -438,28 +435,18 @@ const getOsModel = function (
 		TP extends ODataOptionsWithoutCount<Release['Read']>,
 	>(
 		deviceTypes: string[] | string,
-		// TODO: Consider providing a different way to for specifying includeDraft in the next major
-		// eg: make a methods that returns the complex filter
-		options?: TP & { includeDraft?: boolean },
+		pineOptions?: TP,
+		extraOptions?: { includeDraft?: boolean },
 	): Promise<
 		TypeOrDictionary<OsVersion[] | OsVersionResponse<NonNullable<TP>>>
 	> {
-		const pineOptionEntries =
-			options != null
-				? Object.entries(options).filter(([key]) => key.startsWith('$'))
-				: undefined;
-		const pineOptions =
-			pineOptionEntries != null && pineOptionEntries.length > 0
-				? (Object.fromEntries(pineOptionEntries) as TP)
-				: undefined;
-
 		const singleDeviceTypeArg =
 			typeof deviceTypes === 'string' ? deviceTypes : false;
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
 		const convenienceFilter =
-			options?.includeDraft === true ? 'include_draft' : 'supported';
+			extraOptions?.includeDraft === true ? 'include_draft' : 'supported';
 		const versionsByDt =
-			pineOptions == null
+			pineOptions == null || Object.keys(pineOptions).length === 0
 				? await _memoizedGetAllOsVersions(
 						deviceTypes.slice().sort(),
 						convenienceFilter,
@@ -953,7 +940,11 @@ const getOsModel = function (
 		const isEsr = currentSemver.major > 2000;
 
 		deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
-		const allOsReleases = await getAvailableOsVersions(deviceType, options);
+		const allOsReleases = await getAvailableOsVersions(
+			deviceType,
+			undefined,
+			options,
+		);
 		// use bSemver.compare to find the current version in the OS list
 		// to benefit from the baked-in normalization
 		const current = allOsReleases.find(

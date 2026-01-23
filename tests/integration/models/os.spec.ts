@@ -257,20 +257,24 @@ describe('OS model', function () {
 			it('should cache the results when providing the includeDraft option', async () => {
 				let firstRes = await balena.models.os.getAvailableOsVersions(
 					['raspberrypi3'],
+					undefined,
 					{ includeDraft: true },
 				);
 				let secondRes = await balena.models.os.getAvailableOsVersions(
 					['raspberrypi3'],
+					undefined,
 					{ includeDraft: true },
 				);
 				expect(firstRes).to.equal(secondRes);
 
 				firstRes = await balena.models.os.getAvailableOsVersions(
 					['raspberrypi3'],
+					undefined,
 					{ includeDraft: true },
 				);
 				secondRes = await balena.models.os.getAvailableOsVersions(
 					['raspberrypi3'],
+					undefined,
 					{ includeDraft: true },
 				);
 				expect(firstRes).to.equal(secondRes);
@@ -304,16 +308,16 @@ describe('OS model', function () {
 				const firstRes = await balena.models.os.getAvailableOsVersions(
 					['fincm3'],
 					{
-						includeDraft: true,
 						$filter: { raw_version: '2.29.0-123456789+rev1' },
 					},
+					{ includeDraft: true },
 				);
 				const secondRes = await balena.models.os.getAvailableOsVersions(
 					['fincm3'],
 					{
-						includeDraft: true,
 						$filter: { raw_version: '2.29.0-123456789+rev1' },
 					},
+					{ includeDraft: true },
 				);
 				expect(firstRes).to.not.equal(secondRes);
 			});
@@ -390,6 +394,7 @@ describe('OS model', function () {
 			it('should include draft OS versions when the respective flag is used [string device type argument]', async () => {
 				const versionInfos = await balena.models.os.getAvailableOsVersions(
 					'raspberrypi3',
+					undefined,
 					{ includeDraft: true },
 				);
 				expect(versionInfos).to.be.an('array');
@@ -421,10 +426,13 @@ describe('OS model', function () {
 
 			it('should be able to provide the includeDraft option & extra pine options [string device type argument]', async () => {
 				const finalizedVersionInfos =
-					await balena.models.os.getAvailableOsVersions('raspberrypi3', {
-						includeDraft: false,
-						$filter: { raw_version: '5.1.10-1706616336246+rev2' },
-					});
+					await balena.models.os.getAvailableOsVersions(
+						'raspberrypi3',
+						{
+							$filter: { raw_version: '5.1.10-1706616336246+rev2' },
+						},
+						{ includeDraft: false },
+					);
 				expect(finalizedVersionInfos).to.be.an('array');
 				expect(finalizedVersionInfos.map((v) => v.raw_version)).to.deep.equal(
 					[],
@@ -433,7 +441,6 @@ describe('OS model', function () {
 				const draftVersionInfos = await balena.models.os.getAllOsVersions(
 					'raspberrypi3',
 					{
-						includeDraft: true,
 						$expand: { belongs_to__application: { $select: 'id' } },
 						$filter: { raw_version: '5.1.10-1706616336246+rev2' },
 					},
