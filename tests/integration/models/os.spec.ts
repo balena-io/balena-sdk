@@ -608,9 +608,9 @@ describe('OS model', function () {
 			);
 		});
 
-		it("should support 'default'", () => {
+		it("should not support 'default'", () => {
 			expect(_getMaxSatisfyingVersion('default', defaultOsVersions)).to.equal(
-				'2.85.2+rev3.prod',
+				null,
 			);
 		});
 

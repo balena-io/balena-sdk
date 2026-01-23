@@ -5402,7 +5402,7 @@ balena.models.os.getDownloadSize('raspberry-pi').then(function(size) {
 | Param | Type | Description |
 | --- | --- | --- |
 | deviceType | <code>String</code> | device type slug |
-| versionOrRange | <code>String</code> | can be one of * the exact version number, in which case it is returned if the version is supported, or `null` is returned otherwise, * a [semver](https://www.npmjs.com/package/semver)-compatible range specification, in which case the most recent satisfying version is returned if it exists, or `null` is returned, * `'latest'/'default'` in which case the most recent version is returned, excluding pre-releases, Defaults to `'latest'`. |
+| versionOrRange | <code>String</code> | can be one of * the exact version number, in which case it is returned if the version is supported, or `null` is returned otherwise, * a [semver](https://www.npmjs.com/package/semver)-compatible range specification, in which case the most recent satisfying version is returned if it exists, or `null` is returned, * `'latest'` in which case the most recent version is returned, excluding pre-releases, Defaults to `'latest'`. |
 | [osType] | <code>String</code> | can be one of 'default', 'esr' or null to include all types |
 
 **Example**  

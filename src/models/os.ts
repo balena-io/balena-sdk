@@ -616,11 +616,6 @@ const getOsModel = function (
 			return osVersions[0]?.raw_version;
 		}
 
-		// TODO-next-major: Drop the `default` parameter value
-		if (versionOrRange === 'default') {
-			return osVersions[0]?.raw_version;
-		}
-
 		const versions = osVersions.map((v) => v.raw_version);
 		if (versions.includes(versionOrRange)) {
 			// If the _exact_ version you're looking for exists, it's not a range, and
@@ -675,7 +670,7 @@ const getOsModel = function (
 	 * * a [semver](https://www.npmjs.com/package/semver)-compatible
 	 * range specification, in which case the most recent satisfying version is returned
 	 * if it exists, or `null` is returned,
-	 * * `'latest'/'default'` in which case the most recent version is returned, excluding pre-releases,
+	 * * `'latest'` in which case the most recent version is returned, excluding pre-releases,
 	 * Defaults to `'latest'`.
 	 * @param {String} [osType] - can be one of 'default', 'esr' or null to include all types
 	 *
