@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import * as bSemver from 'balena-semver';
 import * as errors from 'balena-errors';
 import once from 'lodash/once';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
@@ -586,6 +587,43 @@ const getReleaseModel = function (
 	}
 
 	/**
+	 * @summary Sets a given release semver.
+	 * @name setReleaseVersion
+	 * @public
+	 * @function
+	 * @memberof balena.models.release
+	 *
+	 * @param {String|Number|Object} commitOrIdOrRawVersion - release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release
+	 * @param {String|Null} semver - valid semver string
+	 *
+	 * @returns {Promise}
+	 *
+	 * @example
+	 * balena.models.release.setKnownIssueList('7cf02a6', '1.2.3');
+	 *
+	 * @example
+	 * balena.models.release.setKnownIssueList(123, '1.2.3');
+	 *
+	 * @example
+	 * balena.models.release.setKnownIssueList({application: 456, rawVersion: '0.0.0'}, '1.2.3');
+	 */
+	async function setReleaseVersion(
+		commitOrIdOrRawVersion: string | number | ReleaseRawVersionApplicationPair,
+		semver: string,
+	): Promise<void> {
+		if (!bSemver.valid(semver)) {
+			throw new errors.BalenaInvalidParameterError('semver', semver);
+		}
+
+		const { id } = await get(commitOrIdOrRawVersion, { $select: 'id' });
+		await pine.patch<Release>({
+			resource: 'release',
+			id,
+			body: { semver },
+		});
+	}
+
+	/**
 	 * @namespace balena.models.release.tags
 	 * @memberof balena.models.release
 	 */
@@ -950,6 +988,7 @@ const getReleaseModel = function (
 		setIsInvalidated,
 		setNote,
 		setKnownIssueList,
+		setReleaseVersion,
 		tags,
 		asset,
 	};
