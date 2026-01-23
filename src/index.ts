@@ -72,7 +72,6 @@ export type {
 	OsUpdateVersions,
 	OsVersion,
 } from './models/os';
-export type { OsUpdateActionResult } from './util/device-actions/os-update';
 export type { BuilderUrlDeployOptions } from './util/builder';
 export type {
 	CurrentService,

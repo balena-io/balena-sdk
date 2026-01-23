@@ -1547,18 +1547,18 @@ describe('Device Model', function () {
 			});
 
 			['single uuid', 'array of uuids'].forEach((paramType) => {
-				describe(`balena.models.device.startOsUpdate() called with ${paramType}`, function () {
+				describe(`balena.models.device.pinToOSRelease() called with ${paramType}`, function () {
 					givenADevice(before);
 					describe('given an offline device w/o os info', function () {
 						it('should be rejected when using a short uuid', async function () {
 							await expectError(
 								async () => {
 									await (paramType === 'array of uuids'
-										? balena.models.device.startOsUpdate(
+										? balena.models.device.pinToOSRelease(
 												['a2df000'],
 												'2.29.2+rev1.prod',
 											)
-										: balena.models.device.startOsUpdate(
+										: balena.models.device.pinToOSRelease(
 												'a2df000',
 												'2.29.2+rev1.prod',
 											));
@@ -1572,11 +1572,11 @@ describe('Device Model', function () {
 						it('should be rejected if the device does not exist and using using full uuid', async function () {
 							await expectError(async () => {
 								await (paramType === 'array of uuids'
-									? balena.models.device.startOsUpdate(
+									? balena.models.device.pinToOSRelease(
 											['asdfghjkl25c4223b4efe2b66f3e370a'],
 											'2.29.2+rev1.prod',
 										)
-									: balena.models.device.startOsUpdate(
+									: balena.models.device.pinToOSRelease(
 											'asdfghjkl25c4223b4efe2b66f3e370a',
 											'2.29.2+rev1.prod',
 										));
@@ -1588,9 +1588,9 @@ describe('Device Model', function () {
 								async () => {
 									await (paramType === 'array of uuids'
 										? // @ts-expect-error missing parameter
-											balena.models.device.startOsUpdate([this.device.uuid])
+											balena.models.device.pinToOSRelease([this.device.uuid])
 										: // @ts-expect-error missing parameter
-											balena.models.device.startOsUpdate(this.device.uuid));
+											balena.models.device.pinToOSRelease(this.device.uuid));
 								},
 								(error) => {
 									expect(error).to.have.property(
@@ -1604,11 +1604,11 @@ describe('Device Model', function () {
 						it('should not be able to start an OS update for a device that has not yet reported its current version', async function () {
 							await expectError(async () => {
 								await (paramType === 'array of uuids'
-									? balena.models.device.startOsUpdate(
+									? balena.models.device.pinToOSRelease(
 											[this.device.uuid],
 											'2.29.2+rev1.prod',
 										)
-									: balena.models.device.startOsUpdate(
+									: balena.models.device.pinToOSRelease(
 											this.device.uuid,
 											'2.29.2+rev1.prod',
 										));
@@ -1626,11 +1626,11 @@ describe('Device Model', function () {
 							});
 						});
 
-						// TODO; Re-enable once we move from startOsUpdate/pinToOsRelease no longer checks for the device being online
+						// TODO; Re-enable once we move from pinToOsRelease/pinToOsRelease no longer checks for the device being online
 						it.skip('should not be able to start an OS update when the target os version does not exist', async function () {
 							await expectError(
 								async () => {
-									await balena.models.device.startOsUpdate(
+									await balena.models.device.pinToOSRelease(
 										paramType === 'array of uuids'
 											? [this.device.uuid]
 											: this.device.uuid,
@@ -1638,14 +1638,13 @@ describe('Device Model', function () {
 									);
 								},
 								(error) => {
-									expect(error)
-										.to.have.property('message')
-										.that.includes(
-											"2.49.0+rev1.prod is not a valid value for parameter 'targetOsVersion'",
-										);
+									expect(error).to.have.property(
+										'message',
+										'Release not found: 2.49.0+rev1.prod',
+									);
 									expect(error).to.have.property(
 										'code',
-										'BalenaInvalidParameterError',
+										'BalenaReleaseNotFound',
 									);
 								},
 							);
@@ -1654,7 +1653,7 @@ describe('Device Model', function () {
 						it('should not be able to start an OS update for an offline device', async function () {
 							await expectError(
 								async () => {
-									await balena.models.device.startOsUpdate(
+									await balena.models.device.pinToOSRelease(
 										paramType === 'array of uuids'
 											? [this.device.uuid]
 											: this.device.uuid,

@@ -223,10 +223,9 @@ const getOsModel = function (
 	const { apiUrl, isBrowser } = opts;
 
 	const hupActionHelper = once(() => {
-		const osUpdateUtils =
-			// eslint-disable-next-line @typescript-eslint/no-require-imports
-			require('../util/device-actions/os-update/utils') as typeof import('../util/device-actions/os-update/utils');
-		return osUpdateUtils.hupActionHelper;
+		// eslint-disable-next-line @typescript-eslint/no-require-imports
+		const { HUPActionHelper } = require('balena-hup-action-utils');
+		return new HUPActionHelper();
 	});
 
 	const authDependentMemoizer = getAuthDependentMemoize(pubsub);

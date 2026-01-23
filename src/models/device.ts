@@ -30,8 +30,6 @@ import type {
 import { DeviceOverallStatus as OverallStatus } from '../types/device-overall-status';
 import type * as DeviceState from '../types/device-state';
 
-import type { OsUpdateActionResult } from '../util/device-actions/os-update';
-
 import * as url from 'url';
 
 import once from 'lodash/once';
@@ -43,7 +41,6 @@ import {
 	isId,
 	isFullUuid,
 	mergePineOptions,
-	limitedMap,
 	groupByMap,
 	type MergePineOptions,
 } from '../util';
@@ -67,11 +64,7 @@ import {
 	MIN_SUPERVISOR_MC_API,
 } from './device.supervisor-api.partial';
 
-import type {
-	AtLeast,
-	Dictionary,
-	ResolvableReturnType,
-} from '../../typings/utils';
+import type { AtLeast } from '../../typings/utils';
 import type { DeviceType } from '../types/models';
 import type {
 	FilterObj,
@@ -127,12 +120,10 @@ const getDeviceModel = function (
 
 	const { buildDependentResource } =
 		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
-	const hupActionHelper = once(
-		() =>
-			(
-				require('../util/device-actions/os-update/utils') as typeof import('../util/device-actions/os-update/utils')
-			).hupActionHelper,
-	);
+	const hupActionHelper = once(() => {
+		const { HUPActionHelper } = require('balena-hup-action-utils');
+		return new HUPActionHelper();
+	});
 
 	const batchDeviceOperation = once(() =>
 		(
@@ -144,14 +135,6 @@ const getDeviceModel = function (
 			chunkSize: opts.requestBatchingChunkSize,
 		}),
 	);
-
-	const getOsUpdateHelper = once(async () => {
-		const $deviceUrlsBase = await getDeviceUrlsBase();
-		const _getOsUpdateHelper = (
-			require('../util/device-actions/os-update') as typeof import('../util/device-actions/os-update')
-		).getOsUpdateHelper;
-		return _getOsUpdateHelper($deviceUrlsBase, request);
-	});
 	/* eslint-enable @typescript-eslint/no-require-imports */
 
 	const tagsModel = buildDependentResource(
@@ -306,106 +289,6 @@ const getDeviceModel = function (
 			resource: 'device',
 			options: mergePineOptions({ $orderby: { device_name: 'asc' } }, options),
 		})) as OptionsToResponse<Device['Read'], T, undefined>;
-	}
-
-	async function startOsUpdate(
-		uuidOrUuids: string,
-		targetOsVersion: string,
-		options?: { runDetached?: boolean },
-	): Promise<OsUpdateActionResult>;
-	async function startOsUpdate(
-		uuidOrUuids: string[],
-		targetOsVersion: string,
-		options?: { runDetached?: boolean },
-	): Promise<Dictionary<OsUpdateActionResult>>;
-	async function startOsUpdate(
-		uuidOrUuids: string | string[],
-		targetOsVersion: string,
-		options: { runDetached?: boolean } = { runDetached: true },
-	): Promise<OsUpdateActionResult | Dictionary<OsUpdateActionResult>> {
-		if (!targetOsVersion) {
-			throw new errors.BalenaInvalidParameterError(
-				'targetOsVersion',
-				targetOsVersion,
-			);
-		}
-
-		const isDraft =
-			(bSemver.parse(targetOsVersion)?.prerelease.length ?? 0) > 0;
-
-		const getDeviceType = memoizee(
-			async (deviceTypeId: number) =>
-				await sdkInstance.models.deviceType.get(deviceTypeId, {
-					$select: 'slug',
-				}),
-			{ primitive: true, promise: true },
-		);
-		const getAvailableOsVersions = memoizee(
-			async (slug: string, includeDraft: boolean) =>
-				await sdkInstance.models.os.getAvailableOsVersions(slug, undefined, {
-					includeDraft,
-				}),
-			{ primitive: true, promise: true },
-		);
-
-		const osUpdateHelper = await getOsUpdateHelper();
-
-		const results: Dictionary<
-			ResolvableReturnType<typeof osUpdateHelper.startOsUpdate>
-		> = {};
-
-		await batchDeviceOperation()({
-			uuidOrIdOrArray: uuidOrUuids,
-			options: {
-				$select: [
-					'uuid',
-					'is_connected_to_vpn',
-					'os_version',
-					'supervisor_version',
-					'os_variant',
-				],
-			},
-			groupByNavigationPoperty: 'is_of__device_type',
-			fn: async (devices, deviceTypeId) => {
-				const dt = await getDeviceType(deviceTypeId);
-				for (const device of devices) {
-					// this will throw an error if the action isn't available
-					exports._checkOsUpdateTarget(
-						{
-							...device,
-							is_of__device_type: [dt],
-						},
-						targetOsVersion,
-					);
-
-					const osVersions = await getAvailableOsVersions(dt.slug, isDraft);
-
-					if (
-						!osVersions.some(
-							(v) => bSemver.compare(v.raw_version, targetOsVersion) === 0,
-						)
-					) {
-						throw new errors.BalenaInvalidParameterError(
-							'targetOsVersion',
-							targetOsVersion,
-						);
-					}
-				}
-
-				// use the v2 device actions api for detached updates
-				await limitedMap(devices, async (device) => {
-					results[device.uuid] = await osUpdateHelper.startOsUpdate(
-						device.uuid,
-						targetOsVersion,
-						options.runDetached === true ? 'v2' : 'v1',
-					);
-				});
-			},
-		});
-		if (Array.isArray(uuidOrUuids)) {
-			return results;
-		}
-		return results[uuidOrUuids];
 	}
 
 	const exports = {
@@ -2195,28 +2078,118 @@ const getDeviceModel = function (
 		},
 
 		/**
-		 * @summary Start an OS update on a device
-		 * @name startOsUpdate
+		 * @summary Mark a specific device to be updated to a particular OS release
+		 * @name pinToOSRelease
 		 * @public
 		 * @function
 		 * @memberof balena.models.device
 		 *
-		 * @param {String|String[]} uuidOrUuids - full device uuid or array of full uuids
-		 * @param {String} targetOsVersion - semver-compatible version for the target device
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
+		 * @param {String} osVersionOrId - the raw version of a OS release (string) or id (number)
 		 * Unsupported (unpublished) version will result in rejection.
 		 * The version **must** be the exact version number, a "prod" variant and greater than the one running on the device.
-		 * To resolve the semver-compatible range use `balena.model.os.getMaxSatisfyingVersion`.
-		 * @param {Object} [options] - options
-		 * @param {Boolean} [options.runDetached] - run the update in detached mode. True by default
-		 * @fulfil {Object} - action response
+		 * To resolve compatible update targets for a device use `balena.models.os.getSupportedOsUpdateVersions`.
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+rev1.prod').then(function(status) {
+		 * balena.models.device.pinToOSRelease('7cf02a687b74206f92cb455969cf8e98', '2.29.2+rev1.prod').then(function(status) {
 		 * 	console.log(result.status);
 		 * });
 		 */
-		startOsUpdate,
+		async pinToOSRelease(
+			uuidOrIdOrArray: string | string[] | number | number[],
+			osVersionOrId: string | number,
+		): Promise<void> {
+			if (!osVersionOrId) {
+				throw new errors.BalenaInvalidParameterError(
+					'targetOsVersionOrId',
+					osVersionOrId,
+				);
+			}
+
+			const getDeviceType = memoizee(
+				async (deviceTypeId: number) =>
+					await sdkInstance.models.deviceType.get(deviceTypeId, {
+						$select: 'slug',
+					}),
+				{ primitive: true, promise: true },
+			);
+
+			const includeDraft =
+				isId(osVersionOrId) ||
+				(bSemver.parse(osVersionOrId)?.prerelease.length ?? 0) > 0;
+			const getOsRelease = memoizee(
+				async (deviceTypeIdOrSlug: string | number) => {
+					const deviceTypeSlug =
+						typeof deviceTypeIdOrSlug === 'string'
+							? deviceTypeIdOrSlug
+							: (
+									await sdkInstance.models.deviceType.get(deviceTypeIdOrSlug, {
+										$select: 'slug',
+									})
+								).slug;
+					// We can't yet use a $filter on the 'release.raw_version', since we still support OS releases
+					// that b/c their versions are not valid semver their semver/raw_version fields can't be used
+					// and we still have to rely on getAvailableOsVersions
+					// TODO: Use a $filter on the id/raw_version once we drop support for release_tag-only OS releases (<= 2022.01.0 - meta balena base v2.88.4)
+					const osReleases = await sdkInstance.models.os.getAvailableOsVersions(
+						deviceTypeSlug,
+						undefined,
+						{
+							includeDraft,
+						},
+					);
+					const osRelease = osReleases.find(
+						(v) => v.id === osVersionOrId || v.raw_version === osVersionOrId,
+					);
+					if (osRelease == null) {
+						throw new errors.BalenaReleaseNotFound(osVersionOrId);
+					}
+					return osRelease;
+				},
+				{ primitive: true, promise: true },
+			);
+
+			await batchDeviceOperation()({
+				uuidOrIdOrArray,
+				options: {
+					$select: [
+						'uuid',
+						'is_connected_to_vpn',
+						'os_version',
+						'supervisor_version',
+						'os_variant',
+					],
+				},
+				groupByNavigationPoperty: 'is_of__device_type',
+				fn: async (devices, deviceTypeId) => {
+					const dt = await getDeviceType(deviceTypeId);
+					const targetOsRelease = await getOsRelease(dt.slug);
+
+					for (const device of devices) {
+						// this will throw an error if the action isn't available
+						exports._checkOsUpdateTarget(
+							{
+								...device,
+								is_of__device_type: [dt],
+							},
+							targetOsRelease.raw_version,
+						);
+					}
+					await pine.patch({
+						resource: 'device',
+						options: {
+							$filter: {
+								id: { $in: devices.map((d) => d.id) },
+							},
+						},
+						body: {
+							should_be_operated_by__release: targetOsRelease.id,
+						},
+					});
+				},
+			});
+		},
 
 		/**
 		 * @namespace balena.models.device.tags
