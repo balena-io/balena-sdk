@@ -2021,13 +2021,9 @@ const getDeviceModel = function (
 			{
 				uuid,
 				is_of__device_type,
-				is_connected_to_vpn,
 				os_version,
 				os_variant,
-			}: Pick<
-				Device['Read'],
-				'uuid' | 'is_connected_to_vpn' | 'os_version' | 'os_variant'
-			> & {
+			}: Pick<Device['Read'], 'uuid' | 'os_version' | 'os_variant'> & {
 				is_of__device_type: [Pick<DeviceType['Read'], 'slug'>];
 			},
 			targetOsVersion: string,
@@ -2054,10 +2050,6 @@ const getDeviceModel = function (
 				throw new Error(
 					`The os variant of the device is not available: ${uuid}`,
 				);
-			}
-
-			if (!is_connected_to_vpn) {
-				throw new Error(`The device is offline: ${uuid}`);
 			}
 
 			const currentOsVersion =
@@ -2153,13 +2145,7 @@ const getDeviceModel = function (
 			await batchDeviceOperation()({
 				uuidOrIdOrArray,
 				options: {
-					$select: [
-						'uuid',
-						'is_connected_to_vpn',
-						'os_version',
-						'supervisor_version',
-						'os_variant',
-					],
+					$select: ['uuid', 'os_version', 'supervisor_version', 'os_variant'],
 				},
 				groupByNavigationPoperty: 'is_of__device_type',
 				fn: async (devices, deviceTypeId) => {
