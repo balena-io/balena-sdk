@@ -2027,7 +2027,7 @@ const getDeviceModel = function (
 
 		/**
 		 * @summary Set a specific device to run a particular supervisor release
-		 * @name setSupervisorRelease
+		 * @name pinToSupervisorRelease
 		 * @public
 		 * @function
 		 * @memberof balena.models.device
@@ -2039,16 +2039,16 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.setSupervisorRelease('7cf02a69e4d34c9da573914963cf54fd', '10.8.0').then(function() {
+		 * balena.models.device.pinToSupervisorRelease('7cf02a69e4d34c9da573914963cf54fd', '10.8.0').then(function() {
 		 * 	...
 		 * });
 		 *
 		 * @example
-		 * balena.models.device.setSupervisorRelease(123, '11.4.14').then(function() {
+		 * balena.models.device.pinToSupervisorRelease(123, '11.4.14').then(function() {
 		 * 	...
 		 * });
 		 */
-		setSupervisorRelease: async (
+		pinToSupervisorRelease: async (
 			uuidOrIdOrArray: string | string[] | number | number[],
 			supervisorVersionOrId: string | number,
 		): Promise<void> => {

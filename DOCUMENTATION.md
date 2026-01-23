@@ -300,7 +300,7 @@ const sdk = fromSharedOptions();
             * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
             * [.pinToRelease(uuidOrIdOrArray, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
             * [.trackApplicationRelease(uuidOrIdOrArray)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
-            * [.setSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
+            * [.pinToSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId)](#balena.models.device.pinToSupervisorRelease) ⇒ <code>Promise</code>
             * [.startOsUpdate(uuidOrUuids, targetOsVersion, [options])](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
             * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
             * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
@@ -710,7 +710,7 @@ balena.models.device.get(123).catch(function (error) {
         * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
         * [.pinToRelease(uuidOrIdOrArray, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
         * [.trackApplicationRelease(uuidOrIdOrArray)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
-        * [.setSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
+        * [.pinToSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId)](#balena.models.device.pinToSupervisorRelease) ⇒ <code>Promise</code>
         * [.startOsUpdate(uuidOrUuids, targetOsVersion, [options])](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
         * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
         * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
@@ -2267,7 +2267,7 @@ balena.models.application.revokeSupportAccess(123);
     * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
     * [.pinToRelease(uuidOrIdOrArray, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
     * [.trackApplicationRelease(uuidOrIdOrArray)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
-    * [.setSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId)](#balena.models.device.setSupervisorRelease) ⇒ <code>Promise</code>
+    * [.pinToSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId)](#balena.models.device.pinToSupervisorRelease) ⇒ <code>Promise</code>
     * [.startOsUpdate(uuidOrUuids, targetOsVersion, [options])](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
     * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
     * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
@@ -3969,9 +3969,9 @@ balena.models.device.trackApplicationRelease('7cf02a69e4d34c9da573914963cf54fd')
 	...
 });
 ```
-<a name="balena.models.device.setSupervisorRelease"></a>
+<a name="balena.models.device.pinToSupervisorRelease"></a>
 
-##### device.setSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId) ⇒ <code>Promise</code>
+##### device.pinToSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId) ⇒ <code>Promise</code>
 Configures the device to run a particular supervisor release.
 
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
@@ -3985,13 +3985,13 @@ Configures the device to run a particular supervisor release.
 
 **Example**  
 ```js
-balena.models.device.setSupervisorRelease('7cf02a69e4d34c9da573914963cf54fd', '10.8.0').then(function() {
+balena.models.device.pinToSupervisorRelease('7cf02a69e4d34c9da573914963cf54fd', '10.8.0').then(function() {
 	...
 });
 ```
 **Example**  
 ```js
-balena.models.device.setSupervisorRelease(123, '11.4.14').then(function() {
+balena.models.device.pinToSupervisorRelease(123, '11.4.14').then(function() {
 	...
 });
 ```
