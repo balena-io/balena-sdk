@@ -2878,7 +2878,7 @@ describe('Device Model', function () {
 				});
 			});
 
-			describe('balena.models.device.setSupervisorRelease()', function () {
+			describe('balena.models.device.pinToSupervisorRelease()', function () {
 				givenASupervisorRelease(before, '11.12.3');
 
 				before(async function () {
@@ -2886,7 +2886,7 @@ describe('Device Model', function () {
 					// Set all devices to a supervisor release so that the service installs are already set.
 					// We shouldn't need to do this.
 					for (const d of this.devices) {
-						await balena.models.device.setSupervisorRelease(
+						await balena.models.device.pinToSupervisorRelease(
 							d.id,
 							oldSupervisorRelease.id,
 						);
@@ -2896,7 +2896,7 @@ describe('Device Model', function () {
 
 				['raw_version', 'id'].forEach((svReleaseProp) => {
 					it(`should set the batch of devices to a specific supervisor release using the supervisor releases's ${svReleaseProp}`, async function () {
-						await balena.models.device.setSupervisorRelease(
+						await balena.models.device.pinToSupervisorRelease(
 							this.devices.map((d) => d.id),
 							this.supervisorRelease[svReleaseProp],
 						);
@@ -2914,7 +2914,7 @@ describe('Device Model', function () {
 				it('should fail to set the batch of devices to a specific non-existent supervisor release', async function () {
 					const badRelease = 'nonexistent-supervisor-version';
 					await expectError(async () => {
-						await balena.models.device.setSupervisorRelease(
+						await balena.models.device.pinToSupervisorRelease(
 							this.devices.map((d) => d.id),
 							badRelease,
 						);
@@ -2928,11 +2928,11 @@ describe('Device Model', function () {
 				...testDeviceOsInfo,
 			});
 
-			describe('balena.models.device.setSupervisorRelease()', function () {
+			describe('balena.models.device.pinToSupervisorRelease()', function () {
 				givenASupervisorRelease(before);
 
 				it('should set the device to a specific supervisor release, using the device id & target version', async function () {
-					await balena.models.device.setSupervisorRelease(
+					await balena.models.device.pinToSupervisorRelease(
 						this.device.id,
 						this.supervisorRelease.raw_version,
 					);
@@ -2944,7 +2944,7 @@ describe('Device Model', function () {
 				});
 
 				it('should set the device to a specific supervisor release, using the device id & supervisor release id', async function () {
-					await balena.models.device.setSupervisorRelease(
+					await balena.models.device.pinToSupervisorRelease(
 						this.device.id,
 						this.supervisorRelease.id,
 					);
@@ -2958,7 +2958,7 @@ describe('Device Model', function () {
 				it('should fail to set the device to a specific non-existent supervisor release', async function () {
 					const badRelease = 'nonexistent-supervisor-version';
 					await expectError(async () => {
-						await balena.models.device.setSupervisorRelease(
+						await balena.models.device.pinToSupervisorRelease(
 							this.device.id,
 							badRelease,
 						);
@@ -2973,12 +2973,12 @@ describe('Device Model', function () {
 				os_version: hostOS,
 			});
 
-			describe('balena.models.device.setSupervisorRelease()', function () {
+			describe('balena.models.device.pinToSupervisorRelease()', function () {
 				givenASupervisorRelease(before);
 
 				it('should fail to set the target supervisor for a pre-multicontainer device', async function () {
 					await expectError(async () => {
-						await balena.models.device.setSupervisorRelease(
+						await balena.models.device.pinToSupervisorRelease(
 							this.device.id,
 							this.supervisorRelease.id,
 						);
