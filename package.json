@@ -65,7 +65,7 @@
   "author": "Balena Ltd. <hello@balena.io>",
   "license": "Apache-2.0",
   "engines": {
-    "node": "^20.12.0 || >= 22.0.0"
+    "node": "^22.18.0 || >= 24.0.0"
   },
   "devDependencies": {
     "@balena/env-parsing": "^1.2.6",
@@ -119,7 +119,7 @@
     "@balena/abstract-sql-to-typescript": "^5.1.1",
     "@balena/es-version": "^1.0.0",
     "@types/json-schema": "^7.0.9",
-    "@types/node": "^20.17.8",
+    "@types/node": "^22.19.7",
     "abortcontroller-polyfill": "^1.7.1",
     "balena-auth": "^6.0.1",
     "balena-errors": "^4.9.0",
