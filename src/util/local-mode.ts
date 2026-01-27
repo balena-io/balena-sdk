@@ -12,6 +12,7 @@ export const LOCAL_MODE_SUPPORT_PROPERTIES = [
 	'os_version',
 	'os_variant',
 	'supervisor_version',
+	// TODO: Change 'last_connectivity_event' to 'last_vpn_event' in the next major
 	'last_connectivity_event',
 ] as const;
 

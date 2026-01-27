@@ -2,6 +2,7 @@ import type * as DeviceState from '../types/device-state';
 import type { Device } from '../types/models';
 
 export const isProvisioned = (
+	// TODO: Change 'last_connectivity_event' to 'last_vpn_event' in the next major
 	device: Partial<
 		Pick<Device['Read'], 'supervisor_version' | 'last_connectivity_event'>
 	>,
