@@ -1,4 +1,27 @@
 - commits:
+    - subject: Stop setting NODE_OPTIONS=--no-experimental-strip-types since it's no
+        longer needed
+      hash: 17430d8345cafde42b278e4633c409c77af10946
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://github.com/balena-io/balena-sdk/pull/1564
+        see: https://github.com/balena-io/balena-sdk/pull/1564
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Update devDependencies
+      hash: 0a8574c4a97941dfa40ace62d91ad30c1fb5e89d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 22.4.8
+  title: ""
+  date: 2026-01-27T16:04:47.362Z
+- commits:
     - subject: "patch: Publish NPM package(s) using OIDC auth."
       hash: e04dbec529b956613d8b53adc87cd4cff74356da
       body: https://balena.fibery.io/Work/Project/Create-OIDC-trust-between-npm-and-GitHub-Actions-2091
