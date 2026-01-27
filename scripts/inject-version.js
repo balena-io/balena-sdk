@@ -3,12 +3,6 @@
 const fs = require('fs');
 const path = require('path');
 
-const nodeVersion = process.versions.node.split('.').map(Number);
-if (nodeVersion[0] > 22 || (nodeVersion[0] === 22 && nodeVersion[1] >= 18)) {
-	// TODO: Move this directly in the package.json once we drop support for node 20
-	process.env.NODE_OPTIONS = '--no-experimental-strip-types';
-}
-
 const root = path.resolve(__dirname, '..');
 
 function getBuildDir() {
