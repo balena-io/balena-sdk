@@ -1489,7 +1489,6 @@ describe('Application Model', function () {
 				is_running__release: {
 					__id: this.currentRelease.id,
 				},
-				current_services: services,
 				current_services_by_app: {
 					[this.application.slug]: services,
 				},
@@ -1531,8 +1530,6 @@ describe('Application Model', function () {
 
 			// Augmented properties
 			// Should filter out deleted image installs
-			// TODO: Drop this in the next major
-			expect(deviceDetails.current_services.db).to.have.lengthOf(1);
 			expect(
 				deviceDetails.current_services_by_app[this.application.slug].db,
 			).to.have.lengthOf(1);

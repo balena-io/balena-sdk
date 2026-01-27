@@ -71,7 +71,7 @@ export const getSupervisorApiHelper = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.ping('7cf02a6');
+		 * balena.models.device.ping('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.ping(123);
@@ -104,7 +104,7 @@ export const getSupervisorApiHelper = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.identify('7cf02a6');
+		 * balena.models.device.identify('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.identify(123);
@@ -139,7 +139,7 @@ export const getSupervisorApiHelper = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.restartApplication('7cf02a6');
+		 * balena.models.device.restartApplication('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.restartApplication(123);
@@ -181,7 +181,7 @@ export const getSupervisorApiHelper = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.reboot('7cf02a6');
+		 * balena.models.device.reboot('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.reboot(123);
@@ -223,7 +223,7 @@ export const getSupervisorApiHelper = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.shutdown('7cf02a6');
+		 * balena.models.device.shutdown('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.shutdown(123);
@@ -266,7 +266,7 @@ export const getSupervisorApiHelper = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.purge('7cf02a6');
+		 * balena.models.device.purge('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.purge(123);
@@ -304,7 +304,7 @@ export const getSupervisorApiHelper = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.update('7cf02a6', {
+		 * balena.models.device.update('7cf02a69e4d34c9da573914963cf54fd', {
 		 * 	force: true
 		 * });
 		 *
@@ -347,7 +347,7 @@ export const getSupervisorApiHelper = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.getSupervisorState('7cf02a6').then(function(state) {
+		 * balena.models.device.getSupervisorState('7cf02a69e4d34c9da573914963cf54fd').then(function(state) {
 		 * 	console.log(state);
 		 * });
 		 *
@@ -386,7 +386,7 @@ export const getSupervisorApiHelper = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.startService('7cf02a6', 123).then(function() {
+		 * balena.models.device.startService('7cf02a69e4d34c9da573914963cf54fd', 123).then(function() {
 		 * 	...
 		 * });
 		 *
@@ -437,7 +437,7 @@ export const getSupervisorApiHelper = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.stopService('7cf02a6', 123).then(function() {
+		 * balena.models.device.stopService('7cf02a69e4d34c9da573914963cf54fd', 123).then(function() {
 		 * 	...
 		 * });
 		 *
@@ -486,7 +486,7 @@ export const getSupervisorApiHelper = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.restartService('7cf02a6', 123).then(function() {
+		 * balena.models.device.restartService('7cf02a69e4d34c9da573914963cf54fd', 123).then(function() {
 		 * 	...
 		 * });
 		 *

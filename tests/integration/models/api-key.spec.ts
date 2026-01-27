@@ -215,11 +215,19 @@ describe('API Key model', function () {
 		});
 
 		describe('balena.models.apiKey.getDeviceApiKeysByDevice', function () {
+			it('should fail when providing a short device uuid', async function () {
+				await expectError(async () => {
+					await balena.models.apiKey.getDeviceApiKeysByDevice(
+						'nonexistentuuid',
+					);
+				}, `Invalid parameter: nonexistentuuid is not a valid value for parameter 'uuidOrId'`);
+			});
+
 			it('should fail when the device does not exist', async function () {
 				await expectError(
 					async () => {
 						await balena.models.apiKey.getDeviceApiKeysByDevice(
-							'nonexistentuuid',
+							'nonexistentuuid3beaca0080ed7f0a8',
 						);
 					},
 					(error) => {
