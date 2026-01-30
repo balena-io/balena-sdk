@@ -1050,6 +1050,44 @@ export interface ApplicationMembershipRole {
 		is_of__user_application_membership?: Array<
 			UserIsMemberOfApplication['Read']
 		>;
+		// Experimental permissions
+		can_read_application: boolean;
+		can_update_application: boolean;
+		can_read_application_config_variables: boolean;
+		can_modify_application_config_variables: boolean;
+		can_modify_application_environment_variables: boolean;
+		can_modify_application_tags: boolean;
+		can_create_device: boolean;
+		can_read_device: boolean;
+		can_update_device: boolean;
+		can_delete_device: boolean;
+		can_deactivate_device: boolean;
+		can_read_device_service_environment_variables: boolean;
+		can_modify_device_service_environment_variables: boolean;
+		can_modify_device_config_variables: boolean;
+		can_create_provisioning_api_key: boolean;
+		can_create_device_api_key: boolean;
+		can_modify_device_tags: boolean;
+		can_modify_device_environment_variables: boolean;
+		can_tunnel_to_device: boolean;
+		can_ssh_to_device_host: boolean;
+		can_ssh_to_device_containers: boolean;
+		can_trigger_proxy_based_host_update: boolean;
+		can_trigger_proxy_based_supervisor_update: boolean;
+		can_create_release: boolean;
+		can_delete_release: boolean;
+		can_read_application_api_keys: boolean;
+		can_update_application_api_keys: boolean;
+		can_delete_application_api_keys: boolean;
+		can_read_device_api_keys: boolean;
+		can_update_device_api_keys: boolean;
+		can_delete_device_api_keys: boolean;
+		can_proxy_requests_to_single_device_supervisor_api: boolean;
+		can_proxy_requests_to_whole_fleet_device_supervisor_api: boolean;
+		can_modify_release_assets: boolean;
+		belongs_to__organization:
+			| { __id: Organization['Read']['id'] }
+			| [Organization['Read']];
 	};
 	Write: Record<string, never>;
 }
