@@ -1,4 +1,18 @@
 - commits:
+    - subject: "os.getSupportedOsUpdateVersions: Fix the jsdoc of osType to String|Null"
+      hash: 1b9021dcc72b264c7c7f958f581e70b1c9030348
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://github.com/balena-io/balena-sdk/pull/1580#discussion_r2756917256
+        see: https://github.com/balena-io/balena-sdk/pull/1580#discussion_r2756917256
+      author: Thodoris Greasidis
+      nested: []
+  version: 22.4.9
+  title: ""
+  date: 2026-02-03T08:30:53.254Z
+- commits:
     - subject: Stop setting NODE_OPTIONS=--no-experimental-strip-types since it's no
         longer needed
       hash: 17430d8345cafde42b278e4633c409c77af10946
