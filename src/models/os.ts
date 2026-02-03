@@ -921,7 +921,7 @@ const getOsModel = function (
 	 * @param {String} currentVersion - semver-compatible version for the starting OS version
 	 * @param {Object} [options] - Extra options to filter the OS releases by
 	 * @param {Boolean} [options.includeDraft=false] - Whether pre-releases should be included in the results
-	 * @param {Boolean|Null} [options.osType='default'] - Can be one of 'default', 'esr' or null to include all types
+	 * @param {String|Null} [options.osType='default'] - Can be one of 'default', 'esr' or null to include all types
 	 * @fulfil {Object[]|Object} - An array of OsVersion objects when a single device type slug is provided,
 	 * or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.
 	 * @fulfil {Object} - the versions information, of the following structure:
