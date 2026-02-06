@@ -45,19 +45,25 @@ describe('Release Model', function () {
 		});
 
 		parallel('balena.models.release.get()', function () {
-			it('should be rejected if the release id does not exist by id', async () => {
+			it('should be rejected if the release does not exist by id', async () => {
 				await expectError(async () => {
 					await balena.models.release.get(123);
 				}, 'Release not found: 123');
 			});
 
-			it('should be rejected if the release id does not exist by commit', async () => {
+			it('should be rejected if the release does not exist by commit', async () => {
+				await expectError(async () => {
+					await balena.models.release.get('7cf02a69e4d34c9da573914963cf54fd');
+				}, 'Release not found: 7cf02a69e4d34c9da573914963cf54fd');
+			});
+
+			it('should be rejected when providing a short commit', async () => {
 				await expectError(async () => {
 					await balena.models.release.get('7cf02a6');
 				}, 'Release not found: 7cf02a6');
 			});
 
-			it('should be rejected if the release id does not exist by raw_version', async () => {
+			it('should be rejected if the release does not exist by raw_version', async () => {
 				await expectError(async () => {
 					await balena.models.release.get({
 						application: ctx.application.id,
@@ -68,16 +74,24 @@ describe('Release Model', function () {
 		});
 
 		parallel('balena.models.release.getWithImageDetails()', function () {
-			it('should be rejected if the release id does not exist by id', async () => {
+			it('should be rejected if the release does not exist by id', async () => {
 				await expectError(async () => {
 					await balena.models.release.getWithImageDetails(123);
 				}, 'Release not found: 123');
 			});
 
-			it('should be rejected if the release id does not exist by commit', async () => {
+			it('should be rejected when providing a short commit', async () => {
 				await expectError(async () => {
 					await balena.models.release.getWithImageDetails('7cf02a6');
 				}, 'Release not found: 7cf02a6');
+			});
+
+			it('should be rejected if the release does not exist by commit', async () => {
+				await expectError(async () => {
+					await balena.models.release.getWithImageDetails(
+						'7cf02a69e4d34c9da573914963cf54fd',
+					);
+				}, 'Release not found: 7cf02a69e4d34c9da573914963cf54fd');
 			});
 
 			it('should be rejected if the release id does not exist by raw_version', async () => {
@@ -431,17 +445,15 @@ describe('Release Model', function () {
 				}, `Invalid parameter:  is not a valid value for parameter 'commitOrIdOrRawVersion'`);
 			});
 
-			it('should get the requested release by shorter commit', async () => {
-				const release = await balena.models.release.get(
-					ctx.currentRelease.commit.slice(0, 7),
+			it('should be rejected when a short uuid is provided', async function () {
+				await expectError(
+					async () => {
+						await balena.models.release.get(
+							ctx.currentRelease.commit.slice(0, 7),
+						);
+					},
+					`Release not found: ${ctx.currentRelease.commit.slice(0, 7)}`,
 				);
-				expect(release).to.deep.match({
-					status: 'success',
-					source: 'cloud',
-					commit: 'new-release-commit',
-					id: ctx.currentRelease.id,
-					belongs_to__application: { __id: ctx.application.id },
-				});
 			});
 
 			it('should get the requested release by raw_version', async () => {
@@ -523,20 +535,15 @@ describe('Release Model', function () {
 				expect(release.images[0]).to.not.have.property('build_log');
 			});
 
-			it('should get the release with associated images attached by shorter commit', async () => {
-				const release = await balena.models.release.getWithImageDetails(
-					ctx.currentRelease.commit.slice(0, 7),
-				);
-				expect(release).to.deep.match({
-					commit: 'new-release-commit',
-					status: 'success',
-					source: 'cloud',
-					images: [{ service_name: 'db' }, { service_name: 'web' }],
-					user: {
-						username: credentials.username,
+			it('should not find the release with associated images attached by shorter commit', async () => {
+				await expectError(
+					async () => {
+						await balena.models.release.getWithImageDetails(
+							ctx.currentRelease.commit.slice(0, 7),
+						);
 					},
-				});
-				expect(release.images[0]).to.not.have.property('build_log');
+					`Release not found: ${ctx.currentRelease.commit.slice(0, 7)}`,
+				);
 			});
 
 			it('should get the release with associated images attached by raw_version', async () => {
@@ -745,15 +752,10 @@ describe('Release Model', function () {
 			});
 
 			parallel('balena.models.release.get()', function () {
-				it('should be rejected with an error if there is an ambiguation between shorter commits', async () => {
-					await expectError(
-						async () => {
-							await balena.models.release.get('feb23612');
-						},
-						(error) => {
-							expect(error).to.have.property('code', 'BalenaAmbiguousRelease');
-						},
-					);
+				it('should not find the release when providing a shorter commit', async () => {
+					await expectError(async () => {
+						await balena.models.release.get('feb23612');
+					}, `Release not found: feb23612`);
 				});
 
 				it('should get the requested release by the full commit', async () => {
@@ -769,15 +771,10 @@ describe('Release Model', function () {
 			});
 
 			parallel('balena.models.release.getWithImageDetails()', function () {
-				it('should be rejected with an error if there is an ambiguation between shorter commits', async () => {
-					await expectError(
-						async () => {
-							await balena.models.release.getWithImageDetails('feb23612');
-						},
-						(error) => {
-							expect(error).to.have.property('code', 'BalenaAmbiguousRelease');
-						},
-					);
+				it('should not find the release when providing a shorter commit', async () => {
+					await expectError(async () => {
+						await balena.models.release.getWithImageDetails('feb23612');
+					}, `Release not found: feb23612`);
 				});
 
 				it('should get the release with associated images attached by the full commit', async () => {
