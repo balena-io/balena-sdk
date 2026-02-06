@@ -291,6 +291,7 @@ const getDeviceModel = function (
 		})) as OptionsToResponse<Device['Read'], T, undefined>;
 	}
 
+	// The CLI depends on this v format of exports so that it can monkey-patch short device uuid support back in
 	const exports = {
 		OverallStatus,
 		/**
