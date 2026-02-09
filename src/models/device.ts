@@ -2212,6 +2212,7 @@ const getDeviceModel = function (
 		 * @public
 		 * @function
 		 * @memberof balena.models.device
+		 * @deprecated Use models.device.pinToOsRelease
 		 *
 		 * @param {String|String[]} uuidOrUuids - full device uuid or array of full uuids
 		 * @param {String} targetOsVersion - semver-compatible version for the target device
