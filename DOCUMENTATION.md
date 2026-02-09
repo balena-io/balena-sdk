@@ -3804,7 +3804,7 @@ in case that you need to retrieve more device fields than just the progress.
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the progress of a device  
 **Access**: public  
-**Fulfil**: <code>Number\|Null</code> - device progress  
+**Fulfil**: <code>Number\|null</code> - device progress  
 **See**: [get](#balena.models.device.get) for an example on selecting the `overall_progress` field.  
 
 | Param | Type | Description |
@@ -5551,7 +5551,7 @@ that is _not_ pre-release, can be `null`
 | currentVersion | <code>String</code> |  | semver-compatible version for the starting OS version |
 | [options] | <code>Object</code> |  | Extra options to filter the OS releases by |
 | [options.includeDraft] | <code>Boolean</code> | <code>false</code> | Whether pre-releases should be included in the results |
-| [options.osType] | <code>String</code> \| <code>Null</code> | <code>Null</code> | Can be one of 'default', 'esr' or null which includes all types |
+| [options.osType] | <code>String</code> \| <code>null</code> | <code></code> | Can be one of 'default', 'esr' or null which includes all types |
 
 **Example**  
 ```js
@@ -6309,7 +6309,7 @@ balena.models.release.setIsInvalidated('7cf02a69e4d34c9da573914963cf54fd', false
 | Param | Type | Description |
 | --- | --- | --- |
 | commitOrIdOrRawVersion | <code>String</code> \| <code>Number</code> \| <code>Object</code> | release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release |
-| noteOrNull | <code>String</code> \| <code>Null</code> | the note |
+| noteOrNull | <code>String</code> \| <code>null</code> | the note |
 
 **Example**  
 ```js
@@ -6333,7 +6333,7 @@ balena.models.release.setNote({ application: 456, rawVersion: '0.0.0' }, 'My use
 | Param | Type | Description |
 | --- | --- | --- |
 | commitOrIdOrRawVersion | <code>String</code> \| <code>Number</code> \| <code>Object</code> | release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release |
-| knownIssueListOrNull | <code>String</code> \| <code>Null</code> | the known issue list |
+| knownIssueListOrNull | <code>String</code> \| <code>null</code> | the known issue list |
 
 **Example**  
 ```js

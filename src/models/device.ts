@@ -1767,7 +1767,7 @@ const getDeviceModel = function (
 		 * @see {@link balena.models.device.get} for an example on selecting the `overall_progress` field.
 		 *
 		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @fulfil {Number|Null} - device progress
+		 * @fulfil {Number|null} - device progress
 		 * @returns {Promise}
 		 *
 		 * @example

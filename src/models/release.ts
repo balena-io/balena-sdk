@@ -522,7 +522,7 @@ const getReleaseModel = function (
 	 * @memberof balena.models.release
 	 *
 	 * @param {String|Number|Object} commitOrIdOrRawVersion - release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release
-	 * @param {String|Null} noteOrNull - the note
+	 * @param {String|null} noteOrNull - the note
 	 *
 	 * @returns {Promise}
 	 *
@@ -558,7 +558,7 @@ const getReleaseModel = function (
 	 * @memberof balena.models.release
 	 *
 	 * @param {String|Number|Object} commitOrIdOrRawVersion - release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release
-	 * @param {String|Null} knownIssueListOrNull - the known issue list
+	 * @param {String|null} knownIssueListOrNull - the known issue list
 	 *
 	 * @returns {Promise}
 	 *
