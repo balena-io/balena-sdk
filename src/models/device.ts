@@ -375,6 +375,9 @@ const getDeviceModel = function (
 						},
 						targetOsVersion,
 					);
+					if (!device.is_connected_to_vpn) {
+						throw new Error(`The device is offline: ${device.uuid}`);
+					}
 
 					const osVersions = await getAvailableOsVersions(dt.slug, isDraft);
 
@@ -2136,13 +2139,9 @@ const getDeviceModel = function (
 			{
 				uuid,
 				is_of__device_type,
-				is_connected_to_vpn,
 				os_version,
 				os_variant,
-			}: Pick<
-				Device['Read'],
-				'uuid' | 'is_connected_to_vpn' | 'os_version' | 'os_variant'
-			> & {
+			}: Pick<Device['Read'], 'uuid' | 'os_version' | 'os_variant'> & {
 				is_of__device_type: [Pick<DeviceType['Read'], 'slug'>];
 			},
 			targetOsVersion: string,
@@ -2169,10 +2168,6 @@ const getDeviceModel = function (
 				throw new Error(
 					`The os variant of the device is not available: ${uuid}`,
 				);
-			}
-
-			if (!is_connected_to_vpn) {
-				throw new Error(`The device is offline: ${uuid}`);
 			}
 
 			const currentOsVersion =
@@ -2215,6 +2210,114 @@ const getDeviceModel = function (
 		 * });
 		 */
 		startOsUpdate,
+
+		/**
+		 * @summary Mark a specific device to be updated to a particular OS release
+		 * @name pinToOsRelease
+		 * @public
+		 * @function
+		 * @memberof balena.models.device
+		 *
+		 * @param {String|String[]|Number|Number[]} uuidOrIdOrArray - device uuid (string) or id (number) or array of full uuids or ids
+		 * @param {String} osVersionOrId - the raw version of a OS release (string) or id (number)
+		 * Unsupported (unpublished) version will result in rejection.
+		 * The version **must** be the exact version number, a "prod" variant and greater than or equal to the one running on the device.
+		 * To resolve compatible update targets for a device use `balena.models.os.getSupportedOsUpdateVersions`.
+		 * @returns {Promise}
+		 *
+		 * @example
+		 * balena.models.device.pinToOsRelease('7cf02a687b74206f92cb455969cf8e98', '2.29.2+rev1.prod').then(function(status) {
+		 * 	console.log(result.status);
+		 * });
+		 */
+		async pinToOsRelease(
+			uuidOrIdOrArray: string | string[] | number | number[],
+			osVersionOrId: string | number,
+		): Promise<void> {
+			if (!osVersionOrId) {
+				throw new errors.BalenaInvalidParameterError(
+					'targetOsVersionOrId',
+					osVersionOrId,
+				);
+			}
+
+			const getDeviceType = memoizee(
+				async (deviceTypeId: number) =>
+					await sdkInstance.models.deviceType.get(deviceTypeId, {
+						$select: 'slug',
+					}),
+				{ primitive: true, promise: true },
+			);
+
+			const includeDraft =
+				isId(osVersionOrId) ||
+				(bSemver.parse(osVersionOrId)?.prerelease.length ?? 0) > 0;
+			const getOsRelease = memoizee(
+				async (deviceTypeIdOrSlug: string | number) => {
+					const deviceTypeSlug =
+						typeof deviceTypeIdOrSlug === 'string'
+							? deviceTypeIdOrSlug
+							: (
+									await sdkInstance.models.deviceType.get(deviceTypeIdOrSlug, {
+										$select: 'slug',
+									})
+								).slug;
+					// We can't yet use a $filter on the 'release.raw_version', since we still support OS releases
+					// that b/c their versions are not valid semver their semver/raw_version fields can't be used
+					// and we still have to rely on getAvailableOsVersions
+					// TODO: Use a $filter on the id/raw_version once we drop support for release_tag-only OS releases (<= 2022.01.0 - meta balena base v2.88.4)
+					const osReleases = await sdkInstance.models.os.getAvailableOsVersions(
+						deviceTypeSlug,
+						undefined,
+						{
+							includeDraft,
+						},
+					);
+					const osRelease = osReleases.find(
+						(v) => v.id === osVersionOrId || v.raw_version === osVersionOrId,
+					);
+					if (osRelease == null) {
+						throw new errors.BalenaReleaseNotFound(osVersionOrId);
+					}
+					return osRelease;
+				},
+				{ primitive: true, promise: true },
+			);
+
+			await batchDeviceOperation()({
+				uuidOrIdOrArray,
+				options: {
+					$select: ['uuid', 'os_version', 'supervisor_version', 'os_variant'],
+				},
+				groupByNavigationPoperty: 'is_of__device_type',
+				fn: async (devices, deviceTypeId) => {
+					const dt = await getDeviceType(deviceTypeId);
+					const targetOsRelease = await getOsRelease(dt.slug);
+
+					for (const device of devices) {
+						// this will throw an error if the action isn't available
+						exports._checkOsUpdateTarget(
+							{
+								...device,
+								is_of__device_type: [dt],
+							},
+							targetOsRelease.raw_version,
+						);
+					}
+					await pine.patch({
+						resource: 'device',
+						options: {
+							$filter: {
+								id: { $in: devices.map((d) => d.id) },
+							},
+						},
+						body: {
+							should_be_operated_by__release: targetOsRelease.id,
+						},
+					});
+				},
+			});
+		},
 
 		/**
 		 * @namespace balena.models.device.tags

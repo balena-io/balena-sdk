@@ -1671,6 +1671,119 @@ describe('Device Model', function () {
 						});
 					});
 				});
+
+				describe(`balena.models.device.pinToOsRelease() called with ${paramType}`, function () {
+					givenADevice(before);
+					describe('given an offline device w/o os info', function () {
+						it('should be rejected when using a short uuid', async function () {
+							await expectError(
+								async () => {
+									await (paramType === 'array of uuids'
+										? balena.models.device.pinToOsRelease(
+												['a2df000'],
+												'2.29.2+rev1.prod',
+											)
+										: balena.models.device.pinToOsRelease(
+												'a2df000',
+												'2.29.2+rev1.prod',
+											));
+								},
+								paramType === 'array of uuids'
+									? `Invalid parameter: a2df000 is not a valid value for parameter 'uuidOrIdOrArray'`
+									: 'Device not found: a2df000',
+							);
+						});
+
+						it('should be rejected if the device does not exist and using using full uuid', async function () {
+							await expectError(async () => {
+								await (paramType === 'array of uuids'
+									? balena.models.device.pinToOsRelease(
+											['asdfghjkl25c4223b4efe2b66f3e370a'],
+											'2.29.2+rev1.prod',
+										)
+									: balena.models.device.pinToOsRelease(
+											'asdfghjkl25c4223b4efe2b66f3e370a',
+											'2.29.2+rev1.prod',
+										));
+							}, 'Device not found: asdfghjkl25c4223b4efe2b66f3e370a');
+						});
+
+						it('should not be able to pin to an OS release without providing a targetOsVersion parameter', async function () {
+							await expectError(
+								async () => {
+									await (paramType === 'array of uuids'
+										? // @ts-expect-error missing parameter
+											balena.models.device.pinToOsRelease([this.device.uuid])
+										: // @ts-expect-error missing parameter
+											balena.models.device.pinToOsRelease(this.device.uuid));
+								},
+								(error) => {
+									expect(error).to.have.property(
+										'code',
+										'BalenaInvalidParameterError',
+									);
+								},
+							);
+						});
+
+						it('should not be able to pin to an OS release for a device that has not yet reported its current version', async function () {
+							await expectError(async () => {
+								await (paramType === 'array of uuids'
+									? balena.models.device.pinToOsRelease(
+											[this.device.uuid],
+											'2.29.2+rev1.prod',
+										)
+									: balena.models.device.pinToOsRelease(
+											this.device.uuid,
+											'2.29.2+rev1.prod',
+										));
+							}, `The current os version of the device is not available: ${this.device.uuid}`);
+						});
+					});
+
+					// We cannot test these since is_connected_to_vpn is not write-able by users
+					describe('given an offline device with os info', function () {
+						before(async function () {
+							await balena.pine.patch({
+								resource: 'device',
+								id: this.device.id,
+								body: testDeviceOsInfo,
+							});
+						});
+
+						it('should not be able to pin to an OS release when the target os version does not exist', async function () {
+							await expectError(
+								async () => {
+									await balena.models.device.pinToOsRelease(
+										paramType === 'array of uuids'
+											? [this.device.uuid]
+											: this.device.uuid,
+										'2.49.0+rev1.prod',
+									);
+								},
+								(error) => {
+									expect(error).to.have.property(
+										'message',
+										'Release not found: 2.49.0+rev1.prod',
+									);
+									expect(error).to.have.property(
+										'code',
+										'BalenaReleaseNotFound',
+									);
+								},
+							);
+						});
+
+						it('should be able to pin to an OS release for an offline device', async function () {
+							await balena.models.device.pinToOsRelease(
+								paramType === 'array of uuids'
+									? [this.device.uuid]
+									: this.device.uuid,
+								'2.54.2+rev1.prod',
+							);
+						});
+					});
+				});
 			});
 
 			describe('balena.models.device.tags', function () {
@@ -3600,35 +3713,12 @@ describe('Device Model', function () {
 							{
 								uuid,
 								is_of__device_type: [{ slug: 'raspberrypi3' }],
-								is_connected_to_vpn: true,
 								os_version: osVersion,
 								os_variant: osVariant,
 							},
 							'2.29.2+rev1.prod',
 						);
 					}).to.throw('Invalid current balenaOS version');
-				});
-			});
-
-			it('should throw when the device is offline', () => {
-				[
-					['Resin OS 1.21.0', '', '1.28.0'],
-					['Resin OS 1.30.1', '', '2.16.0+rev1'],
-					['Resin OS 2.14.0+rev1', '', '2.16.0+rev1'],
-					['balenaOS 2.26.0+rev1', 'prod', '2.29.2+rev1.prod'],
-				].forEach(function ([osVersion, osVariant, targetOsVersion]) {
-					return expect(() => {
-						_checkOsUpdateTarget(
-							{
-								uuid,
-								is_of__device_type: [{ slug: 'raspberrypi3' }],
-								is_connected_to_vpn: false,
-								os_version: osVersion,
-								os_variant: osVariant,
-							},
-							targetOsVersion,
-						);
-					}).to.throw('The device is offline');
 				});
 			});
 
@@ -3649,7 +3739,6 @@ describe('Device Model', function () {
 							{
 								uuid,
 								is_of__device_type: [{ slug: 'raspberrypi3' }],
-								is_connected_to_vpn: true,
 								os_version: osVersion,
 								os_variant: osVariant,
 							},
@@ -3682,7 +3771,6 @@ describe('Device Model', function () {
 							{
 								uuid,
 								is_of__device_type: [{ slug: 'raspberrypi3' }],
-								is_connected_to_vpn: true,
 								os_version: osVersion,
 								os_variant: osVariant,
 							},
@@ -3709,7 +3797,6 @@ describe('Device Model', function () {
 										{
 											uuid,
 											is_of__device_type: [{ slug: deviceType }],
-											is_connected_to_vpn: true,
 											os_version: osVersion,
 											os_variant: osVariant,
 										},
@@ -3737,7 +3824,6 @@ describe('Device Model', function () {
 									{
 										uuid,
 										is_of__device_type: [{ slug: 'raspberrypi3' }],
-										is_connected_to_vpn: true,
 										os_version: osVersion,
 										os_variant: osVariant,
 									},
@@ -3773,7 +3859,6 @@ describe('Device Model', function () {
 										{
 											uuid,
 											is_of__device_type: [{ slug: deviceTypeSlug }],
-											is_connected_to_vpn: true,
 											os_version: osVersion,
 											os_variant: osVariant,
 										},
@@ -3795,7 +3880,6 @@ describe('Device Model', function () {
 										{
 											uuid,
 											is_of__device_type: [{ slug: deviceTypeSlug }],
-											is_connected_to_vpn: true,
 											os_version: osVersion,
 											os_variant: osVariant,
 										},
@@ -3817,7 +3901,6 @@ describe('Device Model', function () {
 										{
 											uuid,
 											is_of__device_type: [{ slug: deviceTypeSlug }],
-											is_connected_to_vpn: true,
 											os_version: osVersion,
 											os_variant: osVariant,
 										},
@@ -3833,7 +3916,6 @@ describe('Device Model', function () {
 									{
 										uuid,
 										is_of__device_type: [{ slug: deviceTypeSlug }],
-										is_connected_to_vpn: true,
 										os_version: 'balenaOS 2.28.0+rev1',
 										os_variant: 'prod',
 									},
@@ -3848,7 +3930,6 @@ describe('Device Model', function () {
 									{
 										uuid,
 										is_of__device_type: [{ slug: deviceTypeSlug }],
-										is_connected_to_vpn: true,
 										os_version: 'balenaOS 2.28.0-1704382553234',
 										os_variant: 'prod',
 									},
@@ -3863,7 +3944,6 @@ describe('Device Model', function () {
 									{
 										uuid,
 										is_of__device_type: [{ slug: deviceTypeSlug }],
-										is_connected_to_vpn: true,
 										os_version: 'balenaOS 2.28.0-1704382553234',
 										os_variant: 'prod',
 									},
@@ -3887,7 +3967,6 @@ describe('Device Model', function () {
 										{
 											uuid,
 											is_of__device_type: [{ slug: deviceTypeSlug }],
-											is_connected_to_vpn: true,
 											os_version: osVersion,
 											os_variant: osVariant,
 										},
@@ -3909,7 +3988,6 @@ describe('Device Model', function () {
 										{
 											uuid,
 											is_of__device_type: [{ slug: deviceTypeSlug }],
-											is_connected_to_vpn: true,
 											os_version: osVersion,
 											os_variant: osVariant,
 										},
