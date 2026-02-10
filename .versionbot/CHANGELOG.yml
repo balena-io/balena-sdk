@@ -1,4 +1,314 @@
 - commits:
+    - subject: Rename device.setSupervisorRelease to device.pinToSupervisorRelease
+      hash: 94c2c98e786f723d4125eaf9b88873f03af64f68
+      body: ""
+      footer:
+        Resolves: "#1576"
+        resolves: "#1576"
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "os.getAvailableOsVersions: Change the includeDraft convenience options
+        to be passed as a third parameter"
+      hash: ef5f1bb9aef509330a94bc76cda43a99d88a60a8
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Drop support for node < 22.18.0
+      hash: 63dd634dbbe6091724c001f0fc63aac94d735cb2
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Block OS Upgrades from OS < 2.14.0 and target OS < 2.16.0
+      hash: 63c5c8848adc07a179b48167531e84add2644381
+      body: |
+        Update balena-hup-action-utils from 6.2.0 to 7.0.0
+      footer:
+        Change-type: major
+        change-type: major
+        See: https://github.com/balena-io-modules/balena-hup-action-utils/pull/52
+        see: https://github.com/balena-io-modules/balena-hup-action-utils/pull/52
+      author: Thodoris Greasidis
+      nested:
+        - commits:
+            - subject: Update minimum supported TypeScript to 5.9.3
+              hash: 294ef98051a1eb2dbf44730f87459cb48e61da0f
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+            - subject: Update dependency balena-semver to v4
+              hash: d6a9adc7b5df90b8b834df68b18e2b479b3725c5
+              body: |
+                Update balena-semver from 3.0.10 to 4.0.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+            - subject: "tsconfig: Change the compilation target to es2017 with es2019 lib"
+              hash: d79167244ce721fecb6a96155f8682cb4044fe99
+              body: ""
+              footer:
+                Change-type: major
+                change-type: major
+              author: Thodoris Greasidis
+              nested: []
+            - subject: Drop support for nodejs <20.12.0
+              hash: e2a1e5b8e5a8d4f6c3d827aa6aa6e373f7f73797
+              body: ""
+              footer:
+                Change-type: major
+                change-type: major
+              author: Thodoris Greasidis
+              nested: []
+            - subject: Explicitly mark the package.json as type commonjs
+              hash: 67748cbfd2c43530f2fb80abc345b17b59f1e284
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+            - subject: Stop publishing the lib folder
+              hash: a36284c657e66977996b5a493765be35bdb71441
+              body: ""
+              footer:
+                Change-type: major
+                change-type: major
+              author: Thodoris Greasidis
+              nested: []
+            - subject: Drop support for OS Upgrades from OS < 2.14.0 and target OS < 2.16.0
+              hash: 50c711e7a0aa9cc9b9472498110e46b018ac7e68
+              body: ""
+              footer:
+                Change-type: major
+                change-type: major
+                See: https://github.com/balena-os/balenahup/pull/422
+                see: https://github.com/balena-os/balenahup/pull/422
+              author: Thodoris Greasidis
+              nested: []
+            - subject: Drop support for OS Upgrades between v1 & v2 balenaOS
+              hash: 5f033501d5d6a8f8c4b3ae27efa4b201dae2f893
+              body: ""
+              footer:
+                Change-type: major
+                change-type: major
+                See: https://github.com/balena-os/balenahup/pull/422
+                see: https://github.com/balena-os/balenahup/pull/422
+              author: Thodoris Greasidis
+              nested: []
+          version: balena-hup-action-utils-7.0.0
+          title: ""
+          date: 2026-01-19T16:14:57.792Z
+        - commits:
+            - subject: Update dependency lint-staged to v16
+              hash: 6c7268fc019ed281688b76b8ce9578bf8ab869bb
+              body: |
+                Update lint-staged from 15.5.2 to 16.0.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-hup-action-utils-6.2.10
+          title: ""
+          date: 2025-06-08T00:06:42.855Z
+        - commits:
+            - subject: Update dependency husky to v9
+              hash: f315c3a164ae446027f260759a7d51fc2f126026
+              body: |
+                Update husky from 8.0.3 to 9.1.7
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-hup-action-utils-6.2.9
+          title: ""
+          date: 2025-04-02T14:08:03.923Z
+        - commits:
+            - subject: Update dependency rimraf to v6
+              hash: 58ab869ae804953199007293728a2d40ac892b93
+              body: |
+                Update rimraf from 5.0.10 to 6.0.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-hup-action-utils-6.2.8
+          title: ""
+          date: 2025-03-30T00:09:15.054Z
+        - commits:
+            - subject: Update dependency @types/chai-as-promised to v8
+              hash: aee74f9bc45bfbbf61b9f566e5ff7aea2db72b9f
+              body: |
+                Update @types/chai-as-promised from 7.1.8 to 8.0.2
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-hup-action-utils-6.2.7
+          title: ""
+          date: 2025-03-27T07:07:02.767Z
+        - commits:
+            - subject: Update dependency mocha to v11
+              hash: 24ead6e4ac3ed677121baf24574cc3335609ba3e
+              body: |
+                Update mocha from 10.8.2 to 11.1.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-hup-action-utils-6.2.6
+          title: ""
+          date: 2025-03-26T11:01:03.243Z
+        - commits:
+            - subject: Update dependency @balena/lint to v9
+              hash: 40c98513b72400e122caa0e58e6ee89a3cd5ada5
+              body: |
+                Update @balena/lint from 8.2.8 to 9.1.4
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+            - subject: Update TypeScript to 5.8.2
+              hash: 764212235d544beef7e496d7d45a24796dfe6319
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: balena-hup-action-utils-6.2.5
+          title: ""
+          date: 2025-03-26T09:09:40.877Z
+        - commits:
+            - subject: Update dependency balena-semver to v3
+              hash: 07a5838fa02b4df7c43b59db94e1d9f96c234e07
+              body: |
+                Update balena-semver from 2.3.5 to 3.0.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-hup-action-utils-6.2.4
+          title: ""
+          date: 2025-03-26T05:51:20.663Z
+        - commits:
+            - subject: Update dependency @balena/lint to v8
+              hash: 19b0a505856a7877824a61fe388aa10e4a5c5c2e
+              body: |
+                Update @balena/lint from 7.3.0 to 8.2.8
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-hup-action-utils-6.2.3
+          title: ""
+          date: 2025-03-19T17:28:49.695Z
+        - commits:
+            - subject: Eliminate prod/dev variants in version comparison for takeover
+              hash: b0e0a626ac18a6b75c5753801de90633385b774c
+              body: |
+                The variant may be appended by balena-proxy.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ken Bannister <kb2ma@runbox.com>
+                signed-off-by: Ken Bannister <kb2ma@runbox.com>
+              author: Ken Bannister
+              nested: []
+          version: balena-hup-action-utils-6.2.2
+          title: ""
+          date: 2024-12-16T22:29:38.585Z
+        - commits:
+            - subject: Update `getHUPActionType` description
+              hash: 9bef39d9ac729efaf724c82eae2708efede57606
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Matthew Yarmolinsky
+              nested: []
+          version: balena-hup-action-utils-6.2.1
+          title: ""
+          date: 2024-12-10T18:49:36.890Z
+    - subject: "os.getMaxSatisfyingVersion: Drop the 'default' versionRange value in
+        favor of 'latest'"
+      hash: a6b5560a5dacc126c0d08491e4854d1a8cfb5f14
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Drop support for using short release commits as parameters
+      hash: 2332a9d94ca4b03e816056b8a3eb00d7b39a3e4d
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+        See: https://balena.fibery.io/Work/Project/2196
+        see: https://balena.fibery.io/Work/Project/2196
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Drop support for using short device uuids as parameters
+      hash: 6f765338e9ad7793c62948dd4afe73a61996e58c
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+        See: https://balena.fibery.io/Work/Project/2196
+        see: https://balena.fibery.io/Work/Project/2196
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Drop the device.lastOnline() method
+      hash: 3868561f51fcb80cbc31dd43bd35e8772a99147f
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: device.getWithServiceDetails(),
+        application.getWithDeviceServiceDetails(), remove the current_services
+        property
+      hash: 47bfa2e53acccbfdf76681ade762af47256f3fff
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "os.getSupportedOsUpdateVersions: List both Default & ESR OS releases
+        by default"
+      hash: aa56dea42e4495c56f5ae1a832789396396478d9
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Thodoris Greasidis
+      nested: []
+  version: 23.0.0
+  title: ""
+  date: 2026-02-10T06:48:26.006Z
+- commits:
     - subject: "os.getSupportedOsUpdateVersions: Fix the jsdoc of osType to String|Null"
       hash: 1b9021dcc72b264c7c7f958f581e70b1c9030348
       body: ""
