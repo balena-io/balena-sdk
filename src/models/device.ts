@@ -77,6 +77,7 @@ import type {
 	FilterObj,
 	ODataOptionsWithoutCount,
 	OptionsToResponse,
+	ResourceId,
 } from 'pinejs-client-core';
 
 const MIN_OS_MC = '2.12.0';
@@ -131,9 +132,6 @@ const getDeviceModel = function (
 			(
 				require('../util/device-actions/os-update/utils') as typeof import('../util/device-actions/os-update/utils')
 			).hupActionHelper,
-	);
-	const dateUtils = once(
-		() => require('../util/date') as typeof import('../util/date'),
 	);
 
 	const batchDeviceOperation = once(() =>
@@ -344,7 +342,7 @@ const getDeviceModel = function (
 		);
 		const getAvailableOsVersions = memoizee(
 			async (slug: string, includeDraft: boolean) =>
-				await sdkInstance.models.os.getAvailableOsVersions(slug, {
+				await sdkInstance.models.os.getAvailableOsVersions(slug, undefined, {
 					includeDraft,
 				}),
 			{ primitive: true, promise: true },
@@ -568,7 +566,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.get('7cf02a6').then(function(device) {
+		 * balena.models.device.get('7cf02a69e4d34c9da573914963cf54fd').then(function(device) {
 		 * 	console.log(device);
 		 * })
 		 *
@@ -578,7 +576,7 @@ const getDeviceModel = function (
 		 * })
 		 *
 		 * @example
-		 * balena.models.device.get('7cf02a6', { $select: ['overall_status', 'overall_progress'] }).then(function(device) {
+		 * balena.models.device.get('7cf02a69e4d34c9da573914963cf54fd', { $select: ['overall_status', 'overall_progress'] }).then(function(device) {
 		 * 	console.log(device);
 		 * })
 		 */
@@ -589,37 +587,22 @@ const getDeviceModel = function (
 			if (uuidOrId == null) {
 				throw new errors.BalenaDeviceNotFound(uuidOrId);
 			}
-			if (uuidOrId === '') {
-				throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
+
+			let resourceId: ResourceId<Device['Read']>;
+			if (isId(uuidOrId)) {
+				resourceId = uuidOrId;
+			} else {
+				if (!isFullUuid(uuidOrId)) {
+					throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
+				}
+				resourceId = { uuid: uuidOrId };
 			}
 
-			let device:
-				| OptionsToResponse<Device['Read'], T, undefined>[number]
-				| undefined;
-			const isPotentiallyFullUuid = isFullUuid(uuidOrId);
-			if (isPotentiallyFullUuid || isId(uuidOrId)) {
-				device = await pine.get({
-					resource: 'device',
-					id: isPotentiallyFullUuid ? { uuid: uuidOrId } : uuidOrId,
-					options,
-				});
-			} else {
-				const devices = (await pine.get({
-					resource: 'device',
-					options: mergePineOptions(
-						{
-							$filter: {
-								uuid: { $startswith: uuidOrId },
-							},
-						},
-						options,
-					),
-				})) as OptionsToResponse<Device['Read'], T, undefined>;
-				if (devices.length > 1) {
-					throw new errors.BalenaAmbiguousDevice(uuidOrId);
-				}
-				device = devices[0];
-			}
+			const device = await pine.get({
+				resource: 'device',
+				id: resourceId,
+				options,
+			});
 			if (device == null) {
 				throw new errors.BalenaDeviceNotFound(uuidOrId);
 			}
@@ -646,7 +629,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.getWithServiceDetails('7cf02a6').then(function(device) {
+		 * balena.models.device.getWithServiceDetails('7cf02a69e4d34c9da573914963cf54fd').then(function(device) {
 		 * 	console.log(device);
 		 * })
 		 *
@@ -672,9 +655,6 @@ const getDeviceModel = function (
 					typeof uuidOrId
 				>
 			> & {
-				// TODO: Drop this in the next major
-				/** @deprecated in favor of `current_services_by_app` that split system services from application services */
-				current_services: Record<string, CurrentService[]>;
 				current_services_by_app: Record<
 					string,
 					Record<string, CurrentService[]>
@@ -700,9 +680,6 @@ const getDeviceModel = function (
 					typeof uuidOrId
 				>
 			> & {
-				// TODO: Drop this in the next major
-				/** @deprecated in favor of `current_services_by_app` that split system services from application services */
-				current_services: Record<string, CurrentService[]>;
 				current_services_by_app: Record<
 					string,
 					Record<string, CurrentService[]>
@@ -751,7 +728,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.getName('7cf02a6').then(function(deviceName) {
+		 * balena.models.device.getName('7cf02a69e4d34c9da573914963cf54fd').then(function(deviceName) {
 		 * 	console.log(deviceName);
 		 * });
 		 *
@@ -779,7 +756,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.getApplicationName('7cf02a6').then(function(applicationName) {
+		 * balena.models.device.getApplicationName('7cf02a69e4d34c9da573914963cf54fd').then(function(applicationName) {
 		 * 	console.log(applicationName);
 		 * });
 		 *
@@ -808,7 +785,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.has('7cf02a6').then(function(hasDevice) {
+		 * balena.models.device.has('7cf02a69e4d34c9da573914963cf54fd').then(function(hasDevice) {
 		 * 	console.log(hasDevice);
 		 * });
 		 *
@@ -841,7 +818,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.isOnline('7cf02a6').then(function(isOnline) {
+		 * balena.models.device.isOnline('7cf02a69e4d34c9da573914963cf54fd').then(function(isOnline) {
 		 * 	console.log('Is device online?', isOnline);
 		 * });
 		 *
@@ -870,7 +847,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.getLocalIPAddresses('7cf02a6').then(function(localIPAddresses) {
+		 * balena.models.device.getLocalIPAddresses('7cf02a69e4d34c9da573914963cf54fd').then(function(localIPAddresses) {
 		 * 	localIPAddresses.forEach(function(localIP) {
 		 * 		console.log(localIP);
 		 * 	});
@@ -907,7 +884,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.getMACAddresses('7cf02a6').then(function(macAddresses) {
+		 * balena.models.device.getMACAddresses('7cf02a69e4d34c9da573914963cf54fd').then(function(macAddresses) {
 		 * 	macAddresses.forEach(function(mac) {
 		 * 		console.log(mac);
 		 * 	});
@@ -942,7 +919,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.getMetrics('7cf02a6').then(function(deviceMetrics) {
+		 * balena.models.device.getMetrics('7cf02a69e4d34c9da573914963cf54fd').then(function(deviceMetrics) {
 		 * 	console.log(deviceMetrics);
 		 * });
 		 *
@@ -979,7 +956,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.remove('7cf02a6');
+		 * balena.models.device.remove('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.remove(123);
@@ -1013,7 +990,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.deactivate('7cf02a6');
+		 * balena.models.device.deactivate('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.deactivate(123);
@@ -1039,7 +1016,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.rename('7cf02a6', 'NewName');
+		 * balena.models.device.rename('7cf02a69e4d34c9da573914963cf54fd', 'NewName');
 		 *
 		 * @example
 		 * balena.models.device.rename(123, 'NewName');
@@ -1066,7 +1043,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.setNote('7cf02a6', 'My useful note');
+		 * balena.models.device.setNote('7cf02a69e4d34c9da573914963cf54fd', 'My useful note');
 		 *
 		 * @example
 		 * balena.models.device.setNote(123, 'My useful note');
@@ -1091,7 +1068,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.setCustomLocation('7cf02a6', { latitude: 123, longitude: 456 });
+		 * balena.models.device.setCustomLocation('7cf02a69e4d34c9da573914963cf54fd', { latitude: 123, longitude: 456 });
 		 *
 		 * @example
 		 * balena.models.device.setCustomLocation(123, { latitude: 123, longitude: 456 });
@@ -1118,7 +1095,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.unsetCustomLocation('7cf02a6');
+		 * balena.models.device.unsetCustomLocation('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.unsetCustomLocation(123);
@@ -1145,7 +1122,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.move('7cf02a6', 'myorganization/myapp');
+		 * balena.models.device.move('7cf02a69e4d34c9da573914963cf54fd', 'myorganization/myapp');
 		 *
 		 * @example
 		 * balena.models.device.move(123, 'myorganization/myapp');
@@ -1237,7 +1214,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.getSupervisorTargetState('7cf02a6').then(function(state) {
+		 * balena.models.device.getSupervisorTargetState('7cf02a69e4d34c9da573914963cf54fd').then(function(state) {
 		 * 	console.log(state);
 		 * });
 		 *
@@ -1275,7 +1252,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.getSupervisorTargetStateForApp('7cf02a6').then(function(state) {
+		 * balena.models.device.getSupervisorTargetStateForApp('7cf02a69e4d34c9da573914963cf54fd').then(function(state) {
 		 * 	console.log(state);
 		 * });
 		 *
@@ -1285,7 +1262,7 @@ const getDeviceModel = function (
 		 * });
 		 *
 		 * @example
-		 * balena.models.device.getSupervisorTargetStateForApp(123, '7cf02a6').then(function(state) {
+		 * balena.models.device.getSupervisorTargetStateForApp(123, '7cf02a69e4d34c9da573914963cf54fd').then(function(state) {
 		 * 	console.log(state);
 		 * });
 		 *
@@ -1441,7 +1418,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.generateDeviceKey('7cf02a6').then(function(deviceApiKey) {
+		 * balena.models.device.generateDeviceKey('7cf02a69e4d34c9da573914963cf54fd').then(function(deviceApiKey) {
 		 * 	console.log(deviceApiKey);
 		 * });
 		 *
@@ -1484,7 +1461,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.hasDeviceUrl('7cf02a6').then(function(hasDeviceUrl) {
+		 * balena.models.device.hasDeviceUrl('7cf02a69e4d34c9da573914963cf54fd').then(function(hasDeviceUrl) {
 		 * 	if (hasDeviceUrl) {
 		 * 		console.log('The device has device URL enabled');
 		 * 	}
@@ -1516,7 +1493,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.getDeviceUrl('7cf02a6').then(function(url) {
+		 * balena.models.device.getDeviceUrl('7cf02a69e4d34c9da573914963cf54fd').then(function(url) {
 		 * 	console.log(url);
 		 * });
 		 *
@@ -1547,7 +1524,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.enableDeviceUrl('7cf02a6');
+		 * balena.models.device.enableDeviceUrl('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.enableDeviceUrl(123);
@@ -1571,7 +1548,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.disableDeviceUrl('7cf02a6');
+		 * balena.models.device.disableDeviceUrl('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.disableDeviceUrl(123);
@@ -1595,7 +1572,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.enableLocalMode('7cf02a6');
+		 * balena.models.device.enableLocalMode('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.enableLocalMode(123);
@@ -1618,7 +1595,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.disableLocalMode('7cf02a6');
+		 * balena.models.device.disableLocalMode('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.disableLocalMode(123);
@@ -1638,7 +1615,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.isInLocalMode('7cf02a6').then(function(isInLocalMode) {
+		 * balena.models.device.isInLocalMode('7cf02a69e4d34c9da573914963cf54fd').then(function(isInLocalMode) {
 		 * 	if (isInLocalMode) {
 		 * 		console.log('The device has local mode enabled');
 		 * 	}
@@ -1667,7 +1644,7 @@ const getDeviceModel = function (
 		 * @returns {Object} Local mode support info ({ supported: true/false, message: "..." })
 		 *
 		 * @example
-		 * balena.models.device.get('7cf02a6').then(function(device) {
+		 * balena.models.device.get('7cf02a69e4d34c9da573914963cf54fd').then(function(device) {
 		 * 	balena.models.device.getLocalModeSupport(device);
 		 * })
 		 */
@@ -1684,7 +1661,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.enableLockOverride('7cf02a6');
+		 * balena.models.device.enableLockOverride('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.enableLockOverride(123);
@@ -1703,7 +1680,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.disableLockOverride('7cf02a6');
+		 * balena.models.device.disableLockOverride('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.disableLockOverride(123);
@@ -1722,7 +1699,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.hasLockOverride('7cf02a6');
+		 * balena.models.device.hasLockOverride('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.hasLockOverride(123);
@@ -1755,7 +1732,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.getStatus('7cf02a6').then(function(status) {
+		 * balena.models.device.getStatus('7cf02a69e4d34c9da573914963cf54fd').then(function(status) {
 		 * 	console.log(status);
 		 * });
 		 *
@@ -1790,11 +1767,11 @@ const getDeviceModel = function (
 		 * @see {@link balena.models.device.get} for an example on selecting the `overall_progress` field.
 		 *
 		 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-		 * @fulfil {Number|Null} - device progress
+		 * @fulfil {Number|null} - device progress
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.getProgress('7cf02a6').then(function(progress) {
+		 * balena.models.device.getProgress('7cf02a69e4d34c9da573914963cf54fd').then(function(progress) {
 		 * 	console.log(progress);
 		 * });
 		 *
@@ -1826,7 +1803,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.grantSupportAccess('7cf02a6', Date.now() + 3600 * 1000);
+		 * balena.models.device.grantSupportAccess('7cf02a69e4d34c9da573914963cf54fd', Date.now() + 3600 * 1000);
 		 *
 		 * @example
 		 * balena.models.device.grantSupportAccess(123, Date.now() + 3600 * 1000);
@@ -1858,7 +1835,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.revokeSupportAccess('7cf02a6');
+		 * balena.models.device.revokeSupportAccess('7cf02a69e4d34c9da573914963cf54fd');
 		 *
 		 * @example
 		 * balena.models.device.revokeSupportAccess(123);
@@ -1869,43 +1846,6 @@ const getDeviceModel = function (
 			await set(uuidOrIdOrArray, {
 				is_accessible_by_support_until__date: null,
 			});
-		},
-
-		// TODO: Drop device.lastOnline in the next major and change date-fns to a dev dependency
-		/**
-		 * @summary Get a string showing when a device was last set as online
-		 * @name lastOnline
-		 * @public
-		 * @function
-		 * @memberof balena.models.device
-		 *
-		 * @description
-		 * If the device has never been online this method returns the string `Connecting...`.
-		 *
-		 * @deprecated Will be dropped in the next major
-		 * @param {Object} device - A device object
-		 * @returns {String}
-		 *
-		 * @example
-		 * balena.models.device.get('7cf02a6').then(function(device) {
-		 * 	balena.models.device.lastOnline(device);
-		 * })
-		 */
-		lastOnline(
-			device: AtLeast<Device['Read'], 'last_connectivity_event' | 'is_online'>,
-		): string {
-			const lce = device.last_connectivity_event;
-
-			if (!lce) {
-				return 'Connecting...';
-			}
-
-			const { timeSince } = dateUtils();
-			if (device.is_online) {
-				return `Connected (for ${timeSince(lce, false)})`;
-			}
-
-			return timeSince(lce);
 		},
 
 		/**
@@ -1919,7 +1859,7 @@ const getDeviceModel = function (
 		 * @returns {?String}
 		 *
 		 * @example
-		 * balena.models.device.get('7cf02a6').then(function(device) {
+		 * balena.models.device.get('7cf02a69e4d34c9da573914963cf54fd').then(function(device) {
 		 * 	console.log(device.os_version); // => 'balenaOS 2.26.0+rev1'
 		 * 	console.log(device.os_variant); // => 'prod'
 		 * 	balena.models.device.getOsVersion(device); // => '2.26.0+rev1.prod'
@@ -1941,7 +1881,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.isTrackingApplicationRelease('7cf02a6').then(function(isEnabled) {
+		 * balena.models.device.isTrackingApplicationRelease('7cf02a69e4d34c9da573914963cf54fd').then(function(isEnabled) {
 		 * 	console.log(isEnabled);
 		 * });
 		 */
@@ -1966,12 +1906,12 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.getTargetReleaseHash('7cf02a6').then(function(release) {
+		 * balena.models.device.getTargetReleaseHash('7cf02a69e4d34c9da573914963cf54fd').then(function(release) {
 		 * 	console.log(release);
 		 * });
 		 *
 		 * @example
-		 * balena.models.device.getTargetReleaseHash('7cf02a6', function(release) {
+		 * balena.models.device.getTargetReleaseHash('7cf02a69e4d34c9da573914963cf54fd', function(release) {
 		 * 	console.log(release);
 		 * });
 		 */
@@ -2009,7 +1949,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.pinToRelease('7cf02a6', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
+		 * balena.models.device.pinToRelease('7cf02a69e4d34c9da573914963cf54fd', 'f7caf4ff80114deeaefb7ab4447ad9c661c50847').then(function() {
 		 * 	...
 		 * });
 		 *
@@ -2073,7 +2013,7 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.trackApplicationRelease('7cf02a6').then(function() {
+		 * balena.models.device.trackApplicationRelease('7cf02a69e4d34c9da573914963cf54fd').then(function() {
 		 * 	...
 		 * });
 		 */
@@ -2087,7 +2027,7 @@ const getDeviceModel = function (
 
 		/**
 		 * @summary Set a specific device to run a particular supervisor release
-		 * @name setSupervisorRelease
+		 * @name pinToSupervisorRelease
 		 * @public
 		 * @function
 		 * @memberof balena.models.device
@@ -2099,16 +2039,16 @@ const getDeviceModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.device.setSupervisorRelease('7cf02a6', '10.8.0').then(function() {
+		 * balena.models.device.pinToSupervisorRelease('7cf02a69e4d34c9da573914963cf54fd', '10.8.0').then(function() {
 		 * 	...
 		 * });
 		 *
 		 * @example
-		 * balena.models.device.setSupervisorRelease(123, '11.4.14').then(function() {
+		 * balena.models.device.pinToSupervisorRelease(123, '11.4.14').then(function() {
 		 * 	...
 		 * });
 		 */
-		setSupervisorRelease: async (
+		pinToSupervisorRelease: async (
 			uuidOrIdOrArray: string | string[] | number | number[],
 			supervisorVersionOrId: string | number,
 		): Promise<void> => {
@@ -2347,7 +2287,7 @@ const getDeviceModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.device.tags.getAllByDevice('7cf02a6').then(function(tags) {
+			 * balena.models.device.tags.getAllByDevice('7cf02a69e4d34c9da573914963cf54fd').then(function(tags) {
 			 * 	console.log(tags);
 			 * });
 			 *
@@ -2372,7 +2312,7 @@ const getDeviceModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.device.tags.set('7cf02a6', 'EDITOR', 'vim');
+			 * balena.models.device.tags.set('7cf02a69e4d34c9da573914963cf54fd', 'EDITOR', 'vim');
 			 *
 			 * @example
 			 * balena.models.device.tags.set(123, 'EDITOR', 'vim');
@@ -2391,7 +2331,7 @@ const getDeviceModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.device.tags.remove('7cf02a6', 'EDITOR');
+			 * balena.models.device.tags.remove('7cf02a69e4d34c9da573914963cf54fd', 'EDITOR');
 			 */
 			remove: tagsModel.remove,
 		},
@@ -2414,7 +2354,7 @@ const getDeviceModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.device.configVar.getAllByDevice('7cf02a6').then(function(vars) {
+			 * balena.models.device.configVar.getAllByDevice('7cf02a69e4d34c9da573914963cf54fd').then(function(vars) {
 			 * 	console.log(vars);
 			 * });
 			 *
@@ -2496,7 +2436,7 @@ const getDeviceModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.device.configVar.get('7cf02a6', 'BALENA_VAR').then(function(value) {
+			 * balena.models.device.configVar.get('7cf02a69e4d34c9da573914963cf54fd', 'BALENA_VAR').then(function(value) {
 			 * 	console.log(value);
 			 * });
 			 *
@@ -2520,7 +2460,7 @@ const getDeviceModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.device.configVar.set('7cf02a6', 'BALENA_VAR', 'newvalue').then(function() {
+			 * balena.models.device.configVar.set('7cf02a69e4d34c9da573914963cf54fd', 'BALENA_VAR', 'newvalue').then(function() {
 			 * 	...
 			 * });
 			 *
@@ -2543,7 +2483,7 @@ const getDeviceModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.device.configVar.remove('7cf02a6', 'BALENA_VAR').then(function() {
+			 * balena.models.device.configVar.remove('7cf02a69e4d34c9da573914963cf54fd', 'BALENA_VAR').then(function() {
 			 * 	...
 			 * });
 			 *
@@ -2573,7 +2513,7 @@ const getDeviceModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.device.envVar.getAllByDevice('7cf02a6').then(function(vars) {
+			 * balena.models.device.envVar.getAllByDevice('7cf02a69e4d34c9da573914963cf54fd').then(function(vars) {
 			 * 	console.log(vars);
 			 * });
 			 *
@@ -2659,7 +2599,7 @@ const getDeviceModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.device.envVar.get('7cf02a6', 'VAR').then(function(value) {
+			 * balena.models.device.envVar.get('7cf02a69e4d34c9da573914963cf54fd', 'VAR').then(function(value) {
 			 * 	console.log(value);
 			 * });
 			 *
@@ -2683,7 +2623,7 @@ const getDeviceModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.device.envVar.set('7cf02a6', 'VAR', 'newvalue').then(function() {
+			 * balena.models.device.envVar.set('7cf02a69e4d34c9da573914963cf54fd', 'VAR', 'newvalue').then(function() {
 			 * 	...
 			 * });
 			 *
@@ -2706,7 +2646,7 @@ const getDeviceModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.device.envVar.remove('7cf02a6', 'VAR').then(function() {
+			 * balena.models.device.envVar.remove('7cf02a69e4d34c9da573914963cf54fd', 'VAR').then(function() {
 			 * 	...
 			 * });
 			 *
@@ -2736,7 +2676,7 @@ const getDeviceModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.device.serviceVar.getAllByDevice('7cf02a6').then(function(vars) {
+			 * balena.models.device.serviceVar.getAllByDevice('7cf02a69e4d34c9da573914963cf54fd').then(function(vars) {
 			 * 	console.log(vars);
 			 * });
 			 *
@@ -2874,12 +2814,12 @@ const getDeviceModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.device.serviceVar.get('7cf02a6', 123, 'VAR').then(function(value) {
+			 * balena.models.device.serviceVar.get('7cf02a69e4d34c9da573914963cf54fd', 123, 'VAR').then(function(value) {
 			 * 	console.log(value);
 			 * });
 			 *
 			 * @example
-			 * balena.models.device.serviceVar.get('7cf02a6', 'myservice', 'VAR').then(function(value) {
+			 * balena.models.device.serviceVar.get('7cf02a69e4d34c9da573914963cf54fd', 'myservice', 'VAR').then(function(value) {
 			 * 	console.log(value);
 			 * });
 			 *
@@ -2943,13 +2883,13 @@ const getDeviceModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.device.serviceVar.set('7cf02a6', 123, 'VAR', 'override').then(function() {
+			 * balena.models.device.serviceVar.set('7cf02a69e4d34c9da573914963cf54fd', 123, 'VAR', 'override').then(function() {
 			 * 	...
 			 * });
 			 *
 			 *
 			 * @example
-			 * balena.models.device.serviceVar.set('7cf02a6', 'myservice', 'VAR', 'override').then(function() {
+			 * balena.models.device.serviceVar.set('7cf02a69e4d34c9da573914963cf54fd', 'myservice', 'VAR', 'override').then(function() {
 			 * 	...
 			 * });
 			 *
@@ -2969,7 +2909,10 @@ const getDeviceModel = function (
 				let deviceFilter;
 				if (isId(uuidOrId)) {
 					deviceFilter = uuidOrId;
-				} else if (isFullUuid(uuidOrId)) {
+				} else {
+					if (!isFullUuid(uuidOrId)) {
+						throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
+					}
 					deviceFilter = {
 						$any: {
 							$alias: 'd',
@@ -2980,9 +2923,6 @@ const getDeviceModel = function (
 							},
 						},
 					};
-				} else {
-					const device = await exports.get(uuidOrId, { $select: 'id' });
-					deviceFilter = device.id;
 				}
 
 				const serviceInstalls = await pine.get({
@@ -3042,12 +2982,12 @@ const getDeviceModel = function (
 			 * @returns {Promise}
 			 *
 			 * @example
-			 * balena.models.device.serviceVar.remove('7cf02a6', 123, 'VAR').then(function() {
+			 * balena.models.device.serviceVar.remove('7cf02a69e4d34c9da573914963cf54fd', 123, 'VAR').then(function() {
 			 * 	...
 			 * });
 			 *
 			 * @example
-			 * balena.models.device.serviceVar.remove('7cf02a6', 'myservice', 'VAR').then(function() {
+			 * balena.models.device.serviceVar.remove('7cf02a69e4d34c9da573914963cf54fd', 'myservice', 'VAR').then(function() {
 			 * 	...
 			 * });
 			 *
@@ -3155,13 +3095,14 @@ const getDeviceModel = function (
 
 				if (isId(uuidOrId)) {
 					$filter = { ...$filter, tracks__device: uuidOrId };
-				} else if (isFullUuid(uuidOrId)) {
+				} else {
+					if (!isFullUuid(uuidOrId)) {
+						throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
+					}
 					$filter = {
 						...$filter,
 						uuid: uuidOrId,
 					};
-				} else {
-					throw new errors.BalenaInvalidParameterError('uuidOrId', uuidOrId);
 				}
 
 				return (await pine.get({

@@ -103,7 +103,7 @@ const getReleaseModel = function (
 	 * });
 	 *
 	 * @example
-	 * balena.models.release.get('7cf02a6').then(function(release) {
+	 * balena.models.release.get('7cf02a69e4d34c9da573914963cf54fd').then(function(release) {
 	 * 	console.log(release);
 	 * });
 	 *
@@ -149,7 +149,7 @@ const getReleaseModel = function (
 				};
 			} else {
 				$filter = {
-					commit: { $startswith: commitOrIdOrRawVersion },
+					commit: commitOrIdOrRawVersion,
 				};
 			}
 			const releases = (await pine.get({
@@ -206,7 +206,7 @@ const getReleaseModel = function (
 	 * });
 	 *
 	 * @example
-	 * balena.models.release.getWithImageDetails('7cf02a6').then(function(release) {
+	 * balena.models.release.getWithImageDetails('7cf02a69e4d34c9da573914963cf54fd').then(function(release) {
 	 * 	console.log(release);
 	 * });
 	 *
@@ -439,7 +439,7 @@ const getReleaseModel = function (
 	 * });
 	 *
 	 * @example
-	 * balena.models.release.finalize('7cf02a6').then(function() {
+	 * balena.models.release.finalize('7cf02a69e4d34c9da573914963cf54fd').then(function() {
 	 * 	console.log('finalized!');
 	 * });
 	 *
@@ -480,7 +480,7 @@ const getReleaseModel = function (
 	 * });
 	 *
 	 * @example
-	 * balena.models.release.setIsInvalidated('7cf02a6', true).then(function() {
+	 * balena.models.release.setIsInvalidated('7cf02a69e4d34c9da573914963cf54fd', true).then(function() {
 	 * 	console.log('invalidated!');
 	 * });
 	 *
@@ -495,7 +495,7 @@ const getReleaseModel = function (
 	 * });
 	 *
 	 * @example
-	 * balena.models.release.setIsInvalidated('7cf02a6', false).then(function() {
+	 * balena.models.release.setIsInvalidated('7cf02a69e4d34c9da573914963cf54fd', false).then(function() {
 	 * 	console.log('validated!');
 	 * });
 	 *
@@ -522,12 +522,12 @@ const getReleaseModel = function (
 	 * @memberof balena.models.release
 	 *
 	 * @param {String|Number|Object} commitOrIdOrRawVersion - release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release
-	 * @param {String|Null} noteOrNull - the note
+	 * @param {String|null} noteOrNull - the note
 	 *
 	 * @returns {Promise}
 	 *
 	 * @example
-	 * balena.models.release.setNote('7cf02a6', 'My useful note');
+	 * balena.models.release.setNote('7cf02a69e4d34c9da573914963cf54fd', 'My useful note');
 	 *
 	 * @example
 	 * balena.models.release.setNote(123, 'My useful note');
@@ -558,12 +558,12 @@ const getReleaseModel = function (
 	 * @memberof balena.models.release
 	 *
 	 * @param {String|Number|Object} commitOrIdOrRawVersion - release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release
-	 * @param {String|Null} knownIssueListOrNull - the known issue list
+	 * @param {String|null} knownIssueListOrNull - the known issue list
 	 *
 	 * @returns {Promise}
 	 *
 	 * @example
-	 * balena.models.release.setKnownIssueList('7cf02a6', 'This is an issue');
+	 * balena.models.release.setKnownIssueList('7cf02a69e4d34c9da573914963cf54fd', 'This is an issue');
 	 *
 	 * @example
 	 * balena.models.release.setKnownIssueList(123, 'This is an issue');
@@ -660,7 +660,7 @@ const getReleaseModel = function (
 		 * });
 		 *
 		 * @example
-		 * balena.models.release.tags.getAllByRelease('7cf02a6').then(function(tags) {
+		 * balena.models.release.tags.getAllByRelease('7cf02a69e4d34c9da573914963cf54fd').then(function(tags) {
 		 * 	console.log(tags);
 		 * });
 		 *
@@ -712,7 +712,7 @@ const getReleaseModel = function (
 		 * balena.models.release.tags.set(123, 'EDITOR', 'vim');
 		 *
 		 * @example
-		 * balena.models.release.tags.set('7cf02a6', 'EDITOR', 'vim');
+		 * balena.models.release.tags.set('7cf02a69e4d34c9da573914963cf54fd', 'EDITOR', 'vim');
 		 *
 		 * @example
 		 * balena.models.release.tags.set({application: 456, rawVersion: '0.0.0'}, 'EDITOR', 'vim');
@@ -734,7 +734,7 @@ const getReleaseModel = function (
 		 * balena.models.release.tags.remove(123, 'EDITOR');
 		 *
 		 * @example
-		 * balena.models.release.tags.remove('7cf02a6', 'EDITOR');
+		 * balena.models.release.tags.remove('7cf02a69e4d34c9da573914963cf54fd', 'EDITOR');
 		 *
 		 * @example
 		 * balena.models.release.tags.remove({application: 456, rawVersion: '0.0.0'}, 'EDITOR');
@@ -765,7 +765,7 @@ const getReleaseModel = function (
 		 * });
 		 *
 		 * @example
-		 * balena.models.release.asset.getAllByRelease('7cf02a6').then(function(assets) {
+		 * balena.models.release.asset.getAllByRelease('7cf02a69e4d34c9da573914963cf54fd').then(function(assets) {
 		 * 	console.log(assets);
 		 * });
 		 *

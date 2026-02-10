@@ -221,7 +221,7 @@ const getApiKeysModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.apiKey.getDeviceApiKeysByDevice('7cf02a6').then(function(apiKeys) {
+		 * balena.models.apiKey.getDeviceApiKeysByDevice('7cf02a69e4d34c9da573914963cf54fd').then(function(apiKeys) {
 		 * 	console.log(apiKeys);
 		 * });
 		 */

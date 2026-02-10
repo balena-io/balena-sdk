@@ -2,9 +2,6 @@
 import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
-import { subYears } from 'date-fns/subYears';
-import { subDays } from 'date-fns/subDays';
-import { addDays } from 'date-fns/addDays';
 
 import {
 	balena,
@@ -331,10 +328,12 @@ describe('Device Model', function () {
 						return expect(device.id).to.equal(ctx.device.id);
 					});
 
-					it('should be rejected if the device name does not exist', async function () {
+					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.get('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.get(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -349,11 +348,13 @@ describe('Device Model', function () {
 						}, `Invalid parameter:  is not a valid value for parameter 'uuidOrId'`);
 					});
 
-					it('should be able to use a shorter uuid', async function () {
-						const device = await balena.models.device.get(
-							ctx.device.uuid.slice(0, 8),
+					it('should be rejected when a short uuid is provided', async function () {
+						await expectError(
+							async () => {
+								await balena.models.device.get(ctx.device.uuid.slice(0, 8));
+							},
+							`Invalid parameter: ${ctx.device.uuid.slice(0, 8)} is not a valid value for parameter 'uuidOrId'`,
 						);
-						return expect(device.id).to.equal(ctx.device.id);
 					});
 
 					it('should support arbitrary pinejs options', async function () {
@@ -415,8 +416,10 @@ describe('Device Model', function () {
 
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.getName('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.getName(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -438,8 +441,10 @@ describe('Device Model', function () {
 
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.getApplicationName('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.getApplicationName(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -464,7 +469,9 @@ describe('Device Model', function () {
 					});
 
 					it('should eventually be false if the device uuid does not exist', async function () {
-						const result = await balena.models.device.has('asdfghjkl');
+						const result = await balena.models.device.has(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
 						expect(result).to.be.false;
 					});
 
@@ -486,8 +493,10 @@ describe('Device Model', function () {
 
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.isOnline('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.isOnline(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -510,8 +519,10 @@ describe('Device Model', function () {
 
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.getLocalIPAddresses('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.getLocalIPAddresses(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -524,8 +535,10 @@ describe('Device Model', function () {
 				parallel('balena.models.device.getMACAddresses()', function () {
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.getMACAddresses('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.getMACAddresses(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -547,8 +560,10 @@ describe('Device Model', function () {
 				parallel('balena.models.device.getMetrics()', function () {
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.getMetrics('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.getMetrics(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -647,14 +662,29 @@ describe('Device Model', function () {
 				describe('balena.models.device.rename()', function () {
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.rename('asdfghjkl', 'Foo Bar');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.rename(
+								'a2df0000025c4223b4efe2b66f3e370a',
+								'Foo Bar',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
 						await expectError(async () => {
 							await balena.models.device.rename(999999, 'Foo Bar');
 						}, 'Device not found: 999999');
+					});
+
+					it('should be rejected when a short uuid is provided', async function () {
+						await expectError(
+							async () => {
+								await balena.models.device.rename(
+									this.device.uuid.slice(0, 7),
+									'FooBarDeviceByShortUuid',
+								);
+							},
+							`Device not found: ${this.device.uuid.slice(0, 7)}`,
+						);
 					});
 
 					describe('[contained scenario]', function () {
@@ -674,15 +704,6 @@ describe('Device Model', function () {
 							);
 							const name = await balena.models.device.getName(this.device.id);
 							return expect(name).to.equal('FooBarDeviceById');
-						});
-
-						it('should be able to rename the device using a shorter uuid', async function () {
-							await balena.models.device.rename(
-								this.device.uuid.slice(0, 7),
-								'FooBarDeviceByShortUuid',
-							);
-							const name = await balena.models.device.getName(this.device.uuid);
-							return expect(name).to.equal('FooBarDeviceByShortUuid');
 						});
 					});
 				});
@@ -714,11 +735,14 @@ describe('Device Model', function () {
 
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.setCustomLocation('asdfghjkl', {
-								latitude: 43.383333,
-								longitude: 2.383333,
-							});
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.setCustomLocation(
+								'a2df0000025c4223b4efe2b66f3e370a',
+								{
+									latitude: 43.383333,
+									longitude: 2.383333,
+								},
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -759,8 +783,10 @@ describe('Device Model', function () {
 
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.unsetCustomLocation('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.unsetCustomLocation(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -773,8 +799,11 @@ describe('Device Model', function () {
 				describe('balena.models.device.setNote()', function () {
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.setNote('asdfghjkl', 'My note');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.setNote(
+								'a2df0000025c4223b4efe2b66f3e370a',
+								'My note',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -946,10 +975,12 @@ describe('Device Model', function () {
 						expect(deviceKeys[0]).to.have.property('expiry_date', tomorrowDate);
 					});
 
-					it('should be rejected if the device name does not exist', async function () {
+					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.generateDeviceKey('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.generateDeviceKey(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -958,12 +989,15 @@ describe('Device Model', function () {
 						}, 'Device not found: 999999');
 					});
 
-					it('should be able to use a shorter uuid', async function () {
-						const deviceApiKey = await balena.models.device.generateDeviceKey(
-							this.device.uuid.slice(0, 8),
+					it('should be rejected when a short uuid is provided', async function () {
+						await expectError(
+							async () => {
+								await balena.models.device.generateDeviceKey(
+									this.device.uuid.slice(0, 8),
+								);
+							},
+							`Invalid parameter: ${this.device.uuid.slice(0, 8)} is not a valid value for parameter 'uuidOrId'`,
 						);
-						expect(deviceApiKey).to.be.a('string');
-						return expect(deviceApiKey).to.have.length(32);
 					});
 				});
 			});
@@ -971,8 +1005,10 @@ describe('Device Model', function () {
 			describe('balena.models.device.remove()', function () {
 				it('should be rejected if the device uuid does not exist', async function () {
 					await expectError(async () => {
-						await balena.models.device.remove('asdfghjkl');
-					}, 'Device not found: asdfghjkl');
+						await balena.models.device.remove(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
+					}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it('should be rejected if the device id does not exist', async function () {
@@ -1006,12 +1042,13 @@ describe('Device Model', function () {
 						}, `Invalid parameter:  is not a valid value for parameter 'uuidOrIdOrArray'`);
 					});
 
-					it('should be able to remove the device using a shorter uuid', async function () {
-						await balena.models.device.remove(this.device.uuid.slice(0, 7));
-						const devices = await balena.models.device.getAllByApplication(
-							this.application.id,
+					it('should be rejected when a short uuid is provided', async function () {
+						await expectError(
+							async () => {
+								await balena.models.device.remove(this.device.uuid.slice(0, 7));
+							},
+							`Device not found: ${this.device.uuid.slice(0, 7)}`,
 						);
-						return expect(devices).to.deep.equal([]);
 					});
 				});
 			});
@@ -1021,8 +1058,10 @@ describe('Device Model', function () {
 
 				it('should be rejected if the device uuid does not exist', async function () {
 					await expectError(async () => {
-						await balena.models.device.hasDeviceUrl('asdfghjkl');
-					}, 'Device not found: asdfghjkl');
+						await balena.models.device.hasDeviceUrl(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
+					}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it('should be rejected if the device id does not exist', async function () {
@@ -1064,8 +1103,10 @@ describe('Device Model', function () {
 				describe('given a newly created device', function () {
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
-							await balena.models.device.getDeviceUrl('asdfghjkl');
-						}, 'Device not found: asdfghjkl');
+							await balena.models.device.getDeviceUrl(
+								'a2df0000025c4223b4efe2b66f3e370a',
+							);
+						}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 					});
 
 					it('should be rejected if the device id does not exist', async function () {
@@ -1090,11 +1131,15 @@ describe('Device Model', function () {
 						return balena.models.device.enableDeviceUrl(this.device.id);
 					});
 
-					it('should eventually return the correct device url given a shorter uuid', async function () {
-						const deviceUrl = await balena.models.device.getDeviceUrl(
-							this.device.uuid.slice(0, 7),
+					it('should be rejected when a short uuid is provided', async function () {
+						await expectError(
+							async () => {
+								await balena.models.device.getDeviceUrl(
+									this.device.uuid.slice(0, 7),
+								);
+							},
+							`Invalid parameter: ${this.device.uuid.slice(0, 7)} is not a valid value for parameter 'uuidOrId'`,
 						);
-						return expect(deviceUrl).to.match(/[a-z0-9]{32}/);
 					});
 
 					it('should eventually return the correct device url given an id', async function () {
@@ -1125,8 +1170,10 @@ describe('Device Model', function () {
 			describe('balena.models.device.enableDeviceUrl()', function () {
 				it('should be rejected if the device uuid does not exist', async function () {
 					await expectError(async () => {
-						await balena.models.device.enableDeviceUrl('asdfghjkl');
-					}, 'Device not found: asdfghjkl');
+						await balena.models.device.enableDeviceUrl(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
+					}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it('should be rejected if the device id does not exist', async function () {
@@ -1138,6 +1185,17 @@ describe('Device Model', function () {
 				describe('given the device url is disabled', function () {
 					givenADevice(beforeEach);
 
+					it('should be rejected when a short uuid is provided', async function () {
+						await expectError(
+							async () => {
+								await balena.models.device.enableDeviceUrl(
+									this.device.uuid.slice(0, 7),
+								);
+							},
+							`Device not found: ${this.device.uuid.slice(0, 7)}`,
+						);
+					});
+
 					['id', 'uuid'].forEach((prop) => {
 						it(`should be able to enable web access using a ${prop}`, async function () {
 							await balena.models.device.enableDeviceUrl(this.device[prop]);
@@ -1147,24 +1205,18 @@ describe('Device Model', function () {
 							expect(hasDeviceUrl).to.be.true;
 						});
 					});
-
-					it('should be able to enable web access using a shorter uuid', async function () {
-						await balena.models.device.enableDeviceUrl(
-							this.device.uuid.slice(0, 7),
-						);
-						const hasDeviceUrl = await balena.models.device.hasDeviceUrl(
-							this.device.id,
-						);
-						expect(hasDeviceUrl).to.be.true;
-					});
 				});
 			});
 
 			describe('balena.models.device.disableDeviceUrl()', function () {
+				givenADevice(before);
+
 				it('should be rejected if the device uuid does not exist', async function () {
 					await expectError(async () => {
-						await balena.models.device.disableDeviceUrl('asdfghjkl');
-					}, 'Device not found: asdfghjkl');
+						await balena.models.device.disableDeviceUrl(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
+					}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it('should be rejected if the device id does not exist', async function () {
@@ -1173,9 +1225,18 @@ describe('Device Model', function () {
 					}, 'Device not found: 999999');
 				});
 
-				describe('given device url is enabled', function () {
-					givenADevice(before);
+				it('should be rejected when a short uuid is provided', async function () {
+					await expectError(
+						async () => {
+							await balena.models.device.disableDeviceUrl(
+								this.device.uuid.slice(0, 7),
+							);
+						},
+						`Device not found: ${this.device.uuid.slice(0, 7)}`,
+					);
+				});
 
+				describe('given device url is enabled', function () {
 					beforeEach(async function () {
 						await balena.models.device.enableDeviceUrl(this.device.id);
 						const hasDeviceUrl = await balena.models.device.hasDeviceUrl(
@@ -1194,16 +1255,6 @@ describe('Device Model', function () {
 
 					it('should be able to disable web access using an id', async function () {
 						await balena.models.device.disableDeviceUrl(this.device.id);
-						const hasDeviceUrl = await balena.models.device.hasDeviceUrl(
-							this.device.id,
-						);
-						expect(hasDeviceUrl).to.be.false;
-					});
-
-					it('should be able to disable web access using a shorter uuid', async function () {
-						await balena.models.device.disableDeviceUrl(
-							this.device.uuid.slice(0, 7),
-						);
 						const hasDeviceUrl = await balena.models.device.hasDeviceUrl(
 							this.device.id,
 						);
@@ -1294,7 +1345,9 @@ describe('Device Model', function () {
 
 							it(`should be rejected if a device with that ${deviceParam} does not exist`, async function () {
 								const deviceParamValue =
-									deviceParam === 'id' ? 999999 : 'asdfghjkl';
+									deviceParam === 'id'
+										? 999999
+										: 'a2df0000025c4223b4efe2b66f3e370a';
 								await expectError(async () => {
 									await balena.models.device.isInLocalMode(deviceParamValue);
 								}, `Device not found: ${deviceParamValue}`);
@@ -1314,7 +1367,9 @@ describe('Device Model', function () {
 
 							it(`should be rejected if a device with that ${deviceParam} does not exist`, async function () {
 								const deviceParamValue =
-									deviceParam === 'id' ? 999999 : 'asdfghjkl';
+									deviceParam === 'id'
+										? 999999
+										: 'a2df0000025c4223b4efe2b66f3e370a';
 								await expectError(async () => {
 									await balena.models.device.enableLocalMode(deviceParamValue);
 								}, `Device not found: ${deviceParamValue}`);
@@ -1334,7 +1389,9 @@ describe('Device Model', function () {
 
 							it(`should be rejected if a device with that ${deviceParam} does not exist`, async function () {
 								const deviceParamValue =
-									deviceParam === 'id' ? 999999 : 'asdfghjkl';
+									deviceParam === 'id'
+										? 999999
+										: 'a2df0000025c4223b4efe2b66f3e370a';
 								await expectError(async () => {
 									await balena.models.device.disableLocalMode(deviceParamValue);
 								}, `Device not found: ${deviceParamValue}`);
@@ -1493,22 +1550,22 @@ describe('Device Model', function () {
 				describe(`balena.models.device.startOsUpdate() called with ${paramType}`, function () {
 					givenADevice(before);
 					describe('given an offline device w/o os info', function () {
-						it('should be rejected if the device does not exist and using using short uuid', async function () {
+						it('should be rejected when using a short uuid', async function () {
 							await expectError(
 								async () => {
 									await (paramType === 'array of uuids'
 										? balena.models.device.startOsUpdate(
-												['asdfghjkl'],
+												['a2df000'],
 												'2.29.2+rev1.prod',
 											)
 										: balena.models.device.startOsUpdate(
-												'asdfghjkl',
+												'a2df000',
 												'2.29.2+rev1.prod',
 											));
 								},
 								paramType === 'array of uuids'
-									? `Invalid parameter: asdfghjkl is not a valid value for parameter 'uuidOrIdOrArray'`
-									: 'Device not found: asdfghjkl',
+									? `Invalid parameter: a2df000 is not a valid value for parameter 'uuidOrIdOrArray'`
+									: 'Device not found: a2df000',
 							);
 						});
 
@@ -1516,14 +1573,14 @@ describe('Device Model', function () {
 							await expectError(async () => {
 								await (paramType === 'array of uuids'
 									? balena.models.device.startOsUpdate(
-											['asdfghjkld8047d2ae2546389241ea0a'],
+											['asdfghjkl25c4223b4efe2b66f3e370a'],
 											'2.29.2+rev1.prod',
 										)
 									: balena.models.device.startOsUpdate(
-											'asdfghjkld8047d2ae2546389241ea0a',
+											'asdfghjkl25c4223b4efe2b66f3e370a',
 											'2.29.2+rev1.prod',
 										));
-							}, 'Device not found: asdfghjkld8047d2ae2546389241ea0a');
+							}, 'Device not found: asdfghjkl25c4223b4efe2b66f3e370a');
 						});
 
 						it('should not be able to start an OS update without providing a targetOsVersion parameter', async function () {
@@ -1865,8 +1922,10 @@ describe('Device Model', function () {
 
 				it('should be rejected if the device does not exist', async function () {
 					await expectError(async () => {
-						await balena.models.device.getSupervisorTargetState('asdfghjkl');
-					}, 'Device not found: asdfghjkl');
+						await balena.models.device.getSupervisorTargetState(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
+					}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it(`should reflect the device's target state`, async function () {
@@ -1921,9 +1980,9 @@ describe('Device Model', function () {
 				it('should be rejected if the fleet does not exist', async function () {
 					await expectError(async () => {
 						await balena.models.device.getSupervisorTargetStateForApp(
-							'asdfghjkl',
+							'a2df0000025c4223b4efe2b66f3e370a',
 						);
-					}, 'Application not found: asdfghjkl');
+					}, 'Application not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it(`should give a device's target state (v3) for a _generic_ device of a fleet`, async function () {
@@ -1971,8 +2030,10 @@ describe('Device Model', function () {
 
 				it('should be rejected if the device does not exist', async function () {
 					await expectError(async () => {
-						await balena.models.device.getSupervisorState('asdfghjkl');
-					}, 'Device not found: asdfghjkl');
+						await balena.models.device.getSupervisorState(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
+					}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it('should be rejected if the device exists but is inaccessible', async function () {
@@ -2101,9 +2162,10 @@ describe('Device Model', function () {
 			});
 
 			describe('balena.models.device.get()', function () {
-				it('should return the device given the shorter uuid as a string', async function () {
-					const device = await balena.models.device.get(this.shortUuid);
-					return expect(device.id).to.equal(this.deviceInfo.id);
+				it('should be rejected when a short uuid is provided', async function () {
+					await expectError(async () => {
+						await balena.models.device.get(this.shortUuid);
+					}, `Invalid parameter: ${this.shortUuid} is not a valid value for parameter 'uuidOrId'`);
 				});
 
 				it('should fail to find the device given the shorter uuid as a number', async function () {
@@ -2129,28 +2191,18 @@ describe('Device Model', function () {
 			});
 
 			describe('balena.models.device.get()', () => {
-				it('should be rejected with an error if there is an ambiguation between shorter uuids', async function () {
-					await expectError(
-						async () => {
-							await balena.models.device.get(this.uuidRoot);
-						},
-						(error) => {
-							expect(error).to.have.property('code', 'BalenaAmbiguousDevice');
-						},
-					);
+				it('should be rejected when a short uuid is provided', async function () {
+					await expectError(async () => {
+						await balena.models.device.get(this.uuidRoot);
+					}, `Invalid parameter: ${this.uuidRoot} is not a valid value for parameter 'uuidOrId'`);
 				});
 			});
 
 			describe('balena.models.device.has()', () => {
-				it('should be rejected with an error for an ambiguous shorter uuid', async function () {
-					await expectError(
-						async () => {
-							await balena.models.device.has(this.uuidRoot);
-						},
-						(error) => {
-							expect(error).to.have.property('code', 'BalenaAmbiguousDevice');
-						},
-					);
+				it('should be rejected when a short uuid is provided', async function () {
+					await expectError(async () => {
+						await balena.models.device.has(this.uuidRoot);
+					}, `Invalid parameter: ${this.uuidRoot} is not a valid value for parameter 'uuidOrId'`);
 				});
 			});
 		});
@@ -2163,10 +2215,12 @@ describe('Device Model', function () {
 			givenADevice(before);
 
 			describe('balena.models.device.getWithServiceDetails()', function () {
-				it('should be rejected if the device name does not exist', async function () {
+				it('should be rejected if the device uuid does not exist', async function () {
 					await expectError(async () => {
-						await balena.models.device.getWithServiceDetails('asdfghjkl');
-					}, 'Device not found: asdfghjkl');
+						await balena.models.device.getWithServiceDetails(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
+					}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it('should be rejected if the device id does not exist', async function () {
@@ -2175,11 +2229,15 @@ describe('Device Model', function () {
 					}, 'Device not found: 999999');
 				});
 
-				it('should be able to use a shorter uuid', async function () {
-					const device = await balena.models.device.getWithServiceDetails(
-						this.device.uuid.slice(0, 8),
+				it('should be rejected when a short uuid is provided', async function () {
+					await expectError(
+						async () => {
+							await balena.models.device.getWithServiceDetails(
+								this.device.uuid.slice(0, 8),
+							);
+						},
+						`Invalid parameter: ${this.device.uuid.slice(0, 8)} is not a valid value for parameter 'uuidOrId'`,
 					);
-					expect(device.id).to.equal(this.device.id);
 				});
 
 				['id', 'uuid'].forEach((prop) => {
@@ -2230,7 +2288,6 @@ describe('Device Model', function () {
 						is_running__release: {
 							__id: this.currentRelease.id,
 						},
-						current_services: services,
 						current_services_by_app: {
 							[this.application.slug]: services,
 						},
@@ -2267,23 +2324,15 @@ describe('Device Model', function () {
 
 					// Augmented properties
 					// Should filter out deleted image installs
-					expect(deviceDetails.current_services.db).to.have.lengthOf(1);
 					expect(
 						deviceDetails.current_services_by_app[this.application.slug].db,
 					).to.have.lengthOf(1);
-					const currentServices =
-						_.flatten(Object.values(deviceDetails.current_services)) ?? [];
 					const currentServicesByApp =
 						_.flatten(
 							Object.values(
 								deviceDetails.current_services_by_app[this.application.slug],
 							),
 						) ?? [];
-					currentServices.forEach((currentService) => {
-						expect(currentService).to.have.property('commit');
-						expect(currentService).to.have.property('raw_version');
-						expect(currentService).to.have.property('release_id');
-					});
 					currentServicesByApp.forEach((currentService) => {
 						expect(currentService).to.have.property('commit');
 						expect(currentService).to.have.property('raw_version');
@@ -2303,7 +2352,6 @@ describe('Device Model', function () {
 						});
 					// @ts-expect-error - test case
 					expect(deviceDetails.device_name).to.be.undefined;
-					expect(deviceDetails.current_services).not.to.be.undefined;
 					expect(deviceDetails.current_services_by_app[this.application.slug])
 						.not.to.be.undefined;
 					expect(deviceDetails.belongs_to__application[0]).to.deep.match({
@@ -2450,20 +2498,23 @@ describe('Device Model', function () {
 					]);
 				});
 
-				it('can set and then retrieve a device service var by short uuid', async function () {
+				it('should rejected when trying to set or retrieve a device service var by short uuid', async function () {
 					const shortUUID = this.device['uuid'].slice(0, 6);
-					await varModel.set(
-						shortUUID,
-						this.webService.id,
-						'EDITOR_BY_SHORT_UUID',
-						'vim',
-					);
-					const result = await varModel.get(
-						shortUUID,
-						this.webService.id,
-						'EDITOR_BY_SHORT_UUID',
-					);
-					return expect(result).to.equal('vim');
+					await expectError(async () => {
+						await varModel.set(
+							shortUUID,
+							this.webService.id,
+							'EDITOR_BY_SHORT_UUID',
+							'vim',
+						);
+					}, `Invalid parameter: ${shortUUID} is not a valid value for parameter 'uuidOrId'`);
+					await expectError(async () => {
+						await varModel.get(
+							shortUUID,
+							this.webService.id,
+							'EDITOR_BY_SHORT_UUID',
+						);
+					}, `Invalid parameter: ${shortUUID} is not a valid value for parameter 'uuidOrId'`);
 				});
 			});
 
@@ -2493,8 +2544,10 @@ describe('Device Model', function () {
 			describe('balena.models.device.deactivate()', function () {
 				it('should be rejected if the device uuid does not exist', async function () {
 					await expectError(async () => {
-						await balena.models.device.deactivate('asdfghjkl');
-					}, 'Device not found: asdfghjkl');
+						await balena.models.device.deactivate(
+							'a2df0000025c4223b4efe2b66f3e370a',
+						);
+					}, 'Device not found: a2df0000025c4223b4efe2b66f3e370a');
 				});
 
 				it('should be rejected if the device id does not exist', async function () {
@@ -2540,6 +2593,9 @@ describe('Device Model', function () {
 					});
 				}
 
+				const DAY_MS = 24 * 60 * 60 * 1000;
+				const YEAR_MS = 365 * DAY_MS;
+
 				for (const testSet of [
 					{
 						method: 'getAllByApplication',
@@ -2551,8 +2607,8 @@ describe('Device Model', function () {
 						const result = await historyModel[testSet.method](
 							this[testSet.model]['id'],
 							{
-								fromDate: subDays(new Date(), 1),
-								toDate: addDays(new Date(), 1),
+								fromDate: new Date(Date.now() - 1 * DAY_MS),
+								toDate: new Date(Date.now() + 1 * DAY_MS),
 							},
 						);
 						testDeviceHistory(result, this.application, this.device);
@@ -2562,8 +2618,8 @@ describe('Device Model', function () {
 						const result = await historyModel[testSet.method](
 							this[testSet.model]['id'],
 							{
-								fromDate: subDays(new Date(), 1),
-								toDate: addDays(new Date(), 1),
+								fromDate: new Date(Date.now() - 1 * DAY_MS),
+								toDate: new Date(Date.now() + 1 * DAY_MS),
 							},
 							{ $top: 1 },
 						);
@@ -2574,8 +2630,8 @@ describe('Device Model', function () {
 						const result = await historyModel[testSet.method](
 							this[testSet.model]['id'],
 							{
-								fromDate: subYears(new Date(), 2),
-								toDate: subYears(new Date(), 1),
+								fromDate: new Date(Date.now() - 2 * YEAR_MS),
+								toDate: new Date(Date.now() - 1 * YEAR_MS),
 							},
 						);
 						expect(result).to.be.empty;
@@ -2585,8 +2641,8 @@ describe('Device Model', function () {
 						const result = await historyModel[testSet.method](
 							this[testSet.model]['id'],
 							{
-								fromDate: subDays(new Date(), 1),
-								toDate: addDays(new Date(), 1),
+								fromDate: new Date(Date.now() - 1 * DAY_MS),
+								toDate: new Date(Date.now() + 1 * DAY_MS),
 							},
 							{
 								$top: 1,
@@ -2822,7 +2878,7 @@ describe('Device Model', function () {
 				});
 			});
 
-			describe('balena.models.device.setSupervisorRelease()', function () {
+			describe('balena.models.device.pinToSupervisorRelease()', function () {
 				givenASupervisorRelease(before, '11.12.3');
 
 				before(async function () {
@@ -2830,7 +2886,7 @@ describe('Device Model', function () {
 					// Set all devices to a supervisor release so that the service installs are already set.
 					// We shouldn't need to do this.
 					for (const d of this.devices) {
-						await balena.models.device.setSupervisorRelease(
+						await balena.models.device.pinToSupervisorRelease(
 							d.id,
 							oldSupervisorRelease.id,
 						);
@@ -2840,7 +2896,7 @@ describe('Device Model', function () {
 
 				['raw_version', 'id'].forEach((svReleaseProp) => {
 					it(`should set the batch of devices to a specific supervisor release using the supervisor releases's ${svReleaseProp}`, async function () {
-						await balena.models.device.setSupervisorRelease(
+						await balena.models.device.pinToSupervisorRelease(
 							this.devices.map((d) => d.id),
 							this.supervisorRelease[svReleaseProp],
 						);
@@ -2858,7 +2914,7 @@ describe('Device Model', function () {
 				it('should fail to set the batch of devices to a specific non-existent supervisor release', async function () {
 					const badRelease = 'nonexistent-supervisor-version';
 					await expectError(async () => {
-						await balena.models.device.setSupervisorRelease(
+						await balena.models.device.pinToSupervisorRelease(
 							this.devices.map((d) => d.id),
 							badRelease,
 						);
@@ -2872,11 +2928,11 @@ describe('Device Model', function () {
 				...testDeviceOsInfo,
 			});
 
-			describe('balena.models.device.setSupervisorRelease()', function () {
+			describe('balena.models.device.pinToSupervisorRelease()', function () {
 				givenASupervisorRelease(before);
 
 				it('should set the device to a specific supervisor release, using the device id & target version', async function () {
-					await balena.models.device.setSupervisorRelease(
+					await balena.models.device.pinToSupervisorRelease(
 						this.device.id,
 						this.supervisorRelease.raw_version,
 					);
@@ -2888,7 +2944,7 @@ describe('Device Model', function () {
 				});
 
 				it('should set the device to a specific supervisor release, using the device id & supervisor release id', async function () {
-					await balena.models.device.setSupervisorRelease(
+					await balena.models.device.pinToSupervisorRelease(
 						this.device.id,
 						this.supervisorRelease.id,
 					);
@@ -2902,7 +2958,7 @@ describe('Device Model', function () {
 				it('should fail to set the device to a specific non-existent supervisor release', async function () {
 					const badRelease = 'nonexistent-supervisor-version';
 					await expectError(async () => {
-						await balena.models.device.setSupervisorRelease(
+						await balena.models.device.pinToSupervisorRelease(
 							this.device.id,
 							badRelease,
 						);
@@ -2917,12 +2973,12 @@ describe('Device Model', function () {
 				os_version: hostOS,
 			});
 
-			describe('balena.models.device.setSupervisorRelease()', function () {
+			describe('balena.models.device.pinToSupervisorRelease()', function () {
 				givenASupervisorRelease(before);
 
 				it('should fail to set the target supervisor for a pre-multicontainer device', async function () {
 					await expectError(async () => {
-						await balena.models.device.setSupervisorRelease(
+						await balena.models.device.pinToSupervisorRelease(
 							this.device.id,
 							this.supervisorRelease.id,
 						);
@@ -2965,41 +3021,6 @@ describe('Device Model', function () {
 								__id: this.currentRelease.id,
 							},
 						});
-						expect(
-							Object.keys(deviceDetails.current_services).sort(),
-						).to.deep.equal(['__proto__', 'hasOwnProperty']);
-
-						// it seems that deep.match doesn't work with objects with a custom __proto__ property
-						expect(deviceDetails.current_services.hasOwnProperty).to.deep.match(
-							[
-								{
-									id: this.newWebInstall.id,
-									service_id: this.webService.id,
-									image_id: this.newWebImage.id,
-									commit: 'new-release-commit',
-									status: 'Downloading',
-									download_progress: 50,
-								},
-								{
-									id: this.oldWebInstall.id,
-									service_id: this.webService.id,
-									image_id: this.oldWebImage.id,
-									commit: 'old-release-commit',
-									status: 'Running',
-									download_progress: null,
-								},
-							],
-						);
-						expect(deviceDetails.current_services.__proto__).to.deep.match([
-							{
-								id: this.newDbInstall.id,
-								service_id: this.dbService.id,
-								image_id: this.newDbImage.id,
-								commit: 'new-release-commit',
-								status: 'Running',
-								download_progress: null,
-							},
-						]);
 
 						expect(
 							Object.keys(
@@ -3129,16 +3150,15 @@ describe('Device Model', function () {
 					});
 				});
 
-				it('should be able to move a device using shorter uuids', async function () {
-					await balena.models.device.move(
-						this.deviceInfo.uuid.slice(0, 7),
-						this.applicationSameDT.id,
-					);
-					const applicationName = await balena.models.device.getApplicationName(
-						this.deviceInfo.id,
-					);
-					return expect(applicationName).to.equal(
-						this.applicationSameDT.app_name,
+				it('should be rejected when a short uuid is provided', async function () {
+					await expectError(
+						async () => {
+							await balena.models.device.move(
+								this.deviceInfo.uuid.slice(0, 7),
+								this.applicationSameDT.id,
+							);
+						},
+						`Device not found: ${this.deviceInfo.uuid.slice(0, 7)}`,
 					);
 				});
 			});
@@ -3278,43 +3298,6 @@ describe('Device Model', function () {
 			it('should throw when a device uuid is not provided', () => {
 				// @ts-expect-error invalid parameter
 				expect(() => balena.models.device.getDashboardUrl()).to.throw();
-			});
-		});
-
-		describe('balena.models.device.lastOnline()', function () {
-			it('should return the string "Connecting..." if the device has no `last_connectivity_event`', () => {
-				expect(
-					balena.models.device.lastOnline({
-						last_connectivity_event: null,
-						is_online: false,
-					}),
-				).to.equal('Connecting...');
-			});
-
-			it('should return the correct time string if the device is online', function () {
-				const mockDevice = {
-					last_connectivity_event: new Date(
-						Date.now() - 1000 * 60 * 5,
-					).toUTCString(),
-					is_online: true,
-				};
-
-				return expect(balena.models.device.lastOnline(mockDevice)).to.equal(
-					'Connected (for 5 minutes)',
-				);
-			});
-
-			it('should return the correct time string if the device is offline', function () {
-				const mockDevice = {
-					last_connectivity_event: new Date(
-						Date.now() - 1000 * 60 * 5,
-					).toUTCString(),
-					is_online: false,
-				};
-
-				return expect(balena.models.device.lastOnline(mockDevice)).to.equal(
-					'5 minutes ago',
-				);
 			});
 		});
 
@@ -3630,7 +3613,8 @@ describe('Device Model', function () {
 			it('should throw when the device is offline', () => {
 				[
 					['Resin OS 1.21.0', '', '1.28.0'],
-					['Resin OS 1.30.1', '', '2.5.0+rev1'],
+					['Resin OS 1.30.1', '', '2.16.0+rev1'],
+					['Resin OS 2.14.0+rev1', '', '2.16.0+rev1'],
 					['balenaOS 2.26.0+rev1', 'prod', '2.29.2+rev1.prod'],
 				].forEach(function ([osVersion, osVariant, targetOsVersion]) {
 					return expect(() => {
@@ -3693,7 +3677,7 @@ describe('Device Model', function () {
 					['balenaOS 2.26.0+rev1', 'dev'],
 					['balenaOS 2.28.0+rev1', 'dev'],
 				].forEach(function ([osVersion, osVariant]) {
-					return expect(() => {
+					expect(() => {
 						_checkOsUpdateTarget(
 							{
 								uuid,
@@ -3713,57 +3697,14 @@ describe('Device Model', function () {
 			describe('v1 -> v1 hup', () => {
 				['raspberrypi3', 'intel-nuc'].forEach((deviceType) => {
 					describe(`given a ${deviceType}`, function () {
-						it('should throw when current os version is < 1.8.0', () => {
+						it('should throw when current os version is v1', () => {
 							[
 								['Resin OS 1.2.1', ''],
-								['Resin OS 1.6.0', ''],
 								['Resin OS 1.7.2', ''],
-							].forEach(function ([osVersion, osVariant]) {
-								return expect(() => {
-									_checkOsUpdateTarget(
-										{
-											uuid,
-											is_of__device_type: [{ slug: deviceType }],
-											is_connected_to_vpn: true,
-											os_version: osVersion,
-											os_variant: osVariant,
-										},
-										'1.26.0',
-									);
-								}).to.throw('Current OS version must be >= 1.8.0');
-							});
-						});
-
-						it('should throw when the target os version is below the min supported v1 version', () => {
-							[
 								['Resin OS 1.8.0', ''],
-								['Resin OS 1.10.0', ''],
-								['Resin OS 1.19.0', ''],
 								['Resin OS 1.21.0', ''],
 							].forEach(function ([osVersion, osVariant]) {
-								return expect(() => {
-									_checkOsUpdateTarget(
-										{
-											uuid,
-											is_of__device_type: [{ slug: deviceType }],
-											is_connected_to_vpn: true,
-											os_version: osVersion,
-											os_variant: osVariant,
-										},
-										'1.25.0',
-									);
-								}).to.throw('Target OS version must be >= 1.26.0');
-							});
-						});
-
-						it('should not throw when it is a valid v1 -> v1 hup', () => {
-							[
-								['Resin OS 1.8.0', ''],
-								['Resin OS 1.10.0', ''],
-								['Resin OS 1.19.0', ''],
-								['Resin OS 1.21.0', ''],
-							].forEach(function ([osVersion, osVariant]) {
-								return expect(() => {
+								expect(() => {
 									_checkOsUpdateTarget(
 										{
 											uuid,
@@ -3774,7 +3715,7 @@ describe('Device Model', function () {
 										},
 										'1.28.0',
 									);
-								}).to.not.throw();
+								}).to.throw('Current OS version must be >= 2.14.0+rev1');
 							});
 						});
 					});
@@ -3783,171 +3724,13 @@ describe('Device Model', function () {
 
 			describe('v1 -> v2 hup', function () {
 				describe('given a raspberrypi3', function () {
-					it('should throw when current os version is < 1.8.0', () => {
+					it('should throw when current os version is v1', () => {
 						[
 							['Resin OS 1.2.1', ''],
-							['Resin OS 1.6.0', ''],
 							['Resin OS 1.7.2', ''],
-						].forEach(function ([osVersion, osVariant]) {
-							return expect(() => {
-								_checkOsUpdateTarget(
-									{
-										uuid,
-										is_of__device_type: [{ slug: 'raspberrypi3' }],
-										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
-									},
-									'2.5.0+rev1',
-								);
-							}).to.throw('Current OS version must be >= 1.8.0');
-						});
-					});
-
-					it('should not throw when it is a valid v1 -> v2 hup', () => {
-						[
 							['Resin OS 1.8.0', ''],
-							['Resin OS 1.10.0', ''],
-							['Resin OS 1.19.0', ''],
 							['Resin OS 1.21.0', ''],
-							['Resin OS 1.26.1', ''],
 							['Resin OS 1.30.1', ''],
-						].forEach(function ([osVersion, osVariant]) {
-							return expect(() => {
-								_checkOsUpdateTarget(
-									{
-										uuid,
-										is_of__device_type: [{ slug: 'raspberrypi3' }],
-										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
-									},
-									'2.5.0+rev1',
-								);
-							}).to.not.throw();
-						});
-					});
-				});
-
-				describe('given a beaglebone-black', function () {
-					it('should throw when current os version is < 1.30.1', () => {
-						[
-							['Resin OS 1.2.1', ''],
-							['Resin OS 1.6.0', ''],
-							['Resin OS 1.7.2', ''],
-							['Resin OS 1.8.0', ''],
-							['Resin OS 1.10.0', ''],
-							['Resin OS 1.19.0', ''],
-							['Resin OS 1.21.0', ''],
-							['Resin OS 1.26.1', ''],
-						].forEach(function ([osVersion, osVariant]) {
-							return expect(() => {
-								_checkOsUpdateTarget(
-									{
-										uuid,
-										is_of__device_type: [{ slug: 'beaglebone-black' }],
-										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
-									},
-									'2.5.0+rev1',
-								);
-							}).to.throw('Current OS version must be >= 1.30.1');
-						});
-					});
-
-					it('should not throw when it is a valid v1 -> v2 hup', () => {
-						[['Resin OS 1.30.1', '']].forEach(function ([
-							osVersion,
-							osVariant,
-						]) {
-							return expect(() => {
-								_checkOsUpdateTarget(
-									{
-										uuid,
-										is_of__device_type: [{ slug: 'beaglebone-black' }],
-										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
-									},
-									'2.5.0+rev1',
-								);
-							}).to.not.throw();
-						});
-					});
-				});
-			});
-
-			describe('v2 -> v2 hup', function () {
-				describe('given a raspberrypi3', function () {
-					it('should throw when current os version is < 2.0.0+rev1', () => {
-						[['Resin OS 2.0.0.rev0 (prod)', 'prod']].forEach(function ([
-							osVersion,
-							osVariant,
-						]) {
-							return expect(() => {
-								_checkOsUpdateTarget(
-									{
-										uuid,
-										is_of__device_type: [{ slug: 'raspberrypi3' }],
-										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
-									},
-									'2.1.0+rev1.prod',
-								);
-							}).to.throw('Current OS version must be >= 2.0.0+rev1');
-						});
-					});
-
-					it('should not throw when it is a valid v2 -> v2 hup', () => {
-						[
-							['Resin OS 2.0.0.rev1 (prod)', 'prod'],
-							['Resin OS 2.0.0.rev1 (prod)', ''],
-							['Resin OS 2.0.0+rev2', 'prod'],
-							['Resin OS 2.0.0+rev2 (prod)', 'prod'],
-							['Resin OS 2.0.0+rev2 (prod)', ''],
-							['Resin OS 2.0.0+rev3', 'prod'],
-							['Resin OS 2.0.0+rev3 (prod)', 'prod'],
-							['Resin OS 2.0.0+rev3 (prod)', ''],
-							['Resin OS 2.0.0+rev4 (prod)', 'prod'],
-							['Resin OS 2.0.0+rev4 (prod)', ''],
-							['Resin OS 2.0.0+rev5 (prod)', 'prod'],
-							['Resin OS 2.0.1.rev1', ''],
-							['Resin OS 2.0.2+rev2', ''],
-							['Resin OS 2.0.3+rev1', 'prod'],
-							['Resin OS 2.0.4+rev1', 'prod'],
-							['Resin OS 2.0.4+rev2', 'prod'],
-							['Resin OS 2.0.5+rev1', 'prod'],
-							['Resin OS 2.0.6+rev1', 'prod'],
-							['Resin OS 2.0.6+rev2', 'prod'],
-							['Resin OS 2.0.6+rev2', ''],
-							['Resin OS 2.1.0+rev1', 'prod'],
-							['Resin OS 2.2.0+rev1', 'prod'],
-							['Resin OS 2.9.7+rev1', 'prod'],
-							['Resin OS 2.12.0+rev1', 'prod'],
-							['Resin OS 2.12.1+rev1', 'prod'],
-							['balenaOS 2.26.0+rev1', 'prod'],
-						].forEach(function ([osVersion, osVariant]) {
-							return expect(() => {
-								_checkOsUpdateTarget(
-									{
-										uuid,
-										is_of__device_type: [{ slug: 'raspberrypi3' }],
-										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
-									},
-									'2.29.2+rev1.prod',
-								);
-							}).to.not.throw();
-						});
-					});
-
-					it('should throw when updating to a pre-release version with an older server', () => {
-						[
-							['balenaOS 2.29.2-1704382618288+rev1', 'prod'],
-							['balenaOS 2.29.2+rev1', 'prod'],
 						].forEach(function ([osVersion, osVariant]) {
 							expect(() => {
 								_checkOsUpdateTarget(
@@ -3958,160 +3741,185 @@ describe('Device Model', function () {
 										os_version: osVersion,
 										os_variant: osVariant,
 									},
-									'2.28.0-1704382553234+rev1.prod',
+									'2.16.0+rev1',
 								);
-							}).to.throw('OS downgrades are not allowed');
+							}).to.throw('Current OS version must be >= 2.14.0+rev1');
 						});
-					});
-
-					it('should not throw when updating to a pre-release version with a newer base server', () => {
-						expect(() => {
-							_checkOsUpdateTarget(
-								{
-									uuid,
-									is_of__device_type: [{ slug: 'raspberrypi3' }],
-									is_connected_to_vpn: true,
-									os_version: 'balenaOS 2.28.0+rev1',
-									os_variant: 'prod',
-								},
-								'2.29.2-1704382618288+rev1.prod',
-							);
-						}).to.not.throw();
-					});
-
-					it('should not throw when updating a device that is running a pre-release version to a version with a newer base server', () => {
-						expect(() => {
-							_checkOsUpdateTarget(
-								{
-									uuid,
-									is_of__device_type: [{ slug: 'raspberrypi3' }],
-									is_connected_to_vpn: true,
-									os_version: 'balenaOS 2.28.0-1704382553234',
-									os_variant: 'prod',
-								},
-								'2.29.2+rev1.prod',
-							);
-						}).to.not.throw();
-					});
-
-					it('should not throw when updating a device that is running a pre-release version updating to a pre-release version with a newer base server', () => {
-						expect(() => {
-							_checkOsUpdateTarget(
-								{
-									uuid,
-									is_of__device_type: [{ slug: 'raspberrypi3' }],
-									is_connected_to_vpn: true,
-									os_version: 'balenaOS 2.28.0-1704382553234',
-									os_variant: 'prod',
-								},
-								'2.29.2-1704382618288+rev1.prod',
-							);
-						}).to.not.throw();
 					});
 				});
+			});
 
-				describe('given a jetson-tx2', function () {
-					it('should throw when current os version is < 2.7.4', () => {
-						[
-							['Resin OS 2.0.0.rev1 (prod)', 'prod'],
-							['Resin OS 2.0.0.rev1 (prod)', ''],
-							['Resin OS 2.0.0+rev2', 'prod'],
-							['Resin OS 2.0.0+rev2 (prod)', 'prod'],
-							['Resin OS 2.0.0+rev2 (prod)', ''],
-							['Resin OS 2.0.0.rev1 (prod)', 'prod'],
-							['Resin OS 2.0.0.rev1 (prod)', ''],
-							['Resin OS 2.0.0+rev2', 'prod'],
-							['Resin OS 2.0.0+rev2 (prod)', 'prod'],
-							['Resin OS 2.0.0+rev2 (prod)', ''],
-							['Resin OS 2.0.0+rev3', 'prod'],
-							['Resin OS 2.0.0+rev3 (prod)', 'prod'],
-							['Resin OS 2.0.0+rev3 (prod)', ''],
-							['Resin OS 2.0.0+rev4 (prod)', 'prod'],
-							['Resin OS 2.0.0+rev4 (prod)', ''],
-							['Resin OS 2.0.0+rev5 (prod)', 'prod'],
-							['Resin OS 2.0.1.rev1', ''],
-							['Resin OS 2.0.2+rev2', ''],
-							['Resin OS 2.0.3+rev1', 'prod'],
-							['Resin OS 2.0.4+rev1', 'prod'],
-							['Resin OS 2.0.4+rev2', 'prod'],
-							['Resin OS 2.0.5+rev1', 'prod'],
-							['Resin OS 2.0.6+rev1', 'prod'],
-							['Resin OS 2.0.6+rev2', 'prod'],
-							['Resin OS 2.0.6+rev2', ''],
-							['Resin OS 2.1.0+rev1', 'prod'],
-							['Resin OS 2.2.0+rev1', 'prod'],
-							['Resin OS 2.3.0+rev1', 'prod'],
-							['Resin OS 2.3.0+rev2', 'prod'],
-							['Resin OS 2.4.1+rev1', 'prod'],
-							['Resin OS 2.4.2+rev1', 'prod'],
-							['Resin OS 2.6.0+rev1', 'prod'],
-							['Resin OS 2.7.2+rev1', 'prod'],
-						].forEach(function ([osVersion, osVariant]) {
-							return expect(() => {
-								_checkOsUpdateTarget(
-									{
-										uuid,
-										is_of__device_type: [{ slug: 'jetson-tx2' }],
-										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
-									},
-									'2.29.2+rev1.prod',
-								);
-							}).to.throw('Current OS version must be >= 2.7.4');
+			describe('v2 -> v2 hup', function () {
+				for (const deviceTypeSlug of ['raspberrypi3', 'jetson-tx2']) {
+					describe(`given a ${deviceTypeSlug}`, function () {
+						it('should throw when current os version is < 2.14.0+rev1', () => {
+							[
+								['Resin OS 2.0.0.rev0 (prod)', 'prod'],
+								['Resin OS 2.0.0.rev1 (prod)', 'prod'],
+								['Resin OS 2.0.0.rev1 (prod)', ''],
+								['Resin OS 2.0.0+rev2', 'prod'],
+								['Resin OS 2.0.1.rev1', ''],
+								['Resin OS 2.0.3+rev1', 'prod'],
+								['Resin OS 2.0.6+rev2', 'prod'],
+								['Resin OS 2.0.6+rev2', ''],
+								['Resin OS 2.1.0+rev1', 'prod'],
+								['Resin OS 2.2.0+rev1', 'prod'],
+								['Resin OS 2.9.7+rev1', 'prod'],
+								['Resin OS 2.12.0+rev1', 'prod'],
+								['Resin OS 2.12.1+rev1', 'prod'],
+							].forEach(function ([osVersion, osVariant]) {
+								expect(() => {
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceTypeSlug }],
+											is_connected_to_vpn: true,
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										'2.29.2+rev1.prod',
+									);
+								}).to.throw('Current OS version must be >= 2.14.0+rev1');
+							});
 						});
-					});
 
-					it('should not throw when it is a valid v2 -> v2 prod variant hup', () => {
-						[
-							['Resin OS 2.7.4+rev1', 'prod'],
-							['Resin OS 2.7.4+rev2', 'prod'],
-							['Resin OS 2.7.5+rev1', 'prod'],
-							['Resin OS 2.7.5+rev2', 'prod'],
-							['Resin OS 2.7.6+rev1', 'prod'],
-							['Resin OS 2.7.8+rev1', 'prod'],
-							['Resin OS 2.7.8+rev2', 'prod'],
-							['Resin OS 2.9.7+rev1', 'prod'],
-							['Resin OS 2.12.0+rev1', 'prod'],
-							['Resin OS 2.12.1+rev1', 'prod'],
-							['balenaOS 2.26.0+rev1', 'prod'],
-						].forEach(function ([osVersion, osVariant]) {
-							return expect(() => {
+						it('should not throw when it is a valid v2 -> v2 hup', () => {
+							[
+								['Resin OS 2.14.0+rev1', 'prod'],
+								['Resin OS 2.15.1+rev1', 'prod'],
+								['Resin OS 2.16.0+rev1', 'prod'],
+								['balenaOS 2.26.0+rev1', 'prod'],
+							].forEach(function ([osVersion, osVariant]) {
+								return expect(() => {
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceTypeSlug }],
+											is_connected_to_vpn: true,
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										'2.29.2+rev1.prod',
+									);
+								}).to.not.throw();
+							});
+						});
+
+						// pre-release versions
+
+						it('should throw when updating to a pre-release version with an older server', () => {
+							[
+								['balenaOS 2.29.2-1704382618288+rev1', 'prod'],
+								['balenaOS 2.29.2+rev1', 'prod'],
+							].forEach(function ([osVersion, osVariant]) {
+								expect(() => {
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceTypeSlug }],
+											is_connected_to_vpn: true,
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										'2.28.0-1704382553234+rev1.prod',
+									);
+								}).to.throw('OS downgrades are not allowed');
+							});
+						});
+
+						it('should not throw when updating to a pre-release version with a newer base server', () => {
+							expect(() => {
 								_checkOsUpdateTarget(
 									{
 										uuid,
-										is_of__device_type: [{ slug: 'jetson-tx2' }],
+										is_of__device_type: [{ slug: deviceTypeSlug }],
 										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
+										os_version: 'balenaOS 2.28.0+rev1',
+										os_variant: 'prod',
+									},
+									'2.29.2-1704382618288+rev1.prod',
+								);
+							}).to.not.throw();
+						});
+
+						it('should not throw when updating a device that is running a pre-release version to a version with a newer base server', () => {
+							expect(() => {
+								_checkOsUpdateTarget(
+									{
+										uuid,
+										is_of__device_type: [{ slug: deviceTypeSlug }],
+										is_connected_to_vpn: true,
+										os_version: 'balenaOS 2.28.0-1704382553234',
+										os_variant: 'prod',
 									},
 									'2.29.2+rev1.prod',
 								);
 							}).to.not.throw();
 						});
-					});
 
-					it('should not throw when it is a valid v2 -> v2 dev variant hup', () => {
-						[
-							['Resin OS 2.7.4+rev1.dev', 'dev'],
-							['Resin OS 2.9.7+rev2.dev', 'dev'],
-							['balenaOS 2.26.0+rev1.dev', 'dev'],
-						].forEach(function ([osVersion, osVariant]) {
-							return expect(() => {
+						it('should not throw when updating a device that is running a pre-release version updating to a pre-release version with a newer base server', () => {
+							expect(() => {
 								_checkOsUpdateTarget(
 									{
 										uuid,
-										is_of__device_type: [{ slug: 'jetson-tx2' }],
+										is_of__device_type: [{ slug: deviceTypeSlug }],
 										is_connected_to_vpn: true,
-										os_version: osVersion,
-										os_variant: osVariant,
+										os_version: 'balenaOS 2.28.0-1704382553234',
+										os_variant: 'prod',
 									},
-									'2.29.2+rev1.dev',
+									'2.29.2-1704382618288+rev1.prod',
 								);
 							}).to.not.throw();
 						});
+
+						// dev variant
+
+						it('should throw when it is an invalid v2 -> v2 dev variant hup b/c the current os version is < 2.14.0+rev1', () => {
+							[
+								['Resin OS 2.7.4+rev1.dev', 'dev'],
+								['Resin OS 2.9.7+rev2.dev', 'dev'],
+								// 2.14.0+rev1.dev isn't supported b/c it's considered lower than 2.14.0+rev1,
+								// which is the minimum supported version
+								['Resin OS 2.14.0+rev1.dev', 'dev'],
+							].forEach(function ([osVersion, osVariant]) {
+								expect(() => {
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceTypeSlug }],
+											is_connected_to_vpn: true,
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										'2.29.2+rev1.dev',
+									);
+								}).to.throw('Current OS version must be >= 2.14.0+rev1');
+							});
+						});
+
+						it('should not throw when it is a valid v2 -> v2 dev variant hup', () => {
+							[
+								['Resin OS 2.14.0+rev2.dev', 'dev'],
+								['Resin OS 2.15.1+rev1.dev', 'dev'],
+								['Resin OS 2.16.0+rev1.dev', 'dev'],
+								['balenaOS 2.26.0+rev1.dev', 'dev'],
+							].forEach(function ([osVersion, osVariant]) {
+								expect(() => {
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceTypeSlug }],
+											is_connected_to_vpn: true,
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										'2.29.2+rev1.dev',
+									);
+								}).to.not.throw();
+							});
+						});
 					});
-				});
+				}
 			});
 		});
 	});
