@@ -1,4 +1,18 @@
 - commits:
+    - subject: Replace the deprecated url.parse & url.resolve with WHATWG URL API
+      hash: d5d0f24b2ccb1b3197d56ee2a7b0efd1a48cb4da
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://balena.fibery.io/Work/Project/2258
+        see: https://balena.fibery.io/Work/Project/2258
+      author: Thodoris Greasidis
+      nested: []
+  version: 23.0.1
+  title: ""
+  date: 2026-02-11T22:39:24.024Z
+- commits:
     - subject: Rename device.setSupervisorRelease to device.pinToSupervisorRelease
       hash: 94c2c98e786f723d4125eaf9b88873f03af64f68
       body: ""
