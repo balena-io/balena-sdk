@@ -32,8 +32,6 @@ import type * as DeviceState from '../types/device-state';
 
 import type { OsUpdateActionResult } from '../util/device-actions/os-update';
 
-import * as url from 'url';
-
 import once from 'lodash/once';
 import * as bSemver from 'balena-semver';
 import * as errors from 'balena-errors';
@@ -428,7 +426,7 @@ const getDeviceModel = function (
 				throw new Error('The uuid option should be a non empty string');
 			}
 
-			return url.resolve(dashboardUrl, `/devices/${uuid}/summary`);
+			return new URL(`/devices/${uuid}/summary`, dashboardUrl).href;
 		},
 
 		/**

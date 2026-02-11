@@ -1,4 +1,3 @@
-import * as url from 'url';
 import * as errors from 'balena-errors';
 import type { Params } from 'pinejs-client-core';
 import { PinejsClientCore } from 'pinejs-client-core';
@@ -38,10 +37,8 @@ export class PinejsClient extends PinejsClientCore<BalenaModel> {
 	) {
 		super({
 			...params,
-			apiPrefix: url.resolve(
-				backendParams.apiUrl,
-				`/${backendParams.apiVersion}/`,
-			),
+			apiPrefix: new URL(`/${backendParams.apiVersion}/`, backendParams.apiUrl)
+				.href,
 		});
 
 		this.backendParams = backendParams;
