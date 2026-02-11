@@ -20,8 +20,6 @@ import type {
 	Application,
 } from '..';
 
-import * as url from 'url';
-
 import once from 'lodash/once';
 import * as errors from 'balena-errors';
 
@@ -213,7 +211,7 @@ const getApplicationModel = function (
 				throw new Error('The id option should be a finite number');
 			}
 
-			return url.resolve(dashboardUrl, `/apps/${id}`);
+			return new URL(`/apps/${id}`, dashboardUrl).href;
 		},
 
 		/**
