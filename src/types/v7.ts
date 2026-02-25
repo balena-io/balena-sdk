@@ -1035,7 +1035,10 @@ export interface ReleaseAsset {
 export interface ApplicationMembershipRole {
 	Read: {
 		id: Types['Integer']['Read'];
+		created_at: Types['Date Time']['Read'];
+		modified_at: Types['Date Time']['Read'];
 		name: Types['Short Text']['Read'];
+		description: Types['Short Text']['Read'];
 		is_of__team__grants_access_to__application?: Array<
 			TeamApplicationAccess['Read']
 		>;
@@ -1050,6 +1053,78 @@ export interface ApplicationMembershipRole {
 		is_of__user_application_membership?: Array<
 			UserIsMemberOfApplication['Read']
 		>;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_read_application: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_update_application: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_read_application_config_variables: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_modify_application_config_variables: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_modify_application_environment_variables: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_modify_application_tags: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_create_device: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_read_device: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_update_device: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_delete_device: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_deactivate_device: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_read_device_service_environment_variables: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_modify_device_service_environment_variables: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_modify_device_config_variables: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_create_provisioning_api_key: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_create_device_api_key: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_modify_device_tags: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_modify_device_environment_variables: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_tunnel_to_device: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_ssh_to_device_host: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_ssh_to_device_containers: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_trigger_proxy_based_host_update: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_trigger_proxy_based_supervisor_update: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_create_release: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_delete_release: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_read_application_api_keys: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_update_application_api_keys: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_delete_application_api_keys: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_read_device_api_keys: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_update_device_api_keys: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_delete_device_api_keys: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_proxy_requests_to_single_device_supervisor_api: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_proxy_requests_to_whole_fleet_device_supervisor_api: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		can_modify_release_assets: boolean;
+		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
+		belongs_to__organization:
+			| { __id: Organization['Read']['id'] }
+			| [Organization['Read']];
 	};
 	Write: Record<string, never>;
 }
