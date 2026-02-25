@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add experimental role type
+      hash: 52c7197197f9dac1d13676a6dcc910016da843dc
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Andrea Rosci
+      nested: []
+  version: 23.0.3
+  title: ""
+  date: 2026-02-25T17:46:24.682Z
+- commits:
     - subject: Add url as a devDependency to fix mochttp in browser tests
       hash: de962a311fa283f94c833d057adb1c18a976cdce
       body: ""
