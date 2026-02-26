@@ -18,8 +18,8 @@ import type { InjectedDependenciesParam } from '..';
 import type { DeviceType } from '../types/models';
 import type { Partials, Contract } from '../types/contract';
 import { mergePineOptions } from '../util';
+import once from 'lodash/once';
 import * as errors from 'balena-errors';
-import * as Handlebars from 'handlebars';
 
 // REPLACE ONCE HOST OS CONTRACTS ARE GENERATED THROUGH YOCTO
 import {
@@ -37,11 +37,17 @@ const handlebarsRuntimeOptions = {
 	},
 };
 
+const getHandlebars = once(
+	// eslint-disable-next-line @typescript-eslint/no-require-imports
+	() => require('handlebars') as typeof import('handlebars'),
+);
+
 const traversingCompile = (
 	partials: Partials,
 	initial: Contract,
 	path: string[],
 ): Contract => {
+	const Handlebars = getHandlebars();
 	let interpolated: Contract = { ...initial };
 	for (const partialKey of Object.keys(partials)) {
 		const current = partials[partialKey];
