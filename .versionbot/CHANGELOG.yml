@@ -1,4 +1,16 @@
 - commits:
+    - subject: "device-types: Lazy load handlebars in instructions related methods"
+      hash: d342a49c4f18978e432233d45fc23f45d8a103ab
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 23.0.4
+  title: ""
+  date: 2026-02-26T08:01:10.864Z
+- commits:
     - subject: Add experimental role type
       hash: 52c7197197f9dac1d13676a6dcc910016da843dc
       body: ""
