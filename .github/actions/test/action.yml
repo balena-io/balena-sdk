@@ -13,13 +13,14 @@ runs:
   using: "composite"
   steps:
     - name: Setup Node.js 22
-      if: ${{ fromJSON(env.os_value)[0] == 'ubuntu-latest' }}
+      # We run windows w/ node 22 to avoid the flakiness b/c of https://github.com/nodejs/node/issues/56645
+      if: ${{ fromJSON(env.os_value)[0] == 'windows-latest' }}
       uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
       with:
         node-version: 22
 
     - name: Setup Node.js lts
-      if: ${{ fromJSON(env.os_value)[0] != 'ubuntu-latest' }}
+      if: ${{ fromJSON(env.os_value)[0] == 'ubuntu-latest' || fromJSON(env.os_value)[0] == 'macos-latest' }}
       uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
       with:
         node-version: lts/*
