@@ -1,4 +1,22 @@
 - commits:
+    - subject: Use Node 22 for the Windows tests to reduce flakiness
+      hash: 6afef2e308e890be0636f9dff1669fc7ea3adfe8
+      body: >
+        Aims to fix the following error:
+
+        Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file
+        src\win\async.c, line 76
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://github.com/balena-io/balena-sdk/actions/runs/22417396849/job/64952487283?pr=1597
+        see: https://github.com/balena-io/balena-sdk/actions/runs/22417396849/job/64952487283?pr=1597
+      author: Thodoris Greasidis
+      nested: []
+  version: 23.0.5
+  title: ""
+  date: 2026-02-26T16:33:25.326Z
+- commits:
     - subject: "device-types: Lazy load handlebars in instructions related methods"
       hash: d342a49c4f18978e432233d45fc23f45d8a103ab
       body: ""
