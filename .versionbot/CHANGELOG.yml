@@ -1,4 +1,20 @@
 - commits:
+    - subject: Add device.pinToOsRelease that supports offline devices
+      hash: b9c0f22f15b470e541e9307ed2c23fc2f5b87ae6
+      body: ""
+      footer:
+        Depends-on: https://github.com/balena-io/balena-api/pull/6163
+        depends-on: https://github.com/balena-io/balena-api/pull/6163
+        Change-type: minor
+        change-type: minor
+        See: https://balena.fibery.io/Work/Improvement/3617
+        see: https://balena.fibery.io/Work/Improvement/3617
+      author: Thodoris Greasidis
+      nested: []
+  version: 23.1.0
+  title: ""
+  date: 2026-02-27T14:38:22.829Z
+- commits:
     - subject: Use Node 22 for the Windows tests to reduce flakiness
       hash: 6afef2e308e890be0636f9dff1669fc7ea3adfe8
       body: >
