@@ -16,18 +16,11 @@ limitations under the License.
 
 import { EventEmitter } from 'events';
 import { parse as ndjsonParse } from 'ndjson';
-import { globalEnv } from './util/global-env';
 import type {
 	Device,
 	InjectedDependenciesParam,
 	InjectedOptionsParam,
 } from '.';
-
-const AbortController: typeof window.AbortController =
-	'AbortController' in globalEnv
-		? globalEnv.AbortController
-		: // eslint-disable-next-line @typescript-eslint/no-require-imports
-			require('abortcontroller-polyfill/dist/cjs-ponyfill').AbortController;
 
 export interface BaseLog {
 	message: string;
