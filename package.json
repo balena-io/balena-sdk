@@ -121,7 +121,6 @@
     "@balena/es-version": "^1.0.0",
     "@types/json-schema": "^7.0.9",
     "@types/node": "^22.19.7",
-    "abortcontroller-polyfill": "^1.7.1",
     "balena-auth": "^6.0.1",
     "balena-errors": "^4.9.0",
     "balena-hup-action-utils": "~7.0.0",
