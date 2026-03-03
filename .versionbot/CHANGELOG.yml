@@ -1,4 +1,16 @@
 - commits:
+    - subject: Disable restriction on custom actions in workflow
+      hash: 22a18042a31761731c1490ec3322cedcf983e354
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Kyle Harding
+      nested: []
+  version: 23.1.1
+  title: ""
+  date: 2026-03-03T14:54:22.149Z
+- commits:
     - subject: Add device.pinToOsRelease that supports offline devices
       hash: b9c0f22f15b470e541e9307ed2c23fc2f5b87ae6
       body: ""
