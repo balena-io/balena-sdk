@@ -18,7 +18,12 @@ import * as bSemver from 'balena-semver';
 import * as errors from 'balena-errors';
 import once from 'lodash/once';
 
-import { isNotFoundResponse, onlyIf, mergePineOptions } from '../util';
+import {
+	isNotFoundResponse,
+	onlyIf,
+	mergePineOptions,
+	type MergePineOptions,
+} from '../util';
 import type { BalenaRequestStreamResult } from 'balena-request';
 import type {
 	Dictionary,
@@ -95,7 +100,15 @@ export type OsVersion = PickExpandedRelease & OsVersionProps;
 
 type OsVersionResponse<TP extends ODataOptionsWithoutCount<Release['Read']>> =
 	Array<
-		OptionsToResponse<Release['Read'], NonNullable<TP>, undefined>[number] &
+		OptionsToResponse<
+			Release['Read'],
+			MergePineOptions<
+				Release['Read'],
+				typeof baseReleasePineOptions,
+				NonNullable<TP>
+			>,
+			number
+		> &
 			OsVersionProps
 	>;
 
