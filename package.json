@@ -85,7 +85,7 @@
     "chai-samsam": "0.0.2",
     "crypto-browserify": "^3.12.1",
     "domain-browser": "^4.23.0",
-    "dotenv": "^16.6.1",
+    "dotenv": "^17.0.0",
     "husky": "^9.1.7",
     "js-polyfills": "^0.1.43",
     "jsdoc-to-markdown": "^9.1.3",
