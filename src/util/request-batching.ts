@@ -1,6 +1,5 @@
 import * as errors from 'balena-errors';
-import chunk from 'lodash/chunk';
-import { groupByMap, mergePineOptions } from '.';
+import { chunk, groupByMap, mergePineOptions } from '.';
 import type {
 	ExpandableStringKeyOf,
 	ODataOptionsWithoutCount,

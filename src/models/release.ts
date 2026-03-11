@@ -15,9 +15,8 @@ limitations under the License.
 */
 
 import * as errors from 'balena-errors';
-import once from 'lodash/once';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
-import { isId, mergePineOptions } from '../util';
+import { isId, mergePineOptions, once } from '../util';
 import type { ReleaseTag, Release, User, Image } from '../types/models';
 import type { BuilderUrlDeployOptions } from '../util/builder';
 import type {

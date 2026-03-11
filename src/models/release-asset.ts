@@ -8,10 +8,9 @@ import type {
 	Release,
 	ReleaseAsset,
 } from '..';
-import { limitedMap, mergePineOptions } from '../util';
+import { limitedMap, mergePineOptions, once } from '../util';
 import type { ReleaseRawVersionApplicationPair } from './release';
 import { BalenaError } from 'balena-errors';
-import once from 'lodash/once';
 
 type WriteReleaseAssetParams = Omit<ReleaseAsset['Write'], 'asset'> & {
 	asset: File | string;

@@ -17,8 +17,7 @@ limitations under the License.
 import type { InjectedDependenciesParam } from '..';
 import type { DeviceType } from '../types/models';
 import type { Partials, Contract } from '../types/contract';
-import { mergePineOptions } from '../util';
-import once from 'lodash/once';
+import { mergePineOptions, once } from '../util';
 import * as errors from 'balena-errors';
 
 // REPLACE ONCE HOST OS CONTRACTS ARE GENERATED THROUGH YOCTO

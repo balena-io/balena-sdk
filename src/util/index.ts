@@ -424,3 +424,25 @@ export const limitedMap = <T, U>(
 		}
 	});
 };
+
+export const once = <T extends (this: any, ...args: any[]) => any>(
+	fn: T,
+): T => {
+	let result: ReturnType<T>;
+	return function (...args) {
+		if (fn != null) {
+			result = fn.apply(this, args);
+			// @ts-expect-error - passing in fn is required, but we want to clear the reference to it here
+			fn = undefined;
+		}
+		return result;
+	} as T;
+};
+
+export const chunk = <T>(arr: T[], size: number): T[][] => {
+	const result: T[][] = [];
+	for (let i = 0; i < arr.length; i += size) {
+		result.push(arr.slice(i, i + size));
+	}
+	return result;
+};
