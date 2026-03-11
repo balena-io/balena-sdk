@@ -1,4 +1,33 @@
 - commits:
+    - subject: Add an application.getAllByOrganization() example with a $expand to the
+        devices
+      hash: 3fa40f3c41f4a993ec1458338b77898e737347bf
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Fix application.create() example missing an organization parameter
+      hash: 460ca908418bcdd79068159545059b0cfe551516
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: Fix application.getAllByOrganization() example missing an org parameter
+      hash: aeb0f324949fdaffaa6dc367fea49d15f470dc9b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 23.1.6
+  title: ""
+  date: 2026-03-11T22:21:53.636Z
+- commits:
     - subject: Update dependency balena-semver to v4
       hash: 5c918b05b9a1e90c1672bf0f632ec605b742d745
       body: |
