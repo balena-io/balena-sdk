@@ -892,11 +892,17 @@ describe('Application Model', function () {
 								);
 							})
 							.then(function (result) {
-								expect(_.find(result, { name: `BALENA_A_${appParamUpper}` }))
+								expect(
+									result.find(
+										({ name }) => name === `BALENA_A_${appParamUpper}`,
+									),
+								)
 									.to.be.an('object')
 									.that.has.property('value', 'a');
 								return expect(
-									_.find(result, { name: `BALENA_B_${appParamUpper}` }),
+									result.find(
+										({ name }) => name === `BALENA_B_${appParamUpper}`,
+									),
 								)
 									.to.be.an('object')
 									.that.has.property('value', 'b');
@@ -978,10 +984,10 @@ describe('Application Model', function () {
 								);
 							})
 							.then(function (result) {
-								expect(_.find(result, { name: `A_BY_${appParam}` }))
+								expect(result.find(({ name }) => name === `A_BY_${appParam}`))
 									.to.be.an('object')
 									.that.has.property('value', 'a');
-								return expect(_.find(result, { name: `B_BY_${appParam}` }))
+								expect(result.find(({ name }) => name === `B_BY_${appParam}`))
 									.to.be.an('object')
 									.that.has.property('value', 'b');
 							})
@@ -1062,10 +1068,10 @@ describe('Application Model', function () {
 								);
 							})
 							.then(function (result) {
-								expect(_.find(result, { name: `A_BY_${appParam}` }))
+								expect(result.find(({ name }) => name === `A_BY_${appParam}`))
 									.to.be.an('object')
 									.that.has.property('value', 'a');
-								return expect(_.find(result, { name: `B_BY_${appParam}` }))
+								expect(result.find(({ name }) => name === `B_BY_${appParam}`))
 									.to.be.an('object')
 									.that.has.property('value', 'b');
 							})

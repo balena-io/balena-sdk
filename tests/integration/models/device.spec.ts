@@ -1898,10 +1898,18 @@ describe('Device Model', function () {
 						const result = await configVarModel.getAllByDevice(
 							this.device[deviceParam],
 						);
-						expect(_.find(result, { name: `BALENA_A_${deviceParamUpper}` }))
+						expect(
+							result.find(
+								({ name }) => name === `BALENA_A_${deviceParamUpper}`,
+							),
+						)
 							.to.be.an('object')
 							.that.has.property('value', 'a');
-						expect(_.find(result, { name: `BALENA_B_${deviceParamUpper}` }))
+						expect(
+							result.find(
+								({ name }) => name === `BALENA_B_${deviceParamUpper}`,
+							),
+						)
 							.to.be.an('object')
 							.that.has.property('value', 'b');
 						return await Promise.all([
@@ -1925,10 +1933,10 @@ describe('Device Model', function () {
 					const result = await configVarModel.getAllByApplication(
 						this.application.id,
 					);
-					expect(_.find(result, { name: 'BALENA_A_BY_APPLICATION' }))
+					expect(result.find(({ name }) => name === 'BALENA_A_BY_APPLICATION'))
 						.to.be.an('object')
 						.that.has.property('value', 'a');
-					expect(_.find(result, { name: 'BALENA_B_BY_APPLICATION' }))
+					expect(result.find(({ name }) => name === 'BALENA_B_BY_APPLICATION'))
 						.to.be.an('object')
 						.that.has.property('value', 'b');
 					return await Promise.all([
@@ -2001,10 +2009,10 @@ describe('Device Model', function () {
 						const result = await envVarModel.getAllByDevice(
 							this.device[deviceParam],
 						);
-						expect(_.find(result, { name: `A_BY_${deviceParam}` }))
+						expect(result.find(({ name }) => name === `A_BY_${deviceParam}`))
 							.to.be.an('object')
 							.that.has.property('value', 'a');
-						expect(_.find(result, { name: `B_BY_${deviceParam}` }))
+						expect(result.find(({ name }) => name === `B_BY_${deviceParam}`))
 							.to.be.an('object')
 							.that.has.property('value', 'b');
 						return await Promise.all([
@@ -2028,10 +2036,10 @@ describe('Device Model', function () {
 					const result = await envVarModel.getAllByApplication(
 						this.application.id,
 					);
-					expect(_.find(result, { name: 'A_BY_APPLICATION' }))
+					expect(result.find(({ name }) => name === 'A_BY_APPLICATION'))
 						.to.be.an('object')
 						.that.has.property('value', 'a');
-					expect(_.find(result, { name: 'B_BY_APPLICATION' }))
+					expect(result.find(({ name }) => name === 'B_BY_APPLICATION'))
 						.to.be.an('object')
 						.that.has.property('value', 'b');
 					return await Promise.all([
@@ -2451,12 +2459,9 @@ describe('Device Model', function () {
 					expect(
 						deviceDetails.current_services_by_app[this.application.slug].db,
 					).to.have.lengthOf(1);
-					const currentServicesByApp =
-						_.flatten(
-							Object.values(
-								deviceDetails.current_services_by_app[this.application.slug],
-							),
-						) ?? [];
+					const currentServicesByApp = Object.values(
+						deviceDetails.current_services_by_app[this.application.slug],
+					).flat();
 					currentServicesByApp.forEach((currentService) => {
 						expect(currentService).to.have.property('commit');
 						expect(currentService).to.have.property('raw_version');
@@ -2559,12 +2564,16 @@ describe('Device Model', function () {
 								this.device[deviceParam],
 							);
 							expect(
-								_.find(result, { name: `A_BY_${deviceParam}_${serviceParam}` }),
+								result.find(
+									({ name }) => name === `A_BY_${deviceParam}_${serviceParam}`,
+								),
 							)
 								.to.be.an('object')
 								.that.has.property('value', 'a');
 							expect(
-								_.find(result, { name: `B_BY_${deviceParam}_${serviceParam}` }),
+								result.find(
+									({ name }) => name === `B_BY_${deviceParam}_${serviceParam}`,
+								),
 							)
 								.to.be.an('object')
 								.that.has.property('value', 'b');
@@ -2602,10 +2611,10 @@ describe('Device Model', function () {
 					const result = await varModel.getAllByApplication(
 						this.application.id,
 					);
-					expect(_.find(result, { name: 'A_BY_APPLICATION' }))
+					expect(result.find(({ name }) => name === 'A_BY_APPLICATION'))
 						.to.be.an('object')
 						.that.has.property('value', 'a');
-					expect(_.find(result, { name: 'B_BY_APPLICATION' }))
+					expect(result.find(({ name }) => name === 'B_BY_APPLICATION'))
 						.to.be.an('object')
 						.that.has.property('value', 'b');
 					return await Promise.all([
@@ -3564,144 +3573,129 @@ describe('Device Model', function () {
 
 		describe('balena.models.device.getOsVersion()', function () {
 			it('should not parse invalid semver versions', () => {
-				_.forEach(
-					[
-						['Resin OS ', 'dev'],
-						['Resin OS ', 'prod'],
-						['Resin OS 2.0-beta.8', ''],
-					],
-					function ([osVersion, osVariant]) {
-						return expect(
-							balena.models.device.getOsVersion({
-								os_version: osVersion,
-								os_variant: osVariant,
-							}),
-						).to.equal(null);
-					},
-				);
+				for (const [osVersion, osVariant] of [
+					['Resin OS ', 'dev'],
+					['Resin OS ', 'prod'],
+					['Resin OS 2.0-beta.8', ''],
+				]) {
+					expect(
+						balena.models.device.getOsVersion({
+							os_version: osVersion,
+							os_variant: osVariant,
+						}),
+					).to.equal(null);
+				}
 			});
 
 			it('should parse plain os versions w/o variant', () => {
-				_.forEach(
-					[
-						['Resin OS 1.2.1', '', '1.2.1'],
-						['Resin OS 1.6.0', '', '1.6.0'],
-						['Resin OS 2.0.0-beta.1', '', '2.0.0-beta.1'],
-						['Resin OS 2.0.0-beta.3', '', '2.0.0-beta.3'],
-						['Resin OS 2.0.0-beta11.rev1', '', '2.0.0-beta11.rev1'],
-						['Resin OS 2.0.0-beta.8', '', '2.0.0-beta.8'],
-						['Resin OS 2.0.0-rc1.rev1', '', '2.0.0-rc1.rev1'],
-						['Resin OS 2.0.0-rc1.rev2', '', '2.0.0-rc1.rev2'],
-						['Resin OS 2.0.1-beta.4', '', '2.0.1-beta.4'],
-						['Resin OS 2.0.1.rev1', '', '2.0.1+rev1'],
-						['Resin OS 2.0.2-beta.2', '', '2.0.2-beta.2'],
-						['Resin OS 2.0.2-beta.7', '', '2.0.2-beta.7'],
-						['Resin OS 2.0.2+rev2', '', '2.0.2+rev2'],
-						['Resin OS 2.0.6+rev2', '', '2.0.6+rev2'],
-					],
-					function ([osVersion, osVariant, expectation]) {
-						return expect(
-							balena.models.device.getOsVersion({
-								os_version: osVersion,
-								os_variant: osVariant,
-							}),
-						).to.equal(expectation);
-					},
-				);
+				for (const [osVersion, osVariant, expectation] of [
+					['Resin OS 1.2.1', '', '1.2.1'],
+					['Resin OS 1.6.0', '', '1.6.0'],
+					['Resin OS 2.0.0-beta.1', '', '2.0.0-beta.1'],
+					['Resin OS 2.0.0-beta.3', '', '2.0.0-beta.3'],
+					['Resin OS 2.0.0-beta11.rev1', '', '2.0.0-beta11.rev1'],
+					['Resin OS 2.0.0-beta.8', '', '2.0.0-beta.8'],
+					['Resin OS 2.0.0-rc1.rev1', '', '2.0.0-rc1.rev1'],
+					['Resin OS 2.0.0-rc1.rev2', '', '2.0.0-rc1.rev2'],
+					['Resin OS 2.0.1-beta.4', '', '2.0.1-beta.4'],
+					['Resin OS 2.0.1.rev1', '', '2.0.1+rev1'],
+					['Resin OS 2.0.2-beta.2', '', '2.0.2-beta.2'],
+					['Resin OS 2.0.2-beta.7', '', '2.0.2-beta.7'],
+					['Resin OS 2.0.2+rev2', '', '2.0.2+rev2'],
+					['Resin OS 2.0.6+rev2', '', '2.0.6+rev2'],
+				]) {
+					expect(
+						balena.models.device.getOsVersion({
+							os_version: osVersion,
+							os_variant: osVariant,
+						}),
+					).to.equal(expectation);
+				}
 			});
 
 			it('should properly combine the plain os version & variant', () => {
-				_.forEach(
-					[
-						['Resin OS 2.0.0-beta.8', 'prod', '2.0.0-beta.8+prod'],
-						['balenaOS 2.0.0-beta12.rev1', 'prod', '2.0.0-beta12.rev1+prod'],
-						['Resin OS 2.0.0-rc1.rev2', 'prod', '2.0.0-rc1.rev2+prod'],
-						['Resin OS 2.0.0+rev2', 'prod', '2.0.0+rev2.prod'],
-						['Resin OS 2.0.0+rev3', 'prod', '2.0.0+rev3.prod'],
-						['Resin OS 2.0.2+rev2', 'dev', '2.0.2+rev2.dev'],
-						['Resin OS 2.0.3+rev1', 'dev', '2.0.3+rev1.dev'],
-						['Resin OS 2.0.3+rev1', 'prod', '2.0.3+rev1.prod'],
-						['Resin OS 2.0.4+rev1', 'dev', '2.0.4+rev1.dev'],
-						['Resin OS 2.0.4+rev1', 'prod', '2.0.4+rev1.prod'],
-						['Resin OS 2.0.4+rev2', 'prod', '2.0.4+rev2.prod'],
-						['Resin OS 2.0.5', 'dev', '2.0.5+dev'],
-						['Resin OS 2.0.5+rev1', 'dev', '2.0.5+rev1.dev'],
-						['Resin OS 2.0.5+rev1', 'prod', '2.0.5+rev1.prod'],
-						['Resin OS 2.0.6+rev1', 'dev', '2.0.6+rev1.dev'],
-						['Resin OS 2.0.6+rev1', 'prod', '2.0.6+rev1.prod'],
-						['Resin OS 2.0.6+rev2', 'dev', '2.0.6+rev2.dev'],
-						['Resin OS 2.0.6+rev2', 'prod', '2.0.6+rev2.prod'],
-						['Resin OS 2.1.0+rev1', 'dev', '2.1.0+rev1.dev'],
-						['Resin OS 2.1.0+rev1', 'prod', '2.1.0+rev1.prod'],
-						['Resin OS 2.2.0+rev1', 'dev', '2.2.0+rev1.dev'],
-						['Resin OS 2.2.0+rev1', 'prod', '2.2.0+rev1.prod'],
-						['Resin OS 2.9.0-multi1+rev1', 'dev', '2.9.0-multi1+rev1.dev'],
-						['Resin OS 2.9.7+rev1', 'dev', '2.9.7+rev1.dev'],
-						['Resin OS 2.9.7+rev1', 'prod', '2.9.7+rev1.prod'],
-						['Resin OS 2.12.0+rev1', 'dev', '2.12.0+rev1.dev'],
-						['Resin OS 2.12.0+rev1', 'prod', '2.12.0+rev1.prod'],
-						['Resin OS 2.12.1+rev1', 'dev', '2.12.1+rev1.dev'],
-						['Resin OS 2.12.1+rev1', 'prod', '2.12.1+rev1.prod'],
-						['Resin OS 2.12.3', 'dev', '2.12.3+dev'],
-						['Resin OS 2.12.3+rev1', 'dev', '2.12.3+rev1.dev'],
-						['balenaOS 2.26.0', 'dev', '2.26.0+dev'],
-						['balenaOS 2.26.0+rev1', 'dev', '2.26.0+rev1.dev'],
-						['balenaOS 2.26.0+rev1', 'prod', '2.26.0+rev1.prod'],
-						['balenaOS 2.28.0-beta1.rev1', 'prod', '2.28.0-beta1.rev1+prod'],
-						['balenaOS 2.28.0+rev1', 'dev', '2.28.0+rev1.dev'],
-					],
-					function ([osVersion, osVariant, expectation]) {
-						return expect(
-							balena.models.device.getOsVersion({
-								os_version: osVersion,
-								os_variant: osVariant,
-							}),
-						).to.equal(expectation);
-					},
-				);
+				for (const [osVersion, osVariant, expectation] of [
+					['Resin OS 2.0.0-beta.8', 'prod', '2.0.0-beta.8+prod'],
+					['balenaOS 2.0.0-beta12.rev1', 'prod', '2.0.0-beta12.rev1+prod'],
+					['Resin OS 2.0.0-rc1.rev2', 'prod', '2.0.0-rc1.rev2+prod'],
+					['Resin OS 2.0.0+rev2', 'prod', '2.0.0+rev2.prod'],
+					['Resin OS 2.0.0+rev3', 'prod', '2.0.0+rev3.prod'],
+					['Resin OS 2.0.2+rev2', 'dev', '2.0.2+rev2.dev'],
+					['Resin OS 2.0.3+rev1', 'dev', '2.0.3+rev1.dev'],
+					['Resin OS 2.0.3+rev1', 'prod', '2.0.3+rev1.prod'],
+					['Resin OS 2.0.4+rev1', 'dev', '2.0.4+rev1.dev'],
+					['Resin OS 2.0.4+rev1', 'prod', '2.0.4+rev1.prod'],
+					['Resin OS 2.0.4+rev2', 'prod', '2.0.4+rev2.prod'],
+					['Resin OS 2.0.5', 'dev', '2.0.5+dev'],
+					['Resin OS 2.0.5+rev1', 'dev', '2.0.5+rev1.dev'],
+					['Resin OS 2.0.5+rev1', 'prod', '2.0.5+rev1.prod'],
+					['Resin OS 2.0.6+rev1', 'dev', '2.0.6+rev1.dev'],
+					['Resin OS 2.0.6+rev1', 'prod', '2.0.6+rev1.prod'],
+					['Resin OS 2.0.6+rev2', 'dev', '2.0.6+rev2.dev'],
+					['Resin OS 2.0.6+rev2', 'prod', '2.0.6+rev2.prod'],
+					['Resin OS 2.1.0+rev1', 'dev', '2.1.0+rev1.dev'],
+					['Resin OS 2.1.0+rev1', 'prod', '2.1.0+rev1.prod'],
+					['Resin OS 2.2.0+rev1', 'dev', '2.2.0+rev1.dev'],
+					['Resin OS 2.2.0+rev1', 'prod', '2.2.0+rev1.prod'],
+					['Resin OS 2.9.0-multi1+rev1', 'dev', '2.9.0-multi1+rev1.dev'],
+					['Resin OS 2.9.7+rev1', 'dev', '2.9.7+rev1.dev'],
+					['Resin OS 2.9.7+rev1', 'prod', '2.9.7+rev1.prod'],
+					['Resin OS 2.12.0+rev1', 'dev', '2.12.0+rev1.dev'],
+					['Resin OS 2.12.0+rev1', 'prod', '2.12.0+rev1.prod'],
+					['Resin OS 2.12.1+rev1', 'dev', '2.12.1+rev1.dev'],
+					['Resin OS 2.12.1+rev1', 'prod', '2.12.1+rev1.prod'],
+					['Resin OS 2.12.3', 'dev', '2.12.3+dev'],
+					['Resin OS 2.12.3+rev1', 'dev', '2.12.3+rev1.dev'],
+					['balenaOS 2.26.0', 'dev', '2.26.0+dev'],
+					['balenaOS 2.26.0+rev1', 'dev', '2.26.0+rev1.dev'],
+					['balenaOS 2.26.0+rev1', 'prod', '2.26.0+rev1.prod'],
+					['balenaOS 2.28.0-beta1.rev1', 'prod', '2.28.0-beta1.rev1+prod'],
+					['balenaOS 2.28.0+rev1', 'dev', '2.28.0+rev1.dev'],
+				]) {
+					expect(
+						balena.models.device.getOsVersion({
+							os_version: osVersion,
+							os_variant: osVariant,
+						}),
+					).to.equal(expectation);
+				}
 			});
 
 			it('should properly parse the os_version with variant suffix w/o os_variant', () => {
-				_.forEach(
-					[
-						['Resin OS 2.0.0-rc6.rev1 (prod)', '', '2.0.0-rc6.rev1+prod'],
-						['Resin OS 2.0.0.rev1 (prod)', '', '2.0.0+rev1.prod'],
-						['Resin OS 2.0.0+rev2 (prod)', '', '2.0.0+rev2.prod'],
-						['Resin OS 2.0.0+rev3 (dev)', '', '2.0.0+rev3.dev'],
-						['Resin OS 2.0.0+rev3 (prod)', '', '2.0.0+rev3.prod'],
-						['Resin OS 2.0.0+rev4 (prod)', '', '2.0.0+rev4.prod'],
-						['Resin OS 2.0.0+rev5 (dev)', '', '2.0.0+rev5.dev'],
-					],
-					function ([osVersion, osVariant, expectation]) {
-						return expect(
-							balena.models.device.getOsVersion({
-								os_version: osVersion,
-								os_variant: osVariant,
-							}),
-						).to.equal(expectation);
-					},
-				);
+				for (const [osVersion, osVariant, expectation] of [
+					['Resin OS 2.0.0-rc6.rev1 (prod)', '', '2.0.0-rc6.rev1+prod'],
+					['Resin OS 2.0.0.rev1 (prod)', '', '2.0.0+rev1.prod'],
+					['Resin OS 2.0.0+rev2 (prod)', '', '2.0.0+rev2.prod'],
+					['Resin OS 2.0.0+rev3 (dev)', '', '2.0.0+rev3.dev'],
+					['Resin OS 2.0.0+rev3 (prod)', '', '2.0.0+rev3.prod'],
+					['Resin OS 2.0.0+rev4 (prod)', '', '2.0.0+rev4.prod'],
+					['Resin OS 2.0.0+rev5 (dev)', '', '2.0.0+rev5.dev'],
+				]) {
+					expect(
+						balena.models.device.getOsVersion({
+							os_version: osVersion,
+							os_variant: osVariant,
+						}),
+					).to.equal(expectation);
+				}
 			});
 
 			it('should properly combine the os_version with variant suffix & os_variant', () => {
-				_.forEach(
-					[
-						['Resin OS 2.0.0.rev1 (prod)', 'prod', '2.0.0+rev1.prod'],
-						['Resin OS 2.0.0+rev2 (prod)', 'prod', '2.0.0+rev2.prod'],
-						['Resin OS 2.0.0+rev3 (dev)', 'dev', '2.0.0+rev3.dev'],
-						['Resin OS 2.0.0+rev3 (prod)', 'prod', '2.0.0+rev3.prod'],
-						['Resin OS 2.0.0+rev4 (prod)', 'prod', '2.0.0+rev4.prod'],
-						['Resin OS 2.0.0+rev5 (prod)', 'prod', '2.0.0+rev5.prod'],
-					],
-					function ([osVersion, osVariant, expectation]) {
-						return expect(
-							balena.models.device.getOsVersion({
-								os_version: osVersion,
-								os_variant: osVariant,
-							}),
-						).to.equal(expectation);
-					},
-				);
+				for (const [osVersion, osVariant, expectation] of [
+					['Resin OS 2.0.0.rev1 (prod)', 'prod', '2.0.0+rev1.prod'],
+					['Resin OS 2.0.0+rev2 (prod)', 'prod', '2.0.0+rev2.prod'],
+					['Resin OS 2.0.0+rev3 (dev)', 'dev', '2.0.0+rev3.dev'],
+					['Resin OS 2.0.0+rev3 (prod)', 'prod', '2.0.0+rev3.prod'],
+					['Resin OS 2.0.0+rev4 (prod)', 'prod', '2.0.0+rev4.prod'],
+					['Resin OS 2.0.0+rev5 (prod)', 'prod', '2.0.0+rev5.prod'],
+				]) {
+					expect(
+						balena.models.device.getOsVersion({
+							os_version: osVersion,
+							os_variant: osVariant,
+						}),
+					).to.equal(expectation);
+				}
 			});
 		});
 

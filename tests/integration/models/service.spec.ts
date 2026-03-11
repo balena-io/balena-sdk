@@ -164,10 +164,10 @@ describe('Service Model', function () {
 						),
 					]);
 					const result = await varModel.getAllByService(param);
-					expect(_.find(result, { name: `A_${serviceParamSlug}` }))
+					expect(result.find(({ name }) => name === `A_${serviceParamSlug}`))
 						.to.be.an('object')
 						.that.has.property('value', `a_${serviceParamSlug}`);
-					expect(_.find(result, { name: `B_${serviceParamSlug}` }))
+					expect(result.find(({ name }) => name === `B_${serviceParamSlug}`))
 						.to.be.an('object')
 						.that.has.property('value', `b_${serviceParamSlug}`);
 					await Promise.all([
@@ -194,12 +194,16 @@ describe('Service Model', function () {
 						this.application.id,
 					);
 					expect(
-						_.find(result, { name: `A_BY_APPLICATION_${serviceParamSlug}` }),
+						result.find(
+							({ name }) => name === `A_BY_APPLICATION_${serviceParamSlug}`,
+						),
 					)
 						.to.be.an('object')
 						.that.has.property('value', `a_${serviceParamSlug}`);
 					expect(
-						_.find(result, { name: `B_BY_APPLICATION_${serviceParamSlug}` }),
+						result.find(
+							({ name }) => name === `B_BY_APPLICATION_${serviceParamSlug}`,
+						),
 					)
 						.to.be.an('object')
 						.that.has.property('value', `b_${serviceParamSlug}`);
