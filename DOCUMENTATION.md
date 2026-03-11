@@ -1660,9 +1660,20 @@ balena.models.application.getAllDirectlyAccessible().then(function(applications)
 
 **Example**  
 ```js
-balena.models.application.getAllByOrganization().then(function(applications) {
+balena.models.application.getAllByOrganization('myorganization').then(function(applications) {
 	console.log(applications);
 });
+```
+**Example**  
+```js
+const applications = await sdk.models.application.getAllByOrganization('myorganization', {
+		$select: ['app_name', 'slug'],
+		$expand: {
+			owns__device: {
+				$select: ['uuid', 'overall_status', 'is_connected_to_vpn', 'api_heartbeat_state'],
+			},
+		},
+	});
 ```
 <a name="balena.models.application.get"></a>
 
@@ -1821,26 +1832,20 @@ balena.models.application.hasAny().then(function(hasAny) {
 | --- | --- | --- |
 | options | <code>Object</code> | application creation parameters |
 | options.name | <code>String</code> | application name |
+| options.organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the organization that the application will belong to or null |
 | [options.uuid] | <code>String</code> | application uuid |
 | [options.applicationClass] | <code>String</code> | application class: 'app' | 'fleet' | 'block' |
 | options.deviceType | <code>String</code> | device type slug |
-| options.organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the organization that the application will belong to or null |
 
 **Example**  
 ```js
-balena.models.application.create({ name: 'My App', deviceType: 'raspberry-pi' }).then(function(application) {
+balena.models.application.create({ name: 'My App', organization: 'myorganization', deviceType: 'raspberry-pi' }).then(function(application) {
 	console.log(application);
 });
 ```
 **Example**  
 ```js
-balena.models.application.create({ name: 'My Block', applicationClass: 'block', deviceType: 'raspberry-pi' }).then(function(application) {
-	console.log(application);
-});
-```
-**Example**  
-```js
-balena.models.application.create({ name: 'My App', deviceType: 'raspberry-pi', parent: 'ParentApp' }).then(function(application) {
+balena.models.application.create({ name: 'My Block', organization: 'myorganization', applicationClass: 'block', deviceType: 'raspberry-pi' }).then(function(application) {
 	console.log(application);
 });
 ```
