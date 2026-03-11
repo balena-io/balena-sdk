@@ -128,7 +128,7 @@
     "balena-register-device": "^9.0.4",
     "balena-request": "^14.1.6",
     "balena-semver": "^4.0.0",
-    "balena-settings-client": "^5.0.0",
+    "balena-settings-client": "^6.0.0",
     "handlebars": "^4.7.7",
     "memoizee": "^0.4.15",
     "mime": "^3.0.0",
