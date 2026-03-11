@@ -1,6 +1,4 @@
 import type * as _fs from 'fs';
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
 import { expect } from 'chai';
 import {
 	balena,
@@ -146,13 +144,15 @@ describe('Billing Model', function () {
 		});
 
 		describe('balena.models.billing.downloadInvoice()', function () {
-			before(function () {
-				return balena.models.billing
-					.getInvoices(this.initialOrg.id)
-					.then((invoices) => {
-						this.firstInvoiceNumber = invoices[0]?.invoice_number;
-					})
-					.catch(_.noop);
+			before(async function () {
+				try {
+					const invoices = await balena.models.billing.getInvoices(
+						this.initialOrg.id,
+					);
+					this.firstInvoiceNumber = invoices[0]?.invoice_number;
+				} catch {
+					// noop
+				}
 			});
 
 			it('should not be able to download any invoice', async function () {
@@ -208,15 +208,18 @@ describe('Billing Model', function () {
 			$it(description, testFn);
 		};
 
-		before(function () {
-			return loginPaidUser()
-				.then(() => balena.models.billing.getAccount(this.initialOrg.id))
-				.then((accountInfo) => {
-					hasActiveBillingAccount =
-						(accountInfo != null ? accountInfo.account_state : undefined) ===
-						'active';
-				})
-				.catch(_.noop);
+		before(async function () {
+			try {
+				await loginPaidUser();
+				const accountInfo = await balena.models.billing.getAccount(
+					this.initialOrg.id,
+				);
+				hasActiveBillingAccount =
+					(accountInfo != null ? accountInfo.account_state : undefined) ===
+					'active';
+			} catch {
+				// noop
+			}
 		});
 
 		givenInitialOrganization(before);
@@ -446,13 +449,16 @@ describe('Billing Model', function () {
 		});
 
 		describe('balena.models.billing.downloadInvoice()', function () {
-			before(function () {
-				return balena.models.billing
-					.getInvoices(this.initialOrg.id)
-					.then((invoices) => {
-						this.firstInvoiceNumber = invoices[0]?.invoice_number;
-					})
-					.catch(_.noop);
+			before(async function () {
+				try {
+					const invoices = await balena.models.billing.getInvoices(
+						this.initialOrg.id,
+					);
+
+					this.firstInvoiceNumber = invoices[0]?.invoice_number;
+				} catch {
+					// noop
+				}
 			});
 
 			if (IS_BROWSER) {

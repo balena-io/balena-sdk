@@ -32,7 +32,6 @@ import type * as DeviceState from '../types/device-state';
 
 import type { OsUpdateActionResult } from '../util/device-actions/os-update';
 
-import once from 'lodash/once';
 import * as bSemver from 'balena-semver';
 import * as errors from 'balena-errors';
 import memoizee from 'memoizee';
@@ -44,6 +43,7 @@ import {
 	limitedMap,
 	groupByMap,
 	type MergePineOptions,
+	once,
 } from '../util';
 
 import {

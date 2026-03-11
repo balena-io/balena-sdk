@@ -16,9 +16,8 @@ limitations under the License.
 
 import * as bSemver from 'balena-semver';
 import * as errors from 'balena-errors';
-import once from 'lodash/once';
 
-import { isNotFoundResponse, onlyIf, mergePineOptions } from '../util';
+import { isNotFoundResponse, onlyIf, mergePineOptions, once } from '../util';
 import type { BalenaRequestStreamResult } from 'balena-request';
 import type {
 	Dictionary,

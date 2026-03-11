@@ -20,7 +20,6 @@ import type {
 	Application,
 } from '..';
 
-import once from 'lodash/once';
 import * as errors from 'balena-errors';
 
 import {
@@ -28,6 +27,7 @@ import {
 	type MergePineOptions,
 	mergePineOptions,
 	withSupervisorLockedError,
+	once,
 } from '../util';
 
 import {
