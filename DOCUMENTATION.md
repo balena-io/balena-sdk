@@ -1660,7 +1660,7 @@ balena.models.application.getAllDirectlyAccessible().then(function(applications)
 
 **Example**  
 ```js
-balena.models.application.getAllByOrganization().then(function(applications) {
+balena.models.application.getAllByOrganization('myorganization').then(function(applications) {
 	console.log(applications);
 });
 ```

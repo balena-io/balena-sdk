@@ -287,7 +287,7 @@ const getApplicationModel = function (
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.application.getAllByOrganization().then(function(applications) {
+		 * balena.models.application.getAllByOrganization('myorganization').then(function(applications) {
 		 * 	console.log(applications);
 		 * });
 		 */
