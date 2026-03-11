@@ -604,26 +604,21 @@ const getApplicationModel = function (
 		 *
 		 * @param {Object} options - application creation parameters
 		 * @param {String} options.name - application name
+		 * @param {(String|Number)} options.organization - handle (string) or id (number) of the organization that the application will belong to or null
 		 * @param {String} [options.uuid] - application uuid
 		 * @param {String} [options.applicationClass] - application class: 'app' | 'fleet' | 'block'
 		 * @param {String} options.deviceType - device type slug
-		 * @param {(String|Number)} options.organization - handle (string) or id (number) of the organization that the application will belong to or null
 		 *
 		 * @fulfil {Object} - application
 		 * @returns {Promise}
 		 *
 		 * @example
-		 * balena.models.application.create({ name: 'My App', deviceType: 'raspberry-pi' }).then(function(application) {
+		 * balena.models.application.create({ name: 'My App', organization: 'myorganization', deviceType: 'raspberry-pi' }).then(function(application) {
 		 * 	console.log(application);
 		 * });
 		 *
 		 * @example
-		 * balena.models.application.create({ name: 'My Block', applicationClass: 'block', deviceType: 'raspberry-pi' }).then(function(application) {
-		 * 	console.log(application);
-		 * });
-		 *
-		 * @example
-		 * balena.models.application.create({ name: 'My App', deviceType: 'raspberry-pi', parent: 'ParentApp' }).then(function(application) {
+		 * balena.models.application.create({ name: 'My Block', organization: 'myorganization', applicationClass: 'block', deviceType: 'raspberry-pi' }).then(function(application) {
 		 * 	console.log(application);
 		 * });
 		 */

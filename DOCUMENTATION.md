@@ -1821,26 +1821,20 @@ balena.models.application.hasAny().then(function(hasAny) {
 | --- | --- | --- |
 | options | <code>Object</code> | application creation parameters |
 | options.name | <code>String</code> | application name |
+| options.organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the organization that the application will belong to or null |
 | [options.uuid] | <code>String</code> | application uuid |
 | [options.applicationClass] | <code>String</code> | application class: 'app' | 'fleet' | 'block' |
 | options.deviceType | <code>String</code> | device type slug |
-| options.organization | <code>String</code> \| <code>Number</code> | handle (string) or id (number) of the organization that the application will belong to or null |
 
 **Example**  
 ```js
-balena.models.application.create({ name: 'My App', deviceType: 'raspberry-pi' }).then(function(application) {
+balena.models.application.create({ name: 'My App', organization: 'myorganization', deviceType: 'raspberry-pi' }).then(function(application) {
 	console.log(application);
 });
 ```
 **Example**  
 ```js
-balena.models.application.create({ name: 'My Block', applicationClass: 'block', deviceType: 'raspberry-pi' }).then(function(application) {
-	console.log(application);
-});
-```
-**Example**  
-```js
-balena.models.application.create({ name: 'My App', deviceType: 'raspberry-pi', parent: 'ParentApp' }).then(function(application) {
+balena.models.application.create({ name: 'My Block', organization: 'myorganization', applicationClass: 'block', deviceType: 'raspberry-pi' }).then(function(application) {
 	console.log(application);
 });
 ```
