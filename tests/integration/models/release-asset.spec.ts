@@ -745,13 +745,29 @@ describe('Release Asset Model', function () {
 				const content = 'Test content';
 				const file = new File([content], 'test.txt', { type: 'text/plain' });
 
-				await expectError(async () => {
-					await balena.models.release.asset.upload({
-						release: 999999,
-						asset_key: 'invalid-release.txt',
-						asset: file,
-					});
-				}, 'The request was unsuccessful');
+				await expectError(
+					async () => {
+						await balena.models.release.asset.upload({
+							release: 999999,
+							asset_key: 'invalid-release.txt',
+							asset: file,
+						});
+					},
+					(err) =>
+						('statusCode' in err &&
+							err.statusCode === 401 &&
+							err.message === 'The request was unsuccessful') ||
+						// TODO: Properly fix this.
+						// This was necessary to unblock the tests on node 24.14.0 b/c of a change in how undici 7.19.0 handles 401 form requests
+						// See: https://github.com/nodejs/undici/blob/v7.19.0/lib/web/fetch/index.js#L1652
+						// See: https://github.com/nodejs/undici/pull/4747/files#diff-9cc53c7d17eaefd294df4a58f7406660dfe9e2b39feea783e824d33095cafedeR1652
+						// See: https://fetch.spec.whatwg.org/#concept-request-window:~:text=If%20request%E2%80%99s%20body%E2%80%99s%20source%20is%20null%2C%20then%20return%20a%20network%20error.
+						(err instanceof TypeError &&
+							'cause' in err &&
+							err.cause != null &&
+							err.cause instanceof Error &&
+							err.cause.message === 'expected non-null body source'),
+				);
 			});
 		});
 
