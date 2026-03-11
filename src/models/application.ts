@@ -290,6 +290,16 @@ const getApplicationModel = function (
 		 * balena.models.application.getAllByOrganization('myorganization').then(function(applications) {
 		 * 	console.log(applications);
 		 * });
+		 *
+		 * @example
+		 * const applications = await sdk.models.application.getAllByOrganization('myorganization', {
+		 *		$select: ['app_name', 'slug'],
+		 *		$expand: {
+		 *			owns__device: {
+		 *				$select: ['uuid', 'overall_status', 'is_connected_to_vpn', 'api_heartbeat_state'],
+		 *			},
+		 *		},
+		 *	});
 		 */
 		async getAllByOrganization<
 			T extends ODataOptionsWithoutCount<Application['Read']>,

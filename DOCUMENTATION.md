@@ -1664,6 +1664,17 @@ balena.models.application.getAllByOrganization('myorganization').then(function(a
 	console.log(applications);
 });
 ```
+**Example**  
+```js
+const applications = await sdk.models.application.getAllByOrganization('myorganization', {
+		$select: ['app_name', 'slug'],
+		$expand: {
+			owns__device: {
+				$select: ['uuid', 'overall_status', 'is_connected_to_vpn', 'api_heartbeat_state'],
+			},
+		},
+	});
+```
 <a name="balena.models.application.get"></a>
 
 ##### application.get(slugOrUuidOrId, [options], [context]) ⇒ <code>Promise</code>
