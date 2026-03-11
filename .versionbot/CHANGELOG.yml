@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency balena-semver to v4
+      hash: 5c918b05b9a1e90c1672bf0f632ec605b742d745
+      body: |
+        Update balena-semver from 3.0.10 to 4.0.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.1.5
+  title: ""
+  date: 2026-03-11T16:40:34.041Z
+- commits:
     - subject: Switch lodash to a dev only dependency
       hash: ea446418d9d7abe0de220b3f2e9e867dff9dd0aa
       body: |
