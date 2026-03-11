@@ -38,20 +38,20 @@ describe('Application Membership Model', function () {
 			options: { $select: ['id', 'name'] },
 		});
 		this.applicationRoleMap = _.keyBy(roles, 'name');
-		roles.forEach((role) => {
+		for (const role of roles) {
 			expect(role).to.be.an('object');
 			expect(role).to.have.property('id').that.is.a('number');
-		});
+		}
 		this.applicationDeveloperRole = this.applicationRoleMap['developer'];
 		this.applicationOperatorRole = this.applicationRoleMap['operator'];
 		this.applicationObserverRole = this.applicationRoleMap['observer'];
-		[
+		for (const role of [
 			this.applicationDeveloperRole,
 			this.applicationOperatorRole,
 			this.applicationObserverRole,
-		].forEach((role) => {
+		]) {
 			expect(role).to.be.an('object');
-		});
+		}
 	});
 
 	describe('balena.models.application.membership.create()', function () {
@@ -86,7 +86,7 @@ describe('Application Membership Model', function () {
 				)}`,
 			};
 
-			applicationRetrievalFields.forEach((field) => {
+			for (const field of applicationRetrievalFields) {
 				it(`should not be able to add a new member when using an not existing application ${field}`, async function () {
 					await expectError(
 						async () => {
@@ -104,7 +104,7 @@ describe('Application Membership Model', function () {
 						},
 					);
 				});
-			});
+			}
 		});
 
 		describe('[mutating operations]', function () {
@@ -112,7 +112,7 @@ describe('Application Membership Model', function () {
 			afterEach(async function () {
 				await balena.models.application.membership.remove(membership!.id);
 			});
-			applicationRetrievalFields.forEach(function (field) {
+			for (const field of applicationRetrievalFields) {
 				it(`should be able to add a new member to the application by ${field}`, async function () {
 					membership = await balena.models.application.membership.create({
 						application: this.application[field],
@@ -124,7 +124,7 @@ describe('Application Membership Model', function () {
 						.that.has.nested.property('application_membership_role.__id')
 						.that.equals(this.applicationDeveloperRole.id);
 				});
-			});
+			}
 
 			it(`should be able to add a new member to the application without providing a role`, async function () {
 				membership = await balena.models.application.membership.create({
@@ -138,7 +138,7 @@ describe('Application Membership Model', function () {
 					.that.equals(this.applicationDeveloperRole.id);
 			});
 
-			(['observer', 'developer'] as const).forEach(function (roleName) {
+			for (const roleName of ['observer', 'developer'] as const) {
 				it(`should be able to add a new member to the application with a given role [${roleName}]`, async function () {
 					membership = await balena.models.application.membership.create({
 						application: this.application.id,
@@ -151,7 +151,7 @@ describe('Application Membership Model', function () {
 						.that.has.nested.property('application_membership_role.__id')
 						.that.equals(this.applicationRoleMap[roleName].id);
 				});
-			});
+			}
 		});
 	});
 
@@ -165,7 +165,7 @@ describe('Application Membership Model', function () {
 		});
 
 		describe('balena.models.application.membership.remove()', function () {
-			keyAlternatives.forEach(([title, keyGetter]) => {
+			for (const [title, keyGetter] of keyAlternatives) {
 				it(`should be able to remove a member by ${title}`, async function () {
 					const key = keyGetter(membership!);
 					await balena.models.application.membership.remove(key);
@@ -174,7 +174,7 @@ describe('Application Membership Model', function () {
 						await balena.models.application.membership.get(membership!.id);
 					}, 'Application Membership not found');
 				});
-			});
+			}
 		});
 	});
 
@@ -250,10 +250,10 @@ describe('Application Membership Model', function () {
 				});
 			};
 
-			keyAlternatives.forEach((keyAlternative) => {
+			for (const keyAlternative of keyAlternatives) {
 				roleChangeTest('observer', keyAlternative);
 				roleChangeTest('developer', keyAlternative);
-			});
+			}
 		});
 
 		describe('balena.models.application.membership.remove()', function () {
@@ -307,7 +307,7 @@ describe('Application Membership Model', function () {
 		parallel(
 			'balena.models.application.membership.getAllByUser()',
 			function () {
-				(['userId', 'username'] as const).forEach((prop) => {
+				for (const prop of ['userId', 'username'] as const) {
 					it(`shoud return only the user's own membership by ${prop}`, async function () {
 						const memberships =
 							await balena.models.application.membership.getAllByUser(
@@ -323,7 +323,7 @@ describe('Application Membership Model', function () {
 							},
 						]);
 					});
-				});
+				}
 			},
 		);
 
@@ -336,7 +336,7 @@ describe('Application Membership Model', function () {
 				}, 'Application Membership not found');
 			});
 
-			keyAlternatives.forEach(([title, keyGetter]) => {
+			for (const [title, keyGetter] of keyAlternatives) {
 				it(`should be able to retrieve a membership by ${title}`, async function () {
 					const key = keyGetter(membership!);
 					const result = await balena.models.application.membership.get(key, {
@@ -359,7 +359,7 @@ describe('Application Membership Model', function () {
 						'developer',
 					);
 				});
-			});
+			}
 		});
 	});
 });

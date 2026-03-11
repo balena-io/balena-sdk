@@ -144,19 +144,19 @@ describe('Organization model', function () {
 		});
 
 		parallel('balena.models.organization.get()', function () {
-			organizationRetrievalFields.forEach((prop) => {
+			for (const prop of organizationRetrievalFields) {
 				it(`should retrieve an organization by ${prop}`, async function () {
 					const org = await balena.models.organization.get(ctx.newOrg1[prop]);
 					expect(org).to.deep.match(ctx.newOrg1);
 				});
-			});
+			}
 		});
 
 		describe('balena.models.organization.remove()', function () {
-			[
+			for (const { prop, getOrg } of [
 				{ prop: 'id', getOrg: () => ctx.newOrg1 },
 				{ prop: 'handle', getOrg: () => ctx.newOrg2 },
-			].forEach(({ prop, getOrg }) => {
+			]) {
 				it(`should remove an organization by ${prop}`, async function () {
 					const org = getOrg();
 					await balena.models.organization.remove(org[prop]);
@@ -164,7 +164,7 @@ describe('Organization model', function () {
 						await balena.models.organization.remove(org[prop]);
 					}, `Organization not found: ${org[prop]}`);
 				});
-			});
+			}
 		});
 	});
 });

@@ -981,14 +981,14 @@ describe('OS model', function () {
 			});
 
 			describe('given a supported os update path', () => {
-				[
+				for (const [current, target] of [
 					['2.14.0+rev1.prod', '2.16.0+rev2.prod'],
 					// 2.14.0+rev1.dev isn't supported b/c it's considered lower than 2.14.0+rev1,
 					// which is the minimum supported version
 					['2.14.0+rev2.dev', '2.16.0+rev2.dev'],
 					['2.14.0+rev2.prod', '2.88.4'],
 					['2.14.0+rev2.dev', '2.88.4'],
-				].forEach(([current, target]) => {
+				]) {
 					it(`should return true when updating ${current} -> ${target}`, async () => {
 						expect(
 							await balena.models.os.isSupportedOsUpdate(
@@ -998,7 +998,7 @@ describe('OS model', function () {
 							),
 						).to.equal(true);
 					});
-				});
+				}
 			});
 		});
 	});
@@ -1039,10 +1039,10 @@ describe('OS model', function () {
 				expect(recommended).to.be.a('string');
 				expect(versions).to.be.an('array');
 				expect(versions).to.not.have.length(0);
-				versions.forEach(function (v) {
+				for (const v of versions) {
 					expect(v).to.be.a('string');
 					expect(bSemver.gte(v, current)).to.be.true;
-				});
+				}
 
 				expect(versions.length > 2).to.be.true;
 				const sortedVersions = versions.slice().sort(bSemver.rcompare);
@@ -1244,7 +1244,7 @@ describe('OS model', function () {
 				}, 'An OS version is required when calling os.getConfig');
 			});
 
-			applicationRetrievalFields.forEach((prop) => {
+			for (const prop of applicationRetrievalFields) {
 				it(`should be able to get an application config by ${prop}`, async function () {
 					const config = await balena.models.os.getConfig(
 						ctx.application[prop],
@@ -1262,7 +1262,7 @@ describe('OS model', function () {
 					expect(config).to.have.property('vpnEndpoint');
 					expect(config).to.have.property('listenPort');
 				});
-			});
+			}
 
 			it('should be rejected if the version is invalid', async function () {
 				await expectError(
@@ -1447,7 +1447,7 @@ describe('OS model', function () {
 
 	describe('helpers', () => {
 		describe('balena.models.os.isArchitectureCompatibleWith()', function () {
-			[
+			for (const [deviceArch, appArch] of [
 				['armv7hf', 'i386'],
 				['aarch64', 'i386'],
 				['i386', 'armv7hf'],
@@ -1468,13 +1468,13 @@ describe('OS model', function () {
 				['armv7hf', 'armv5e'],
 				['armv7hf', 'aarch64'],
 				['aarch64', 'armv5e'],
-			].forEach(function ([deviceArch, appArch]) {
+			]) {
 				it(`should return false when comparing ${deviceArch} and ${appArch} architectures`, () => {
 					expect(
 						balena.models.os.isArchitectureCompatibleWith(deviceArch, appArch),
 					).to.equal(false);
 				});
-			});
+			}
 
 			it('should return true when comparing the same architecture slugs', function () {
 				expect(
@@ -1500,17 +1500,17 @@ describe('OS model', function () {
 				).to.equal(true);
 			});
 
-			[
+			for (const [deviceArch, appArch] of [
 				['aarch64', 'armv7hf'],
 				['aarch64', 'rpi'],
 				['armv7hf', 'rpi'],
-			].forEach(function ([deviceArch, appArch]) {
+			]) {
 				it(`should return true when comparing ${deviceArch} and ${appArch} architectures`, () => {
 					expect(
 						balena.models.os.isArchitectureCompatibleWith(deviceArch, appArch),
 					).to.equal(true);
 				});
-			});
+			}
 		});
 	});
 

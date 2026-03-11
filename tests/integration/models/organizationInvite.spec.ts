@@ -172,10 +172,10 @@ describe('Organization Invite Model', function () {
 							options: { $select: ['id', 'name'] },
 						});
 						this.orgRoleMap = _.keyBy(roles, 'name');
-						roles.forEach((role) => {
+						for (const role of roles) {
 							expect(role).to.be.an('object');
 							expect(role).to.have.property('id').that.is.a('number');
-						});
+						}
 						this.orgMemberRole = this.orgRoleMap['member'];
 					});
 					afterEach(async function () {
@@ -211,7 +211,7 @@ describe('Organization Invite Model', function () {
 							.that.equals(this.orgMemberRole.id);
 					});
 
-					(['member', 'administrator'] as const).forEach(function (roleName) {
+					for (const roleName of ['member', 'administrator'] as const) {
 						it(`should be able to invite a new member to the organization with a given role [${roleName}]`, async function () {
 							membership = await balena.models.organization.invite.create(
 								this.organization.id,
@@ -226,7 +226,7 @@ describe('Organization Invite Model', function () {
 								.that.has.nested.property('organization_membership_role.__id')
 								.that.equals(this.orgRoleMap[roleName].id);
 						});
-					});
+					}
 				});
 			});
 

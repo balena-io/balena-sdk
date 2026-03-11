@@ -34,15 +34,15 @@ describe('Device Type model', function () {
 	});
 
 	parallel('balena.models.deviceType.get()', function () {
-		[
+		for (const { titlePart, value } of [
 			{ titlePart: 'slug', value: RPI2_DEVICE_TYPE_SLUG },
 			{ titlePart: 'alias', value: RPI2_DEVICE_TYPE_ALIAS },
-		].forEach(({ titlePart, value }) => {
+		]) {
 			it(`should get device type by ${titlePart}`, async function () {
 				const deviceType = await balena.models.deviceType.get(value);
 				expect(deviceType).to.have.property('slug', RPI2_DEVICE_TYPE_SLUG);
 			});
-		});
+		}
 
 		it(`should get device type by id`, async function () {
 			const deviceType =
@@ -52,17 +52,17 @@ describe('Device Type model', function () {
 	});
 
 	parallel('balena.models.deviceType.getBySlugOrName()', function () {
-		[
+		for (const type of [
 			{ key: 'name', value: RPI2_DEVICE_TYPE_NAME },
 			{ key: 'slug', value: RPI2_DEVICE_TYPE_SLUG },
-		].forEach((type) => {
+		]) {
 			it(`should get device type by ${type.key}`, async function () {
 				const deviceType = await balena.models.deviceType.getBySlugOrName(
 					type.value,
 				);
 				expect(deviceType).to.have.property('slug', RPI2_DEVICE_TYPE_SLUG);
 			});
-		});
+		}
 	});
 
 	parallel('balena.models.deviceType.getName()', function () {
@@ -100,52 +100,50 @@ describe('Device Type model', function () {
 	});
 
 	parallel('balena.models.deviceType.getInstructions()', function () {
-		(
+		for (const [deviceTypeSlug, instructions] of [
 			[
+				RPI2_DEVICE_TYPE_SLUG,
 				[
-					RPI2_DEVICE_TYPE_SLUG,
-					[
-						'Insert the SD card to the host machine.',
-						'Write the balenaOS file you downloaded to the SD card. We recommend using [Etcher](https://etcher.balena.io/).',
-						'Wait for writing of balenaOS to complete.',
-						'Remove the SD card from the host machine.',
-						'Insert the freshly flashed SD card into the Raspberry Pi 2.',
-						'Connect power to the Raspberry Pi 2 to boot the device.',
-					],
+					'Insert the SD card to the host machine.',
+					'Write the balenaOS file you downloaded to the SD card. We recommend using [Etcher](https://etcher.balena.io/).',
+					'Wait for writing of balenaOS to complete.',
+					'Remove the SD card from the host machine.',
+					'Insert the freshly flashed SD card into the Raspberry Pi 2.',
+					'Connect power to the Raspberry Pi 2 to boot the device.',
 				],
+			],
+			[
+				RADXA_ZERO_DEVICE_TYPE_SLUG,
 				[
-					RADXA_ZERO_DEVICE_TYPE_SLUG,
-					[
-						"Use the [maskrom mode](https://wiki.radxa.com/Zero/dev/maskrom#Enable_maskrom) instructions provided by the vendor and make sure the board's USB2 port is used for provisioning.",
-						'Install on your PC the [tools](https://wiki.radxa.com/Zero/dev/maskrom#Install_required_tools) required for flashing.',
-						'Clear eMMC and set it in UMS mode. Make sure to use [this loader](https://dl.radxa.com/zero/images/loader/radxa-zero-erase-emmc.bin) when following the [sideloading instructions](https://wiki.radxa.com/Zero/dev/maskrom#Side_loading_binaries).',
-						'Write the OS to the internal eMMC storage device. We recommend using [Etcher](http://www.etcher.io).',
-						'Once the OS has been written to the eMMC you need to repower your board.',
-					],
+					"Use the [maskrom mode](https://wiki.radxa.com/Zero/dev/maskrom#Enable_maskrom) instructions provided by the vendor and make sure the board's USB2 port is used for provisioning.",
+					'Install on your PC the [tools](https://wiki.radxa.com/Zero/dev/maskrom#Install_required_tools) required for flashing.',
+					'Clear eMMC and set it in UMS mode. Make sure to use [this loader](https://dl.radxa.com/zero/images/loader/radxa-zero-erase-emmc.bin) when following the [sideloading instructions](https://wiki.radxa.com/Zero/dev/maskrom#Side_loading_binaries).',
+					'Write the OS to the internal eMMC storage device. We recommend using [Etcher](http://www.etcher.io).',
+					'Once the OS has been written to the eMMC you need to repower your board.',
 				],
+			],
+			[
+				'intel-nuc',
 				[
-					'intel-nuc',
-					[
-						'Insert the USB key to the host machine.',
-						'Write the balenaOS file you downloaded to the USB key. We recommend using [Etcher](https://etcher.balena.io/).',
-						'Wait for writing of balenaOS to complete.',
-						'Remove the USB key from the host machine.',
-						'Insert the freshly flashed USB key into the Intel NUC.',
-						'<strong role="alert">Warning!</strong> This will also completely erase internal storage medium, so please make a backup first.',
-						'Ensure there are no other USB keys are inserted. Power on the Intel NUC with a keyboard connected. Press the F10 key while BIOS is loading to enter the boot menu. Select the USB key from the boot menu.',
-						'Wait for the Intel NUC to finish flashing and shutdown. Please wait until all LEDs are off.',
-						'Remove the USB key from the Intel NUC.',
-						'Power up the Intel NUC to boot the device.',
-					],
+					'Insert the USB key to the host machine.',
+					'Write the balenaOS file you downloaded to the USB key. We recommend using [Etcher](https://etcher.balena.io/).',
+					'Wait for writing of balenaOS to complete.',
+					'Remove the USB key from the host machine.',
+					'Insert the freshly flashed USB key into the Intel NUC.',
+					'<strong role="alert">Warning!</strong> This will also completely erase internal storage medium, so please make a backup first.',
+					'Ensure there are no other USB keys are inserted. Power on the Intel NUC with a keyboard connected. Press the F10 key while BIOS is loading to enter the boot menu. Select the USB key from the boot menu.',
+					'Wait for the Intel NUC to finish flashing and shutdown. Please wait until all LEDs are off.',
+					'Remove the USB key from the Intel NUC.',
+					'Power up the Intel NUC to boot the device.',
 				],
+			],
+			[
+				'jetson-nano',
 				[
-					'jetson-nano',
-					[
-						'To provision Nvidia Jetson Nano SD-CARD, follow the instructions using our [Jetson Flash tool](https://github.com/balena-os/jetson-flash/blob/master/docs/jetson-nano.md) to make the process more streamlined.',
-					],
+					'To provision Nvidia Jetson Nano SD-CARD, follow the instructions using our [Jetson Flash tool](https://github.com/balena-os/jetson-flash/blob/master/docs/jetson-nano.md) to make the process more streamlined.',
 				],
-			] as const
-		).forEach(([deviceTypeSlug, instructions]) => {
+			],
+		] as const) {
 			it(`should get just the full instructions for installing BalenaOS for ${deviceTypeSlug} with templates strings resolved when passing the slug`, async function () {
 				const result =
 					await balena.models.deviceType.getInstructions(deviceTypeSlug);
@@ -168,7 +166,7 @@ describe('Device Type model', function () {
 				expect(result).to.not.have.length(0);
 				expect(result).to.eql(instructions);
 			});
-		});
+		}
 
 		it('should return an array of strings or a dictionary of arrays of strings', async function () {
 			const dts = await balena.models.deviceType.getAll({
@@ -186,18 +184,18 @@ describe('Device Type model', function () {
 					return;
 				}
 				if (Array.isArray(instructions)) {
-					instructions.forEach((instruction) =>
-						expect(instruction).to.be.a('string'),
-					);
+					for (const instruction of instructions) {
+						expect(instruction).to.be.a('string');
+					}
 				} else {
 					expect(instructions)
 						.to.be.an('object')
 						.that.has.keys(['Linux', 'MacOS', 'Windows']);
 					for (const osInstructions of Object.values(instructions)) {
 						expect(osInstructions).to.be.an('array');
-						osInstructions.forEach((instruction) =>
-							expect(instruction).to.be.a('string'),
-						);
+						for (const instruction of osInstructions) {
+							expect(instruction).to.be.a('string');
+						}
 					}
 				}
 			}
@@ -205,17 +203,15 @@ describe('Device Type model', function () {
 	});
 
 	parallel('balena.models.deviceType.getInstallMethod()', function () {
-		(
-			[
-				[RPI2_DEVICE_TYPE_SLUG, RPI2_DEVICE_TYPE_INSTALL_METHOD],
-				[RADXA_ZERO_DEVICE_TYPE_SLUG, RADXA_ZERO_DEVICE_TYPE_INSTALL_METHOD],
-			] as const
-		).forEach(([deviceTypeSlug, installationMethod]) => {
+		for (const [deviceTypeSlug, installationMethod] of [
+			[RPI2_DEVICE_TYPE_SLUG, RPI2_DEVICE_TYPE_INSTALL_METHOD],
+			[RADXA_ZERO_DEVICE_TYPE_SLUG, RADXA_ZERO_DEVICE_TYPE_INSTALL_METHOD],
+		] as const) {
 			it(`should get device type installation method for ${deviceTypeSlug}`, async function () {
 				const result =
 					await balena.models.deviceType.getInstallMethod(deviceTypeSlug);
 				expect(result).to.equal(installationMethod);
 			});
-		});
+		}
 	});
 });

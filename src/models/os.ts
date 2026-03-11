@@ -334,10 +334,10 @@ const getOsModel = function (
 
 	const _transformHostApps = (apps: HostAppInfo[]) => {
 		const osVersionsByDeviceType: Dictionary<OsVersion[]> = {};
-		apps.forEach((hostApp) => {
+		for (const hostApp of apps) {
 			const hostAppDeviceType = hostApp.is_for__device_type[0]?.slug;
 			if (!hostAppDeviceType) {
-				return;
+				continue;
 			}
 
 			osVersionsByDeviceType[hostAppDeviceType] ??= [];
@@ -346,12 +346,12 @@ const getOsModel = function (
 			osVersionsByDeviceType[hostAppDeviceType].push(
 				..._getOsVersionsFromReleases(hostApp.owns__release ?? [], appTags),
 			);
-		});
+		}
 
 		// transform version sets
-		Object.keys(osVersionsByDeviceType).forEach((deviceType) => {
+		for (const deviceType of Object.keys(osVersionsByDeviceType)) {
 			osVersionsByDeviceType[deviceType].sort(sortVersions);
-		});
+		}
 
 		return osVersionsByDeviceType;
 	};

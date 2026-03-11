@@ -105,14 +105,14 @@ describe('Release Model', function () {
 		});
 
 		parallel('balena.models.release.getAllByApplication()', function () {
-			applicationRetrievalFields.forEach((prop) => {
+			for (const prop of applicationRetrievalFields) {
 				it(`should eventually become an empty array given an application ${prop}`, async () => {
 					const releases = await balena.models.release.getAllByApplication(
 						ctx.application[prop],
 					);
 					expect(releases).to.have.lengthOf(0);
 				});
-			});
+			}
 
 			it('should be rejected if the application name does not exist', async () => {
 				await expectError(async () => {
@@ -264,7 +264,7 @@ describe('Release Model', function () {
 			});
 
 			describe('[mutating operations]', function () {
-				applicationRetrievalFields.forEach((prop) => {
+				for (const prop of applicationRetrievalFields) {
 					it(`should be able to create a release using a tarball url given an application ${prop}`, async () => {
 						const releaseId = await balena.models.release.createFromUrl(
 							ctx.application[prop],
@@ -283,7 +283,7 @@ describe('Release Model', function () {
 						});
 						expect(release).to.have.property('commit').that.is.a('string');
 					});
-				});
+				}
 			});
 		});
 
@@ -330,77 +330,69 @@ describe('Release Model', function () {
 			});
 
 			describe('balena.model.release.finalize()', function () {
-				uniquePropertyNames
-					.map((key) => [key, getFieldLabel(key)] as const)
-					.forEach(([field, fieldLabel], index) => {
-						it(`should finalize a release by ${fieldLabel}`, async () => {
-							const draftRelease = testReleaseByField[fieldLabel];
-							const finalizeParam = getParam(field, draftRelease);
-							await balena.models.release.finalize(finalizeParam);
-							const freshRelease = await balena.models.release.get(
-								draftRelease.id,
-								{
-									$select: [
-										'id',
-										'commit',
-										'raw_version',
-										'is_final',
-										'belongs_to__application',
-									],
-								},
-							);
-							expect(freshRelease).to.deep.match({
-								id: draftRelease.id,
-								commit: draftRelease.commit,
-								raw_version: draftRelease.raw_version.replace(
-									/-(\d)+$/,
-									index > 0 ? `+rev${index}` : '',
-								),
-								is_final: true,
-							});
-							// Only update the releases in the context if the tests pass
-							// otherwise retries could conceal errors.
-							testReleaseByField[fieldLabel] = freshRelease;
+				uniquePropertyNames.forEach((field, index) => {
+					const fieldLabel = getFieldLabel(field);
+					it(`should finalize a release by ${fieldLabel}`, async () => {
+						const draftRelease = testReleaseByField[fieldLabel];
+						const finalizeParam = getParam(field, draftRelease);
+						await balena.models.release.finalize(finalizeParam);
+						const freshRelease = await balena.models.release.get(
+							draftRelease.id,
+							{
+								$select: [
+									'id',
+									'commit',
+									'raw_version',
+									'is_final',
+									'belongs_to__application',
+								],
+							},
+						);
+						expect(freshRelease).to.deep.match({
+							id: draftRelease.id,
+							commit: draftRelease.commit,
+							raw_version: draftRelease.raw_version.replace(
+								/-(\d)+$/,
+								index > 0 ? `+rev${index}` : '',
+							),
+							is_final: true,
 						});
+						// Only update the releases in the context if the tests pass
+						// otherwise retries could conceal errors.
+						testReleaseByField[fieldLabel] = freshRelease;
 					});
+				});
 			});
 
 			describe('balena.model.release.setIsInvalidated()', function () {
-				uniquePropertyNames
-					.map((key) => [key, getFieldLabel(key)] as const)
-					.forEach(([field, fieldLabel]) => {
-						it(`should invalidate a release by ${fieldLabel}`, async () => {
-							const release = testReleaseByField[fieldLabel];
-							const invalidateParam = getParam(field, release);
-							await balena.models.release.setIsInvalidated(
-								invalidateParam,
-								true,
-							);
-							const invalidatedRelease = await balena.models.release.get(
-								release.id,
-								{ $select: 'is_invalidated' },
-							);
-							expect(invalidatedRelease).to.deep.match({
-								is_invalidated: true,
-							});
-						});
-
-						it(`should validate a release by ${fieldLabel}`, async () => {
-							const release = testReleaseByField[fieldLabel];
-							const validateParam = getParam(field, release);
-							await balena.models.release.setIsInvalidated(
-								validateParam,
-								false,
-							);
-							const validatedRelease = await balena.models.release.get(
-								release.id,
-								{ $select: 'is_invalidated' },
-							);
-							expect(validatedRelease).to.deep.match({
-								is_invalidated: false,
-							});
+				for (const field of uniquePropertyNames) {
+					const fieldLabel = getFieldLabel(field);
+					it(`should invalidate a release by ${fieldLabel}`, async () => {
+						const release = testReleaseByField[fieldLabel];
+						const invalidateParam = getParam(field, release);
+						await balena.models.release.setIsInvalidated(invalidateParam, true);
+						const invalidatedRelease = await balena.models.release.get(
+							release.id,
+							{ $select: 'is_invalidated' },
+						);
+						expect(invalidatedRelease).to.deep.match({
+							is_invalidated: true,
 						});
 					});
+
+					it(`should validate a release by ${fieldLabel}`, async () => {
+						const release = testReleaseByField[fieldLabel];
+						const validateParam = getParam(field, release);
+						await balena.models.release.setIsInvalidated(validateParam, false);
+						const validatedRelease = await balena.models.release.get(
+							release.id,
+							{ $select: 'is_invalidated' },
+						);
+						expect(validatedRelease).to.deep.match({
+							is_invalidated: false,
+						});
+					});
+				}
 			});
 		});
 	});
@@ -586,7 +578,7 @@ describe('Release Model', function () {
 		});
 
 		describe('balena.models.release.setNote()', function () {
-			uniquePropertyNames.forEach((field) => {
+			for (const field of uniquePropertyNames) {
 				const fieldLabel = getFieldLabel(field);
 				it(`should set a note using the release ${fieldLabel}`, async () => {
 					const release = ctx.currentRelease;
@@ -601,11 +593,11 @@ describe('Release Model', function () {
 						note,
 					});
 				});
-			});
+			}
 		});
 
 		describe('balena.models.release.setKnownIssueList()', function () {
-			uniquePropertyNames.forEach((field) => {
+			for (const field of uniquePropertyNames) {
 				const fieldLabel = getFieldLabel(field);
 				it(`should set the known issue list using the release ${fieldLabel}`, async () => {
 					const release = ctx.currentRelease;
@@ -623,7 +615,7 @@ describe('Release Model', function () {
 						known_issue_list: knownIssueList,
 					});
 				});
-			});
+			}
 		});
 
 		describe('balena.models.release.tags', function () {
@@ -703,7 +695,7 @@ describe('Release Model', function () {
 				});
 
 				parallel('', function () {
-					applicationRetrievalFields.forEach((prop) => {
+					for (const prop of applicationRetrievalFields) {
 						it(`should get the latest release by application ${prop}`, async () => {
 							const release =
 								await balena.models.release.getLatestByApplication(
@@ -716,7 +708,7 @@ describe('Release Model', function () {
 								belongs_to__application: { __id: ctx.application.id },
 							});
 						});
-					});
+					}
 				});
 			});
 		});

@@ -40,9 +40,9 @@ export async function expectError(
 }
 
 export const assertDeepMatchAndLength = (a: unknown[], b: unknown[]) => {
-	[a, b].forEach((target) =>
-		expect(target).to.have.property('length').that.is.a('number'),
-	);
+	for (const target of [a, b]) {
+		expect(target).to.have.property('length').that.is.a('number');
+	}
 
 	if (a.length !== b.length) {
 		// We found an error! Use deep.equal
@@ -66,7 +66,7 @@ export const describeExpandAssertions = <
 		);
 	}
 	parallel(`expanding from ${params.resource}`, function () {
-		Object.keys(expand).forEach((key) => {
+		for (const key of Object.keys(expand)) {
 			it(`should succeed to expand property ${key}`, async function () {
 				// @ts-expect-error - this typing is actually incomplete
 				// runtime errors will happen if params has an id or options has $count
@@ -88,7 +88,7 @@ export const describeExpandAssertions = <
 					expect(result).to.have.property(key).that.is.an('array');
 				}
 			});
-		});
+		}
 	});
 };
 

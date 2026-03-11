@@ -116,21 +116,21 @@ export = (deps: InjectedDependenciesParam, opts: InjectedOptionsParam) => {
 		>;
 	};
 
-	(Object.keys(modelsTemplate) as Array<keyof typeof modelsTemplate>).forEach(
-		(moduleName) => {
-			Object.defineProperty(models, moduleName, {
-				enumerable: true,
-				configurable: true,
-				get() {
-					const moduleFactory = modelsTemplate[moduleName]();
-					// We need the delete first as the current property is read-only
-					// and the delete removes that restriction
-					delete this[moduleName];
-					return (this[moduleName] = moduleFactory(deps, opts));
-				},
-			});
-		},
-	);
+	for (const moduleName of Object.keys(modelsTemplate) as Array<
+		keyof typeof modelsTemplate
+	>) {
+		Object.defineProperty(models, moduleName, {
+			enumerable: true,
+			configurable: true,
+			get() {
+				const moduleFactory = modelsTemplate[moduleName]();
+				// We need the delete first as the current property is read-only
+				// and the delete removes that restriction
+				delete this[moduleName];
+				return (this[moduleName] = moduleFactory(deps, opts));
+			},
+		});
+	}
 
 	return models;
 };

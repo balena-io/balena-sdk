@@ -324,7 +324,9 @@ export function givenAnOrganization(beforeFn: Mocha.HookFunction) {
 			},
 		});
 		// just make sure we didn't accidentaly fetched more than intended
-		orgs.forEach(({ name }) => expect(name).to.equal(TEST_ORGANIZATION_NAME));
+		for (const { name } of orgs) {
+			expect(name).to.equal(TEST_ORGANIZATION_NAME);
+		}
 		await Promise.all(
 			orgs.map(({ id }) => balena.models.organization.remove(id)),
 		);
