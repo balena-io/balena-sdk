@@ -1,4 +1,17 @@
 - commits:
+    - subject: Remove abortcontroller-polyfill in favor of Node.js built-in
+        AbortController
+      hash: 7fd23d54dcdac9709018144dd1ac174d376342bd
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: v1rtl
+      nested: []
+  version: 23.1.2
+  title: ""
+  date: 2026-03-11T12:27:15.544Z
+- commits:
     - subject: Disable restriction on custom actions in workflow
       hash: 22a18042a31761731c1490ec3322cedcf983e354
       body: ""
