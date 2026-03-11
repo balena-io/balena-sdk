@@ -1,4 +1,18 @@
 - commits:
+    - subject: Switch lodash to a dev only dependency
+      hash: ea446418d9d7abe0de220b3f2e9e867dff9dd0aa
+      body: |
+        Lodash is still loaded/used as a sub dependency for now but those uses
+        will go away as the relevant dependencies are updated
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 23.1.4
+  title: ""
+  date: 2026-03-11T16:17:36.699Z
+- commits:
     - subject: Unblock tests from node 24.14.0 fetch behavior changes
       hash: 75fa66d6f91a5e5272278a0c0ec30dbd8eddadce
       body: ""
