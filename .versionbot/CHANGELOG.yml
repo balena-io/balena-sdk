@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency balena-settings-client to v6
+      hash: a38f3e4b08f89390374d3b25c8e2561e01c06120
+      body: |
+        Update balena-settings-client from 5.0.3 to 6.0.3
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.1.7
+  title: ""
+  date: 2026-03-13T12:50:27.798Z
+- commits:
     - subject: Add an application.getAllByOrganization() example with a $expand to the
         devices
       hash: 3fa40f3c41f4a993ec1458338b77898e737347bf
