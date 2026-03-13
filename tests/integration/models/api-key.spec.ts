@@ -98,10 +98,10 @@ describe('API Key model', function () {
 						description: 'apiKey2Description',
 					},
 				]);
-				apiKeys.forEach(function (apiKey) {
+				for (const apiKey of apiKeys) {
 					expect(apiKey).to.have.property('id').that.is.a('number');
 					expect(apiKey).to.have.property('created_at').that.is.a('string');
-				});
+				}
 			});
 		});
 	});
@@ -145,10 +145,10 @@ describe('API Key model', function () {
 						description: 'apiKey2Description',
 					},
 				]);
-				apiKeys.forEach(function (apiKey) {
+				for (const apiKey of apiKeys) {
 					expect(apiKey).to.have.property('id').that.is.a('number');
 					expect(apiKey).to.have.property('created_at').that.is.a('string');
-				});
+				}
 			});
 		});
 	});

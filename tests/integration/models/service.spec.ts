@@ -26,14 +26,14 @@ describe('Service Model', function () {
 		});
 
 		parallel('balena.models.service.getAllByApplication()', function () {
-			applicationRetrievalFields.forEach((prop) => {
+			for (const prop of applicationRetrievalFields) {
 				it(`should eventually become an empty array given an application ${prop}`, async function () {
 					const result = await balena.models.service.getAllByApplication(
 						ctx.application[prop],
 					);
 					expect(result).to.deep.equal([]);
 				});
-			});
+			}
 
 			it('should be rejected if the application name does not exist', async function () {
 				await expectError(async () => {
@@ -104,7 +104,7 @@ describe('Service Model', function () {
 				return service[paramName];
 			}
 
-			serviceParams.forEach(function (serviceParam) {
+			for (const serviceParam of serviceParams) {
 				const serviceParamSlug = serviceParam.replace(/[ &]/g, '_');
 
 				it(`can create a variable by service ${serviceParam}`, async function () {
@@ -212,7 +212,7 @@ describe('Service Model', function () {
 						varModel.remove(param, `B_BY_APPLICATION_${serviceParamSlug}`),
 					]);
 				});
-			});
+			}
 		});
 	});
 });

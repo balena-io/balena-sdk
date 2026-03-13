@@ -220,7 +220,7 @@ describe('Device Model', function () {
 				});
 
 				parallel('balena.models.device.getAllByApplication()', function () {
-					applicationRetrievalFields.forEach((prop) => {
+					for (const prop of applicationRetrievalFields) {
 						it(`should get the device given the right application ${prop}`, async function () {
 							const devices = await balena.models.device.getAllByApplication(
 								ctx.application[prop],
@@ -228,7 +228,7 @@ describe('Device Model', function () {
 							expect(devices).to.have.length(1);
 							return expect(devices[0].id).to.equal(ctx.device.id);
 						});
-					});
+					}
 
 					it('should be rejected if the application slug does not exist', async function () {
 						await expectError(async () => {
@@ -269,7 +269,7 @@ describe('Device Model', function () {
 				});
 
 				parallel('balena.models.device.getAllByOrganization()', function () {
-					organizationRetrievalFields.forEach((prop) => {
+					for (const prop of organizationRetrievalFields) {
 						it(`should get the device given the right organization ${prop}`, async function () {
 							const devices = await balena.models.device.getAllByOrganization(
 								ctx.initialOrg[prop],
@@ -277,7 +277,7 @@ describe('Device Model', function () {
 							expect(devices).to.have.length(1);
 							return expect(devices[0].id).to.equal(ctx.device.id);
 						});
-					});
+					}
 
 					it('should be rejected if the organization slug does not exist', async function () {
 						await expectError(async () => {
@@ -430,14 +430,14 @@ describe('Device Model', function () {
 				});
 
 				parallel('balena.models.device.getApplicationName()', function () {
-					['id', 'uuid'].forEach((prop) => {
+					for (const prop of ['id', 'uuid']) {
 						it(`should get the correct application name from a device ${prop}`, async function () {
 							const result = await balena.models.device.getApplicationName(
 								ctx.device[prop],
 							);
 							expect(result).to.equal(ctx.application.app_name);
 						});
-					});
+					}
 
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
@@ -455,12 +455,12 @@ describe('Device Model', function () {
 				});
 
 				parallel('balena.models.device.has()', function () {
-					['id', 'uuid'].forEach((prop) => {
+					for (const prop of ['id', 'uuid']) {
 						it(`should eventually be true if the device ${prop} exists`, async function () {
 							const result = await balena.models.device.has(ctx.device[prop]);
 							expect(result).to.be.true;
 						});
-					});
+					}
 
 					it('should return false if the device id is undefined', async function () {
 						// @ts-expect-error invalid parameter
@@ -482,14 +482,14 @@ describe('Device Model', function () {
 				});
 
 				parallel('balena.models.device.isOnline()', function () {
-					['id', 'uuid'].forEach((prop) => {
+					for (const prop of ['id', 'uuid']) {
 						it(`should eventually be false if the device ${prop} is offline`, async function () {
 							const result = await balena.models.device.isOnline(
 								ctx.device[prop],
 							);
 							expect(result).to.be.false;
 						});
-					});
+					}
 
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
@@ -507,7 +507,7 @@ describe('Device Model', function () {
 				});
 
 				parallel('balena.models.device.getLocalIPAddresses()', function () {
-					['id', 'uuid'].forEach((prop) => {
+					for (const prop of ['id', 'uuid']) {
 						it(`should be rejected with an offline error if the device ${prop} is offline`, async function () {
 							await expectError(async () => {
 								await balena.models.device.getLocalIPAddresses(
@@ -515,7 +515,7 @@ describe('Device Model', function () {
 								);
 							}, `The device is offline: ${ctx.device[prop]}`);
 						});
-					});
+					}
 
 					it('should be rejected if the device uuid does not exist', async function () {
 						await expectError(async () => {
@@ -547,14 +547,14 @@ describe('Device Model', function () {
 						}, 'Device not found: 999999');
 					});
 
-					deviceUniqueFields.forEach((field) => {
+					for (const field of deviceUniqueFields) {
 						it(`should retrieve a empty list of mac addresses by ${field}`, async function () {
 							const result = await balena.models.device.getMACAddresses(
 								ctx.device[field],
 							);
 							expect(result).to.deep.equal([]);
 						});
-					});
+					}
 				});
 
 				parallel('balena.models.device.getMetrics()', function () {
@@ -572,7 +572,7 @@ describe('Device Model', function () {
 						}, 'Device not found: 999999');
 					});
 
-					deviceUniqueFields.forEach((field) => {
+					for (const field of deviceUniqueFields) {
 						it(`should retrieve an empty device metrics object by ${field}`, async function () {
 							const result = await balena.models.device.getMetrics(
 								ctx.device[field],
@@ -589,7 +589,7 @@ describe('Device Model', function () {
 								is_undervolted: false,
 							});
 						});
-					});
+					}
 				});
 
 				describe('balena.models.device.getMACAddresses()', function () {
@@ -602,7 +602,7 @@ describe('Device Model', function () {
 					});
 
 					parallel('', function () {
-						deviceUniqueFields.forEach((field) => {
+						for (const field of deviceUniqueFields) {
 							it(`should be able to retrieve the device mac addresses by ${field}`, async function () {
 								const result = await balena.models.device.getMACAddresses(
 									ctx.device[field],
@@ -612,7 +612,7 @@ describe('Device Model', function () {
 									'66:77:88:99:AA:BB',
 								]);
 							});
-						});
+						}
 					});
 				});
 
@@ -634,7 +634,7 @@ describe('Device Model', function () {
 					});
 
 					parallel('', function () {
-						deviceUniqueFields.forEach((field) => {
+						for (const field of deviceUniqueFields) {
 							it(`should be able to retrieve the device metrics by ${field}`, async function () {
 								const result = await balena.models.device.getMetrics(
 									ctx.device[field],
@@ -651,7 +651,7 @@ describe('Device Model', function () {
 									cpu_id: 'a CPU string',
 								});
 							});
-						});
+						}
 					});
 				});
 			});
@@ -1071,14 +1071,14 @@ describe('Device Model', function () {
 				});
 
 				describe('given device url is disabled', function () {
-					['id', 'uuid'].forEach((prop) => {
+					for (const prop of ['id', 'uuid']) {
 						it(`should eventually be false given a device ${prop}`, async function () {
 							const hasDeviceUrl = await balena.models.device.hasDeviceUrl(
 								this.device[prop],
 							);
 							expect(hasDeviceUrl).to.be.false;
 						});
-					});
+					}
 				});
 
 				describe('given device url is enabled', function () {
@@ -1086,14 +1086,14 @@ describe('Device Model', function () {
 						return balena.models.device.enableDeviceUrl(this.device.id);
 					});
 
-					['id', 'uuid'].forEach((prop) => {
+					for (const prop of ['id', 'uuid']) {
 						it(`should eventually be true given a device ${prop}`, async function () {
 							const hasDeviceUrl = await balena.models.device.hasDeviceUrl(
 								this.device[prop],
 							);
 							expect(hasDeviceUrl).to.be.true;
 						});
-					});
+					}
 				});
 			});
 
@@ -1117,13 +1117,13 @@ describe('Device Model', function () {
 				});
 
 				describe('given device url is disabled', function () {
-					['id', 'uuid'].forEach((prop) => {
+					for (const prop of ['id', 'uuid']) {
 						it(`should be rejected with an error given a device ${prop}`, async function () {
 							await expectError(async () => {
 								await balena.models.device.getDeviceUrl(this.device[prop]);
 							}, `Device is not web accessible: ${this.device[prop]}`);
 						});
-					});
+					}
 				});
 
 				describe('given device url is enabled', function () {
@@ -1196,7 +1196,7 @@ describe('Device Model', function () {
 						);
 					});
 
-					['id', 'uuid'].forEach((prop) => {
+					for (const prop of ['id', 'uuid']) {
 						it(`should be able to enable web access using a ${prop}`, async function () {
 							await balena.models.device.enableDeviceUrl(this.device[prop]);
 							const hasDeviceUrl = await balena.models.device.hasDeviceUrl(
@@ -1204,7 +1204,7 @@ describe('Device Model', function () {
 							);
 							expect(hasDeviceUrl).to.be.true;
 						});
-					});
+					}
 				});
 			});
 
@@ -1334,7 +1334,7 @@ describe('Device Model', function () {
 				});
 
 				describe('[mutating operations]', () => {
-					deviceUniqueFields.forEach(function (deviceParam) {
+					for (const deviceParam of deviceUniqueFields) {
 						describe('balena.models.device.isInLocalMode()', function () {
 							it(`should be false by default for a device retrieved by ${deviceParam}`, async function () {
 								const isInLocalMode = await balena.models.device.isInLocalMode(
@@ -1397,21 +1397,21 @@ describe('Device Model', function () {
 								}, `Device not found: ${deviceParamValue}`);
 							});
 						});
-					});
+					}
 				});
 			});
 
 			describe('balena.models.device.hasLockOverride()', function () {
 				givenADevice(before);
 
-				deviceUniqueFields.forEach(function (deviceParam) {
+				for (const deviceParam of deviceUniqueFields) {
 					it(`should be false by default for a device retrieved by ${deviceParam}`, async function () {
 						const hasLockOverride = await balena.models.device.hasLockOverride(
 							this.device[deviceParam],
 						);
 						expect(hasLockOverride).to.be.false;
 					});
-				});
+				}
 
 				const OVERRIDE_LOCK_ENV_VAR = 'RESIN_OVERRIDE_LOCK';
 
@@ -1509,7 +1509,7 @@ describe('Device Model', function () {
 			describe('balena.models.device.enableLockOverride()', function () {
 				givenADevice(beforeEach);
 
-				deviceUniqueFields.forEach(function (deviceParam) {
+				for (const deviceParam of deviceUniqueFields) {
 					it(`should be able to enable lock override by ${deviceParam}`, async function () {
 						await balena.models.device.enableLockOverride(
 							this.device[deviceParam],
@@ -1519,7 +1519,7 @@ describe('Device Model', function () {
 						);
 						expect(hasLockOverride).to.be.true;
 					});
-				});
+				}
 			});
 
 			describe('balena.models.device.disableLockOverride()', function () {
@@ -1533,7 +1533,7 @@ describe('Device Model', function () {
 					expect(hasLockOverride).to.be.true;
 				});
 
-				deviceUniqueFields.forEach(function (deviceParam) {
+				for (const deviceParam of deviceUniqueFields) {
 					it(`should be able to disable lock override by ${deviceParam}`, async function () {
 						await balena.models.device.disableLockOverride(
 							this.device[deviceParam],
@@ -1543,10 +1543,10 @@ describe('Device Model', function () {
 						);
 						return expect(hasLockOverride).to.be.false;
 					});
-				});
+				}
 			});
 
-			['single uuid', 'array of uuids'].forEach((paramType) => {
+			for (const paramType of ['single uuid', 'array of uuids']) {
 				describe(`balena.models.device.startOsUpdate() called with ${paramType}`, function () {
 					givenADevice(before);
 					describe('given an offline device w/o os info', function () {
@@ -1795,7 +1795,7 @@ describe('Device Model', function () {
 						});
 					});
 				});
-			});
+			}
 
 			describe('balena.models.device.tags', function () {
 				givenADevice(before);
@@ -1838,7 +1838,7 @@ describe('Device Model', function () {
 
 				const configVarModel = balena.models.device.configVar;
 
-				deviceUniqueFields.forEach(function (deviceParam) {
+				for (const deviceParam of deviceUniqueFields) {
 					const deviceParamUpper = deviceParam.toUpperCase();
 
 					it(`can create a variable by ${deviceParam}`, async function () {
@@ -1923,7 +1923,7 @@ describe('Device Model', function () {
 							),
 						]);
 					});
-				});
+				}
 
 				it('can create and then retrieve multiple variables by application', async function () {
 					await Promise.all([
@@ -1951,7 +1951,7 @@ describe('Device Model', function () {
 
 				const envVarModel = balena.models.device.envVar;
 
-				deviceUniqueFields.forEach(function (deviceParam) {
+				for (const deviceParam of deviceUniqueFields) {
 					it(`can create a variable by ${deviceParam}`, async function () {
 						await envVarModel.set(
 							this.device[deviceParam],
@@ -2026,7 +2026,7 @@ describe('Device Model', function () {
 							),
 						]);
 					});
-				});
+				}
 
 				it('can create and then retrieve multiple variables by application', async function () {
 					await Promise.all([
@@ -2189,14 +2189,14 @@ describe('Device Model', function () {
 				});
 
 				describe('Given an inactive device', () => {
-					deviceUniqueFields.forEach((prop) => {
+					for (const prop of deviceUniqueFields) {
 						it(`should return inactive when retrieving by ${prop}`, async function () {
 							const status = await balena.models.device.getStatus(
 								this.device[prop],
 							);
 							expect(status).to.equal('inactive');
 						});
-					});
+					}
 				});
 
 				describe('Given a vpn only online device', function () {
@@ -2211,14 +2211,14 @@ describe('Device Model', function () {
 						});
 					});
 
-					deviceUniqueFields.forEach((prop) => {
+					for (const prop of deviceUniqueFields) {
 						it(`should return reduced-functionality when retrieving by ${prop}`, async function () {
 							const status = await balena.models.device.getStatus(
 								this.device[prop],
 							);
 							expect(status).to.equal('reduced-functionality');
 						});
-					});
+					}
 				});
 
 				describe('Given an offline device', function () {
@@ -2232,14 +2232,14 @@ describe('Device Model', function () {
 						});
 					});
 
-					deviceUniqueFields.forEach((prop) => {
+					for (const prop of deviceUniqueFields) {
 						it(`should return disconnected when retrieving by ${prop}`, async function () {
 							const status = await balena.models.device.getStatus(
 								this.device[prop],
 							);
 							expect(status).to.equal('disconnected');
 						});
-					});
+					}
 				});
 			});
 		});
@@ -2372,14 +2372,14 @@ describe('Device Model', function () {
 					);
 				});
 
-				['id', 'uuid'].forEach((prop) => {
+				for (const prop of ['id', 'uuid']) {
 					it(`should be able to get the device by ${prop}`, async function () {
 						const device = await balena.models.device.getWithServiceDetails(
 							this.device[prop],
 						);
 						expect(device.id).to.equal(this.device.id);
 					});
-				});
+				}
 
 				it('should retrieve the current service details', async function () {
 					const deviceDetails =
@@ -2430,7 +2430,7 @@ describe('Device Model', function () {
 
 					// Just to make TS happy, since we already checked its length.
 					const imageInstalls = deviceDetails.image_install ?? [];
-					imageInstalls.forEach((imageInstall) => {
+					for (const imageInstall of imageInstalls) {
 						expect(imageInstall)
 							.to.have.property('id')
 							.that.is.oneOf([
@@ -2452,7 +2452,7 @@ describe('Device Model', function () {
 						expect(imageInstall).to.not.have.property('image_id');
 						expect(imageInstall).to.not.have.property('commit');
 						expect(imageInstall).to.not.have.property('raw_version');
-					});
+					}
 
 					// Augmented properties
 					// Should filter out deleted image installs
@@ -2462,11 +2462,11 @@ describe('Device Model', function () {
 					const currentServicesByApp = Object.values(
 						deviceDetails.current_services_by_app[this.application.slug],
 					).flat();
-					currentServicesByApp.forEach((currentService) => {
+					for (const currentService of currentServicesByApp) {
 						expect(currentService).to.have.property('commit');
 						expect(currentService).to.have.property('raw_version');
 						expect(currentService).to.have.property('release_id');
-					});
+					}
 				});
 
 				it('should allow options to change the device fields returned', async function () {
@@ -2496,8 +2496,8 @@ describe('Device Model', function () {
 					keyof BalenaSdk.Service['Read']
 				>;
 
-				deviceUniqueFields.forEach(function (deviceParam) {
-					serviceParams.forEach(function (serviceParam) {
+				for (const deviceParam of deviceUniqueFields) {
+					for (const serviceParam of serviceParams) {
 						it(`can create a variable by device ${deviceParam} & service ${serviceParam}`, async function () {
 							await varModel.set(
 								this.device[deviceParam],
@@ -2590,8 +2590,8 @@ describe('Device Model', function () {
 								),
 							]);
 						});
-					});
-				});
+					}
+				}
 
 				it('can create and then retrieve multiple variables by application', async function () {
 					await Promise.all([
@@ -2652,7 +2652,7 @@ describe('Device Model', function () {
 			});
 
 			describe('balena.models.device.isTrackingApplicationRelease()', function () {
-				['id', 'uuid'].forEach((prop) => {
+				for (const prop of ['id', 'uuid']) {
 					it(`should be tracking the latest release, using the device ${prop}`, async function () {
 						const isTracking =
 							await balena.models.device.isTrackingApplicationRelease(
@@ -2660,18 +2660,18 @@ describe('Device Model', function () {
 							);
 						expect(isTracking).to.be.true;
 					});
-				});
+				}
 			});
 
 			describe('balena.models.device.getTargetReleaseHash()', function () {
-				['id', 'uuid'].forEach((prop) => {
+				for (const prop of ['id', 'uuid']) {
 					it(`should retrieve the commit hash of the tracked application release, using the device ${prop}`, async function () {
 						const hash = await balena.models.device.getTargetReleaseHash(
 							this.device[prop],
 						);
 						expect(hash).to.equal('new-release-commit');
 					});
-				});
+				}
 			});
 
 			describe('balena.models.device.deactivate()', function () {
@@ -2974,7 +2974,7 @@ describe('Device Model', function () {
 				}
 			});
 
-			['id', 'uuid'].forEach((prop) => {
+			for (const prop of ['id', 'uuid']) {
 				describe('balena.models.device.pinToRelease()', function () {
 					it(`should set the batch of devices to a specific release using an array of ${prop}s`, async function () {
 						await balena.models.device.pinToRelease(
@@ -3009,7 +3009,7 @@ describe('Device Model', function () {
 						);
 					});
 				});
-			});
+			}
 
 			describe('balena.models.device.pinToSupervisorRelease()', function () {
 				givenASupervisorRelease(before, '11.12.3');
@@ -3027,7 +3027,7 @@ describe('Device Model', function () {
 				});
 				givenASupervisorRelease(before, '11.12.4');
 
-				['raw_version', 'id'].forEach((svReleaseProp) => {
+				for (const svReleaseProp of ['raw_version', 'id']) {
 					it(`should set the batch of devices to a specific supervisor release using the supervisor releases's ${svReleaseProp}`, async function () {
 						await balena.models.device.pinToSupervisorRelease(
 							this.devices.map((d) => d.id),
@@ -3042,7 +3042,7 @@ describe('Device Model', function () {
 							}),
 						);
 					});
-				});
+				}
 
 				it('should fail to set the batch of devices to a specific non-existent supervisor release', async function () {
 					const badRelease = 'nonexistent-supervisor-version';
@@ -3267,7 +3267,7 @@ describe('Device Model', function () {
 
 		describe('balena.models.device.move()', function () {
 			describe('when trying to move between applications of the same device type', function () {
-				applicationRetrievalFields.forEach((prop) => {
+				for (const prop of applicationRetrievalFields) {
 					it(`should be able to move a device by device uuid and application ${prop}`, async function () {
 						await balena.models.device.move(
 							this.deviceInfo.uuid,
@@ -3281,7 +3281,7 @@ describe('Device Model', function () {
 							this.applicationSameDT.app_name,
 						);
 					});
-				});
+				}
 
 				it('should be rejected when a short uuid is provided', async function () {
 					await expectError(
@@ -3376,11 +3376,11 @@ describe('Device Model', function () {
 		});
 
 		describe('balena.models.device.move()', function () {
-			[
+			for (const [deviceArch, appArch] of [
 				['rpi', 'armv7hf'],
 				['rpi', 'aarch64'],
 				['armv7hf', 'aarch64'],
-			].forEach(function ([deviceArch, appArch]) {
+			]) {
 				it(`should be rejected with an incompatibility error when trying to move an ${deviceArch} device to an ${appArch} application`, async function () {
 					const device = this.devices[deviceArch];
 					const app = this.apps[appArch];
@@ -3388,13 +3388,13 @@ describe('Device Model', function () {
 						await balena.models.device.move(device.uuid, app.slug);
 					}, `Incompatible application: ${app.slug}`);
 				});
-			});
+			}
 
-			[
+			for (const [deviceArch, appArch] of [
 				['aarch64', 'armv7hf'],
 				['aarch64', 'rpi'],
 				['armv7hf', 'rpi'],
-			].forEach(function ([deviceArch, appArch]) {
+			]) {
 				it(`should be able to move an ${deviceArch} device to an ${appArch} application`, async function () {
 					const device = this.devices[deviceArch];
 					const app = this.apps[appArch];
@@ -3404,7 +3404,7 @@ describe('Device Model', function () {
 					);
 					expect(applicationName).to.equal(app.app_name);
 				});
-			});
+			}
 		});
 	});
 
@@ -3708,11 +3708,11 @@ describe('Device Model', function () {
 			const { _checkOsUpdateTarget } = balena.models.device;
 
 			it('should throw when the current os version is invalid', () => {
-				[
+				for (const [osVersion, osVariant] of [
 					['Resin OS ', 'dev'],
 					['Resin OS ', 'prod'],
 					['Resin OS 2.0-beta.8', ''],
-				].forEach(function ([osVersion, osVariant]) {
+				]) {
 					return expect(() => {
 						_checkOsUpdateTarget(
 							{
@@ -3725,11 +3725,11 @@ describe('Device Model', function () {
 							'start',
 						);
 					}).to.throw('Invalid current balenaOS version');
-				});
+				}
 			});
 
 			it('should throw for upgrades from prod -> dev', () => {
-				[
+				for (const [osVersion, osVariant] of [
 					['Resin OS 2.0.0+rev3 (prod)', 'prod'],
 					['Resin OS 2.0.0+rev3 (prod)', ''],
 					['Resin OS 2.0.4+rev1', 'prod'],
@@ -3739,7 +3739,7 @@ describe('Device Model', function () {
 					['Resin OS 2.12.3+rev1', 'prod'],
 					['balenaOS 2.26.0', 'prod'],
 					['balenaOS 2.28.0+rev1', 'prod'],
-				].forEach(function ([osVersion, osVariant]) {
+				]) {
 					return expect(() => {
 						_checkOsUpdateTarget(
 							{
@@ -3754,11 +3754,11 @@ describe('Device Model', function () {
 					}).to.throw(
 						'Updates cannot be performed between development and production balenaOS variants',
 					);
-				});
+				}
 			});
 
 			it('should throw for upgrades from dev -> prod', () => {
-				[
+				for (const [osVersion, osVariant] of [
 					['Resin OS 2.0.0+rev3 (dev)', 'dev'],
 					['Resin OS 2.0.0+rev5 (dev)', ''],
 					['Resin OS 2.0.4+rev1', 'dev'],
@@ -3772,7 +3772,7 @@ describe('Device Model', function () {
 					['balenaOS 2.26.0', 'dev'],
 					['balenaOS 2.26.0+rev1', 'dev'],
 					['balenaOS 2.28.0+rev1', 'dev'],
-				].forEach(function ([osVersion, osVariant]) {
+				]) {
 					expect(() => {
 						_checkOsUpdateTarget(
 							{
@@ -3787,19 +3787,19 @@ describe('Device Model', function () {
 					}).to.throw(
 						'Updates cannot be performed between development and production balenaOS variants',
 					);
-				});
+				}
 			});
 
 			describe('v1 -> v1 hup', () => {
-				['raspberrypi3', 'intel-nuc'].forEach((deviceType) => {
+				for (const deviceType of ['raspberrypi3', 'intel-nuc']) {
 					describe(`given a ${deviceType}`, function () {
 						it('should throw when current os version is v1', () => {
-							[
+							for (const [osVersion, osVariant] of [
 								['Resin OS 1.2.1', ''],
 								['Resin OS 1.7.2', ''],
 								['Resin OS 1.8.0', ''],
 								['Resin OS 1.21.0', ''],
-							].forEach(function ([osVersion, osVariant]) {
+							]) {
 								expect(() => {
 									_checkOsUpdateTarget(
 										{
@@ -3812,22 +3812,22 @@ describe('Device Model', function () {
 										'start',
 									);
 								}).to.throw('Current OS version must be >= 2.14.0+rev1');
-							});
+							}
 						});
 					});
-				});
+				}
 			});
 
 			describe('v1 -> v2 hup', function () {
 				describe('given a raspberrypi3', function () {
 					it('should throw when current os version is v1', () => {
-						[
+						for (const [osVersion, osVariant] of [
 							['Resin OS 1.2.1', ''],
 							['Resin OS 1.7.2', ''],
 							['Resin OS 1.8.0', ''],
 							['Resin OS 1.21.0', ''],
 							['Resin OS 1.30.1', ''],
-						].forEach(function ([osVersion, osVariant]) {
+						]) {
 							expect(() => {
 								_checkOsUpdateTarget(
 									{
@@ -3840,7 +3840,7 @@ describe('Device Model', function () {
 									'start',
 								);
 							}).to.throw('Current OS version must be >= 2.14.0+rev1');
-						});
+						}
 					});
 				});
 			});
@@ -3849,7 +3849,7 @@ describe('Device Model', function () {
 				for (const deviceTypeSlug of ['raspberrypi3', 'jetson-tx2']) {
 					describe(`given a ${deviceTypeSlug}`, function () {
 						it('should throw when current os version is < 2.14.0+rev1', () => {
-							[
+							for (const [osVersion, osVariant] of [
 								['Resin OS 2.0.0.rev0 (prod)', 'prod'],
 								['Resin OS 2.0.0.rev1 (prod)', 'prod'],
 								['Resin OS 2.0.0.rev1 (prod)', ''],
@@ -3863,7 +3863,7 @@ describe('Device Model', function () {
 								['Resin OS 2.9.7+rev1', 'prod'],
 								['Resin OS 2.12.0+rev1', 'prod'],
 								['Resin OS 2.12.1+rev1', 'prod'],
-							].forEach(function ([osVersion, osVariant]) {
+							]) {
 								expect(() => {
 									_checkOsUpdateTarget(
 										{
@@ -3876,17 +3876,17 @@ describe('Device Model', function () {
 										'start',
 									);
 								}).to.throw('Current OS version must be >= 2.14.0+rev1');
-							});
+							}
 						});
 
 						it('should not throw when it is a valid v2 -> v2 hup', () => {
-							[
+							for (const [osVersion, osVariant] of [
 								['Resin OS 2.14.0+rev1', 'prod'],
 								['Resin OS 2.15.1+rev1', 'prod'],
 								['Resin OS 2.16.0+rev1', 'prod'],
 								['balenaOS 2.26.0+rev1', 'prod'],
-							].forEach(function ([osVersion, osVariant]) {
-								return expect(() => {
+							]) {
+								expect(() => {
 									_checkOsUpdateTarget(
 										{
 											uuid,
@@ -3898,16 +3898,16 @@ describe('Device Model', function () {
 										'start',
 									);
 								}).to.not.throw();
-							});
+							}
 						});
 
 						// pre-release versions
 
 						it('should throw when updating to a pre-release version with an older server', () => {
-							[
+							for (const [osVersion, osVariant] of [
 								['balenaOS 2.29.2-1704382618288+rev1', 'prod'],
 								['balenaOS 2.29.2+rev1', 'prod'],
-							].forEach(function ([osVersion, osVariant]) {
+							]) {
 								expect(() => {
 									_checkOsUpdateTarget(
 										{
@@ -3920,7 +3920,7 @@ describe('Device Model', function () {
 										'start',
 									);
 								}).to.throw('OS downgrades are not allowed');
-							});
+							}
 						});
 
 						it('should not throw when updating to a pre-release version with a newer base server', () => {
@@ -3971,13 +3971,13 @@ describe('Device Model', function () {
 						// dev variant
 
 						it('should throw when it is an invalid v2 -> v2 dev variant hup b/c the current os version is < 2.14.0+rev1', () => {
-							[
+							for (const [osVersion, osVariant] of [
 								['Resin OS 2.7.4+rev1.dev', 'dev'],
 								['Resin OS 2.9.7+rev2.dev', 'dev'],
 								// 2.14.0+rev1.dev isn't supported b/c it's considered lower than 2.14.0+rev1,
 								// which is the minimum supported version
 								['Resin OS 2.14.0+rev1.dev', 'dev'],
-							].forEach(function ([osVersion, osVariant]) {
+							]) {
 								expect(() => {
 									_checkOsUpdateTarget(
 										{
@@ -3990,16 +3990,16 @@ describe('Device Model', function () {
 										'start',
 									);
 								}).to.throw('Current OS version must be >= 2.14.0+rev1');
-							});
+							}
 						});
 
 						it('should not throw when it is a valid v2 -> v2 dev variant hup', () => {
-							[
+							for (const [osVersion, osVariant] of [
 								['Resin OS 2.14.0+rev2.dev', 'dev'],
 								['Resin OS 2.15.1+rev1.dev', 'dev'],
 								['Resin OS 2.16.0+rev1.dev', 'dev'],
 								['balenaOS 2.26.0+rev1.dev', 'dev'],
-							].forEach(function ([osVersion, osVariant]) {
+							]) {
 								expect(() => {
 									_checkOsUpdateTarget(
 										{
@@ -4012,7 +4012,7 @@ describe('Device Model', function () {
 										'start',
 									);
 								}).to.not.throw();
-							});
+							}
 						});
 
 						for (const [osVersion, osVariant, rawVersion] of [

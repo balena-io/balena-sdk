@@ -18,10 +18,10 @@ describe('mjs imports', function () {
 		await import('./import_named.mjs');
 	});
 
-	[
+	for (const [titlePart, loader] of [
 		['default', async () => (await import('./import_default.mjs')).default],
 		['named', async () => (await import('./import_named.mjs')).default],
-	].forEach(([titlePart, loader]) => {
+	]) {
 		describe(`${titlePart} imports`, function () {
 			it('should include all exported methods', async function () {
 				const sdkExports = await loader();
@@ -44,5 +44,5 @@ describe('mjs imports', function () {
 				expect(isLoggedIn).to.be.false;
 			});
 		});
-	});
+	}
 });

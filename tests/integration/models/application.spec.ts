@@ -186,7 +186,7 @@ describe('Application Model', function () {
 					}),
 				);
 
-				organizationRetrievalFields.forEach((prop) => {
+				for (const prop of organizationRetrievalFields) {
 					it(`should be able to create an application using the user's initial organization ${prop}`, async function () {
 						await balena.models.application.create({
 							name: `${TEST_APPLICATION_NAME_PREFIX}_FooBarByOrg${_.startCase(prop)}`,
@@ -207,7 +207,7 @@ describe('Application Model', function () {
 							this.initialOrg.id,
 						);
 					});
-				});
+				}
 
 				it('...should be able to create an application w/o providing an application type', function () {
 					return balena.models.application
@@ -324,7 +324,7 @@ describe('Application Model', function () {
 						await balena.models.application.remove('');
 					}, `Application not found: `);
 				});
-				applicationRetrievalFields.forEach((prop) => {
+				for (const prop of applicationRetrievalFields) {
 					it(`should be able to remove an existing application by ${prop}`, async function () {
 						await balena.models.application.remove(this.application[prop]);
 
@@ -332,7 +332,7 @@ describe('Application Model', function () {
 							await balena.models.application.getAll({}, 'directly_accessible'),
 						).to.deep.equal([]);
 					});
-				});
+				}
 			});
 		});
 
@@ -442,7 +442,7 @@ describe('Application Model', function () {
 					},
 				);
 
-				organizationRetrievalFields.forEach((prop) => {
+				for (const prop of organizationRetrievalFields) {
 					it('should eventually become an array containing the application', async function () {
 						const applications =
 							await balena.models.application.getAllByOrganization(
@@ -451,16 +451,16 @@ describe('Application Model', function () {
 						expect(applications).to.have.length(1);
 						expect(applications[0].id).to.equal(ctx.application.id);
 					});
-				});
+				}
 
 				parallel('balena.models.application.get()', function () {
-					applicationRetrievalFields.forEach((prop) => {
+					for (const prop of applicationRetrievalFields) {
 						it(`should be able to get an application by ${prop}`, async function () {
 							expect(
 								await balena.models.application.get(ctx.application[prop]),
 							).to.deep.equal(ctx.application);
 						});
-					});
+					}
 
 					it('should be able to get an application by slug regardless of casing', async function () {
 						if (
@@ -508,7 +508,7 @@ describe('Application Model', function () {
 				parallel(
 					'balena.models.application.getDirectlyAccessible()',
 					function () {
-						applicationRetrievalFields.forEach((prop) => {
+						for (const prop of applicationRetrievalFields) {
 							it(`should be able to get an application by ${prop}`, async function () {
 								expect(
 									await balena.models.application.getDirectlyAccessible(
@@ -516,17 +516,17 @@ describe('Application Model', function () {
 									),
 								).to.deep.equal(ctx.application);
 							});
-						});
+						}
 					},
 				);
 
 				parallel('balena.models.application.has()', function () {
-					applicationRetrievalFields.forEach((prop) => {
+					for (const prop of applicationRetrievalFields) {
 						it(`should eventually be true if the application ${prop} exists`, async function () {
 							expect(await balena.models.application.has(ctx.application[prop]))
 								.to.be.true;
 						});
-					});
+					}
 
 					it('should return false if the application id is undefined', async function () {
 						// @ts-expect-error invalid value
@@ -568,7 +568,7 @@ describe('Application Model', function () {
 							originalAppName,
 						);
 					});
-					applicationRetrievalFields.forEach((prop) => {
+					for (const prop of applicationRetrievalFields) {
 						it(`should be able to rename an existing application by ${prop}`, async function () {
 							const newApplicationName = `${TEST_APPLICATION_NAME_PREFIX}_newApplicationName_${prop}`;
 							await balena.models.application.rename(
@@ -583,7 +583,7 @@ describe('Application Model', function () {
 							);
 							expect(app).to.have.property('app_name', newApplicationName);
 						});
-					});
+					}
 				});
 			});
 
@@ -600,7 +600,7 @@ describe('Application Model', function () {
 						return provisioningKeys;
 					};
 
-				applicationRetrievalFields.forEach((prop) => {
+				for (const prop of applicationRetrievalFields) {
 					it(`should be able to generate a provisioning key by ${prop}`, function () {
 						return balena.models.application
 							.generateProvisioningKey({
@@ -614,9 +614,9 @@ describe('Application Model', function () {
 								return expect(key).to.have.length(32);
 							});
 					});
-				});
+				}
 
-				applicationRetrievalFields.forEach((prop) => {
+				for (const prop of applicationRetrievalFields) {
 					it(`should be able to generate a provisioning key by ${prop} with key name as key_${prop}`, async function () {
 						const provisioningKeys = await getProvisioningKeys(
 							this.application[prop],
@@ -721,7 +721,7 @@ describe('Application Model', function () {
 							.to.have.property('expiry_date')
 							.to.be.equal(oneHourDate);
 					});
-				});
+				}
 
 				it('should be rejected if the application slug does not exist', async function () {
 					await expectError(async () => {
@@ -825,7 +825,7 @@ describe('Application Model', function () {
 			describe('balena.models.application.configVar', function () {
 				const configVarModel = balena.models.application.configVar;
 
-				applicationRetrievalFields.forEach(function (appParam) {
+				for (const appParam of applicationRetrievalFields) {
 					const appParamUpper = appParam.toUpperCase();
 
 					it(`can create a variable by ${appParam}`, async function () {
@@ -920,13 +920,13 @@ describe('Application Model', function () {
 								]),
 							);
 					});
-				});
+				}
 			});
 
 			describe('balena.models.application.envVar', function () {
 				const envVarModel = balena.models.application.envVar;
 
-				applicationRetrievalFields.forEach(function (appParam) {
+				for (const appParam of applicationRetrievalFields) {
 					it(`can create a variable by ${appParam}`, async function () {
 						await envVarModel.set(
 							this.application[appParam],
@@ -1004,13 +1004,13 @@ describe('Application Model', function () {
 								]),
 							);
 					});
-				});
+				}
 			});
 
 			describe('balena.models.application.buildEnvVar', function () {
 				const envVarModel = balena.models.application.buildVar;
 
-				applicationRetrievalFields.forEach(function (appParam) {
+				for (const appParam of applicationRetrievalFields) {
 					it(`can create a variable by ${appParam}`, async function () {
 						await envVarModel.set(
 							this.application[appParam],
@@ -1088,7 +1088,7 @@ describe('Application Model', function () {
 								]),
 							);
 					});
-				});
+				}
 			});
 
 			describe('with a registered device', function () {
@@ -1335,48 +1335,46 @@ describe('Application Model', function () {
 						});
 					});
 
-					(
+					for (const [releaseType, prepareFn] of [
 						[
-							[
-								'draft',
-								async function () {
-									const { id: userId } = await balena.auth.getUserInfo();
-									this.testNonLatestRelease = await balena.pine.post({
-										resource: 'release',
-										body: {
-											belongs_to__application: this.application.id,
-											is_created_by__user: userId,
-											commit: 'draft-release-commit',
-											status: 'success',
-											source: 'cloud',
-											is_final: false,
-											composition: {},
-											start_timestamp: Date.now(),
-										},
-									});
-								},
-							],
-							[
-								'invalidated',
-								async function () {
-									const { id } = await balena.auth.getUserInfo();
-									this.testNonLatestRelease = await balena.pine.post({
-										resource: 'release',
-										body: {
-											belongs_to__application: this.application.id,
-											is_created_by__user: id,
-											commit: 'invalidated-release-commit',
-											status: 'success',
-											source: 'cloud',
-											is_invalidated: true,
-											composition: {},
-											start_timestamp: Date.now(),
-										},
-									});
-								},
-							],
-						] as const
-					).forEach(([releaseType, prepareFn]) => {
+							'draft',
+							async function () {
+								const { id: userId } = await balena.auth.getUserInfo();
+								this.testNonLatestRelease = await balena.pine.post({
+									resource: 'release',
+									body: {
+										belongs_to__application: this.application.id,
+										is_created_by__user: userId,
+										commit: 'draft-release-commit',
+										status: 'success',
+										source: 'cloud',
+										is_final: false,
+										composition: {},
+										start_timestamp: Date.now(),
+									},
+								});
+							},
+						],
+						[
+							'invalidated',
+							async function () {
+								const { id } = await balena.auth.getUserInfo();
+								this.testNonLatestRelease = await balena.pine.post({
+									resource: 'release',
+									body: {
+										belongs_to__application: this.application.id,
+										is_created_by__user: id,
+										commit: 'invalidated-release-commit',
+										status: 'success',
+										source: 'cloud',
+										is_invalidated: true,
+										composition: {},
+										start_timestamp: Date.now(),
+									},
+								});
+							},
+						],
+					] as const) {
 						describe(`given a new ${releaseType} release`, function () {
 							before(prepareFn);
 
@@ -1432,7 +1430,7 @@ describe('Application Model', function () {
 								});
 							});
 						});
-					});
+					}
 				});
 			});
 		});
@@ -1507,7 +1505,7 @@ describe('Application Model', function () {
 			// Should include the Device model properties
 			expect(deviceDetails.image_install).to.have.lengthOf(3);
 
-			deviceDetails.image_install.forEach((imageInstall) => {
+			for (const imageInstall of deviceDetails.image_install) {
 				expect(imageInstall)
 					.to.have.property('id')
 					.that.is.oneOf([
@@ -1532,7 +1530,7 @@ describe('Application Model', function () {
 				expect(imageInstall).to.not.have.property('service_id');
 				expect(imageInstall).to.not.have.property('image_id');
 				expect(imageInstall).to.not.have.property('commit');
-			});
+			}
 
 			// Augmented properties
 			// Should filter out deleted image installs
@@ -1644,7 +1642,7 @@ describe('Application Model', function () {
 
 		describe('when logged in', function () {
 			parallel('balena.models.application.get()', function () {
-				applicationRetrievalFields.forEach((prop) => {
+				for (const prop of applicationRetrievalFields) {
 					$it(
 						`should be able to get the public application by ${prop}`,
 						async function () {
@@ -1652,13 +1650,13 @@ describe('Application Model', function () {
 							expect(app.id).to.equal(publicApp.id);
 						},
 					);
-				});
+				}
 			});
 
 			parallel(
 				'balena.models.application.get() [directly_accessible]',
 				function () {
-					applicationRetrievalFields.forEach((prop) => {
+					for (const prop of applicationRetrievalFields) {
 						$it(
 							`should not return the public application by ${prop}`,
 							async function () {
@@ -1671,14 +1669,14 @@ describe('Application Model', function () {
 								}, `Application not found: ${publicApp[prop]}`);
 							},
 						);
-					});
+					}
 				},
 			);
 
 			parallel(
 				'balena.models.application.getDirectlyAccessible()',
 				function () {
-					applicationRetrievalFields.forEach((prop) => {
+					for (const prop of applicationRetrievalFields) {
 						$it(
 							`should not return the public application by ${prop}`,
 							async function () {
@@ -1689,7 +1687,7 @@ describe('Application Model', function () {
 								}, `Application not found: ${publicApp[prop]}`);
 							},
 						);
-					});
+					}
 				},
 			);
 
@@ -1768,20 +1766,20 @@ describe('Application Model', function () {
 								const appIds = apps.map((app) => app.id);
 								expect(appIds.includes(publicApp.id)).to.be.true;
 
-								apps.forEach(function (app) {
+								for (const app of apps) {
 									expect(app).to.have.property('id').that.is.a('number');
 									expect(app).to.have.property('app_name').that.is.a('string');
 									expect(app).to.have.property('slug').that.is.a('string');
 									expect(app).to.have.property('uuid').that.is.a('string');
 									expect(app).to.have.property('is_public', true);
-								});
+								}
 							});
 					},
 				);
 			});
 
 			parallel('balena.models.application.get()', function () {
-				applicationRetrievalFields.forEach((prop) => {
+				for (const prop of applicationRetrievalFields) {
 					$it(
 						`should be able to get a public application by ${prop}`,
 						function () {
@@ -1796,7 +1794,7 @@ describe('Application Model', function () {
 								});
 						},
 					);
-				});
+				}
 			});
 		});
 	});

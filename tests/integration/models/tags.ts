@@ -88,7 +88,7 @@ export const itShouldGetAllTagsByResource = function (opts: Options) {
 			);
 		});
 
-		uniquePropertyNames.forEach((uniquePropertyName) => {
+		for (const uniquePropertyName of uniquePropertyNames) {
 			const uniquePropertyNameLabel = getFieldLabel(uniquePropertyName);
 			it(`should be rejected if the ${resourceName} ${uniquePropertyNameLabel} does not exist`, async function () {
 				let getAllByResourceParam;
@@ -126,7 +126,7 @@ export const itShouldGetAllTagsByResource = function (opts: Options) {
 					}`,
 				);
 			});
-		});
+		}
 	});
 
 	describe('given a tag', function () {
@@ -144,7 +144,7 @@ export const itShouldGetAllTagsByResource = function (opts: Options) {
 		});
 
 		parallel('', function () {
-			uniquePropertyNames.forEach((uniquePropertyName) => {
+			for (const uniquePropertyName of uniquePropertyNames) {
 				const uniquePropertyNameLabel = getFieldLabel(uniquePropertyName);
 				it(`should retrieve the tag by ${resourceName} ${uniquePropertyNameLabel}`, async function () {
 					const getAllByResourceParam = getParam(
@@ -156,7 +156,7 @@ export const itShouldGetAllTagsByResource = function (opts: Options) {
 					expect(tags[0].tag_key).to.equal('EDITOR');
 					expect(tags[0].value).to.equal('vim');
 				});
-			});
+			}
 		});
 	});
 };
@@ -172,7 +172,7 @@ export const itShouldSetGetAndRemoveTags = function (opts: Options) {
 		this.resource = opts.resourceProvider();
 	});
 
-	uniquePropertyNames.forEach((param) => {
+	for (const param of uniquePropertyNames) {
 		const uniquePropertyNameLabel = getFieldLabel(param);
 		describe(`given a ${resourceName} ${uniquePropertyNameLabel}`, function () {
 			const $it = param ? it : it.skip;
@@ -247,7 +247,7 @@ export const itShouldSetGetAndRemoveTags = function (opts: Options) {
 				return expect(tags).to.have.length(0);
 			});
 		});
-	});
+	}
 
 	describe(`${modelNamespace}.set()`, function () {
 		it('should not allow creating a resin tag', async function () {

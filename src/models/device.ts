@@ -2086,21 +2086,22 @@ const getDeviceModel = function (
 					},
 				},
 				fn: async (devices) => {
-					devices.forEach((device) => {
+					for (const device of devices) {
 						ensureVersionCompatibility(
 							device.supervisor_version,
 							MIN_SUPERVISOR_MC_API,
 							'supervisor',
 						);
 						ensureVersionCompatibility(device.os_version, MIN_OS_MC, 'host OS');
-					});
+					}
 					const devicesByDeviceType = groupByMap(
 						devices,
 						(device) =>
 							device.is_of__device_type[0].is_of__cpu_architecture.__id,
 					);
 					await Promise.all(
-						[...devicesByDeviceType.entries()].map(
+						Array.from(
+							devicesByDeviceType.entries(),
 							async ([cpuArchId, devicesOfType]) => {
 								const release = await getRelease(cpuArchId);
 								await pine.patch({

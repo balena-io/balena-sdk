@@ -55,15 +55,15 @@ describe('Organization Membership Model', function () {
 			options: { $select: ['id', 'name'] },
 		});
 		this.orgRoleMap = _.keyBy(roles, 'name');
-		roles.forEach((role) => {
+		for (const role of roles) {
 			expect(role).to.be.an('object');
 			expect(role).to.have.property('id').that.is.a('number');
-		});
+		}
 		this.orgAdminRole = this.orgRoleMap['administrator'];
 		this.orgMemberRole = this.orgRoleMap['member'];
-		[this.orgAdminRole, this.orgMemberRole].forEach((role) => {
+		for (const role of [this.orgAdminRole, this.orgMemberRole]) {
 			expect(role).to.be.an('object');
-		});
+		}
 	});
 
 	describe('balena.models.organization.membership.getAllByOrganization()', function () {
@@ -116,7 +116,7 @@ describe('Organization Membership Model', function () {
 				}, 'Organization Membership not found');
 			});
 
-			keyAlternatives.forEach(([title, keyGetter]) => {
+			for (const [title, keyGetter] of keyAlternatives) {
 				it(`should be able to retrieve a membership by ${title}`, async function () {
 					const key = keyGetter(membership!);
 					const result = await balena.models.organization.membership.get(key, {
@@ -139,13 +139,13 @@ describe('Organization Membership Model', function () {
 						'administrator',
 					);
 				});
-			});
+			}
 		});
 
 		parallel(
 			'balena.models.organization.membership.getAllByUser()',
 			function () {
-				(['userId', 'username'] as const).forEach((prop) => {
+				for (const prop of ['userId', 'username'] as const) {
 					it(`shoud return only the user's own membership by ${prop}`, async function () {
 						const memberships =
 							await balena.models.organization.membership.getAllByUser(
@@ -159,7 +159,7 @@ describe('Organization Membership Model', function () {
 							},
 						]);
 					});
-				});
+				}
 			},
 		);
 	});
@@ -202,7 +202,7 @@ describe('Organization Membership Model', function () {
 				| undefined;
 
 			describe('balena.models.organization.membership.remove()', function () {
-				keyAlternatives.forEach(([title, keyGetter]) => {
+				for (const [title, keyGetter] of keyAlternatives) {
 					it(`should be able to remove a member by ${title}`, async function () {
 						const key = keyGetter(membership!);
 						await balena.models.organization.membership.remove(key);
@@ -211,7 +211,7 @@ describe('Organization Membership Model', function () {
 							await balena.models.organization.membership.get(membership!.id);
 						}, 'Organization Membership not found');
 					});
-				});
+				}
 			});
 		});
 
@@ -299,10 +299,10 @@ describe('Organization Membership Model', function () {
 					});
 				};
 
-				keyAlternatives.forEach((keyAlternative) => {
+				for (const keyAlternative of keyAlternatives) {
 					roleChangeTest('member', keyAlternative);
 					roleChangeTest('administrator', keyAlternative);
-				});
+				}
 			});
 
 			describe('balena.models.organization.membership.remove()', function () {
