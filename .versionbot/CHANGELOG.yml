@@ -1,4 +1,16 @@
 - commits:
+    - subject: Convert most `forEach` functions to `for..of`
+      hash: 2892b2086c70ce34facf92d8ea1eb70e691f051e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 23.1.8
+  title: ""
+  date: 2026-03-13T13:20:59.329Z
+- commits:
     - subject: Update dependency balena-settings-client to v6
       hash: a38f3e4b08f89390374d3b25c8e2561e01c06120
       body: |
