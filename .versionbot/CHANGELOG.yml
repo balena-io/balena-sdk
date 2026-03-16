@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency domain-browser to v5
+      hash: 4955e48b116a506a88b83aebbd084db2bc66cc1c
+      body: |
+        Update domain-browser from 4.23.0 to 5.7.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.1.10
+  title: ""
+  date: 2026-03-16T17:35:21.213Z
+- commits:
     - subject: Update sinon to v21
       hash: 30c047c9522a83960db618cecdaaaa723d7475b2
       body: |
