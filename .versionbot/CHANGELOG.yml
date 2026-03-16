@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency dotenv to v17
+      hash: ba9ab4814118152956d778bb1973138a6fbe223a
+      body: |
+        Update dotenv from 16.6.1 to 17.3.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.1.11
+  title: ""
+  date: 2026-03-16T18:41:04.994Z
+- commits:
     - subject: Update dependency domain-browser to v5
       hash: 4955e48b116a506a88b83aebbd084db2bc66cc1c
       body: |
