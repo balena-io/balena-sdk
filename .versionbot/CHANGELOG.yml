@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update sinon to v21
+      hash: 30c047c9522a83960db618cecdaaaa723d7475b2
+      body: |
+        Update @types/sinon from 20.0.0 to 21.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.1.9
+  title: ""
+  date: 2026-03-16T14:07:38.078Z
+- commits:
     - subject: Convert most `forEach` functions to `for..of`
       hash: 2892b2086c70ce34facf92d8ea1eb70e691f051e
       body: ""
