@@ -11,24 +11,50 @@ const outputDir = __dirname;
 
 async function generateDocs() {
 	await jsdoc2md.clear();
+	const templateData = await jsdoc2md.getTemplateData({ files: inputFiles });
 
-	const jsDocOpts = { files: inputFiles };
+	// Define priority for "kinds"
+	const kindOrder = {
+		module: 1,
+		function: 2, // Functions first within an object
+		constant: 3,
+		member: 3, // Sub-objects/models usually fall here
+		namespace: 4,
+		typedef: 5,
+	};
 
-	console.log('Fetching template data...');
-	const templateData = await jsdoc2md.getTemplateData(jsDocOpts);
-
-	templateData.sort(function (a, b) {
-		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-		const nameA = (a.longname || '').toUpperCase();
-		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-		const nameB = (b.longname || '').toUpperCase();
-		if (nameA < nameB) {
+	templateData.sort((a, b) => {
+		// 1. Module Priority: Move all modules to the very top
+		if (a.kind === 'module' && b.kind !== 'module') {
 			return -1;
 		}
-		if (nameA > nameB) {
+		if (a.kind !== 'module' && b.kind === 'module') {
 			return 1;
 		}
-		return 0;
+
+		// 2. Group by Parent: Keep things belonging to 'models.application' together
+		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+		const parentA = a.memberof || '';
+		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+		const parentB = b.memberof || '';
+
+		if (parentA !== parentB) {
+			return parentA.localeCompare(parentB);
+		}
+
+		// 3. Kind Priority: Within 'application', put 'create()' (function) before 'apiKey' (member)
+		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+		const priorityA = kindOrder[a.kind] || 99;
+		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+		const priorityB = kindOrder[b.kind] || 99;
+
+		if (priorityA !== priorityB) {
+			return priorityA - priorityB;
+		}
+
+		// 4. Alphabetical Tie-breaker: create() vs get()
+		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+		return (a.name || '').localeCompare(b.name || '');
 	});
 
 	const renderOpts = {
