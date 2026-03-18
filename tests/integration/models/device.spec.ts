@@ -4022,7 +4022,7 @@ describe('Device Model', function () {
 							['balenaOS 2.26.0+rev1', 'dev', '2.26.0+rev1.dev'],
 							['balenaOS 2.88.4+rev10', 'prod', '2.88.4+rev10'],
 							['balenaOS 2.88.4+rev10', 'dev', '2.88.4+rev10'],
-						]) {
+						] as const) {
 							it(`should throw when starting an update to the same OS version that the device is running ${osVersion} ${osVariant}`, function () {
 								const isUnifiedOsRelease = !/dev|prod/.test(rawVersion);
 								if (osVariant === 'dev' && isUnifiedOsRelease) {
@@ -4043,6 +4043,25 @@ describe('Device Model', function () {
 									);
 								}).to.throw();
 							});
+
+							const oppositeVariant = osVariant === 'dev' ? 'prod' : 'dev';
+							const targetReleaseHasVariant = /\.(dev|prod)$/.test(rawVersion);
+							if (targetReleaseHasVariant) {
+								it(`should throw when pinning to the same OS version that what the device is running ${osVersion} ${oppositeVariant} but different variant`, function () {
+									expect(() => {
+										_checkOsUpdateTarget(
+											{
+												uuid,
+												is_of__device_type: [{ slug: deviceTypeSlug }],
+												os_version: osVersion,
+												os_variant: oppositeVariant,
+											},
+											rawVersion,
+											'pin',
+										);
+									}).to.throw();
+								});
+							}
 
 							it(`should not throw when pinning to the same OS version that the device is running ${osVersion} ${osVariant}`, function () {
 								expect(() => {
