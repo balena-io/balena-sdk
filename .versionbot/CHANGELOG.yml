@@ -1,4 +1,19 @@
 - commits:
+    - subject: "device.pinToOsRelease: Prevent pinning to different variant of the
+        current OS version"
+      hash: c4ff6696d01da3b0f1349a6bcd086d29a9439b9e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://balena.fibery.io/Work/Project/1704
+        see: https://balena.fibery.io/Work/Project/1704
+      author: Thodoris Greasidis
+      nested: []
+  version: 23.1.12
+  title: ""
+  date: 2026-03-19T01:54:32.285Z
+- commits:
     - subject: Update dependency dotenv to v17
       hash: ba9ab4814118152956d778bb1973138a6fbe223a
       body: |
