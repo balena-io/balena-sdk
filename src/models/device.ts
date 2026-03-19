@@ -2179,15 +2179,21 @@ const getDeviceModel = function (
 				mode === 'pin' &&
 				// Allow pinning the device back to the current OS version
 				bSemver.parse(os_version) != null &&
-				bSemver.parse(targetOsVersion) != null &&
-				bSemver.compare(
-					os_version,
-					targetOsVersion.replace(/\.(dev|prod)\b/, ''),
-				) === 0
+				bSemver.parse(targetOsVersion) != null
 			) {
-				// This is not part of the hup-action utils b/c the proxy needs to block such requests,
-				// and when the sdk pins a device to the same OS release, that will not reach the proxy.
-				return;
+				// TODO: Switch the regex to capture groups once we bump to es2018
+				const [, targetOsVersionWoVariant, , targetReleaseVariant] =
+					targetOsVersion.match(/^(.+?)(\.(dev|prod))?$/) ?? [];
+				if (
+					targetOsVersionWoVariant != null &&
+					(targetReleaseVariant == null ||
+						targetReleaseVariant === os_variant) &&
+					bSemver.compare(os_version, targetOsVersionWoVariant) === 0
+				) {
+					// This is not part of the hup-action utils b/c the proxy needs to block such requests,
+					// and when the sdk pins a device to the same OS release, that will not reach the proxy.
+					return;
+				}
 			}
 
 			const currentOsVersionWithVariant =
