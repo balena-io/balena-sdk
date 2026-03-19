@@ -33,11 +33,11 @@ import type {
 } from '../types/models';
 import type { InjectedDependenciesParam, InjectedOptionsParam } from '..';
 import { getAuthDependentMemoize } from '../util/cache';
-import { BalenaReleaseNotFound } from 'balena-errors';
 import type {
 	ODataOptionsWithoutCount,
 	OptionsToResponse,
 } from 'pinejs-client-core';
+import { OSImageNotFound } from '../errors';
 
 type ResourceTagBase = Pick<
 	ApplicationTag['Read'] &
@@ -721,9 +721,7 @@ const getOsModel = function (
 					(v) => v.osType === OsTypes.DEFAULT,
 				);
 				if (!foundVersion) {
-					throw new BalenaReleaseNotFound(
-						'No version available for this device type',
-					);
+					throw new OSImageNotFound(deviceType, version, restOptions.imageType);
 				}
 				version = foundVersion.raw_version;
 			} else {
@@ -742,7 +740,7 @@ const getOsModel = function (
 			});
 		} catch (err) {
 			if (isNotFoundResponse(err)) {
-				throw new Error('No such version for the device type');
+				throw new OSImageNotFound(deviceType, version, restOptions.imageType);
 			}
 			throw err;
 		}

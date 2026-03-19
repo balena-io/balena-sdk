@@ -160,7 +160,7 @@ export type BalenaSDK = {
 	request: BalenaRequest;
 	pine: PineClient;
 	utils: import('./util').BalenaUtils;
-	errors: typeof import('balena-errors');
+	errors: typeof import('./errors');
 	version: string;
 };
 
@@ -212,7 +212,7 @@ export const getSdk = function ($opts?: SdkOptions) {
 	const BalenaAuth = (require('balena-auth') as typeof import('balena-auth'))
 		.default;
 	const { PinejsClient } = require('./pine') as typeof import('./pine');
-	const errors = require('balena-errors') as typeof import('balena-errors');
+	const errors = require('./errors') as typeof import('./errors');
 	const { PubSub } = require('./util/pubsub') as typeof import('./util/pubsub');
 
 	/**
