@@ -1,4 +1,16 @@
 - commits:
+    - subject: "os.download: Improve error thrown if version is not found"
+      hash: 1de79f42cc8bb65437ffa8bc1060cbba955717df
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 23.1.13
+  title: ""
+  date: 2026-03-20T15:26:58.104Z
+- commits:
     - subject: "device.pinToOsRelease: Prevent pinning to different variant of the
         current OS version"
       hash: c4ff6696d01da3b0f1349a6bcd086d29a9439b9e
