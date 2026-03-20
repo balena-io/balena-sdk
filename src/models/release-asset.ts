@@ -10,7 +10,7 @@ import type {
 } from '..';
 import { limitedMap, mergePineOptions, once } from '../util';
 import type { ReleaseRawVersionApplicationPair } from './release';
-import { BalenaError } from 'balena-errors';
+import { ReleaseAssetAlreadyExists } from '../errors';
 
 type WriteReleaseAssetParams = Omit<ReleaseAsset['Write'], 'asset'> & {
 	asset: File | string;
@@ -53,16 +53,6 @@ type ReleaseAssetId =
 			asset_key: ReleaseAsset['Read']['asset_key'];
 			release: string | number | ReleaseRawVersionApplicationPair;
 	  };
-
-class ReleaseAssetAlreadyExists extends BalenaError {
-	constructor(release: number, asset_key: string) {
-		super(
-			new Error(
-				`Release asset combination of ${release} and ${asset_key} already exists`,
-			),
-		);
-	}
-}
 
 const MINIMUM_MULTIPART_SIZE = 5 * 1024 * 1024; // 5MiB
 
