@@ -275,7 +275,14 @@ describe('Release Model', function () {
 						releaseIds.push(releaseId);
 
 						const release = await balena.models.release.get(releaseId);
-						expect(release).to.deep.match({
+						expect(
+							_.pick(release, [
+								'id',
+								'status',
+								'source',
+								'belongs_to__application',
+							]),
+						).to.deep.equal({
 							status: 'running',
 							source: 'cloud',
 							id: releaseId,
@@ -348,7 +355,9 @@ describe('Release Model', function () {
 								],
 							},
 						);
-						expect(freshRelease).to.deep.match({
+						expect(
+							_.pick(freshRelease, ['id', 'commit', 'raw_version', 'is_final']),
+						).to.deep.equal({
 							id: draftRelease.id,
 							commit: draftRelease.commit,
 							raw_version: draftRelease.raw_version.replace(
@@ -375,7 +384,7 @@ describe('Release Model', function () {
 							release.id,
 							{ $select: 'is_invalidated' },
 						);
-						expect(invalidatedRelease).to.deep.match({
+						expect(invalidatedRelease).to.deep.equal({
 							is_invalidated: true,
 						});
 					});
@@ -388,7 +397,7 @@ describe('Release Model', function () {
 							release.id,
 							{ $select: 'is_invalidated' },
 						);
-						expect(validatedRelease).to.deep.match({
+						expect(validatedRelease).to.deep.equal({
 							is_invalidated: false,
 						});
 					});
@@ -409,7 +418,15 @@ describe('Release Model', function () {
 		parallel('balena.models.release.get()', function () {
 			it('should get the requested release by id', async () => {
 				const release = await balena.models.release.get(ctx.currentRelease.id);
-				expect(release).to.deep.match({
+				expect(
+					_.pick(release, [
+						'status',
+						'source',
+						'commit',
+						'id',
+						'belongs_to__application',
+					]),
+				).to.deep.equal({
 					status: 'success',
 					source: 'cloud',
 					commit: 'new-release-commit',
@@ -422,7 +439,15 @@ describe('Release Model', function () {
 				const release = await balena.models.release.get(
 					ctx.currentRelease.commit,
 				);
-				expect(release).to.deep.match({
+				expect(
+					_.pick(release, [
+						'status',
+						'source',
+						'commit',
+						'id',
+						'belongs_to__application',
+					]),
+				).to.deep.equal({
 					status: 'success',
 					source: 'cloud',
 					commit: 'new-release-commit',
@@ -453,7 +478,15 @@ describe('Release Model', function () {
 					application: ctx.application.id,
 					rawVersion: ctx.currentRelease.raw_version,
 				});
-				expect(release).to.deep.match({
+				expect(
+					_.pick(release, [
+						'status',
+						'source',
+						'commit',
+						'id',
+						'belongs_to__application',
+					]),
+				).to.deep.equal({
 					status: 'success',
 					source: 'cloud',
 					commit: 'new-release-commit',
@@ -475,8 +508,8 @@ describe('Release Model', function () {
 						const sortedReleases = _.sortBy(
 							releases,
 							(release) => release.start_timestamp,
-						);
-						expect(sortedReleases).to.deep.match([
+						).map((r) => _.pick(r, ['status', 'source', 'commit']));
+						expect(sortedReleases).to.deep.equal([
 							{
 								status: 'success',
 								source: 'cloud',
@@ -497,34 +530,52 @@ describe('Release Model', function () {
 				const release = await balena.models.release.getWithImageDetails(
 					ctx.currentRelease.id,
 				);
-				expect(release).to.deep.match({
+				expect(
+					_.pick(release, ['commit', 'status', 'source', 'user']),
+				).to.deep.equal({
 					commit: 'new-release-commit',
 					status: 'success',
 					source: 'cloud',
-					images: [{ service_name: 'db' }, { service_name: 'web' }],
 					user: {
+						id: (await balena.auth.getUserInfo()).id,
 						username: credentials.username,
 					},
 				});
-
-				expect(release.images[0]).to.not.have.property('build_log');
+				expect(
+					_.sortBy(
+						release.images.map(({ id, ...restImage }) => restImage),
+						(i) => i.service_name,
+					),
+				).to.deep.equal(
+					// Should not inlcude a build_log
+					[{ service_name: 'db' }, { service_name: 'web' }],
+				);
 			});
 
 			it('should get the release with associated images attached by commit', async () => {
 				const release = await balena.models.release.getWithImageDetails(
 					ctx.currentRelease.commit,
 				);
-				expect(release).to.deep.match({
+				expect(
+					_.pick(release, ['commit', 'status', 'source', 'user']),
+				).to.deep.equal({
 					commit: 'new-release-commit',
 					status: 'success',
 					source: 'cloud',
-					images: [{ service_name: 'db' }, { service_name: 'web' }],
 					user: {
+						id: (await balena.auth.getUserInfo()).id,
 						username: credentials.username,
 					},
 				});
-
-				expect(release.images[0]).to.not.have.property('build_log');
+				expect(
+					_.sortBy(
+						release.images.map(({ id, ...restImage }) => restImage),
+						(i) => i.service_name,
+					),
+				).to.deep.equal(
+					// Should not inlcude a build_log
+					[{ service_name: 'db' }, { service_name: 'web' }],
+				);
 			});
 
 			it('should not find the release with associated images attached by shorter commit', async () => {
@@ -543,16 +594,26 @@ describe('Release Model', function () {
 					application: ctx.application.id,
 					rawVersion: ctx.currentRelease.raw_version,
 				});
-				expect(release).to.deep.match({
+				expect(
+					_.pick(release, ['commit', 'status', 'source', 'user']),
+				).to.deep.equal({
 					commit: 'new-release-commit',
 					status: 'success',
 					source: 'cloud',
-					images: [{ service_name: 'db' }, { service_name: 'web' }],
 					user: {
+						id: (await balena.auth.getUserInfo()).id,
 						username: credentials.username,
 					},
 				});
-				expect(release.images[0]).to.not.have.property('build_log');
+				expect(
+					_.sortBy(
+						release.images.map(({ id, ...restImage }) => restImage),
+						(i) => i.service_name,
+					),
+				).to.deep.equal(
+					// Should not inlcude a build_log
+					[{ service_name: 'db' }, { service_name: 'web' }],
+				);
 			});
 
 			it('should allow extra options to also get the build log', async () => {
@@ -562,18 +623,22 @@ describe('Release Model', function () {
 						image: { $select: 'build_log' },
 					},
 				);
-				expect(release).to.deep.match({
-					images: [
-						{
-							service_name: 'db',
-							build_log: 'db log',
-						},
-						{
-							service_name: 'web',
-							build_log: 'web log',
-						},
-					],
-				});
+				expect(release).to.have.property('images').that.is.an('array');
+				expect(
+					_.sortBy(
+						release.images.map((i) => _.pick(i, ['service_name', 'build_log'])),
+						(i) => i.service_name,
+					),
+				).to.deep.equal([
+					{
+						service_name: 'db',
+						build_log: 'new db log',
+					},
+					{
+						service_name: 'web',
+						build_log: 'new web log',
+					},
+				]);
 			});
 		});
 
@@ -588,7 +653,7 @@ describe('Release Model', function () {
 					const updatedRelease = await balena.models.release.get(release.id, {
 						$select: ['id', 'note'],
 					});
-					expect(updatedRelease).to.deep.match({
+					expect(updatedRelease).to.deep.equal({
 						id: release.id,
 						note,
 					});
@@ -610,7 +675,7 @@ describe('Release Model', function () {
 					const updatedRelease = await balena.models.release.get(release.id, {
 						$select: ['id', 'known_issue_list'],
 					});
-					expect(updatedRelease).to.deep.match({
+					expect(updatedRelease).to.deep.equal({
 						id: release.id,
 						known_issue_list: knownIssueList,
 					});
@@ -700,8 +765,16 @@ describe('Release Model', function () {
 							const release =
 								await balena.models.release.getLatestByApplication(
 									ctx.application[prop],
+									{
+										$select: [
+											'status',
+											'source',
+											'commit',
+											'belongs_to__application',
+										],
+									},
 								);
-							expect(release).to.deep.match({
+							expect(release).to.deep.equal({
 								status: 'success',
 								source: 'cloud',
 								commit: 'errored-then-fixed-release-commit',
@@ -753,8 +826,9 @@ describe('Release Model', function () {
 				it('should get the requested release by the full commit', async () => {
 					const release = await balena.models.release.get(
 						'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
+						{ $select: ['status', 'source', 'commit'] },
 					);
-					expect(release).to.deep.match({
+					expect(release).to.deep.equal({
 						commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
 						status: 'success',
 						source: 'cloud',
@@ -773,11 +847,13 @@ describe('Release Model', function () {
 					const release = await balena.models.release.getWithImageDetails(
 						'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
 					);
-					expect(release).to.deep.match({
-						commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
-						status: 'success',
-						source: 'cloud',
-					});
+					expect(_.pick(release, ['commit', 'status', 'source'])).to.deep.equal(
+						{
+							commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
+							status: 'success',
+							source: 'cloud',
+						},
+					);
 				});
 			});
 		});

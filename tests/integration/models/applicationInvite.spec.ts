@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import { balena, givenAnApplication, givenLoggedInUser } from '../setup';
 import { expectError, timeSuite } from '../../util';
-import { assertDeepMatchAndLength } from '../../util';
 const TEST_EMAIL = 'user.test@example.org';
 const TEST_MESSAGE = 'Hey!, Join my app on balenaCloud';
 const TEST_ROLE = 'developer';
@@ -89,19 +88,20 @@ describe('Application Invite Model', function () {
 							await balena.models.application.invite.getAllByApplication(
 								this.application.id,
 								{
+									$select: ['message'],
 									$expand: {
-										is_invited_to__application: { $select: ['id'] },
 										invitee: { $select: ['email'] },
+										is_invited_to__application: { $select: ['id'] },
 										application_membership_role: { $select: ['name'] },
 									},
-									$select: ['message'],
 								},
 							);
-						assertDeepMatchAndLength(invites, [
+						expect(invites).to.deep.equal([
 							{
 								message: TEST_MESSAGE,
-								application_membership_role: [{ name: TEST_ROLE }],
+								invitee: [{ email: TEST_EMAIL }],
 								is_invited_to__application: [{ id: this.application.id }],
+								application_membership_role: [{ name: TEST_ROLE }],
 							},
 						]);
 					});
@@ -160,11 +160,15 @@ describe('Application Invite Model', function () {
 							await balena.models.application.invite.getAllByApplication(
 								ctx.application.id,
 								{
+									$select: ['message'],
 									$expand: { invitee: { $select: ['email'] } },
 								},
 							);
-						assertDeepMatchAndLength(applicationInvites, [
-							{ invitee: [{ email: TEST_EMAIL }] },
+						expect(applicationInvites).to.deep.equal([
+							{
+								message: TEST_MESSAGE,
+								invitee: [{ email: TEST_EMAIL }],
+							},
 						]);
 					});
 
@@ -214,19 +218,20 @@ describe('Application Invite Model', function () {
 							await balena.models.application.invite.getAllByApplication(
 								this.application.id,
 								{
+									$select: ['message'],
 									$expand: {
-										is_invited_to__application: { $select: ['id'] },
 										invitee: { $select: ['email'] },
 										application_membership_role: { $select: ['name'] },
+										is_invited_to__application: { $select: ['id'] },
 									},
-									$select: ['message'],
 								},
 							);
-						assertDeepMatchAndLength(invites, [
+						expect(invites).to.deep.equal([
 							{
 								message: null,
-								application_membership_role: [{ name: 'developer' }],
+								invitee: [{ email: TEST_EMAIL }],
 								is_invited_to__application: [{ id: this.application.id }],
+								application_membership_role: [{ name: 'developer' }],
 							},
 						]);
 					});

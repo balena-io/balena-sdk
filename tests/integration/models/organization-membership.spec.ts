@@ -9,7 +9,7 @@ import {
 	givenLoggedInUser,
 } from '../setup';
 import type * as BalenaSdk from '../../..';
-import { assertDeepMatchAndLength, expectError, timeSuite } from '../../util';
+import { expectError, timeSuite } from '../../util';
 import {
 	itShouldSetGetAndRemoveTags,
 	itShouldGetAllTagsByResource,
@@ -80,8 +80,7 @@ describe('Organization Membership Model', function () {
 					this.initialOrg.id,
 					opts,
 				);
-			assertDeepMatchAndLength(
-				memberships.map((m) => m.user[0].username).sort(),
+			expect(memberships.map((m) => m.user[0].username).sort()).to.deep.equal(
 				[credentials.username, credentials.member.username].sort(),
 			);
 		});
@@ -146,12 +145,19 @@ describe('Organization Membership Model', function () {
 			'balena.models.organization.membership.getAllByUser()',
 			function () {
 				for (const prop of ['userId', 'username'] as const) {
-					it(`shoud return only the user's own membership by ${prop}`, async function () {
+					it(`should return only the user's own membership by ${prop}`, async function () {
 						const memberships =
 							await balena.models.organization.membership.getAllByUser(
 								ctx[prop],
+								{
+									$select: [
+										'user',
+										'is_member_of__organization',
+										'organization_membership_role',
+									],
+								},
 							);
-						assertDeepMatchAndLength(memberships, [
+						expect(memberships).to.deep.equal([
 							{
 								user: { __id: ctx.userId },
 								is_member_of__organization: { __id: ctx.initialOrg.id },
@@ -351,10 +357,9 @@ describe('Organization Membership Model', function () {
 									},
 								},
 							);
-						assertDeepMatchAndLength(
+						expect(
 							administratorMemberships.map((m) => m.user[0].username),
-							[credentials.username],
-						);
+						).to.deep.equal([credentials.username]);
 					});
 
 					it(`should not be able to remove the last administrator of the organization`, async function () {

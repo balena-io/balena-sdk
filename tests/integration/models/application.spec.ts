@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import type * as BalenaSdk from '../../..';
-import { expectError, timeSuite } from '../../util';
+import { assertExists, expectError, timeSuite } from '../../util';
 import type * as tagsHelper from './tags';
 
 import {
@@ -24,6 +24,7 @@ import {
 	itShouldSetGetAndRemoveTags,
 	itShouldGetAllTagsByResource,
 } from './tags';
+import { pickCurrentServicesByAppDetails } from '../utils';
 
 describe('Application Model', function () {
 	timeSuite(before);
@@ -777,9 +778,10 @@ describe('Application Model', function () {
 					const app = await balena.models.application.get(this.application.id, {
 						$select: 'is_accessible_by_support_until__date',
 					});
-					expect(
-						Date.parse(app.is_accessible_by_support_until__date!),
-					).to.equal(expiryTime);
+					assertExists(app.is_accessible_by_support_until__date);
+					expect(Date.parse(app.is_accessible_by_support_until__date)).to.equal(
+						expiryTime,
+					);
 				});
 			});
 
@@ -1440,7 +1442,9 @@ describe('Application Model', function () {
 		givenMulticontainerApplicationWithADevice(before);
 
 		const itShouldBeAnApplicationWithDeviceServiceDetails = function (
-			application,
+			application: Awaited<
+				ReturnType<typeof balena.models.application.getWithDeviceServiceDetails>
+			>,
 			expectCommit = false,
 		) {
 			// Commit is empty on newly created application, so ignoring it
@@ -1500,7 +1504,17 @@ describe('Application Model', function () {
 
 			expect(application.owns__device).to.have.lengthOf(1);
 			const [deviceDetails] = application.owns__device;
-			expect(deviceDetails).to.deep.match(deviceExpectation);
+			expect({
+				..._.pick(deviceDetails, Object.keys(deviceExpectation)),
+				...pickCurrentServicesByAppDetails(deviceDetails, [
+					'id',
+					'service_id',
+					'image_id',
+					'status',
+					'download_progress',
+					...(expectCommit ? ['commit'] : []),
+				]),
+			}).to.deep.equal(deviceExpectation);
 
 			// Should include the Device model properties
 			expect(deviceDetails.image_install).to.have.lengthOf(3);

@@ -51,14 +51,14 @@ describe('Organization model', function () {
 
 			it(`should retrieve the initial organization of the user's username`, async function () {
 				const orgs = await balena.models.organization.get(credentials.username);
-				expect(orgs).to.deep.match(ctx.userInitialOrg);
+				expect(orgs).to.deep.equal(ctx.userInitialOrg);
 			});
 
 			it(`should retrieve the initial organization of the user by organization id`, async function () {
 				const orgs = await balena.models.organization.get(
 					ctx.userInitialOrg.id,
 				);
-				expect(orgs).to.deep.match(ctx.userInitialOrg);
+				expect(orgs).to.deep.equal(ctx.userInitialOrg);
 			});
 		});
 
@@ -147,7 +147,7 @@ describe('Organization model', function () {
 			for (const prop of organizationRetrievalFields) {
 				it(`should retrieve an organization by ${prop}`, async function () {
 					const org = await balena.models.organization.get(ctx.newOrg1[prop]);
-					expect(org).to.deep.match(ctx.newOrg1);
+					expect(org).to.deep.equal(ctx.newOrg1);
 				});
 			}
 		});

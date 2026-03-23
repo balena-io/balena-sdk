@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import {
@@ -53,27 +51,24 @@ describe('Service Model', function () {
 		givenMulticontainerApplication(before);
 
 		describe('balena.models.service.getAllByApplication()', () => {
-			it('should load both services', function () {
-				return balena.models.service
-					.getAllByApplication(this.application.id)
-					.then((services) => {
-						expect(services).to.have.lengthOf(2);
-
-						const sortedServices = _.sortBy(
-							services,
-							(service) => service.service_name,
-						);
-						expect(sortedServices).to.deep.match([
-							{
-								service_name: 'db',
-								application: { __id: this.application.id },
-							},
-							{
-								service_name: 'web',
-								application: { __id: this.application.id },
-							},
-						]);
-					});
+			it('should load both services', async function () {
+				const services = await balena.models.service.getAllByApplication(
+					this.application.id,
+					{
+						$select: ['service_name', 'application'],
+						$orderby: { service_name: 'asc' },
+					},
+				);
+				expect(services).to.deep.equal([
+					{
+						service_name: 'db',
+						application: { __id: this.application.id },
+					},
+					{
+						service_name: 'web',
+						application: { __id: this.application.id },
+					},
+				]);
 			});
 		});
 

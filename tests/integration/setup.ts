@@ -1,11 +1,8 @@
 import { optionalVar, requiredVar } from '@balena/env-parsing';
-import * as chai from 'chai';
 import { expect } from 'chai';
-import chaiSamsam from 'chai-samsam';
 import memoizee from 'memoizee';
 import type * as BalenaSdk from '../../';
 import { getInitialOrganization } from './utils';
-chai.use(chaiSamsam);
 
 export const IS_BROWSER = typeof window !== 'undefined' && window !== null;
 const CURRENT_ENVIRONMENT = IS_BROWSER ? 'browser' : 'node';

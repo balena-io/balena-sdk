@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-restricted-imports
+import * as _ from 'lodash';
 import type * as _fs from 'fs';
 import { expect } from 'chai';
 import {
@@ -36,10 +38,20 @@ describe('Billing Model', function () {
 		describe('balena.models.billing.getPlan()', function () {
 			it('should return a free tier billing plan object', async function () {
 				const plan = await balena.models.billing.getPlan(this.initialOrg.id);
-				expect(plan).to.deep.match({
+				expect(
+					_.pick(plan, [
+						'title',
+						'name',
+						'code',
+						'tier',
+						'addOns',
+						'billing',
+						'support',
+					]),
+				).to.deep.equal({
 					title: 'Free',
 					name: 'Free plan',
-					code: 'free',
+					code: 'free-monthly',
 					tier: 'free',
 					addOns: [],
 					billing: {
@@ -327,7 +339,18 @@ describe('Billing Model', function () {
 					return balena.models.billing
 						.getPlan(this.initialOrg.id)
 						.then(function (plan) {
-							expect(plan).to.deep.match({
+							expect(
+								_.pick(plan, [
+									'title',
+									'name',
+									'code',
+									'tier',
+									'addOns',
+									'addonPlan',
+									'billing',
+									'support',
+								]),
+							).to.deep.equal({
 								title: 'Team member',
 								name: 'Team member plan',
 								code: 'free',

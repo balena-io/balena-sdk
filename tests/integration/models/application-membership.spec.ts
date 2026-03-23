@@ -10,7 +10,7 @@ import {
 	applicationRetrievalFields,
 } from '../setup';
 import type * as BalenaSdk from '../../..';
-import { assertDeepMatchAndLength, expectError, timeSuite } from '../../util';
+import { expectError, timeSuite } from '../../util';
 
 const keyAlternatives = [
 	['id', (member: BalenaSdk.UserIsMemberOfApplication['Read']) => member.id],
@@ -290,8 +290,15 @@ describe('Application Membership Model', function () {
 					const memberships =
 						await balena.models.application.membership.getAllByApplication(
 							ctx.application.id,
+							{
+								$select: [
+									'user',
+									'is_member_of__application',
+									'application_membership_role',
+								],
+							},
 						);
-					assertDeepMatchAndLength(memberships, [
+					expect(memberships).to.deep.equal([
 						{
 							user: membership!.user,
 							is_member_of__application: { __id: ctx.application.id },
@@ -308,12 +315,19 @@ describe('Application Membership Model', function () {
 			'balena.models.application.membership.getAllByUser()',
 			function () {
 				for (const prop of ['userId', 'username'] as const) {
-					it(`shoud return only the user's own membership by ${prop}`, async function () {
+					it(`should return only the user's own membership by ${prop}`, async function () {
 						const memberships =
 							await balena.models.application.membership.getAllByUser(
 								ctx[prop],
+								{
+									$select: [
+										'user',
+										'is_member_of__application',
+										'application_membership_role',
+									],
+								},
 							);
-						assertDeepMatchAndLength(memberships, [
+						expect(memberships).to.deep.equal([
 							{
 								user: { __id: ctx.userId },
 								is_member_of__application: { __id: ctx.application.id },
