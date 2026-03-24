@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/setup-node digest to 53b8394
+      hash: 94605cb33eccfa177dda2563e4202f267e3cad5e
+      body: |
+        Update actions/setup-node
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.1.16
+  title: ""
+  date: 2026-03-24T18:36:23.088Z
+- commits:
     - subject: Drop chai-samsam from the devDependencies
       hash: 4afd2f1bdd476e65e5b8f346a0fe0cff84f77e20
       body: ""
