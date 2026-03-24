@@ -26,6 +26,7 @@ import {
 } from './tags';
 import type * as tagsHelper from './tags';
 import type * as BalenaSdk from '../../..';
+import { pickCurrentServicesByAppDetails } from '../utils';
 
 const makeRequest = async (url) => {
 	try {
@@ -261,7 +262,7 @@ describe('Device Model', function () {
 								$select: ['overall_status', 'overall_progress'],
 							},
 						);
-						return expect(device).to.deep.match({
+						expect(device).to.deep.equal({
 							overall_status: 'inactive',
 							overall_progress: null,
 						});
@@ -310,7 +311,7 @@ describe('Device Model', function () {
 								$select: ['overall_status', 'overall_progress'],
 							},
 						);
-						return expect(device).to.deep.match({
+						expect(device).to.deep.equal({
 							overall_status: 'inactive',
 							overall_progress: null,
 						});
@@ -370,7 +371,7 @@ describe('Device Model', function () {
 						const device = await balena.models.device.get(ctx.device.uuid, {
 							$select: ['overall_status', 'overall_progress'],
 						});
-						return expect(device).to.deep.match({
+						expect(device).to.deep.equal({
 							overall_status: 'inactive',
 							overall_progress: null,
 						});
@@ -2255,7 +2256,7 @@ describe('Device Model', function () {
 					const device = await balena.models.device.get(this.device.uuid, {
 						$select: ['overall_status', 'overall_progress'],
 					});
-					return expect(device).to.deep.match({
+					expect(device).to.deep.equal({
 						overall_status: 'reduced-functionality',
 						overall_progress: null,
 					});
@@ -2414,7 +2415,15 @@ describe('Device Model', function () {
 							},
 						],
 					};
-					expect(deviceDetails).to.deep.match({
+
+					expect({
+						..._.pick(deviceDetails, [
+							'device_name',
+							'uuid',
+							'is_running__release',
+						]),
+						...pickCurrentServicesByAppDetails(deviceDetails),
+					}).to.deep.equal({
 						device_name: this.device.device_name,
 						uuid: this.device.uuid,
 						is_running__release: {
@@ -2483,7 +2492,7 @@ describe('Device Model', function () {
 					expect(deviceDetails.device_name).to.be.undefined;
 					expect(deviceDetails.current_services_by_app[this.application.slug])
 						.not.to.be.undefined;
-					expect(deviceDetails.belongs_to__application[0]).to.deep.match({
+					expect(deviceDetails.belongs_to__application[0]).to.deep.equal({
 						id: this.application.id,
 						app_name: this.application.app_name,
 					});
@@ -3147,7 +3156,13 @@ describe('Device Model', function () {
 					it('should retrieve the current service details', async function () {
 						const deviceDetails =
 							await balena.models.device.getWithServiceDetails(this.device.id);
-						expect(deviceDetails).to.deep.match({
+						expect(
+							_.pick(deviceDetails, [
+								'device_name',
+								'uuid',
+								'is_running__release',
+							]),
+						).to.deep.equal({
 							device_name: this.device.device_name,
 							uuid: this.device.uuid,
 							is_running__release: {
@@ -3162,9 +3177,17 @@ describe('Device Model', function () {
 						).to.deep.equal(['__proto__', 'hasOwnProperty']);
 
 						expect(
-							deviceDetails.current_services_by_app[this.application.slug]
-								.hasOwnProperty,
-						).to.deep.match([
+							deviceDetails.current_services_by_app[this.application.slug][
+								'hasOwnProperty'
+							].map(
+								({
+									install_date,
+									raw_version,
+									release_id,
+									...restServiceInfo
+								}) => restServiceInfo,
+							),
+						).to.deep.equal([
 							{
 								id: this.newWebInstall.id,
 								service_id: this.webService.id,
@@ -3183,10 +3206,18 @@ describe('Device Model', function () {
 							},
 						]);
 
-						return expect(
-							deviceDetails.current_services_by_app[this.application.slug]
-								.__proto__,
-						).to.deep.match([
+						expect(
+							deviceDetails.current_services_by_app[this.application.slug][
+								'__proto__'
+							].map(
+								({
+									install_date,
+									raw_version,
+									release_id,
+									...restServiceInfo
+								}) => restServiceInfo,
+							),
+						).to.deep.equal([
 							{
 								id: this.newDbInstall.id,
 								service_id: this.dbService.id,

@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-restricted-imports
+import * as _ from 'lodash';
 import * as bSemver from 'balena-semver';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
@@ -1316,7 +1318,9 @@ describe('OS model', function () {
 				return balena.models.os
 					.getConfig(ctx.application.id, configOptions)
 					.then(function (config) {
-						expect(config).to.deep.match({
+						expect(
+							_.pick(config, ['appUpdatePollInterval', 'wifiKey', 'wifiSsid']),
+						).to.deep.equal({
 							// NOTE: the interval is converted to ms in the config object
 							appUpdatePollInterval:
 								configOptions.appUpdatePollInterval * 60 * 1000,
@@ -1348,7 +1352,9 @@ describe('OS model', function () {
 				return balena.models.os
 					.getConfig(ctx.application.id, configOptions)
 					.then(function (config) {
-						expect(config).to.deep.match({
+						expect(
+							_.pick(config, ['appUpdatePollInterval', 'wifiKey', 'wifiSsid']),
+						).to.deep.equal({
 							// NOTE: the interval is converted to ms in the config object
 							appUpdatePollInterval:
 								configOptions.appUpdatePollInterval * 60 * 1000,

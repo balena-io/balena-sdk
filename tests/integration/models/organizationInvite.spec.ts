@@ -7,7 +7,7 @@ import {
 	credentials,
 	organizationRetrievalFields,
 } from '../setup';
-import { timeSuite, assertDeepMatchAndLength, expectError } from '../../util';
+import { timeSuite, expectError } from '../../util';
 import type * as BalenaSdk from '../../..';
 // eslint-disable-next-line no-restricted-imports
 import * as _ from 'lodash';
@@ -90,19 +90,20 @@ describe('Organization Invite Model', function () {
 							await balena.models.organization.invite.getAllByOrganization(
 								this.organization.id,
 								{
+									$select: ['message'],
 									$expand: {
-										is_invited_to__organization: { $select: ['id'] },
 										invitee: { $select: ['email'] },
+										is_invited_to__organization: { $select: ['id'] },
 										organization_membership_role: { $select: ['name'] },
 									},
-									$select: ['message'],
 								},
 							);
-						assertDeepMatchAndLength(invites, [
+						expect(invites).to.deep.equal([
 							{
 								message: TEST_MESSAGE,
-								organization_membership_role: [{ name: TEST_ROLE }],
+								invitee: [{ email: TEST_EMAIL }],
 								is_invited_to__organization: [{ id: this.organization.id }],
+								organization_membership_role: [{ name: TEST_ROLE }],
 							},
 						]);
 					});
@@ -262,11 +263,15 @@ describe('Organization Invite Model', function () {
 								await balena.models.organization.invite.getAllByOrganization(
 									ctx.organization.id,
 									{
+										$select: ['message'],
 										$expand: { invitee: { $select: ['email'] } },
 									},
 								);
-							assertDeepMatchAndLength(organizationInvites, [
-								{ invitee: [{ email: TEST_EMAIL }] },
+							expect(organizationInvites).to.deep.equal([
+								{
+									message: TEST_MESSAGE,
+									invitee: [{ email: TEST_EMAIL }],
+								},
 							]);
 						});
 
@@ -318,18 +323,19 @@ describe('Organization Invite Model', function () {
 								this.organization.id,
 								{
 									$expand: {
-										is_invited_to__organization: { $select: ['id'] },
 										invitee: { $select: ['email'] },
+										is_invited_to__organization: { $select: ['id'] },
 										organization_membership_role: { $select: ['name'] },
 									},
 									$select: ['message'],
 								},
 							);
-						assertDeepMatchAndLength(invites, [
+						expect(invites).to.deep.equal([
 							{
 								message: null,
-								organization_membership_role: [{ name: 'member' }],
+								invitee: [{ email: TEST_EMAIL }],
 								is_invited_to__organization: [{ id: this.organization.id }],
+								organization_membership_role: [{ name: 'member' }],
 							},
 						]);
 					});

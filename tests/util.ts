@@ -1,4 +1,3 @@
-import 'chai-samsam';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import { balena } from './integration/setup';
@@ -38,21 +37,6 @@ export async function expectError(
 		expect(err).to.have.property('message').that.matches(extraErrorChecks);
 	}
 }
-
-export const assertDeepMatchAndLength = (a: unknown[], b: unknown[]) => {
-	for (const target of [a, b]) {
-		expect(target).to.have.property('length').that.is.a('number');
-	}
-
-	if (a.length !== b.length) {
-		// We found an error! Use deep.equal
-		// so that the whole content of array a is printed.
-		expect(a).to.deep.equal(b);
-	}
-
-	expect(a).to.deep.match(b);
-	expect(a).to.have.lengthOf(b.length);
-};
 
 export const describeExpandAssertions = <
 	T extends BalenaModel[keyof BalenaModel],

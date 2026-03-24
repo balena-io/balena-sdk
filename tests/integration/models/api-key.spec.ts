@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-restricted-imports
+import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import {
@@ -7,7 +9,7 @@ import {
 	givenLoggedInUser,
 	TEST_KEY_NAME_PREFIX,
 } from '../setup';
-import { assertDeepMatchAndLength, expectError, timeSuite } from '../../util';
+import { expectError, timeSuite } from '../../util';
 import type * as BalenaSdk from '../../..';
 
 describe('API Key model', function () {
@@ -88,7 +90,9 @@ describe('API Key model', function () {
 					},
 				});
 				expect(apiKeys).to.be.an('array');
-				assertDeepMatchAndLength(apiKeys, [
+				expect(
+					apiKeys.map((apiKey) => _.pick(apiKey, ['name', 'description'])),
+				).to.deep.equal([
 					{
 						name: `${TEST_KEY_NAME_PREFIX}_apiKey1`,
 						description: null,
@@ -135,7 +139,9 @@ describe('API Key model', function () {
 			it('should be able to retrieve all api keys created', async function () {
 				const apiKeys = await balena.models.apiKey.getAllNamedUserApiKeys();
 				expect(apiKeys).to.be.an('array');
-				assertDeepMatchAndLength(apiKeys, [
+				expect(
+					apiKeys.map((apiKey) => _.pick(apiKey, ['name', 'description'])),
+				).to.deep.equal([
 					{
 						name: `${TEST_KEY_NAME_PREFIX}_apiKey1`,
 						description: null,
@@ -271,9 +277,10 @@ describe('API Key model', function () {
 					name: updatedApiKeyName,
 				});
 				const [apiKey] = await balena.models.apiKey.getAll({
+					$select: ['name', 'description'],
 					$filter: { id: ctx.namedUserApiKey!.id },
 				});
-				expect(apiKey).to.deep.match({
+				expect(apiKey).to.deep.equal({
 					name: updatedApiKeyName,
 					description: 'apiKeyDescriptionToBeUpdated',
 				});
@@ -284,9 +291,10 @@ describe('API Key model', function () {
 					description: 'updatedApiKeyDescription',
 				});
 				const [apiKey] = await balena.models.apiKey.getAll({
+					$select: ['name', 'description'],
 					$filter: { id: ctx.namedUserApiKey!.id },
 				});
-				expect(apiKey).to.deep.match({
+				expect(apiKey).to.deep.equal({
 					name: updatedApiKeyName,
 					description: 'updatedApiKeyDescription',
 				});
@@ -297,9 +305,10 @@ describe('API Key model', function () {
 					description: '',
 				});
 				const [apiKey] = await balena.models.apiKey.getAll({
+					$select: ['name', 'description'],
 					$filter: { id: ctx.namedUserApiKey!.id },
 				});
-				expect(apiKey).to.deep.match({
+				expect(apiKey).to.deep.equal({
 					name: updatedApiKeyName,
 					description: '',
 				});
@@ -310,9 +319,10 @@ describe('API Key model', function () {
 					description: null,
 				});
 				const [apiKey] = await balena.models.apiKey.getAll({
+					$select: ['name', 'description'],
 					$filter: { id: ctx.namedUserApiKey!.id },
 				});
-				expect(apiKey).to.deep.match({
+				expect(apiKey).to.deep.equal({
 					name: updatedApiKeyName,
 					description: null,
 				});
@@ -333,9 +343,10 @@ describe('API Key model', function () {
 				});
 
 				const [apiKey] = await balena.models.apiKey.getAll({
+					$select: ['name', 'expiry_date'],
 					$filter: { id: ctx.namedUserApiKey!.id },
 				});
-				expect(apiKey).to.deep.match({
+				expect(apiKey).to.deep.equal({
 					name: updatedApiKeyName,
 					expiry_date: validDate,
 				});
@@ -346,9 +357,10 @@ describe('API Key model', function () {
 					expiryDate: null,
 				});
 				const [apiKey] = await balena.models.apiKey.getAll({
+					$select: ['name', 'expiry_date'],
 					$filter: { id: ctx.namedUserApiKey!.id },
 				});
-				expect(apiKey).to.deep.match({
+				expect(apiKey).to.deep.equal({
 					name: updatedApiKeyName,
 					expiry_date: null,
 				});
@@ -364,9 +376,12 @@ describe('API Key model', function () {
 					const apiKey = await balena.pine.get({
 						resource: 'api_key',
 						id: ctx[ctxPropName]!.id,
+						options: {
+							$select: ['name', 'description'],
+						},
 					});
 					expect(apiKey).to.be.an('object');
-					expect(apiKey).to.deep.match({
+					expect(apiKey).to.deep.equal({
 						name: newllyUpdatedApiKeyName,
 						description: 'newllyUpdatedApiKeyDescription' + title,
 					});

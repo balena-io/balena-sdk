@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-restricted-imports
+import * as _ from 'lodash';
 import type { Dictionary } from '../../typings/utils';
 import { balena } from './setup';
 
@@ -44,3 +46,33 @@ export const getParam = <T>(
 
 	return resource[field];
 };
+
+export const pickCurrentServicesByAppDetails = (
+	device: Awaited<
+		ReturnType<typeof balena.models.device.getWithServiceDetails>
+	>,
+	pickProps = [
+		'id',
+		'service_id',
+		'image_id',
+		'commit',
+		'status',
+		'download_progress',
+	],
+) => ({
+	current_services_by_app: Object.fromEntries(
+		Object.entries(device.current_services_by_app).map(
+			([appSlug, detailsByService]) => [
+				appSlug,
+				Object.fromEntries(
+					Object.entries(detailsByService).map(
+						([serviceName, serviceInfos]) => [
+							serviceName,
+							serviceInfos.map((s) => _.pick(s, pickProps)),
+						],
+					),
+				),
+			],
+		),
+	),
+});

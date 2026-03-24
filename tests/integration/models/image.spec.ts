@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-restricted-imports
+import * as _ from 'lodash';
 import { expect } from 'chai';
 import {
 	balena,
@@ -36,12 +38,15 @@ describe('Image Model', function () {
 
 		describe('balena.models.image.get()', function () {
 			it('should get the requested image', function () {
+				// we don't pass a select to also test that the build_log is no included unless selected
 				return balena.models.image.get(this.newWebImage.id).then((image) => {
-					expect(image).to.deep.match({
-						project_type: 'dockerfile',
-						status: 'success',
-						id: this.newWebImage.id,
-					});
+					expect(_.pick(image, ['project_type', 'status', 'id'])).to.deep.equal(
+						{
+							project_type: 'dockerfile',
+							status: 'success',
+							id: this.newWebImage.id,
+						},
+					);
 					expect(image.build_log).to.be.undefined;
 				});
 			});
