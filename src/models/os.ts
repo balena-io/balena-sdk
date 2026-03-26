@@ -25,6 +25,7 @@ import type {
 	TypeOrDictionary,
 } from '../../typings/utils';
 import type {
+	Application,
 	ApplicationTag,
 	DeviceTag,
 	OrganizationMembershipTag,
@@ -230,38 +231,43 @@ const getOsModel = function (
 
 	const authDependentMemoizer = getAuthDependentMemoize(pubsub);
 
-	type HostAppInfo = ResolvableReturnType<typeof _getOsVersions>[number];
-	const _getOsVersions = async (
+	type HostAppInfo = ResolvableReturnType<
+		typeof _getHostAppsWithReleases
+	>[number];
+	const _getHostAppsWithReleases = async (
 		deviceTypes: string[],
-		options: ODataOptionsWithoutCount<Release['Read']> = {},
+		options: ODataOptionsWithoutCount<Application['Read']> = {},
 	) => {
 		return await pine.get({
 			resource: 'application',
-			options: {
-				$select: 'is_for__device_type',
-				$expand: {
-					application_tag: {
-						$select: ['tag_key', 'value'],
+			options: mergePineOptions(
+				{
+					$select: 'is_for__device_type',
+					$expand: {
+						application_tag: {
+							$select: ['tag_key', 'value'],
+						},
+						is_for__device_type: {
+							$select: 'slug',
+						},
+						owns__release: baseReleasePineOptions,
 					},
-					is_for__device_type: {
-						$select: 'slug',
-					},
-					owns__release: mergePineOptions(baseReleasePineOptions, options),
-				},
-				$filter: {
-					is_host: true,
-					is_for__device_type: {
-						$any: {
-							$alias: 'dt',
-							$expr: {
-								dt: {
-									slug: { $in: deviceTypes },
+					$filter: {
+						is_host: true,
+						is_for__device_type: {
+							$any: {
+								$alias: 'dt',
+								$expr: {
+									dt: {
+										slug: { $in: deviceTypes },
+									},
 								},
 							},
 						},
 					},
 				},
-			},
+				options,
+			),
 		});
 	};
 
@@ -356,37 +362,98 @@ const getOsModel = function (
 		return osVersionsByDeviceType;
 	};
 
-	const _getAllOsVersions = async (
+	const _getAllOsReleasesByDT = async (
 		deviceTypes: string[],
-		options: ODataOptionsWithoutCount<Release['Read']> | undefined,
+		releaseOptions: ODataOptionsWithoutCount<Release['Read']> | undefined,
 		convenienceFilter: 'supported' | 'include_draft' | 'all',
+		osType: 'default' | 'esr' | 'all',
 	): Promise<Dictionary<OsVersion[]>> => {
 		const extraFilterOptions = {
 			...((convenienceFilter === 'supported' ||
 				convenienceFilter === 'include_draft') && {
-				$filter: {
-					...(convenienceFilter === 'supported' && { is_final: true }),
-					is_invalidated: false,
-					status: 'success',
+				$expand: {
+					owns__release: {
+						$filter: {
+							...(convenienceFilter === 'supported' && { is_final: true }),
+							is_invalidated: false,
+							status: 'success',
+						},
+					},
 				},
 			}),
-		};
+			...(osType === 'esr' && {
+				$filter: {
+					application_tag: {
+						$any: {
+							$alias: 'at',
+							$expr: {
+								at: {
+									tag_key: RELEASE_POLICY_TAG_NAME,
+									value: OsTypes.ESR,
+								},
+							},
+						},
+					},
+				},
+			}),
+			...(osType === 'default' && {
+				$filter: {
+					$or: [
+						{
+							$not: {
+								application_tag: {
+									$any: {
+										$alias: 'at',
+										$expr: {
+											at: {
+												tag_key: RELEASE_POLICY_TAG_NAME,
+											},
+										},
+									},
+								},
+							},
+						},
+						{
+							application_tag: {
+								$any: {
+									$alias: 'at',
+									$expr: {
+										at: {
+											tag_key: RELEASE_POLICY_TAG_NAME,
+											value: OsTypes.DEFAULT,
+										},
+									},
+								},
+							},
+						},
+					],
+				},
+			}),
+		} satisfies ODataOptionsWithoutCount<Application['Read']>;
 
 		const finalOptions =
-			options != null
-				? mergePineOptions(options, extraFilterOptions)
+			releaseOptions != null
+				? mergePineOptions(
+						{ $expand: { owns__release: releaseOptions } },
+						extraFilterOptions,
+					)
 				: extraFilterOptions;
-
-		const hostapps = await _getOsVersions(deviceTypes, finalOptions);
+		const hostapps = await _getHostAppsWithReleases(deviceTypes, finalOptions);
 		return _transformHostApps(hostapps);
 	};
 
-	const _memoizedGetAllOsVersions = authDependentMemoizer(
+	const _memoizedGetAllOsReleasesByDT = authDependentMemoizer(
 		async (
 			deviceTypes: string[],
 			convenienceFilter: 'supported' | 'include_draft' | 'all',
+			osType: 'default' | 'esr' | 'all',
 		) => {
-			return await _getAllOsVersions(deviceTypes, undefined, convenienceFilter);
+			return await _getAllOsReleasesByDT(
+				deviceTypes,
+				undefined,
+				convenienceFilter,
+				osType,
+			);
 		},
 	);
 
@@ -395,7 +462,10 @@ const getOsModel = function (
 	async function getAvailableOsVersions<DT extends string | string[]>(
 		deviceType: DT,
 		pineOptions?: undefined,
-		extraOptions?: { includeDraft?: boolean },
+		extraOptions?: {
+			osType?: 'default' | 'esr';
+			includeDraft?: boolean;
+		},
 	): Promise<DT extends string ? OsVersion[] : Dictionary<OsVersion[]>>;
 	async function getAvailableOsVersions<
 		DT extends string | string[],
@@ -403,7 +473,10 @@ const getOsModel = function (
 	>(
 		deviceType: DT,
 		pineOptions: TP,
-		extraOptions?: { includeDraft?: boolean },
+		extraOptions?: {
+			osType?: 'default' | 'esr';
+			includeDraft?: boolean;
+		},
 	): Promise<
 		DT extends string
 			? OsVersionResponse<TP>
@@ -419,6 +492,7 @@ const getOsModel = function (
 	 * @param {String|String[]} deviceTypes - device type slug or array of slugs
 	 * @param {Object} [pineOptions] - Extra pine options to use
 	 * @param {Object} [extraOptions] - Extra convenience options to use
+	 * @param {String} [extraOptions.osType] - can be one of 'default', 'esr' or undefined to include all types
 	 * @param {Boolean} [extraOptions.includeDraft=false] - Whether pre-releases should be included in the results
 	 * @fulfil {Object[]|Object} - An array of OsVersion objects when a single device type slug is provided,
 	 * or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.
@@ -435,7 +509,10 @@ const getOsModel = function (
 	>(
 		deviceTypes: string[] | string,
 		pineOptions?: TP,
-		extraOptions?: { includeDraft?: boolean },
+		extraOptions?: {
+			osType?: 'default' | 'esr';
+			includeDraft?: boolean;
+		},
 	): Promise<
 		TypeOrDictionary<OsVersion[] | OsVersionResponse<NonNullable<TP>>>
 	> {
@@ -444,13 +521,20 @@ const getOsModel = function (
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
 		const convenienceFilter =
 			extraOptions?.includeDraft === true ? 'include_draft' : 'supported';
+		const osType = extraOptions?.osType ?? 'all';
 		const versionsByDt =
 			pineOptions == null || Object.keys(pineOptions).length === 0
-				? await _memoizedGetAllOsVersions(
+				? await _memoizedGetAllOsReleasesByDT(
 						deviceTypes.slice().sort(),
 						convenienceFilter,
+						osType,
 					)
-				: await _getAllOsVersions(deviceTypes, pineOptions, convenienceFilter);
+				: await _getAllOsReleasesByDT(
+						deviceTypes,
+						pineOptions,
+						convenienceFilter,
+						osType,
+					);
 
 		return singleDeviceTypeArg
 			? (versionsByDt[singleDeviceTypeArg] ?? [])
@@ -568,7 +652,7 @@ const getOsModel = function (
 	const _clearDeviceTypesAndOsVersionCaches = () => {
 		_getNormalizedDeviceTypeSlug.clear();
 		_getDownloadSize.clear();
-		_memoizedGetAllOsVersions.clear();
+		_memoizedGetAllOsReleasesByDT.clear();
 	};
 
 	const normalizeVersion = (v: string) => {
@@ -658,7 +742,7 @@ const getOsModel = function (
 	 * if it exists, or `null` is returned,
 	 * * `'latest'` in which case the most recent version is returned, excluding pre-releases,
 	 * Defaults to `'latest'`.
-	 * @param {String} [osType] - can be one of 'default', 'esr' or null to include all types
+	 * @param {String} [osType] - can be one of 'default', 'esr' or undefined to include all types
 	 *
 	 * @fulfil {String|null} - the version number, or `null` if no matching versions are found
 	 * @returns {Promise}
@@ -674,10 +758,9 @@ const getOsModel = function (
 		osType?: 'default' | 'esr',
 	): Promise<string | null> {
 		deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
-		let osVersions = await getAvailableOsVersions(deviceType);
-		if (osType != null) {
-			osVersions = osVersions.filter((v) => v.osType === osType);
-		}
+		const osVersions = await getAvailableOsVersions(deviceType, undefined, {
+			osType,
+		});
 		return _getMaxSatisfyingVersion(versionOrRange, osVersions) ?? null;
 	};
 
@@ -717,9 +800,11 @@ const getOsModel = function (
 		try {
 			const slug = await _getNormalizedDeviceTypeSlug(deviceType);
 			if (version === 'latest') {
-				const foundVersion = (await getAvailableOsVersions(slug)).find(
-					(v) => v.osType === OsTypes.DEFAULT,
-				);
+				const foundVersion = (
+					await getAvailableOsVersions(slug, undefined, {
+						osType: OsTypes.DEFAULT,
+					})
+				)[0];
 				if (!foundVersion) {
 					throw new OSImageNotFound(deviceType, version, restOptions.imageType);
 				}
@@ -921,8 +1006,9 @@ const getOsModel = function (
 		currentVersion: string,
 		{
 			osType,
-			...options
+			includeDraft,
 		}: {
+			// TODO: Drop the null in the next major to make it consistent w/ the other methods.
 			osType?: 'default' | 'esr' | null;
 			includeDraft?: boolean;
 		} = {},
@@ -940,7 +1026,9 @@ const getOsModel = function (
 		const allOsReleases = await getAvailableOsVersions(
 			deviceType,
 			undefined,
-			options,
+			// We don't pass in the osType b/c we need to fetch all OS version
+			// so that we can find the current version in the list.
+			{ includeDraft },
 		);
 		// use bSemver.compare to find the current version in the OS list
 		// to benefit from the baked-in normalization
