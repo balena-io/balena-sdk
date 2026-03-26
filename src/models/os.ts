@@ -572,6 +572,8 @@ const getOsModel = function (
 	 *
 	 * @param {String|String[]} deviceTypes - device type slug or array of slugs
 	 * @param {Object} [options={}] - extra pine options to use
+	 * @param {Object} [extraOptions] - Extra convenience options to use
+	 * @param {String} [extraOptions.osType] - can be one of 'default', 'esr' or undefined to include all types
 	 * @fulfil {Object[]|Object} - An array of OsVersion objects when a single device type slug is provided,
 	 * or a dictionary of OsVersion objects by device type slug when an array of device type slugs is provided.
 	 * @returns {Promise}
@@ -590,6 +592,9 @@ const getOsModel = function (
 	>(
 		deviceTypes: string[] | string,
 		options?: TP,
+		extraOptions?: {
+			osType?: 'default' | 'esr';
+		},
 	): Promise<
 		TypeOrDictionary<OsVersionResponse<NonNullable<TP>> | OsVersion[]>
 	> {
@@ -598,8 +603,17 @@ const getOsModel = function (
 		deviceTypes = Array.isArray(deviceTypes) ? deviceTypes : [deviceTypes];
 		const versionsByDt =
 			options == null
-				? await _memoizedGetAllOsVersions(deviceTypes.slice().sort(), 'all')
-				: await _getAllOsVersions(deviceTypes, options, 'all');
+				? await _memoizedGetAllOsReleasesByDT(
+						deviceTypes.slice().sort(),
+						'all',
+						extraOptions?.osType ?? 'all',
+					)
+				: await _getAllOsReleasesByDT(
+						deviceTypes,
+						options,
+						'all',
+						extraOptions?.osType ?? 'all',
+					);
 		return singleDeviceTypeArg
 			? (versionsByDt[singleDeviceTypeArg] ?? [])
 			: versionsByDt;
