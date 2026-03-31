@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update TypeScript to 6.0.2
+      hash: faaa9e61b6d90180ee22ebc8846157039ee922f6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+  version: 23.1.17
+  title: ""
+  date: 2026-03-31T13:00:07.523Z
+- commits:
     - subject: Update actions/setup-node digest to 53b8394
       hash: 94605cb33eccfa177dda2563e4202f267e3cad5e
       body: |
