@@ -4,6 +4,7 @@
         "resolveJsonModule": true,
         "noImplicitThis": false,
         "skipLibCheck": true,
+        "rootDir": "./"
     },
     "include": [
         "scripts/*.js",
