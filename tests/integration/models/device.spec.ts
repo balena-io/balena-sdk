@@ -3752,7 +3752,7 @@ describe('Device Model', function () {
 								os_version: osVersion,
 								os_variant: osVariant,
 							},
-							'2.29.2+rev1.prod',
+							{ raw_version: '2.29.2+rev1.prod' },
 							'start',
 						);
 					}).to.throw('Invalid current balenaOS version');
@@ -3779,7 +3779,7 @@ describe('Device Model', function () {
 								os_version: osVersion,
 								os_variant: osVariant,
 							},
-							'2.29.2+rev1.dev',
+							{ raw_version: '2.29.2+rev1.dev' },
 							'start',
 						);
 					}).to.throw(
@@ -3812,7 +3812,7 @@ describe('Device Model', function () {
 								os_version: osVersion,
 								os_variant: osVariant,
 							},
-							'2.29.2+rev1.prod',
+							{ raw_version: '2.29.2+rev1.prod' },
 							'start',
 						);
 					}).to.throw(
@@ -3839,7 +3839,7 @@ describe('Device Model', function () {
 											os_version: osVersion,
 											os_variant: osVariant,
 										},
-										'1.28.0',
+										{ raw_version: '1.28.0' },
 										'start',
 									);
 								}).to.throw('Current OS version must be >= 2.14.0+rev1');
@@ -3867,7 +3867,7 @@ describe('Device Model', function () {
 										os_version: osVersion,
 										os_variant: osVariant,
 									},
-									'2.16.0+rev1',
+									{ raw_version: '2.16.0+rev1' },
 									'start',
 								);
 							}).to.throw('Current OS version must be >= 2.14.0+rev1');
@@ -3903,7 +3903,7 @@ describe('Device Model', function () {
 											os_version: osVersion,
 											os_variant: osVariant,
 										},
-										'2.29.2+rev1.prod',
+										{ raw_version: '2.29.2+rev1.prod' },
 										'start',
 									);
 								}).to.throw('Current OS version must be >= 2.14.0+rev1');
@@ -3925,7 +3925,32 @@ describe('Device Model', function () {
 											os_version: osVersion,
 											os_variant: osVariant,
 										},
-										'2.29.2+rev1.prod',
+										{ raw_version: '2.29.2+rev1.prod' },
+										'start',
+									);
+								}).to.not.throw();
+							}
+						});
+
+						it('should not throw when it is a valid v2 -> v2 hup, when basedOnVersion is set on a rolling release', () => {
+							for (const [osVersion, osVariant] of [
+								['Resin OS 2.14.0+rev1', 'prod'],
+								['Resin OS 2.15.1+rev1', 'prod'],
+								['Resin OS 2.16.0+rev1', 'prod'],
+								['balenaOS 2.26.0+rev1', 'prod'],
+							]) {
+								expect(() => {
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceTypeSlug }],
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										{
+											raw_version: '2.29.2+rev1.prod',
+											basedOnVersion: '2.29.2+rev1.prod',
+										},
 										'start',
 									);
 								}).to.not.throw();
@@ -3947,7 +3972,7 @@ describe('Device Model', function () {
 											os_version: osVersion,
 											os_variant: osVariant,
 										},
-										'2.28.0-1704382553234+rev1.prod',
+										{ raw_version: '2.28.0-1704382553234+rev1.prod' },
 										'start',
 									);
 								}).to.throw('OS downgrades are not allowed');
@@ -3963,7 +3988,7 @@ describe('Device Model', function () {
 										os_version: 'balenaOS 2.28.0+rev1',
 										os_variant: 'prod',
 									},
-									'2.29.2-1704382618288+rev1.prod',
+									{ raw_version: '2.29.2-1704382618288+rev1.prod' },
 									'start',
 								);
 							}).to.not.throw();
@@ -3978,7 +4003,7 @@ describe('Device Model', function () {
 										os_version: 'balenaOS 2.28.0-1704382553234',
 										os_variant: 'prod',
 									},
-									'2.29.2+rev1.prod',
+									{ raw_version: '2.29.2+rev1.prod' },
 									'start',
 								);
 							}).to.not.throw();
@@ -3993,11 +4018,104 @@ describe('Device Model', function () {
 										os_version: 'balenaOS 2.28.0-1704382553234',
 										os_variant: 'prod',
 									},
-									'2.29.2-1704382618288+rev1.prod',
+									{ raw_version: '2.29.2-1704382618288+rev1.prod' },
 									'start',
 								);
 							}).to.not.throw();
 						});
+
+						// ESR
+
+						const esr = {
+							v2021_04_0: {
+								raw_version: '2021.04.0.prod',
+								basedOnVersion: '2.73.15',
+							},
+							v2022_7_0: {
+								raw_version: '2022.7.0',
+								basedOnVersion: 'v2.99.27',
+							},
+						};
+
+						for (const [osVersion, osVariant, target] of [
+							['balenaOS 2.75.1+rev1', 'prod', esr.v2021_04_0],
+							['balenaOS 2.102.6', 'prod', esr.v2021_04_0],
+							['balenaOS 2.102.6', 'prod', esr.v2022_7_0],
+						] as const) {
+							it(`should throw when a rolling to ESR update would cause to a downgrade, ${osVersion}->${target.raw_version}`, () => {
+								expect(() => {
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceTypeSlug }],
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										target,
+										'start',
+									);
+								}).to.throw('OS downgrades are not allowed');
+							});
+						}
+
+						for (const [osVersion, osVariant, target] of [
+							[`balenaOS ${esr.v2022_7_0.raw_version}`, 'prod', esr.v2021_04_0],
+						] as const) {
+							it(`should throw when an ESR to ESR update would cause to a downgrade, ${osVersion}->${target.raw_version}`, () => {
+								expect(() => {
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceTypeSlug }],
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										target,
+										'start',
+									);
+								}).to.throw('OS downgrades are not allowed');
+							});
+						}
+
+						for (const [osVersion, osVariant, target] of [
+							['balenaOS 2.60.1+rev1', 'prod', esr.v2021_04_0],
+							['balenaOS 2.60.1+rev1', 'prod', esr.v2022_7_0],
+							['balenaOS 2.75.1+rev1', 'prod', esr.v2022_7_0],
+						] as const) {
+							it(`should not throw when a valid rolling to ESR update is triggered, ${osVersion}->${target.raw_version}`, () => {
+								expect(() => {
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceTypeSlug }],
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										target,
+										'start',
+									);
+								}).to.not.throw();
+							});
+						}
+
+						for (const [osVersion, osVariant, target] of [
+							[`balenaOS ${esr.v2021_04_0.raw_version}`, 'prod', esr.v2022_7_0],
+						] as const) {
+							it(`should not throw when an valid ESR to ESR update is triggered, ${osVersion}->${target.raw_version}`, () => {
+								expect(() => {
+									_checkOsUpdateTarget(
+										{
+											uuid,
+											is_of__device_type: [{ slug: deviceTypeSlug }],
+											os_version: osVersion,
+											os_variant: osVariant,
+										},
+										target,
+										'start',
+									);
+								}).to.not.throw();
+							});
+						}
 
 						// dev variant
 
@@ -4017,7 +4135,7 @@ describe('Device Model', function () {
 											os_version: osVersion,
 											os_variant: osVariant,
 										},
-										'2.29.2+rev1.dev',
+										{ raw_version: '2.29.2+rev1.dev' },
 										'start',
 									);
 								}).to.throw('Current OS version must be >= 2.14.0+rev1');
@@ -4039,7 +4157,7 @@ describe('Device Model', function () {
 											os_version: osVersion,
 											os_variant: osVariant,
 										},
-										'2.29.2+rev1.dev',
+										{ raw_version: '2.29.2+rev1.dev' },
 										'start',
 									);
 								}).to.not.throw();
@@ -4069,7 +4187,7 @@ describe('Device Model', function () {
 											os_version: osVersion,
 											os_variant: osVariant,
 										},
-										rawVersion,
+										{ raw_version: rawVersion },
 										'start',
 									);
 								}).to.throw();
@@ -4087,7 +4205,7 @@ describe('Device Model', function () {
 												os_version: osVersion,
 												os_variant: oppositeVariant,
 											},
-											rawVersion,
+											{ raw_version: rawVersion },
 											'pin',
 										);
 									}).to.throw();
@@ -4103,7 +4221,7 @@ describe('Device Model', function () {
 											os_version: osVersion,
 											os_variant: osVariant,
 										},
-										rawVersion,
+										{ raw_version: rawVersion },
 										'pin',
 									);
 								}).to.not.throw();

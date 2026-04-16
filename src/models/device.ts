@@ -18,6 +18,7 @@ import type {
 	InjectedOptionsParam,
 	InjectedDependenciesParam,
 	CurrentService,
+	OsVersion,
 } from '..';
 import type {
 	Device,
@@ -125,11 +126,9 @@ const getDeviceModel = function (
 
 	const { buildDependentResource } =
 		require('../util/dependent-resource') as typeof import('../util/dependent-resource');
-	const hupActionHelper = once(
+	const hupActionUtils = once(
 		() =>
-			(
-				require('../util/device-actions/os-update/utils') as typeof import('../util/device-actions/os-update/utils')
-			).hupActionHelper,
+			require('../util/device-actions/os-update/utils') as typeof import('../util/device-actions/os-update/utils'),
 	);
 
 	const batchDeviceOperation = once(() =>
@@ -367,30 +366,31 @@ const getDeviceModel = function (
 			fn: async (devices, deviceTypeId) => {
 				const dt = await getDeviceType(deviceTypeId);
 				for (const device of devices) {
+					const availableOsReleases = await getAvailableOsVersions(
+						dt.slug,
+						isDraft,
+					);
+					const targetOsRelease = availableOsReleases.find(
+						(v) => bSemver.compare(v.raw_version, targetOsVersion) === 0,
+					);
+					if (targetOsRelease == null) {
+						throw new errors.BalenaInvalidParameterError(
+							'targetOsVersion',
+							targetOsVersion,
+						);
+					}
 					// this will throw an error if the action isn't available
 					exports._checkOsUpdateTarget(
 						{
 							...device,
 							is_of__device_type: [dt],
 						},
-						targetOsVersion,
+						targetOsRelease,
 						'start',
 					);
+
 					if (!device.is_connected_to_vpn) {
 						throw new Error(`The device is offline: ${device.uuid}`);
-					}
-
-					const osVersions = await getAvailableOsVersions(dt.slug, isDraft);
-
-					if (
-						!osVersions.some(
-							(v) => bSemver.compare(v.raw_version, targetOsVersion) === 0,
-						)
-					) {
-						throw new errors.BalenaInvalidParameterError(
-							'targetOsVersion',
-							targetOsVersion,
-						);
 					}
 				}
 
@@ -2147,7 +2147,7 @@ const getDeviceModel = function (
 			}: Pick<Device['Read'], 'uuid' | 'os_version' | 'os_variant'> & {
 				is_of__device_type: [Pick<DeviceType['Read'], 'slug'>];
 			},
-			targetOsVersion: string,
+			targetOsRelease: Pick<OsVersion, 'raw_version' | 'basedOnVersion'>,
 			// TODO: Drop this extra parameter in the next major when we drop startOsUpdate
 			mode: 'start' | 'pin',
 		) {
@@ -2159,6 +2159,12 @@ const getDeviceModel = function (
 				throw new Error(
 					`The current os version of the device is not available: ${uuid}`,
 				);
+			}
+
+			const currentOsSemver = bSemver.parse(os_version);
+			if (currentOsSemver == null) {
+				const { HUPActionError } = hupActionUtils();
+				throw new HUPActionError('Invalid current balenaOS version');
 			}
 
 			const deviceType = is_of__device_type?.[0]?.slug;
@@ -2175,19 +2181,17 @@ const getDeviceModel = function (
 				);
 			}
 
-			if (
-				mode === 'pin' &&
-				// Allow pinning the device back to the current OS version
-				bSemver.parse(os_version) != null &&
-				bSemver.parse(targetOsVersion) != null
-			) {
+			// Allow pinning the device back to the current OS version
+			if (mode === 'pin') {
 				// TODO: Switch the regex to capture groups once we bump to es2018
+				// We can assume that raw_version is valid since it comes from the API.
 				const [, targetOsVersionWoVariant, , targetReleaseVariant] =
-					targetOsVersion.match(/^(.+?)(\.(dev|prod))?$/) ?? [];
+					targetOsRelease.raw_version.match(/^(.+?)(\.(dev|prod))?$/) ?? [];
 				if (
 					targetOsVersionWoVariant != null &&
 					(targetReleaseVariant == null ||
 						targetReleaseVariant === os_variant) &&
+					// We have already checked that we can parse os_version
 					bSemver.compare(os_version, targetOsVersionWoVariant) === 0
 				) {
 					// This is not part of the hup-action utils b/c the proxy needs to block such requests,
@@ -2206,11 +2210,27 @@ const getDeviceModel = function (
 			// rely on getHUPActionType to throw an error
 
 			// this will throw an error if the action isn't available
-			hupActionHelper().getHUPActionType(
+			hupActionUtils().hupActionHelper.getHUPActionType(
 				deviceType,
 				currentOsVersionWithVariant,
-				targetOsVersion,
+				targetOsRelease.raw_version,
 			);
+			// Check for downgrades for rolling -> ESR HUPs
+			const isOnEsr = currentOsSemver.major > 2000;
+			if (!isOnEsr && targetOsRelease.basedOnVersion != null) {
+				const parsedTargetOsVersion = bSemver.parse(
+					targetOsRelease.raw_version,
+				);
+				const targetIsEsr =
+					parsedTargetOsVersion != null && parsedTargetOsVersion.major > 2000;
+				if (targetIsEsr) {
+					hupActionUtils().hupActionHelper.getHUPActionType(
+						deviceType,
+						currentOsVersionWithVariant,
+						targetOsRelease.basedOnVersion,
+					);
+				}
+			}
 		},
 
 		// TODO: At some point add => @deprecated Use models.device.pinToOsRelease
@@ -2320,7 +2340,7 @@ const getDeviceModel = function (
 								...device,
 								is_of__device_type: [dt],
 							},
-							targetOsRelease.raw_version,
+							targetOsRelease,
 							'pin',
 						);
 					}
