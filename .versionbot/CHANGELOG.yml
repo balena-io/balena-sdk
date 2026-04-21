@@ -1,4 +1,19 @@
 - commits:
+    - subject: "devices: Add downgrade checks to startOsUpdate & pinToOsRelease for
+        rolling to ESR OS updates"
+      hash: 8a73da2e4aad868223926574e7bf69752d7fd12b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://balena.fibery.io/Work/Project/1704
+        see: https://balena.fibery.io/Work/Project/1704
+      author: Thodoris Greasidis
+      nested: []
+  version: 23.1.18
+  title: ""
+  date: 2026-04-21T08:48:39.775Z
+- commits:
     - subject: Update TypeScript to 6.0.2
       hash: faaa9e61b6d90180ee22ebc8846157039ee922f6
       body: ""
