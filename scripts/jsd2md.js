@@ -23,6 +23,8 @@ const getRenderOpts = (data) => ({
 	'no-gfm': true,
 	'example-lang': 'js',
 	'member-index-format': 'list',
+	'heading-depth': 1,
+	partial: resolve(__dirname, '../doc/partials/*.hbs'),
 });
 
 async function generateDocs() {
@@ -84,33 +86,6 @@ async function generateDocs() {
 		{ recursive: true },
 	);
 
-	// console.log(
-	// 	"*** items",
-	// 	templateData.filter((item) => item.kind === "member").length,
-	// 	new Set(
-	// 		templateData
-	// 			.filter((item) =>
-	// 				[
-	// 					"auth",
-	// 					"logs",
-	// 					"settings",
-	// 					"utils",
-	// 					"application",
-	// 					"buildVar",
-	// 					"errors",
-	// 					"interceptors",
-	// 					"pine",
-	// 					"request",
-	// 					"balena-sdk",
-	// 					"getSdk",
-	// 					"setSharedOptions",
-	// 					"listImagesFromTargetState",
-	// 				].includes(item.name),
-	// 			)
-	// 			.map((item) => `${item.kind}:${item.name}:${item.memberof}`),
-	// 	),
-	// );
-
 	const pages = new Map();
 	for (const item of templateData) {
 		// Special cases. Handles:
@@ -122,10 +97,10 @@ async function generateDocs() {
 			item.memberof?.startsWith('module:') ||
 			(!item.memberof && item.kind === 'function')
 		) {
-			if (!pages.has('introduction')) {
-				pages.set('introduction', []);
+			if (!pages.has('miscellaneous')) {
+				pages.set('miscellaneous', []);
 			}
-			pages.set('introduction', [...pages.get('introduction'), item.id]);
+			pages.set('miscellaneous', [...pages.get('miscellaneous'), item.id]);
 			continue;
 		}
 		if (!item.memberof) {
@@ -157,9 +132,12 @@ async function generateDocs() {
 		if (page === 'balena') {
 			continue;
 		}
+		const pageItem = templateData.find((it) => it.id === page);
 		const pageContents = await jsdoc2md.render(
 			getRenderOpts([
-				{ ...templateData.find((it) => it.id === page), memberof: undefined },
+				// content won't render if it has a parent but the parent is not included in the data
+				// so we set memberof to undefined to make it think it has no parent and ensure it renders
+				{ ...pageItem, memberof: undefined },
 				...templateData.filter((it) => (pages.get(page) ?? []).includes(it.id)),
 			]),
 		);
@@ -167,10 +145,11 @@ async function generateDocs() {
 			mkdirSync(resolve(outputDir, 'models'), { recursive: true });
 			const models = pages.get('balena.models') ?? [];
 			for (const model of models) {
+				const modelItem = templateData.find((it) => it.id === model);
 				const modelContent = await jsdoc2md.render(
 					getRenderOpts([
 						{
-							...templateData.find((it) => it.id === model),
+							...modelItem,
 							memberof: undefined,
 						},
 						...templateData.filter((it) =>
@@ -179,10 +158,7 @@ async function generateDocs() {
 					]),
 				);
 				writeFileSync(
-					resolve(
-						outputDir,
-						`models/${templateData.find((it) => it.id === model).name}.md`,
-					),
+					resolve(outputDir, `models/${modelItem.name}.md`),
 					modelContent,
 					{
 						recursive: true,
@@ -203,17 +179,21 @@ async function generateDocs() {
 		);
 	}
 
-	const introductionContents = await jsdoc2md.render(
-		getRenderOpts(
-			(pages.get('introduction') ?? []).map((page) => ({
-				...templateData.find((it) => it.id === page),
-				memberof: undefined,
-			})),
+	const miscellaneousContents = await jsdoc2md.render({
+		...getRenderOpts(
+			(pages.get('miscellaneous') ?? []).map((page) => {
+				const miscellaneousItem = templateData.find((it) => it.id === page);
+				return {
+					...miscellaneousItem,
+					memberof: undefined,
+				};
+			}),
 		),
-	);
+		'heading-depth': 2,
+	});
 	writeFileSync(
-		resolve(outputDir, 'introduction.md'),
-		readFileSync(introductionPath, 'utf8') + '\n\n' + introductionContents,
+		resolve(outputDir, 'miscellaneous.md'),
+		'# Miscellaneous\n\n' + miscellaneousContents,
 		{
 			recursive: true,
 		},

@@ -1,36 +1,13 @@
-<a name="balena.models.release"></a>
+# release
+balena.models.release : <code>object</code>
 
-## .release : <code>object</code>
 **Kind**: static namespace  
-
-* [.release](#balena.models.release) : <code>object</code>
-    * [.createFromUrl(slugOrUuidOrId, urlDeployOptions)](#balena.models.release.createFromUrl) ⇒ <code>Promise</code>
-    * [.finalize(commitOrIdOrRawVersion)](#balena.models.release.finalize) ⇒ <code>Promise</code>
-    * [.get(commitOrIdOrRawVersion, [options])](#balena.models.release.get) ⇒ <code>Promise</code>
-    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getLatestByApplication(slugOrUuidOrId, [options])](#balena.models.release.getLatestByApplication) ⇒ <code>Promise</code>
-    * [.getWithImageDetails(commitOrIdOrRawVersion, [options])](#balena.models.release.getWithImageDetails) ⇒ <code>Promise</code>
-    * [.setIsInvalidated(commitOrIdOrRawVersion, isInvalidated)](#balena.models.release.setIsInvalidated) ⇒ <code>Promise</code>
-    * [.setKnownIssueList(commitOrIdOrRawVersion, knownIssueListOrNull)](#balena.models.release.setKnownIssueList) ⇒ <code>Promise</code>
-    * [.setNote(commitOrIdOrRawVersion, noteOrNull)](#balena.models.release.setNote) ⇒ <code>Promise</code>
-    * [.asset](#balena.models.release.asset) : <code>object</code>
-        * [.download(id)](#balena.models.release.asset.download) ⇒ <code>Promise</code>
-        * [.get(id, [options])](#balena.models.release.asset.get) ⇒ <code>Promise</code>
-        * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.asset.getAllByRelease) ⇒ <code>Promise</code>
-        * [.remove(id)](#balena.models.release.asset.remove) ⇒ <code>Promise</code>
-        * [.upload(uploadParams, [options])](#balena.models.release.asset.upload) ⇒ <code>Promise</code>
-    * [.tags](#balena.models.release.tags) : <code>object</code>
-        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
-        * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
-        * [.remove(commitOrIdOrRawVersion, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
-        * [.set(commitOrIdOrRawVersion, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.release.createFromUrl"></a>
+## createFromUrl
+balena.models.release.createFromUrl(slugOrUuidOrId, urlDeployOptions) ⇒ <code>Promise</code>
 
-### release.createFromUrl(slugOrUuidOrId, urlDeployOptions) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Create a new release built from the source in the provided url  
 **Access**: public  
@@ -72,9 +49,9 @@ balena.models.release.createFromUrl(123, { url: 'https://github.com/balena-io-pr
 
 * * *
 
-<a name="balena.models.release.finalize"></a>
+## finalize
+balena.models.release.finalize(commitOrIdOrRawVersion) ⇒ <code>Promise</code>
 
-### release.finalize(commitOrIdOrRawVersion) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Finalizes a draft release  
 **Access**: public  
@@ -113,9 +90,9 @@ balena.models.release.finalize({application: 456, raw_version: '0.0.0'}).then(fu
 
 * * *
 
-<a name="balena.models.release.get"></a>
+## get
+balena.models.release.get(commitOrIdOrRawVersion, [options]) ⇒ <code>Promise</code>
 
-### release.get(commitOrIdOrRawVersion, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Get a specific release  
 **Access**: public  
@@ -157,9 +134,9 @@ balena.models.release.get({application: 456, raw_version: '0.0.0'}).then(functio
 
 * * *
 
-<a name="balena.models.release.getAllByApplication"></a>
+## getAllByApplication
+balena.models.release.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 
-### release.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Get all releases from an application  
 **Access**: public  
@@ -195,9 +172,9 @@ balena.models.release.getAllByApplication(123).then(function(releases) {
 
 * * *
 
-<a name="balena.models.release.getLatestByApplication"></a>
+## getLatestByApplication
+balena.models.release.getLatestByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 
-### release.getLatestByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Get the latest successful release for an application  
 **Access**: public  
@@ -233,9 +210,9 @@ balena.models.release.getLatestByApplication(123).then(function(releases) {
 
 * * *
 
-<a name="balena.models.release.getWithImageDetails"></a>
+## getWithImageDetails
+balena.models.release.getWithImageDetails(commitOrIdOrRawVersion, [options]) ⇒ <code>Promise</code>
 
-### release.getWithImageDetails(commitOrIdOrRawVersion, [options]) ⇒ <code>Promise</code>
 This method does not map exactly to the underlying model: it runs a
 larger prebuilt query, and reformats it into an easy to use and
 understand format. If you want significantly more control, or to see the
@@ -295,9 +272,9 @@ balena.models.release.getWithImageDetails(123, { image: { $select: 'build_log' }
 
 * * *
 
-<a name="balena.models.release.setIsInvalidated"></a>
+## setIsInvalidated
+balena.models.release.setIsInvalidated(commitOrIdOrRawVersion, isInvalidated) ⇒ <code>Promise</code>
 
-### release.setIsInvalidated(commitOrIdOrRawVersion, isInvalidated) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Set the is_invalidated property of a release to true or false  
 **Access**: public  
@@ -351,9 +328,9 @@ balena.models.release.setIsInvalidated('7cf02a69e4d34c9da573914963cf54fd', false
 
 * * *
 
-<a name="balena.models.release.setKnownIssueList"></a>
+## setKnownIssueList
+balena.models.release.setKnownIssueList(commitOrIdOrRawVersion, knownIssueListOrNull) ⇒ <code>Promise</code>
 
-### release.setKnownIssueList(commitOrIdOrRawVersion, knownIssueListOrNull) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Add a known issue list to a release  
 **Access**: public  
@@ -388,9 +365,9 @@ balena.models.release.setKnownIssueList({application: 456, rawVersion: '0.0.0'},
 
 * * *
 
-<a name="balena.models.release.setNote"></a>
+## setNote
+balena.models.release.setNote(commitOrIdOrRawVersion, noteOrNull) ⇒ <code>Promise</code>
 
-### release.setNote(commitOrIdOrRawVersion, noteOrNull) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>release</code>](#balena.models.release)  
 **Summary**: Add a note to a release  
 **Access**: public  
@@ -425,24 +402,16 @@ balena.models.release.setNote({ application: 456, rawVersion: '0.0.0' }, 'My use
 
 * * *
 
-<a name="balena.models.release.asset"></a>
+## asset
+balena.models.release.asset : <code>object</code>
 
-### release.asset : <code>object</code>
 **Kind**: static namespace of [<code>release</code>](#balena.models.release)  
-
-* [.asset](#balena.models.release.asset) : <code>object</code>
-    * [.download(id)](#balena.models.release.asset.download) ⇒ <code>Promise</code>
-    * [.get(id, [options])](#balena.models.release.asset.get) ⇒ <code>Promise</code>
-    * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.asset.getAllByRelease) ⇒ <code>Promise</code>
-    * [.remove(id)](#balena.models.release.asset.remove) ⇒ <code>Promise</code>
-    * [.upload(uploadParams, [options])](#balena.models.release.asset.upload) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.release.asset.download"></a>
+### download
+balena.models.release.asset.download(id) ⇒ <code>Promise</code>
 
-#### asset.download(id) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>asset</code>](#balena.models.release.asset)  
 **Summary**: Download a release asset  
 **Access**: public  
@@ -478,9 +447,9 @@ balena.models.release.asset.download({
 
 * * *
 
-<a name="balena.models.release.asset.get"></a>
+### get
+balena.models.release.asset.get(id, [options]) ⇒ <code>Promise</code>
 
-#### asset.get(id, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>asset</code>](#balena.models.release.asset)  
 **Summary**: Get a specific release asset  
 **Access**: public  
@@ -519,9 +488,9 @@ balena.models.release.asset.get({
 
 * * *
 
-<a name="balena.models.release.asset.getAllByRelease"></a>
+### getAllByRelease
+balena.models.release.asset.getAllByRelease(commitOrIdOrRawVersion, [options]) ⇒ <code>Promise</code>
 
-#### asset.getAllByRelease(commitOrIdOrRawVersion, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>asset</code>](#balena.models.release.asset)  
 **Summary**: Get all release assets for a release  
 **Access**: public  
@@ -563,9 +532,9 @@ balena.models.release.asset.getAllByRelease({ application: 456, raw_version: '1.
 
 * * *
 
-<a name="balena.models.release.asset.remove"></a>
+### remove
+balena.models.release.asset.remove(id) ⇒ <code>Promise</code>
 
-#### asset.remove(id) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>asset</code>](#balena.models.release.asset)  
 **Summary**: Remove a release asset  
 **Access**: public  
@@ -596,9 +565,9 @@ balena.models.release.asset.remove({
 
 * * *
 
-<a name="balena.models.release.asset.upload"></a>
+### upload
+balena.models.release.asset.upload(uploadParams, [options]) ⇒ <code>Promise</code>
 
-#### asset.upload(uploadParams, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>asset</code>](#balena.models.release.asset)  
 **Summary**: Upload a release asset  
 **Access**: public  
@@ -716,23 +685,16 @@ balena.models.release.asset.upload({
 
 * * *
 
-<a name="balena.models.release.tags"></a>
+## tags
+balena.models.release.tags : <code>object</code>
 
-### release.tags : <code>object</code>
 **Kind**: static namespace of [<code>release</code>](#balena.models.release)  
-
-* [.tags](#balena.models.release.tags) : <code>object</code>
-    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.release.tags.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getAllByRelease(commitOrIdOrRawVersion, [options])](#balena.models.release.tags.getAllByRelease) ⇒ <code>Promise</code>
-    * [.remove(commitOrIdOrRawVersion, tagKey)](#balena.models.release.tags.remove) ⇒ <code>Promise</code>
-    * [.set(commitOrIdOrRawVersion, tagKey, value)](#balena.models.release.tags.set) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.release.tags.getAllByApplication"></a>
+### getAllByApplication
+balena.models.release.tags.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 
-#### tags.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>tags</code>](#balena.models.release.tags)  
 **Summary**: Get all release tags for an application  
 **Access**: public  
@@ -768,9 +730,9 @@ balena.models.release.tags.getAllByApplication(999999).then(function(tags) {
 
 * * *
 
-<a name="balena.models.release.tags.getAllByRelease"></a>
+### getAllByRelease
+balena.models.release.tags.getAllByRelease(commitOrIdOrRawVersion, [options]) ⇒ <code>Promise</code>
 
-#### tags.getAllByRelease(commitOrIdOrRawVersion, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>tags</code>](#balena.models.release.tags)  
 **Summary**: Get all release tags for a release  
 **Access**: public  
@@ -812,9 +774,9 @@ balena.models.release.tags.getAllByRelease({application: 456, rawVersion: '0.0.0
 
 * * *
 
-<a name="balena.models.release.tags.remove"></a>
+### remove
+balena.models.release.tags.remove(commitOrIdOrRawVersion, tagKey) ⇒ <code>Promise</code>
 
-#### tags.remove(commitOrIdOrRawVersion, tagKey) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>tags</code>](#balena.models.release.tags)  
 **Summary**: Remove a release tag  
 **Access**: public  
@@ -849,9 +811,9 @@ balena.models.release.tags.remove({application: 456, rawVersion: '0.0.0'}, 'EDIT
 
 * * *
 
-<a name="balena.models.release.tags.set"></a>
+### set
+balena.models.release.tags.set(commitOrIdOrRawVersion, tagKey, value) ⇒ <code>Promise</code>
 
-#### tags.set(commitOrIdOrRawVersion, tagKey, value) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>tags</code>](#balena.models.release.tags)  
 **Summary**: Set a release tag  
 **Access**: public  

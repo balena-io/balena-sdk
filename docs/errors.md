@@ -1,6 +1,6 @@
-<a name="balena.errors"></a>
+# errors
+balena.errors : <code>Object</code>
 
-## .errors : <code>Object</code>
 The balena-errors module used internally. This is provided primarily for
 convenience, and to avoid the necessity for separate balena-errors
 dependencies. You'll want to use this if you need to match on the specific

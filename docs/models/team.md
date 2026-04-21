@@ -1,26 +1,13 @@
-<a name="balena.models.team"></a>
+# team
+balena.models.team : <code>object</code>
 
-## .team : <code>object</code>
 **Kind**: static namespace  
-
-* [.team](#balena.models.team) : <code>object</code>
-    * [.create(organizationSlugOrId, name)](#balena.models.team.create) ⇒ <code>Promise</code>
-    * [.get(teamId, [options])](#balena.models.team.get) ⇒ <code>Promise</code>
-    * [.getAllByOrganization(organizationSlugOrId, [options])](#balena.models.team.getAllByOrganization) ⇒ <code>Promise</code>
-    * [.remove(teamId)](#balena.models.team.remove) ⇒ <code>Promise</code>
-    * [.rename(teamId, newName)](#balena.models.team.rename) ⇒ <code>Promise</code>
-    * [.applicationAccess](#balena.models.team.applicationAccess) : <code>object</code>
-        * [.get(teamApplicationAccessId, [options])](#balena.models.team.applicationAccess.get) ⇒ <code>Promise</code>
-        * [.getAllByTeam(teamId, [options])](#balena.models.team.applicationAccess.getAllByTeam) ⇒ <code>Promise</code>
-        * [.remove(teamApplicationAccessId)](#balena.models.team.applicationAccess.remove) ⇒ <code>Promise</code>
-        * [.update(teamApplicationAccessId, roleName)](#balena.models.team.applicationAccess.update) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.team.create"></a>
+## create
+balena.models.team.create(organizationSlugOrId, name) ⇒ <code>Promise</code>
 
-### team.create(organizationSlugOrId, name) ⇒ <code>Promise</code>
 This method creates a new team.
 
 **Kind**: static method of [<code>team</code>](#balena.models.team)  
@@ -59,9 +46,9 @@ balena.models.team.create('myOrgHandle', 'MyTeam')
 
 * * *
 
-<a name="balena.models.team.get"></a>
+## get
+balena.models.team.get(teamId, [options]) ⇒ <code>Promise</code>
 
-### team.get(teamId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>team</code>](#balena.models.team)  
 **Summary**: Get a single Team  
 **Access**: public  
@@ -91,9 +78,9 @@ balena.models.team.get(123).then(function(team) {
 
 * * *
 
-<a name="balena.models.team.getAllByOrganization"></a>
+## getAllByOrganization
+balena.models.team.getAllByOrganization(organizationSlugOrId, [options]) ⇒ <code>Promise</code>
 
-### team.getAllByOrganization(organizationSlugOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>team</code>](#balena.models.team)  
 **Summary**: Get all Teams of a specific Organization  
 **Access**: public  
@@ -129,9 +116,9 @@ balena.models.team.getAllByOrganization('MyOrganizationHandle').then(function(te
 
 * * *
 
-<a name="balena.models.team.remove"></a>
+## remove
+balena.models.team.remove(teamId) ⇒ <code>Promise</code>
 
-### team.remove(teamId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>team</code>](#balena.models.team)  
 **Summary**: Remove a Team  
 **Access**: public  
@@ -155,9 +142,9 @@ balena.models.team.remove(123);
 
 * * *
 
-<a name="balena.models.team.rename"></a>
+## rename
+balena.models.team.rename(teamId, newName) ⇒ <code>Promise</code>
 
-### team.rename(teamId, newName) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>team</code>](#balena.models.team)  
 **Summary**: Rename Team  
 **Access**: public  
@@ -184,23 +171,16 @@ balena.models.team.rename(123, 'MyNewTeamName');
 
 * * *
 
-<a name="balena.models.team.applicationAccess"></a>
+## applicationAccess
+balena.models.team.applicationAccess : <code>object</code>
 
-### team.applicationAccess : <code>object</code>
 **Kind**: static namespace of [<code>team</code>](#balena.models.team)  
-
-* [.applicationAccess](#balena.models.team.applicationAccess) : <code>object</code>
-    * [.get(teamApplicationAccessId, [options])](#balena.models.team.applicationAccess.get) ⇒ <code>Promise</code>
-    * [.getAllByTeam(teamId, [options])](#balena.models.team.applicationAccess.getAllByTeam) ⇒ <code>Promise</code>
-    * [.remove(teamApplicationAccessId)](#balena.models.team.applicationAccess.remove) ⇒ <code>Promise</code>
-    * [.update(teamApplicationAccessId, roleName)](#balena.models.team.applicationAccess.update) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.team.applicationAccess.get"></a>
+### get
+balena.models.team.applicationAccess.get(teamApplicationAccessId, [options]) ⇒ <code>Promise</code>
 
-#### applicationAccess.get(teamApplicationAccessId, [options]) ⇒ <code>Promise</code>
 This method get specific team application access.
 
 **Kind**: static method of [<code>applicationAccess</code>](#balena.models.team.applicationAccess)  
@@ -232,9 +212,9 @@ balena.models.team.applicationAccess.get(1239948).then(function(teamApplicationA
 
 * * *
 
-<a name="balena.models.team.applicationAccess.getAllByTeam"></a>
+### getAllByTeam
+balena.models.team.applicationAccess.getAllByTeam(teamId, [options]) ⇒ <code>Promise</code>
 
-#### applicationAccess.getAllByTeam(teamId, [options]) ⇒ <code>Promise</code>
 This method get all team application access.
 
 **Kind**: static method of [<code>applicationAccess</code>](#balena.models.team.applicationAccess)  
@@ -266,9 +246,9 @@ balena.models.team.applicationAccess.getAllByTeam(1239948).then(function(teamApp
 
 * * *
 
-<a name="balena.models.team.applicationAccess.remove"></a>
+### remove
+balena.models.team.applicationAccess.remove(teamApplicationAccessId) ⇒ <code>Promise</code>
 
-#### applicationAccess.remove(teamApplicationAccessId) ⇒ <code>Promise</code>
 This remove a team application access.
 
 **Kind**: static method of [<code>applicationAccess</code>](#balena.models.team.applicationAccess)  
@@ -297,9 +277,9 @@ balena.models.team.remove(123).then(function(teams) {
 
 * * *
 
-<a name="balena.models.team.applicationAccess.update"></a>
+### update
+balena.models.team.applicationAccess.update(teamApplicationAccessId, roleName) ⇒ <code>Promise</code>
 
-#### applicationAccess.update(teamApplicationAccessId, roleName) ⇒ <code>Promise</code>
 This method update a team application access role.
 
 **Kind**: static method of [<code>applicationAccess</code>](#balena.models.team.applicationAccess)  

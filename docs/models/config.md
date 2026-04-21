@@ -1,21 +1,13 @@
-<a name="balena.models.config"></a>
+# config
+balena.models.config : <code>object</code>
 
-## .config : <code>object</code>
 **Kind**: static namespace  
-
-* [.config](#balena.models.config) : <code>object</code>
-    * [.getAll()](#balena.models.config.getAll) ⇒ <code>Promise</code>
-    * [.getConfigVarSchema(deviceType)](#balena.models.config.getConfigVarSchema) ⇒ <code>Promise</code>
-    * [.getDeviceOptions(deviceType)](#balena.models.config.getDeviceOptions) ⇒ <code>Promise</code>
-    * <del>[.getDeviceTypeManifestBySlug(slugOrName)](#balena.models.config.getDeviceTypeManifestBySlug) ⇒ <code>Promise</code></del>
-    * <del>[.getDeviceTypes()](#balena.models.config.getDeviceTypes) ⇒ <code>Promise</code></del>
-
 
 * * *
 
-<a name="balena.models.config.getAll"></a>
+## getAll
+balena.models.config.getAll() ⇒ <code>Promise</code>
 
-### config.getAll() ⇒ <code>Promise</code>
 **Kind**: static method of [<code>config</code>](#balena.models.config)  
 **Summary**: Get all configuration  
 **Access**: public  
@@ -29,9 +21,9 @@ balena.models.config.getAll().then(function(config) {
 
 * * *
 
-<a name="balena.models.config.getConfigVarSchema"></a>
+## getConfigVarSchema
+balena.models.config.getConfigVarSchema(deviceType) ⇒ <code>Promise</code>
 
-### config.getConfigVarSchema(deviceType) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>config</code>](#balena.models.config)  
 **Summary**: Get configuration variables schema for a device type  
 **Access**: public  
@@ -58,9 +50,9 @@ balena.models.config.getConfigVarSchema('raspberry-pi').then(function(options) {
 
 * * *
 
-<a name="balena.models.config.getDeviceOptions"></a>
+## getDeviceOptions
+balena.models.config.getDeviceOptions(deviceType) ⇒ <code>Promise</code>
 
-### config.getDeviceOptions(deviceType) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>config</code>](#balena.models.config)  
 **Summary**: Get configuration/initialization options for a device type  
 **Access**: public  
@@ -87,9 +79,9 @@ balena.models.config.getDeviceOptions('raspberry-pi').then(function(options) {
 
 * * *
 
-<a name="balena.models.config.getDeviceTypeManifestBySlug"></a>
+## getDeviceTypeManifestBySlug
+balena.models.config.getDeviceTypeManifestBySlug<del>(slugOrName) ⇒ <code>Promise</code></del>
 
-### <del>config.getDeviceTypeManifestBySlug(slugOrName) ⇒ <code>Promise</code></del>
 ***use balena.models.deviceType.getBySlugOrName***
 
 **Kind**: static method of [<code>config</code>](#balena.models.config)  
@@ -118,9 +110,9 @@ balena.models.config.getDeviceTypeManifestBySlug('raspberry-pi').then(function(m
 
 * * *
 
-<a name="balena.models.config.getDeviceTypes"></a>
+## getDeviceTypes
+balena.models.config.getDeviceTypes<del>() ⇒ <code>Promise</code></del>
 
-### <del>config.getDeviceTypes() ⇒ <code>Promise</code></del>
 ***use balena.models.deviceType.getAll***
 
 **Kind**: static method of [<code>config</code>](#balena.models.config)  

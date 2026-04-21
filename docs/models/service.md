@@ -1,23 +1,13 @@
-<a name="balena.models.service"></a>
+# service
+balena.models.service : <code>object</code>
 
-## .service : <code>object</code>
 **Kind**: static namespace  
-
-* [.service](#balena.models.service) : <code>object</code>
-    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.getAllByApplication) ⇒ <code>Promise</code>
-    * [.var](#balena.models.service.var) : <code>object</code>
-        * [.get(serviceIdOrNaturalKey, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
-        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
-        * [.getAllByService(serviceIdOrNaturalKey, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
-        * [.remove(serviceIdOrNaturalKey, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
-        * [.set(serviceIdOrNaturalKey, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.service.getAllByApplication"></a>
+## getAllByApplication
+balena.models.service.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 
-### service.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>service</code>](#balena.models.service)  
 **Summary**: Get all services from an application  
 **Access**: public  
@@ -53,24 +43,16 @@ balena.models.service.getAllByApplication(123).then(function(services) {
 
 * * *
 
-<a name="balena.models.service.var"></a>
+## var
+balena.models.service.var : <code>object</code>
 
-### service.var : <code>object</code>
 **Kind**: static namespace of [<code>service</code>](#balena.models.service)  
-
-* [.var](#balena.models.service.var) : <code>object</code>
-    * [.get(serviceIdOrNaturalKey, key)](#balena.models.service.var.get) ⇒ <code>Promise</code>
-    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.service.var.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getAllByService(serviceIdOrNaturalKey, [options])](#balena.models.service.var.getAllByService) ⇒ <code>Promise</code>
-    * [.remove(serviceIdOrNaturalKey, key)](#balena.models.service.var.remove) ⇒ <code>Promise</code>
-    * [.set(serviceIdOrNaturalKey, key, value)](#balena.models.service.var.set) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.service.var.get"></a>
+### get
+balena.models.service.var.get(serviceIdOrNaturalKey, key) ⇒ <code>Promise</code>
 
-#### var.get(serviceIdOrNaturalKey, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>var</code>](#balena.models.service.var)  
 **Summary**: Get the value of a specific service variable  
 **Access**: public  
@@ -106,9 +88,9 @@ balena.models.service.var.get({ application: 'myorganization/myapp', service_nam
 
 * * *
 
-<a name="balena.models.service.var.getAllByApplication"></a>
+### getAllByApplication
+balena.models.service.var.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 
-#### var.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>var</code>](#balena.models.service.var)  
 **Summary**: Get all service variables by application  
 **Access**: public  
@@ -144,9 +126,9 @@ balena.models.service.var.getAllByApplication(999999).then(function(vars) {
 
 * * *
 
-<a name="balena.models.service.var.getAllByService"></a>
+### getAllByService
+balena.models.service.var.getAllByService(serviceIdOrNaturalKey, [options]) ⇒ <code>Promise</code>
 
-#### var.getAllByService(serviceIdOrNaturalKey, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>var</code>](#balena.models.service.var)  
 **Summary**: Get all variables for a service  
 **Access**: public  
@@ -182,9 +164,9 @@ balena.models.service.var.getAllByService({ application: 'myorganization/myapp',
 
 * * *
 
-<a name="balena.models.service.var.remove"></a>
+### remove
+balena.models.service.var.remove(serviceIdOrNaturalKey, key) ⇒ <code>Promise</code>
 
-#### var.remove(serviceIdOrNaturalKey, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>var</code>](#balena.models.service.var)  
 **Summary**: Clear the value of a specific service variable  
 **Access**: public  
@@ -219,9 +201,9 @@ balena.models.service.var.remove({ application: 'myorganization/myapp', service_
 
 * * *
 
-<a name="balena.models.service.var.set"></a>
+### set
+balena.models.service.var.set(serviceIdOrNaturalKey, key, value) ⇒ <code>Promise</code>
 
-#### var.set(serviceIdOrNaturalKey, key, value) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>var</code>](#balena.models.service.var)  
 **Summary**: Set the value of a specific service variable  
 **Access**: public  

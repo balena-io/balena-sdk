@@ -1,36 +1,13 @@
-<a name="balena.auth"></a>
+# auth
+balena.auth : <code>object</code>
 
-## .auth : <code>object</code>
 **Kind**: static namespace  
-
-* [.auth](#balena.auth) : <code>object</code>
-    * [.authenticate(credentials)](#balena.auth.authenticate) ⇒ <code>Promise</code>
-    * [.getActorId()](#balena.auth.getActorId) ⇒ <code>Promise</code>
-    * [.getToken()](#balena.auth.getToken) ⇒ <code>Promise</code>
-    * [.getUserInfo()](#balena.auth.getUserInfo) ⇒ <code>Promise</code>
-    * [.isLoggedIn()](#balena.auth.isLoggedIn) ⇒ <code>Promise</code>
-    * [.login(credentials)](#balena.auth.login) ⇒ <code>Promise</code>
-    * [.loginWithToken(authToken)](#balena.auth.loginWithToken) ⇒ <code>Promise</code>
-    * [.logout()](#balena.auth.logout) ⇒ <code>Promise</code>
-    * [.register(credentials)](#balena.auth.register) ⇒ <code>Promise</code>
-    * [.requestVerificationEmail()](#balena.auth.requestVerificationEmail) ⇒ <code>Promise</code>
-    * [.verifyEmail(verificationPayload)](#balena.auth.verifyEmail) ⇒ <code>Promise</code>
-    * [.whoami()](#balena.auth.whoami) ⇒ <code>Promise</code>
-    * [.twoFactor](#balena.auth.twoFactor) : <code>object</code>
-        * [.challenge(code)](#balena.auth.twoFactor.challenge) ⇒ <code>Promise</code>
-        * [.disable(password)](#balena.auth.twoFactor.disable) ⇒ <code>Promise</code>
-        * [.enable(code)](#balena.auth.twoFactor.enable) ⇒ <code>Promise</code>
-        * [.getSetupKey()](#balena.auth.twoFactor.getSetupKey) ⇒ <code>Promise</code>
-        * [.isEnabled()](#balena.auth.twoFactor.isEnabled) ⇒ <code>Promise</code>
-        * [.isPassed()](#balena.auth.twoFactor.isPassed) ⇒ <code>Promise</code>
-        * [.verify(code)](#balena.auth.twoFactor.verify) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.auth.authenticate"></a>
+## authenticate
+balena.auth.authenticate(credentials) ⇒ <code>Promise</code>
 
-### auth.authenticate(credentials) ⇒ <code>Promise</code>
 You should use [login](#balena.auth.login) when possible,
 as it takes care of saving the token and email as well.
 
@@ -69,9 +46,9 @@ balena.auth.authenticate(credentials).then(function(token) {
 
 * * *
 
-<a name="balena.auth.getActorId"></a>
+## getActorId
+balena.auth.getActorId() ⇒ <code>Promise</code>
 
-### auth.getActorId() ⇒ <code>Promise</code>
 This will only work if you used [login](#balena.auth.login) or [loginWithToken](#balena.auth.loginWithToken) to log in.
 
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
@@ -87,9 +64,9 @@ balena.auth.getActorId().then(function(actorId) {
 
 * * *
 
-<a name="balena.auth.getToken"></a>
+## getToken
+balena.auth.getToken() ⇒ <code>Promise</code>
 
-### auth.getToken() ⇒ <code>Promise</code>
 This will only work if you used [login](#balena.auth.login) to log in.
 
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
@@ -105,9 +82,9 @@ balena.auth.getToken().then(function(token) {
 
 * * *
 
-<a name="balena.auth.getUserInfo"></a>
+## getUserInfo
+balena.auth.getUserInfo() ⇒ <code>Promise</code>
 
-### auth.getUserInfo() ⇒ <code>Promise</code>
 This will only work if you used [login](#balena.auth.login) to log in.
 
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
@@ -123,9 +100,9 @@ balena.auth.getUserInfo().then(function(userInfo) {
 
 * * *
 
-<a name="balena.auth.isLoggedIn"></a>
+## isLoggedIn
+balena.auth.isLoggedIn() ⇒ <code>Promise</code>
 
-### auth.isLoggedIn() ⇒ <code>Promise</code>
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
 **Summary**: Check if you're logged in  
 **Access**: public  
@@ -143,9 +120,9 @@ balena.auth.isLoggedIn().then(function(isLoggedIn) {
 
 * * *
 
-<a name="balena.auth.login"></a>
+## login
+balena.auth.login(credentials) ⇒ <code>Promise</code>
 
-### auth.login(credentials) ⇒ <code>Promise</code>
 If the login is successful, the token is persisted between sessions.
 
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
@@ -177,9 +154,9 @@ balena.auth.login(credentials);
 
 * * *
 
-<a name="balena.auth.loginWithToken"></a>
+## loginWithToken
+balena.auth.loginWithToken(authToken) ⇒ <code>Promise</code>
 
-### auth.loginWithToken(authToken) ⇒ <code>Promise</code>
 Login to balena with a session token or api key instead of with credentials.
 
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
@@ -205,9 +182,9 @@ balena.auth.loginWithToken(authToken);
 
 * * *
 
-<a name="balena.auth.logout"></a>
+## logout
+balena.auth.logout() ⇒ <code>Promise</code>
 
-### auth.logout() ⇒ <code>Promise</code>
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
 **Summary**: Logout  
 **Access**: public  
@@ -218,9 +195,9 @@ balena.auth.logout();
 
 * * *
 
-<a name="balena.auth.register"></a>
+## register
+balena.auth.register(credentials) ⇒ <code>Promise</code>
 
-### auth.register(credentials) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
 **Summary**: Register a user account  
 **Access**: public  
@@ -259,9 +236,9 @@ balena.auth.register({
 
 * * *
 
-<a name="balena.auth.requestVerificationEmail"></a>
+## requestVerificationEmail
+balena.auth.requestVerificationEmail() ⇒ <code>Promise</code>
 
-### auth.requestVerificationEmail() ⇒ <code>Promise</code>
 This will only work if you used [login](#balena.auth.login) to log in.
 
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
@@ -276,9 +253,9 @@ balena.auth.requestVerificationEmail().then(function() {
 
 * * *
 
-<a name="balena.auth.verifyEmail"></a>
+## verifyEmail
+balena.auth.verifyEmail(verificationPayload) ⇒ <code>Promise</code>
 
-### auth.verifyEmail(verificationPayload) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
 **Summary**: Verifies an email  
 **Access**: public  
@@ -314,9 +291,9 @@ balena.auth.verifyEmail({
 
 * * *
 
-<a name="balena.auth.whoami"></a>
+## whoami
+balena.auth.whoami() ⇒ <code>Promise</code>
 
-### auth.whoami() ⇒ <code>Promise</code>
 This will only work if you used [login](#balena.auth.login) or [loginWithToken](#balena.auth.loginWithToken) to log in.
 
 **Kind**: static method of [<code>auth</code>](#balena.auth)  
@@ -336,26 +313,16 @@ balena.auth.whoami().then(function(result) {
 
 * * *
 
-<a name="balena.auth.twoFactor"></a>
+## twoFactor
+balena.auth.twoFactor : <code>object</code>
 
-### auth.twoFactor : <code>object</code>
 **Kind**: static namespace of [<code>auth</code>](#balena.auth)  
-
-* [.twoFactor](#balena.auth.twoFactor) : <code>object</code>
-    * [.challenge(code)](#balena.auth.twoFactor.challenge) ⇒ <code>Promise</code>
-    * [.disable(password)](#balena.auth.twoFactor.disable) ⇒ <code>Promise</code>
-    * [.enable(code)](#balena.auth.twoFactor.enable) ⇒ <code>Promise</code>
-    * [.getSetupKey()](#balena.auth.twoFactor.getSetupKey) ⇒ <code>Promise</code>
-    * [.isEnabled()](#balena.auth.twoFactor.isEnabled) ⇒ <code>Promise</code>
-    * [.isPassed()](#balena.auth.twoFactor.isPassed) ⇒ <code>Promise</code>
-    * [.verify(code)](#balena.auth.twoFactor.verify) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.auth.twoFactor.challenge"></a>
+### challenge
+balena.auth.twoFactor.challenge(code) ⇒ <code>Promise</code>
 
-#### twoFactor.challenge(code) ⇒ <code>Promise</code>
 You should use [login](#balena.auth.login) when possible,
 as it takes care of saving the token and email as well.
 
@@ -382,9 +349,9 @@ balena.auth.twoFactor.challenge('1234');
 
 * * *
 
-<a name="balena.auth.twoFactor.disable"></a>
+### disable
+balena.auth.twoFactor.disable(password) ⇒ <code>Promise</code>
 
-#### twoFactor.disable(password) ⇒ <code>Promise</code>
 Disables two factor authentication.
 
 **Kind**: static method of [<code>twoFactor</code>](#balena.auth.twoFactor)  
@@ -412,9 +379,9 @@ balena.auth.loginWithToken(token);
 
 * * *
 
-<a name="balena.auth.twoFactor.enable"></a>
+### enable
+balena.auth.twoFactor.enable(code) ⇒ <code>Promise</code>
 
-#### twoFactor.enable(code) ⇒ <code>Promise</code>
 Enables two factor authentication.
 
 **Kind**: static method of [<code>twoFactor</code>](#balena.auth.twoFactor)  
@@ -442,9 +409,9 @@ balena.auth.loginWithToken(token);
 
 * * *
 
-<a name="balena.auth.twoFactor.getSetupKey"></a>
+### getSetupKey
+balena.auth.twoFactor.getSetupKey() ⇒ <code>Promise</code>
 
-#### twoFactor.getSetupKey() ⇒ <code>Promise</code>
 Retrieves a setup key for enabling two factor authentication.
 
 **Kind**: static method of [<code>twoFactor</code>](#balena.auth.twoFactor)  
@@ -459,9 +426,9 @@ console.log(setupKey);
 
 * * *
 
-<a name="balena.auth.twoFactor.isEnabled"></a>
+### isEnabled
+balena.auth.twoFactor.isEnabled() ⇒ <code>Promise</code>
 
-#### twoFactor.isEnabled() ⇒ <code>Promise</code>
 **Kind**: static method of [<code>twoFactor</code>](#balena.auth.twoFactor)  
 **Summary**: Check if two factor authentication is enabled  
 **Access**: public  
@@ -477,9 +444,9 @@ balena.auth.twoFactor.isEnabled().then(function(isEnabled) {
 
 * * *
 
-<a name="balena.auth.twoFactor.isPassed"></a>
+### isPassed
+balena.auth.twoFactor.isPassed() ⇒ <code>Promise</code>
 
-#### twoFactor.isPassed() ⇒ <code>Promise</code>
 **Kind**: static method of [<code>twoFactor</code>](#balena.auth.twoFactor)  
 **Summary**: Check if two factor authentication challenge was passed  
 **Access**: public  
@@ -495,9 +462,9 @@ balena.auth.twoFactor.isPassed().then(function(isPassed) {
 
 * * *
 
-<a name="balena.auth.twoFactor.verify"></a>
+### verify
+balena.auth.twoFactor.verify(code) ⇒ <code>Promise</code>
 
-#### twoFactor.verify(code) ⇒ <code>Promise</code>
 Verifies two factor authentication.
 Note that this method not update the token automatically.
 You should use [challenge](#balena.auth.twoFactor.challenge) when possible,

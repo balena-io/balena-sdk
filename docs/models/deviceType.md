@@ -1,25 +1,13 @@
-<a name="balena.models.deviceType"></a>
+# deviceType
+balena.models.deviceType : <code>object</code>
 
-## .deviceType : <code>object</code>
 **Kind**: static namespace  
-
-* [.deviceType](#balena.models.deviceType) : <code>object</code>
-    * [.get(idOrSlug, [options])](#balena.models.deviceType.get) ⇒ <code>Promise</code>
-    * [.getAll([options])](#balena.models.deviceType.getAll) ⇒ <code>Promise</code>
-    * [.getAllSupported([options])](#balena.models.deviceType.getAllSupported) ⇒ <code>Promise</code>
-    * [.getBySlugOrName(slugOrName)](#balena.models.deviceType.getBySlugOrName) ⇒ <code>Promise</code>
-    * [.getInstallMethod(deviceTypeSlug)](#balena.models.deviceType.getInstallMethod) ⇒ <code>Promise</code>
-    * [.getInstructions(deviceTypeSlugOrContract)](#balena.models.deviceType.getInstructions) ⇒ <code>Promise</code>
-    * [.getInterpolatedPartials(deviceTypeSlug)](#balena.models.deviceType.getInterpolatedPartials) ⇒ <code>Promise</code>
-    * [.getName(deviceTypeSlug)](#balena.models.deviceType.getName) ⇒ <code>Promise</code>
-    * [.getSlugByName(deviceTypeName)](#balena.models.deviceType.getSlugByName) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.deviceType.get"></a>
+## get
+balena.models.deviceType.get(idOrSlug, [options]) ⇒ <code>Promise</code>
 
-### deviceType.get(idOrSlug, [options]) ⇒ <code>Promise</code>
 This method returns a single device type.
 
 **Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
@@ -57,9 +45,9 @@ balena.models.deviceType.get('raspberrypi').then(function(deviceType) {
 
 * * *
 
-<a name="balena.models.deviceType.getAll"></a>
+## getAll
+balena.models.deviceType.getAll([options]) ⇒ <code>Promise</code>
 
-### deviceType.getAll([options]) ⇒ <code>Promise</code>
 This method returns all device types.
 
 **Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
@@ -94,9 +82,9 @@ balena.models.deviceType.getAll({ $select: ['name', 'slug'] }).then(function(dev
 
 * * *
 
-<a name="balena.models.deviceType.getAllSupported"></a>
+## getAllSupported
+balena.models.deviceType.getAllSupported([options]) ⇒ <code>Promise</code>
 
-### deviceType.getAllSupported([options]) ⇒ <code>Promise</code>
 This method returns all supported device types.
 
 **Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
@@ -131,9 +119,9 @@ balena.models.deviceType.getAllSupported({ $select: ['name', 'slug'] }).then(fun
 
 * * *
 
-<a name="balena.models.deviceType.getBySlugOrName"></a>
+## getBySlugOrName
+balena.models.deviceType.getBySlugOrName(slugOrName) ⇒ <code>Promise</code>
 
-### deviceType.getBySlugOrName(slugOrName) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
 **Summary**: Get a deviceType by slug or name  
 **Access**: public  
@@ -160,9 +148,9 @@ balena.models.deviceType.getBySlugOrName('raspberry-pi').then(function(deviceTyp
 
 * * *
 
-<a name="balena.models.deviceType.getInstallMethod"></a>
+## getInstallMethod
+balena.models.deviceType.getInstallMethod(deviceTypeSlug) ⇒ <code>Promise</code>
 
-### deviceType.getInstallMethod(deviceTypeSlug) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
 **Summary**: Get installation method on a given device type  
 **Access**: public  
@@ -190,9 +178,9 @@ balena.models.deviceType.getInstallMethod('raspberry-pi').then(function(method) 
 
 * * *
 
-<a name="balena.models.deviceType.getInstructions"></a>
+## getInstructions
+balena.models.deviceType.getInstructions(deviceTypeSlugOrContract) ⇒ <code>Promise</code>
 
-### deviceType.getInstructions(deviceTypeSlugOrContract) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
 **Summary**: Get instructions for installing a host OS on a given device type  
 **Access**: public  
@@ -227,9 +215,9 @@ balena.models.deviceType.getInstructions('raspberry-pi').then(function(instructi
 
 * * *
 
-<a name="balena.models.deviceType.getInterpolatedPartials"></a>
+## getInterpolatedPartials
+balena.models.deviceType.getInterpolatedPartials(deviceTypeSlug) ⇒ <code>Promise</code>
 
-### deviceType.getInterpolatedPartials(deviceTypeSlug) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
 **Summary**: Get a contract with resolved partial templates  
 **Access**: public  
@@ -259,9 +247,9 @@ balena.models.deviceType.getInterpolatedPartials('raspberry-pi').then(function(c
 
 * * *
 
-<a name="balena.models.deviceType.getName"></a>
+## getName
+balena.models.deviceType.getName(deviceTypeSlug) ⇒ <code>Promise</code>
 
-### deviceType.getName(deviceTypeSlug) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
 **Summary**: Get display name for a device  
 **Access**: public  
@@ -289,9 +277,9 @@ balena.models.deviceType.getName('raspberry-pi').then(function(deviceTypeName) {
 
 * * *
 
-<a name="balena.models.deviceType.getSlugByName"></a>
+## getSlugByName
+balena.models.deviceType.getSlugByName(deviceTypeName) ⇒ <code>Promise</code>
 
-### deviceType.getSlugByName(deviceTypeName) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>deviceType</code>](#balena.models.deviceType)  
 **Summary**: Get device slug  
 **Access**: public  

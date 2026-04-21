@@ -1,101 +1,13 @@
-<a name="balena.models.device"></a>
+# device
+balena.models.device : <code>object</code>
 
-## .device : <code>object</code>
 **Kind**: static namespace  
-
-* [.device](#balena.models.device) : <code>object</code>
-    * [.deactivate(uuidOrIdOrArray)](#balena.models.device.deactivate) ⇒ <code>Promise</code>
-    * [.disableDeviceUrl(uuidOrIdOrArray)](#balena.models.device.disableDeviceUrl) ⇒ <code>Promise</code>
-    * [.disableLocalMode(uuidOrId)](#balena.models.device.disableLocalMode) ⇒ <code>Promise</code>
-    * [.disableLockOverride(uuidOrId)](#balena.models.device.disableLockOverride) ⇒ <code>Promise</code>
-    * [.enableDeviceUrl(uuidOrIdOrArray)](#balena.models.device.enableDeviceUrl) ⇒ <code>Promise</code>
-    * [.enableLocalMode(uuidOrId)](#balena.models.device.enableLocalMode) ⇒ <code>Promise</code>
-    * [.enableLockOverride(uuidOrId)](#balena.models.device.enableLockOverride) ⇒ <code>Promise</code>
-    * [.generateDeviceKey(uuidOrId, [keyName], [keyDescription])](#balena.models.device.generateDeviceKey) ⇒ <code>Promise</code>
-    * [.generateUniqueKey()](#balena.models.device.generateUniqueKey) ⇒ <code>String</code>
-    * [.get(uuidOrId, [options])](#balena.models.device.get) ⇒ <code>Promise</code>
-    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getAllByOrganization(handleOrId, [options])](#balena.models.device.getAllByOrganization) ⇒ <code>Promise</code>
-    * [.getApplicationName(uuidOrId)](#balena.models.device.getApplicationName) ⇒ <code>Promise</code>
-    * [.getByName(name)](#balena.models.device.getByName) ⇒ <code>Promise</code>
-    * [.getDashboardUrl(uuid)](#balena.models.device.getDashboardUrl) ⇒ <code>String</code>
-    * [.getDeviceUrl(uuidOrId)](#balena.models.device.getDeviceUrl) ⇒ <code>Promise</code>
-    * [.getLocalIPAddresses(uuidOrId)](#balena.models.device.getLocalIPAddresses) ⇒ <code>Promise</code>
-    * [.getLocalModeSupport(device)](#balena.models.device.getLocalModeSupport) ⇒ <code>Object</code>
-    * [.getMACAddresses(uuidOrId)](#balena.models.device.getMACAddresses) ⇒ <code>Promise</code>
-    * [.getMetrics(uuidOrId)](#balena.models.device.getMetrics) ⇒ <code>Promise</code>
-    * [.getName(uuidOrId)](#balena.models.device.getName) ⇒ <code>Promise</code>
-    * [.getOsVersion(device)](#balena.models.device.getOsVersion) ⇒ <code>String</code>
-    * [.getProgress(uuidOrId)](#balena.models.device.getProgress) ⇒ <code>Promise</code>
-    * [.getStatus(uuidOrId)](#balena.models.device.getStatus) ⇒ <code>Promise</code>
-    * [.getSupervisorState(uuidOrId)](#balena.models.device.getSupervisorState) ⇒ <code>Promise</code>
-    * [.getSupervisorTargetState(uuidOrId, version)](#balena.models.device.getSupervisorTargetState) ⇒ <code>Promise</code>
-    * [.getSupervisorTargetStateForApp(uuidOrId, release)](#balena.models.device.getSupervisorTargetStateForApp) ⇒ <code>Promise</code>
-    * [.getTargetReleaseHash(uuidOrId)](#balena.models.device.getTargetReleaseHash) ⇒ <code>Promise</code>
-    * [.getWithServiceDetails(uuidOrId, [options])](#balena.models.device.getWithServiceDetails) ⇒ <code>Promise</code>
-    * [.grantSupportAccess(uuidOrIdOrArray, expiryTimestamp)](#balena.models.device.grantSupportAccess) ⇒ <code>Promise</code>
-    * [.has(uuidOrId)](#balena.models.device.has) ⇒ <code>Promise</code>
-    * [.hasDeviceUrl(uuidOrId)](#balena.models.device.hasDeviceUrl) ⇒ <code>Promise</code>
-    * [.hasLockOverride(uuidOrId)](#balena.models.device.hasLockOverride) ⇒ <code>Promise</code>
-    * [.identify(uuidOrId)](#balena.models.device.identify) ⇒ <code>Promise</code>
-    * [.isInLocalMode(uuidOrId)](#balena.models.device.isInLocalMode) ⇒ <code>Promise</code>
-    * [.isOnline(uuidOrId)](#balena.models.device.isOnline) ⇒ <code>Promise</code>
-    * [.isTrackingApplicationRelease(uuidOrId)](#balena.models.device.isTrackingApplicationRelease) ⇒ <code>Promise</code>
-    * [.move(uuidOrIdOrArray, applicationSlugOrUuidOrId)](#balena.models.device.move) ⇒ <code>Promise</code>
-    * [.ping(uuidOrId)](#balena.models.device.ping) ⇒ <code>Promise</code>
-    * [.pinToOsRelease(uuidOrIdOrArray, osVersionOrId)](#balena.models.device.pinToOsRelease) ⇒ <code>Promise</code>
-    * [.pinToRelease(uuidOrIdOrArray, fullReleaseHashOrId)](#balena.models.device.pinToRelease) ⇒ <code>Promise</code>
-    * [.pinToSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId)](#balena.models.device.pinToSupervisorRelease) ⇒ <code>Promise</code>
-    * [.purge(uuidOrId)](#balena.models.device.purge) ⇒ <code>Promise</code>
-    * [.reboot(uuidOrId, [options])](#balena.models.device.reboot) ⇒ <code>Promise</code>
-    * [.register(applicationSlugOrUuidOrId, uuid, [deviceTypeSlug])](#balena.models.device.register) ⇒ <code>Promise</code>
-    * [.remove(uuidOrIdOrArray)](#balena.models.device.remove) ⇒ <code>Promise</code>
-    * [.rename(uuidOrId, newName)](#balena.models.device.rename) ⇒ <code>Promise</code>
-    * [.restartApplication(uuidOrId)](#balena.models.device.restartApplication) ⇒ <code>Promise</code>
-    * [.restartService(uuidOrId, imageId)](#balena.models.device.restartService) ⇒ <code>Promise</code>
-    * [.revokeSupportAccess(uuidOrIdOrArray)](#balena.models.device.revokeSupportAccess) ⇒ <code>Promise</code>
-    * [.setCustomLocation(uuidOrIdOrArray, location)](#balena.models.device.setCustomLocation) ⇒ <code>Promise</code>
-    * [.setNote(uuidOrIdOrArray, note)](#balena.models.device.setNote) ⇒ <code>Promise</code>
-    * [.shutdown(uuidOrId, [options])](#balena.models.device.shutdown) ⇒ <code>Promise</code>
-    * [.startOsUpdate(uuidOrUuids, targetOsVersion, [options])](#balena.models.device.startOsUpdate) ⇒ <code>Promise</code>
-    * [.startService(uuidOrId, imageId)](#balena.models.device.startService) ⇒ <code>Promise</code>
-    * [.stopService(uuidOrId, imageId)](#balena.models.device.stopService) ⇒ <code>Promise</code>
-    * [.trackApplicationRelease(uuidOrIdOrArray)](#balena.models.device.trackApplicationRelease) ⇒ <code>Promise</code>
-    * [.unsetCustomLocation(uuidOrIdOrArray)](#balena.models.device.unsetCustomLocation) ⇒ <code>Promise</code>
-    * [.update(uuidOrId, [options])](#balena.models.device.update) ⇒ <code>Promise</code>
-    * [.configVar](#balena.models.device.configVar) : <code>object</code>
-        * [.get(uuidOrId, key)](#balena.models.device.configVar.get) ⇒ <code>Promise</code>
-        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
-        * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
-        * [.remove(uuidOrId, key)](#balena.models.device.configVar.remove) ⇒ <code>Promise</code>
-        * [.set(uuidOrId, key, value)](#balena.models.device.configVar.set) ⇒ <code>Promise</code>
-    * [.envVar](#balena.models.device.envVar) : <code>object</code>
-        * [.get(uuidOrId, key)](#balena.models.device.envVar.get) ⇒ <code>Promise</code>
-        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
-        * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
-        * [.remove(uuidOrId, key)](#balena.models.device.envVar.remove) ⇒ <code>Promise</code>
-        * [.set(uuidOrId, key, value)](#balena.models.device.envVar.set) ⇒ <code>Promise</code>
-    * [.history](#balena.models.device.history) : <code>object</code>
-        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.history.getAllByApplication) ⇒ <code>Promise</code>
-        * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.history.getAllByDevice) ⇒ <code>Promise</code>
-    * [.serviceVar](#balena.models.device.serviceVar) : <code>object</code>
-        * [.get(uuidOrId, serviceNameOrId, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
-        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
-        * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
-        * [.remove(uuidOrId, serviceNameOrId, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
-        * [.set(uuidOrId, serviceNameOrId, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
-    * [.tags](#balena.models.device.tags) : <code>object</code>
-        * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
-        * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
-        * [.remove(uuidOrId, tagKey)](#balena.models.device.tags.remove) ⇒ <code>Promise</code>
-        * [.set(uuidOrId, tagKey, value)](#balena.models.device.tags.set) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.device.deactivate"></a>
+## deactivate
+balena.models.device.deactivate(uuidOrIdOrArray) ⇒ <code>Promise</code>
 
-### device.deactivate(uuidOrIdOrArray) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Deactivate device  
 **Access**: public  
@@ -123,9 +35,9 @@ balena.models.device.deactivate(123);
 
 * * *
 
-<a name="balena.models.device.disableDeviceUrl"></a>
+## disableDeviceUrl
+balena.models.device.disableDeviceUrl(uuidOrIdOrArray) ⇒ <code>Promise</code>
 
-### device.disableDeviceUrl(uuidOrIdOrArray) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Disable device url for a device  
 **Access**: public  
@@ -153,9 +65,9 @@ balena.models.device.disableDeviceUrl(123);
 
 * * *
 
-<a name="balena.models.device.disableLocalMode"></a>
+## disableLocalMode
+balena.models.device.disableLocalMode(uuidOrId) ⇒ <code>Promise</code>
 
-### device.disableLocalMode(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Disable local mode  
 **Access**: public  
@@ -183,9 +95,9 @@ balena.models.device.disableLocalMode(123);
 
 * * *
 
-<a name="balena.models.device.disableLockOverride"></a>
+## disableLockOverride
+balena.models.device.disableLockOverride(uuidOrId) ⇒ <code>Promise</code>
 
-### device.disableLockOverride(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Disable lock override  
 **Access**: public  
@@ -213,9 +125,9 @@ balena.models.device.disableLockOverride(123);
 
 * * *
 
-<a name="balena.models.device.enableDeviceUrl"></a>
+## enableDeviceUrl
+balena.models.device.enableDeviceUrl(uuidOrIdOrArray) ⇒ <code>Promise</code>
 
-### device.enableDeviceUrl(uuidOrIdOrArray) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Enable device url for a device  
 **Access**: public  
@@ -243,9 +155,9 @@ balena.models.device.enableDeviceUrl(123);
 
 * * *
 
-<a name="balena.models.device.enableLocalMode"></a>
+## enableLocalMode
+balena.models.device.enableLocalMode(uuidOrId) ⇒ <code>Promise</code>
 
-### device.enableLocalMode(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Enable local mode  
 **Access**: public  
@@ -273,9 +185,9 @@ balena.models.device.enableLocalMode(123);
 
 * * *
 
-<a name="balena.models.device.enableLockOverride"></a>
+## enableLockOverride
+balena.models.device.enableLockOverride(uuidOrId) ⇒ <code>Promise</code>
 
-### device.enableLockOverride(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Enable lock override  
 **Access**: public  
@@ -303,9 +215,9 @@ balena.models.device.enableLockOverride(123);
 
 * * *
 
-<a name="balena.models.device.generateDeviceKey"></a>
+## generateDeviceKey
+balena.models.device.generateDeviceKey(uuidOrId, [keyName], [keyDescription]) ⇒ <code>Promise</code>
 
-### device.generateDeviceKey(uuidOrId, [keyName], [keyDescription]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Generate a device key  
 **Access**: public  
@@ -343,9 +255,9 @@ balena.models.device.generateDeviceKey(123).then(function(deviceApiKey) {
 
 * * *
 
-<a name="balena.models.device.generateUniqueKey"></a>
+## generateUniqueKey
+balena.models.device.generateUniqueKey() ⇒ <code>String</code>
 
-### device.generateUniqueKey() ⇒ <code>String</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Generate a random key, useful for both uuid and api key.  
 **Returns**: <code>String</code> - A generated key  
@@ -359,9 +271,9 @@ console.log(randomKey);
 
 * * *
 
-<a name="balena.models.device.get"></a>
+## get
+balena.models.device.get(uuidOrId, [options]) ⇒ <code>Promise</code>
 
-### device.get(uuidOrId, [options]) ⇒ <code>Promise</code>
 This method returns a single device by id or uuid.
 In order to have the following computed properties in the result
 you have to explicitly define them in a `$select` in the extra options:
@@ -410,9 +322,9 @@ balena.models.device.get('7cf02a69e4d34c9da573914963cf54fd', { $select: ['overal
 
 * * *
 
-<a name="balena.models.device.getAllByApplication"></a>
+## getAllByApplication
+balena.models.device.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 
-### device.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 This method returns all devices of a specific application.
 In order to have the following computed properties in the result
 you have to explicitly define them in a `$select` in the extra options:
@@ -461,9 +373,9 @@ balena.models.device.getAllByApplication('myorganization/myapp', { $select: ['ov
 
 * * *
 
-<a name="balena.models.device.getAllByOrganization"></a>
+## getAllByOrganization
+balena.models.device.getAllByOrganization(handleOrId, [options]) ⇒ <code>Promise</code>
 
-### device.getAllByOrganization(handleOrId, [options]) ⇒ <code>Promise</code>
 This method returns all devices of a specific application.
 In order to have the following computed properties in the result
 you have to explicitly define them in a `$select` in the extra options:
@@ -512,9 +424,9 @@ balena.models.device.getAllByOrganization('myorganization', { $select: ['overall
 
 * * *
 
-<a name="balena.models.device.getApplicationName"></a>
+## getApplicationName
+balena.models.device.getApplicationName(uuidOrId) ⇒ <code>Promise</code>
 
-### device.getApplicationName(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get application name  
 **Access**: public  
@@ -547,9 +459,9 @@ balena.models.device.getApplicationName(123).then(function(applicationName) {
 
 * * *
 
-<a name="balena.models.device.getByName"></a>
+## getByName
+balena.models.device.getByName(name) ⇒ <code>Promise</code>
 
-### device.getByName(name) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get devices by name  
 **Access**: public  
@@ -576,9 +488,9 @@ balena.models.device.getByName('MyDevice').then(function(devices) {
 
 * * *
 
-<a name="balena.models.device.getDashboardUrl"></a>
+## getDashboardUrl
+balena.models.device.getDashboardUrl(uuid) ⇒ <code>String</code>
 
-### device.getDashboardUrl(uuid) ⇒ <code>String</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get Dashboard URL for a specific device  
 **Returns**: <code>String</code> - - Dashboard URL for the specific device  
@@ -606,9 +518,9 @@ dashboardDeviceUrl = balena.models.device.getDashboardUrl('a44b544b8cc24d11b036c
 
 * * *
 
-<a name="balena.models.device.getDeviceUrl"></a>
+## getDeviceUrl
+balena.models.device.getDeviceUrl(uuidOrId) ⇒ <code>Promise</code>
 
-### device.getDeviceUrl(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get a device url  
 **Access**: public  
@@ -641,9 +553,9 @@ balena.models.device.getDeviceUrl(123).then(function(url) {
 
 * * *
 
-<a name="balena.models.device.getLocalIPAddresses"></a>
+## getLocalIPAddresses
+balena.models.device.getLocalIPAddresses(uuidOrId) ⇒ <code>Promise</code>
 
-### device.getLocalIPAddresses(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the local IP addresses of a device  
 **Access**: public  
@@ -681,9 +593,9 @@ balena.models.device.getLocalIPAddresses(123).then(function(localIPAddresses) {
 
 * * *
 
-<a name="balena.models.device.getLocalModeSupport"></a>
+## getLocalModeSupport
+balena.models.device.getLocalModeSupport(device) ⇒ <code>Object</code>
 
-### device.getLocalModeSupport(device) ⇒ <code>Object</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Returns whether local mode is supported along with a message describing the reason why local mode is not supported.  
 **Returns**: <code>Object</code> - Local mode support info ({ supported: true/false, message: "..." })  
@@ -710,9 +622,9 @@ balena.models.device.get('7cf02a69e4d34c9da573914963cf54fd').then(function(devic
 
 * * *
 
-<a name="balena.models.device.getMACAddresses"></a>
+## getMACAddresses
+balena.models.device.getMACAddresses(uuidOrId) ⇒ <code>Promise</code>
 
-### device.getMACAddresses(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the MAC addresses of a device  
 **Access**: public  
@@ -749,9 +661,9 @@ balena.models.device.getMACAddresses(123).then(function(macAddresses) {
 
 * * *
 
-<a name="balena.models.device.getMetrics"></a>
+## getMetrics
+balena.models.device.getMetrics(uuidOrId) ⇒ <code>Promise</code>
 
-### device.getMetrics(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the metrics related information for a device  
 **Access**: public  
@@ -784,9 +696,9 @@ balena.models.device.getMetrics(123).then(function(deviceMetrics) {
 
 * * *
 
-<a name="balena.models.device.getName"></a>
+## getName
+balena.models.device.getName(uuidOrId) ⇒ <code>Promise</code>
 
-### device.getName(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the name of a device  
 **Access**: public  
@@ -819,9 +731,9 @@ balena.models.device.getName(123).then(function(deviceName) {
 
 * * *
 
-<a name="balena.models.device.getOsVersion"></a>
+## getOsVersion
+balena.models.device.getOsVersion(device) ⇒ <code>String</code>
 
-### device.getOsVersion(device) ⇒ <code>String</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the OS version (version number and variant combined) running on a device  
 **Access**: public  
@@ -849,9 +761,9 @@ balena.models.device.get('7cf02a69e4d34c9da573914963cf54fd').then(function(devic
 
 * * *
 
-<a name="balena.models.device.getProgress"></a>
+## getProgress
+balena.models.device.getProgress(uuidOrId) ⇒ <code>Promise</code>
 
-### device.getProgress(uuidOrId) ⇒ <code>Promise</code>
 Convenience method for getting the overall progress of a device.
 It's recommended to use `balena.models.device.get()` instead,
 in case that you need to retrieve more device fields than just the progress.
@@ -889,9 +801,9 @@ balena.models.device.getProgress(123).then(function(progress) {
 
 * * *
 
-<a name="balena.models.device.getStatus"></a>
+## getStatus
+balena.models.device.getStatus(uuidOrId) ⇒ <code>Promise</code>
 
-### device.getStatus(uuidOrId) ⇒ <code>Promise</code>
 Convenience method for getting the overall status of a device.
 It's recommended to use `balena.models.device.get()` instead,
 in case that you need to retrieve more device fields than just the status.
@@ -929,9 +841,9 @@ balena.models.device.getStatus(123).then(function(status) {
 
 * * *
 
-<a name="balena.models.device.getSupervisorState"></a>
+## getSupervisorState
+balena.models.device.getSupervisorState(uuidOrId) ⇒ <code>Promise</code>
 
-### device.getSupervisorState(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the supervisor state on a device  
 **Access**: public  
@@ -963,9 +875,9 @@ balena.models.device.getSupervisorState(123).then(function(state) {
 
 * * *
 
-<a name="balena.models.device.getSupervisorTargetState"></a>
+## getSupervisorTargetState
+balena.models.device.getSupervisorTargetState(uuidOrId, version) ⇒ <code>Promise</code>
 
-### device.getSupervisorTargetState(uuidOrId, version) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the target supervisor state on a device  
 **Access**: public  
@@ -1006,9 +918,9 @@ balena.models.device.getSupervisorTargetState(123, 3).then(function(state) {
 
 * * *
 
-<a name="balena.models.device.getSupervisorTargetStateForApp"></a>
+## getSupervisorTargetStateForApp
+balena.models.device.getSupervisorTargetStateForApp(uuidOrId, release) ⇒ <code>Promise</code>
 
-### device.getSupervisorTargetStateForApp(uuidOrId, release) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the target supervisor state on a "generic" device on a fleet  
 **Access**: public  
@@ -1049,9 +961,9 @@ balena.models.device.getSupervisorTargetStateForApp(123, '7cf02a69e4d34c9da57391
 
 * * *
 
-<a name="balena.models.device.getTargetReleaseHash"></a>
+## getTargetReleaseHash
+balena.models.device.getTargetReleaseHash(uuidOrId) ⇒ <code>Promise</code>
 
-### device.getTargetReleaseHash(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get the hash of the currently tracked release for a specific device  
 **Access**: public  
@@ -1084,9 +996,9 @@ balena.models.device.getTargetReleaseHash('7cf02a69e4d34c9da573914963cf54fd', fu
 
 * * *
 
-<a name="balena.models.device.getWithServiceDetails"></a>
+## getWithServiceDetails
+balena.models.device.getWithServiceDetails(uuidOrId, [options]) ⇒ <code>Promise</code>
 
-### device.getWithServiceDetails(uuidOrId, [options]) ⇒ <code>Promise</code>
 This method does not map exactly to the underlying model: it runs a
 larger prebuilt query, and reformats it into an easy to use and
 understand format. If you want more control, or to see the raw model
@@ -1128,9 +1040,9 @@ balena.models.device.getWithServiceDetails(123).then(function(device) {
 
 * * *
 
-<a name="balena.models.device.grantSupportAccess"></a>
+## grantSupportAccess
+balena.models.device.grantSupportAccess(uuidOrIdOrArray, expiryTimestamp) ⇒ <code>Promise</code>
 
-### device.grantSupportAccess(uuidOrIdOrArray, expiryTimestamp) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Grant support access to a device until a specified time  
 **Access**: public  
@@ -1161,9 +1073,9 @@ balena.models.device.grantSupportAccess(123, Date.now() + 3600 * 1000);
 
 * * *
 
-<a name="balena.models.device.has"></a>
+## has
+balena.models.device.has(uuidOrId) ⇒ <code>Promise</code>
 
-### device.has(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Check if a device exists  
 **Access**: public  
@@ -1196,9 +1108,9 @@ balena.models.device.has(123).then(function(hasDevice) {
 
 * * *
 
-<a name="balena.models.device.hasDeviceUrl"></a>
+## hasDeviceUrl
+balena.models.device.hasDeviceUrl(uuidOrId) ⇒ <code>Promise</code>
 
-### device.hasDeviceUrl(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Check if a device is web accessible with device utls  
 **Access**: public  
@@ -1235,9 +1147,9 @@ balena.models.device.hasDeviceUrl(123).then(function(hasDeviceUrl) {
 
 * * *
 
-<a name="balena.models.device.hasLockOverride"></a>
+## hasLockOverride
+balena.models.device.hasLockOverride(uuidOrId) ⇒ <code>Promise</code>
 
-### device.hasLockOverride(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Check if a device has the lock override enabled  
 **Access**: public  
@@ -1265,9 +1177,9 @@ balena.models.device.hasLockOverride(123);
 
 * * *
 
-<a name="balena.models.device.identify"></a>
+## identify
+balena.models.device.identify(uuidOrId) ⇒ <code>Promise</code>
 
-### device.identify(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Identify device  
 **Access**: public  
@@ -1295,9 +1207,9 @@ balena.models.device.identify(123);
 
 * * *
 
-<a name="balena.models.device.isInLocalMode"></a>
+## isInLocalMode
+balena.models.device.isInLocalMode(uuidOrId) ⇒ <code>Promise</code>
 
-### device.isInLocalMode(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Check if local mode is enabled on the device  
 **Access**: public  
@@ -1334,9 +1246,9 @@ balena.models.device.isInLocalMode(123).then(function(isInLocalMode) {
 
 * * *
 
-<a name="balena.models.device.isOnline"></a>
+## isOnline
+balena.models.device.isOnline(uuidOrId) ⇒ <code>Promise</code>
 
-### device.isOnline(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Check if a device is online  
 **Access**: public  
@@ -1369,9 +1281,9 @@ balena.models.device.isOnline(123).then(function(isOnline) {
 
 * * *
 
-<a name="balena.models.device.isTrackingApplicationRelease"></a>
+## isTrackingApplicationRelease
+balena.models.device.isTrackingApplicationRelease(uuidOrId) ⇒ <code>Promise</code>
 
-### device.isTrackingApplicationRelease(uuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Get whether the device is configured to track the current application release  
 **Access**: public  
@@ -1398,9 +1310,9 @@ balena.models.device.isTrackingApplicationRelease('7cf02a69e4d34c9da573914963cf5
 
 * * *
 
-<a name="balena.models.device.move"></a>
+## move
+balena.models.device.move(uuidOrIdOrArray, applicationSlugOrUuidOrId) ⇒ <code>Promise</code>
 
-### device.move(uuidOrIdOrArray, applicationSlugOrUuidOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Move a device to another application  
 **Access**: public  
@@ -1435,9 +1347,9 @@ balena.models.device.move(123, 456);
 
 * * *
 
-<a name="balena.models.device.ping"></a>
+## ping
+balena.models.device.ping(uuidOrId) ⇒ <code>Promise</code>
 
-### device.ping(uuidOrId) ⇒ <code>Promise</code>
 This is useful to signal that the supervisor is alive and responding.
 
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
@@ -1467,9 +1379,9 @@ balena.models.device.ping(123);
 
 * * *
 
-<a name="balena.models.device.pinToOsRelease"></a>
+## pinToOsRelease
+balena.models.device.pinToOsRelease(uuidOrIdOrArray, osVersionOrId) ⇒ <code>Promise</code>
 
-### device.pinToOsRelease(uuidOrIdOrArray, osVersionOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Mark a specific device to be updated to a particular OS release  
 **Access**: public  
@@ -1500,9 +1412,9 @@ await balena.models.device.pinToOsRelease('7cf02a687b74206f92cb455969cf8e98', '2
 
 * * *
 
-<a name="balena.models.device.pinToRelease"></a>
+## pinToRelease
+balena.models.device.pinToRelease(uuidOrIdOrArray, fullReleaseHashOrId) ⇒ <code>Promise</code>
 
-### device.pinToRelease(uuidOrIdOrArray, fullReleaseHashOrId) ⇒ <code>Promise</code>
 Configures the device to run a particular release
 and not get updated when the current application release changes.
 
@@ -1540,9 +1452,9 @@ balena.models.device.pinToRelease(123, 'f7caf4ff80114deeaefb7ab4447ad9c661c50847
 
 * * *
 
-<a name="balena.models.device.pinToSupervisorRelease"></a>
+## pinToSupervisorRelease
+balena.models.device.pinToSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId) ⇒ <code>Promise</code>
 
-### device.pinToSupervisorRelease(uuidOrIdOrArray, supervisorVersionOrId) ⇒ <code>Promise</code>
 Configures the device to run a particular supervisor release.
 
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
@@ -1579,9 +1491,9 @@ balena.models.device.pinToSupervisorRelease(123, '11.4.14').then(function() {
 
 * * *
 
-<a name="balena.models.device.purge"></a>
+## purge
+balena.models.device.purge(uuidOrId) ⇒ <code>Promise</code>
 
-### device.purge(uuidOrId) ⇒ <code>Promise</code>
 This function clears the user application's `/data` directory.
 
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
@@ -1611,9 +1523,9 @@ balena.models.device.purge(123);
 
 * * *
 
-<a name="balena.models.device.reboot"></a>
+## reboot
+balena.models.device.reboot(uuidOrId, [options]) ⇒ <code>Promise</code>
 
-### device.reboot(uuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Reboot device  
 **Access**: public  
@@ -1647,9 +1559,9 @@ balena.models.device.reboot(123);
 
 * * *
 
-<a name="balena.models.device.register"></a>
+## register
+balena.models.device.register(applicationSlugOrUuidOrId, uuid, [deviceTypeSlug]) ⇒ <code>Promise</code>
 
-### device.register(applicationSlugOrUuidOrId, uuid, [deviceTypeSlug]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Register a new device with a Balena application.  
 **Access**: public  
@@ -1697,9 +1609,9 @@ balena.models.device.register(123, uuid).then(function(registrationInfo) {
 
 * * *
 
-<a name="balena.models.device.remove"></a>
+## remove
+balena.models.device.remove(uuidOrIdOrArray) ⇒ <code>Promise</code>
 
-### device.remove(uuidOrIdOrArray) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Remove device  
 **Access**: public  
@@ -1727,9 +1639,9 @@ balena.models.device.remove(123);
 
 * * *
 
-<a name="balena.models.device.rename"></a>
+## rename
+balena.models.device.rename(uuidOrId, newName) ⇒ <code>Promise</code>
 
-### device.rename(uuidOrId, newName) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Rename device  
 **Access**: public  
@@ -1760,9 +1672,9 @@ balena.models.device.rename(123, 'NewName');
 
 * * *
 
-<a name="balena.models.device.restartApplication"></a>
+## restartApplication
+balena.models.device.restartApplication(uuidOrId) ⇒ <code>Promise</code>
 
-### device.restartApplication(uuidOrId) ⇒ <code>Promise</code>
 This function restarts the Docker container running
 the application on the device, but doesn't reboot
 the device itself.
@@ -1794,9 +1706,9 @@ balena.models.device.restartApplication(123);
 
 * * *
 
-<a name="balena.models.device.restartService"></a>
+## restartService
+balena.models.device.restartService(uuidOrId, imageId) ⇒ <code>Promise</code>
 
-### device.restartService(uuidOrId, imageId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Restart a service on a device  
 **Access**: public  
@@ -1831,9 +1743,9 @@ balena.models.device.restartService(1, 123).then(function() {
 
 * * *
 
-<a name="balena.models.device.revokeSupportAccess"></a>
+## revokeSupportAccess
+balena.models.device.revokeSupportAccess(uuidOrIdOrArray) ⇒ <code>Promise</code>
 
-### device.revokeSupportAccess(uuidOrIdOrArray) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Revoke support access to a device  
 **Access**: public  
@@ -1861,9 +1773,9 @@ balena.models.device.revokeSupportAccess(123);
 
 * * *
 
-<a name="balena.models.device.setCustomLocation"></a>
+## setCustomLocation
+balena.models.device.setCustomLocation(uuidOrIdOrArray, location) ⇒ <code>Promise</code>
 
-### device.setCustomLocation(uuidOrIdOrArray, location) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Set a custom location for a device  
 **Access**: public  
@@ -1894,9 +1806,9 @@ balena.models.device.setCustomLocation(123, { latitude: 123, longitude: 456 });
 
 * * *
 
-<a name="balena.models.device.setNote"></a>
+## setNote
+balena.models.device.setNote(uuidOrIdOrArray, note) ⇒ <code>Promise</code>
 
-### device.setNote(uuidOrIdOrArray, note) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Note a device  
 **Access**: public  
@@ -1927,9 +1839,9 @@ balena.models.device.setNote(123, 'My useful note');
 
 * * *
 
-<a name="balena.models.device.shutdown"></a>
+## shutdown
+balena.models.device.shutdown(uuidOrId, [options]) ⇒ <code>Promise</code>
 
-### device.shutdown(uuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Shutdown device  
 **Access**: public  
@@ -1963,9 +1875,9 @@ balena.models.device.shutdown(123);
 
 * * *
 
-<a name="balena.models.device.startOsUpdate"></a>
+## startOsUpdate
+balena.models.device.startOsUpdate(uuidOrUuids, targetOsVersion, [options]) ⇒ <code>Promise</code>
 
-### device.startOsUpdate(uuidOrUuids, targetOsVersion, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Start an OS update on a device  
 **Access**: public  
@@ -2004,9 +1916,9 @@ balena.models.device.startOsUpdate('7cf02a687b74206f92cb455969cf8e98', '2.29.2+r
 
 * * *
 
-<a name="balena.models.device.startService"></a>
+## startService
+balena.models.device.startService(uuidOrId, imageId) ⇒ <code>Promise</code>
 
-### device.startService(uuidOrId, imageId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Start a service on a device  
 **Access**: public  
@@ -2041,9 +1953,9 @@ balena.models.device.startService(1, 123).then(function() {
 
 * * *
 
-<a name="balena.models.device.stopService"></a>
+## stopService
+balena.models.device.stopService(uuidOrId, imageId) ⇒ <code>Promise</code>
 
-### device.stopService(uuidOrId, imageId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Stop a service on a device  
 **Access**: public  
@@ -2078,9 +1990,9 @@ balena.models.device.stopService(1, 123).then(function() {
 
 * * *
 
-<a name="balena.models.device.trackApplicationRelease"></a>
+## trackApplicationRelease
+balena.models.device.trackApplicationRelease(uuidOrIdOrArray) ⇒ <code>Promise</code>
 
-### device.trackApplicationRelease(uuidOrIdOrArray) ⇒ <code>Promise</code>
 The device's current release will be updated with each new successfully built release.
 
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
@@ -2108,9 +2020,9 @@ balena.models.device.trackApplicationRelease('7cf02a69e4d34c9da573914963cf54fd')
 
 * * *
 
-<a name="balena.models.device.unsetCustomLocation"></a>
+## unsetCustomLocation
+balena.models.device.unsetCustomLocation(uuidOrIdOrArray) ⇒ <code>Promise</code>
 
-### device.unsetCustomLocation(uuidOrIdOrArray) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Clear the custom location of a device  
 **Access**: public  
@@ -2138,9 +2050,9 @@ balena.models.device.unsetCustomLocation(123);
 
 * * *
 
-<a name="balena.models.device.update"></a>
+## update
+balena.models.device.update(uuidOrId, [options]) ⇒ <code>Promise</code>
 
-### device.update(uuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Trigger an update check on the supervisor  
 **Access**: public  
@@ -2178,24 +2090,16 @@ balena.models.device.update(123, {
 
 * * *
 
-<a name="balena.models.device.configVar"></a>
+## configVar
+balena.models.device.configVar : <code>object</code>
 
-### device.configVar : <code>object</code>
 **Kind**: static namespace of [<code>device</code>](#balena.models.device)  
-
-* [.configVar](#balena.models.device.configVar) : <code>object</code>
-    * [.get(uuidOrId, key)](#balena.models.device.configVar.get) ⇒ <code>Promise</code>
-    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.configVar.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.configVar.getAllByDevice) ⇒ <code>Promise</code>
-    * [.remove(uuidOrId, key)](#balena.models.device.configVar.remove) ⇒ <code>Promise</code>
-    * [.set(uuidOrId, key, value)](#balena.models.device.configVar.set) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.device.configVar.get"></a>
+### get
+balena.models.device.configVar.get(uuidOrId, key) ⇒ <code>Promise</code>
 
-#### configVar.get(uuidOrId, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>configVar</code>](#balena.models.device.configVar)  
 **Summary**: Get the value of a specific config variable  
 **Access**: public  
@@ -2231,9 +2135,9 @@ balena.models.device.configVar.get(999999, 'BALENA_VAR').then(function(value) {
 
 * * *
 
-<a name="balena.models.device.configVar.getAllByApplication"></a>
+### getAllByApplication
+balena.models.device.configVar.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 
-#### configVar.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>configVar</code>](#balena.models.device.configVar)  
 **Summary**: Get all device config variables by application  
 **Access**: public  
@@ -2269,9 +2173,9 @@ balena.models.device.configVar.getAllByApplication(999999).then(function(vars) {
 
 * * *
 
-<a name="balena.models.device.configVar.getAllByDevice"></a>
+### getAllByDevice
+balena.models.device.configVar.getAllByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
 
-#### configVar.getAllByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>configVar</code>](#balena.models.device.configVar)  
 **Summary**: Get all config variables for a device  
 **Access**: public  
@@ -2307,9 +2211,9 @@ balena.models.device.configVar.getAllByDevice(999999).then(function(vars) {
 
 * * *
 
-<a name="balena.models.device.configVar.remove"></a>
+### remove
+balena.models.device.configVar.remove(uuidOrId, key) ⇒ <code>Promise</code>
 
-#### configVar.remove(uuidOrId, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>configVar</code>](#balena.models.device.configVar)  
 **Summary**: Clear the value of a specific config variable  
 **Access**: public  
@@ -2344,9 +2248,9 @@ balena.models.device.configVar.remove(999999, 'BALENA_VAR').then(function() {
 
 * * *
 
-<a name="balena.models.device.configVar.set"></a>
+### set
+balena.models.device.configVar.set(uuidOrId, key, value) ⇒ <code>Promise</code>
 
-#### configVar.set(uuidOrId, key, value) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>configVar</code>](#balena.models.device.configVar)  
 **Summary**: Set the value of a specific config variable  
 **Access**: public  
@@ -2384,24 +2288,16 @@ balena.models.device.configVar.set(999999, 'BALENA_VAR', 'newvalue').then(functi
 
 * * *
 
-<a name="balena.models.device.envVar"></a>
+## envVar
+balena.models.device.envVar : <code>object</code>
 
-### device.envVar : <code>object</code>
 **Kind**: static namespace of [<code>device</code>](#balena.models.device)  
-
-* [.envVar](#balena.models.device.envVar) : <code>object</code>
-    * [.get(uuidOrId, key)](#balena.models.device.envVar.get) ⇒ <code>Promise</code>
-    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.envVar.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.envVar.getAllByDevice) ⇒ <code>Promise</code>
-    * [.remove(uuidOrId, key)](#balena.models.device.envVar.remove) ⇒ <code>Promise</code>
-    * [.set(uuidOrId, key, value)](#balena.models.device.envVar.set) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.device.envVar.get"></a>
+### get
+balena.models.device.envVar.get(uuidOrId, key) ⇒ <code>Promise</code>
 
-#### envVar.get(uuidOrId, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>envVar</code>](#balena.models.device.envVar)  
 **Summary**: Get the value of a specific environment variable  
 **Access**: public  
@@ -2437,9 +2333,9 @@ balena.models.device.envVar.get(999999, 'VAR').then(function(value) {
 
 * * *
 
-<a name="balena.models.device.envVar.getAllByApplication"></a>
+### getAllByApplication
+balena.models.device.envVar.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 
-#### envVar.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>envVar</code>](#balena.models.device.envVar)  
 **Summary**: Get all device environment variables by application  
 **Access**: public  
@@ -2475,9 +2371,9 @@ balena.models.device.envVar.getAllByApplication(999999).then(function(vars) {
 
 * * *
 
-<a name="balena.models.device.envVar.getAllByDevice"></a>
+### getAllByDevice
+balena.models.device.envVar.getAllByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
 
-#### envVar.getAllByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>envVar</code>](#balena.models.device.envVar)  
 **Summary**: Get all environment variables for a device  
 **Access**: public  
@@ -2513,9 +2409,9 @@ balena.models.device.envVar.getAllByDevice(999999).then(function(vars) {
 
 * * *
 
-<a name="balena.models.device.envVar.remove"></a>
+### remove
+balena.models.device.envVar.remove(uuidOrId, key) ⇒ <code>Promise</code>
 
-#### envVar.remove(uuidOrId, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>envVar</code>](#balena.models.device.envVar)  
 **Summary**: Clear the value of a specific environment variable  
 **Access**: public  
@@ -2550,9 +2446,9 @@ balena.models.device.envVar.remove(999999, 'VAR').then(function() {
 
 * * *
 
-<a name="balena.models.device.envVar.set"></a>
+### set
+balena.models.device.envVar.set(uuidOrId, key, value) ⇒ <code>Promise</code>
 
-#### envVar.set(uuidOrId, key, value) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>envVar</code>](#balena.models.device.envVar)  
 **Summary**: Set the value of a specific environment variable  
 **Access**: public  
@@ -2590,21 +2486,16 @@ balena.models.device.envVar.set(999999, 'VAR', 'newvalue').then(function() {
 
 * * *
 
-<a name="balena.models.device.history"></a>
+## history
+balena.models.device.history : <code>object</code>
 
-### device.history : <code>object</code>
 **Kind**: static namespace of [<code>device</code>](#balena.models.device)  
-
-* [.history](#balena.models.device.history) : <code>object</code>
-    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.history.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.history.getAllByDevice) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.device.history.getAllByApplication"></a>
+### getAllByApplication
+balena.models.device.history.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 
-#### history.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>history</code>](#balena.models.device.history)  
 **Summary**: Get all device history entries by application with time frame  
 **Access**: public  
@@ -2662,9 +2553,9 @@ balena.models.device.history.getAllByApplication(
 
 * * *
 
-<a name="balena.models.device.history.getAllByDevice"></a>
+### getAllByDevice
+balena.models.device.history.getAllByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
 
-#### history.getAllByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>history</code>](#balena.models.device.history)  
 **Summary**: Get all history entries for a device  
 **Access**: public  
@@ -2720,24 +2611,16 @@ balena.models.device.history.getAllByDevice(
 
 * * *
 
-<a name="balena.models.device.serviceVar"></a>
+## serviceVar
+balena.models.device.serviceVar : <code>object</code>
 
-### device.serviceVar : <code>object</code>
 **Kind**: static namespace of [<code>device</code>](#balena.models.device)  
-
-* [.serviceVar](#balena.models.device.serviceVar) : <code>object</code>
-    * [.get(uuidOrId, serviceNameOrId, key)](#balena.models.device.serviceVar.get) ⇒ <code>Promise</code>
-    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.serviceVar.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.serviceVar.getAllByDevice) ⇒ <code>Promise</code>
-    * [.remove(uuidOrId, serviceNameOrId, key)](#balena.models.device.serviceVar.remove) ⇒ <code>Promise</code>
-    * [.set(uuidOrId, serviceNameOrId, key, value)](#balena.models.device.serviceVar.set) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.device.serviceVar.get"></a>
+### get
+balena.models.device.serviceVar.get(uuidOrId, serviceNameOrId, key) ⇒ <code>Promise</code>
 
-#### serviceVar.get(uuidOrId, serviceNameOrId, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>serviceVar</code>](#balena.models.device.serviceVar)  
 **Summary**: Get the overriden value of a service variable on a device  
 **Access**: public  
@@ -2782,9 +2665,9 @@ balena.models.device.serviceVar.get(999999, 123, 'VAR').then(function(value) {
 
 * * *
 
-<a name="balena.models.device.serviceVar.getAllByApplication"></a>
+### getAllByApplication
+balena.models.device.serviceVar.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 
-#### serviceVar.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>serviceVar</code>](#balena.models.device.serviceVar)  
 **Summary**: Get all device service variable overrides by application  
 **Access**: public  
@@ -2820,9 +2703,9 @@ balena.models.device.serviceVar.getAllByApplication(999999).then(function(vars) 
 
 * * *
 
-<a name="balena.models.device.serviceVar.getAllByDevice"></a>
+### getAllByDevice
+balena.models.device.serviceVar.getAllByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
 
-#### serviceVar.getAllByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>serviceVar</code>](#balena.models.device.serviceVar)  
 **Summary**: Get all service variable overrides for a device  
 **Access**: public  
@@ -2858,9 +2741,9 @@ balena.models.device.serviceVar.getAllByDevice(999999).then(function(vars) {
 
 * * *
 
-<a name="balena.models.device.serviceVar.remove"></a>
+### remove
+balena.models.device.serviceVar.remove(uuidOrId, serviceNameOrId, key) ⇒ <code>Promise</code>
 
-#### serviceVar.remove(uuidOrId, serviceNameOrId, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>serviceVar</code>](#balena.models.device.serviceVar)  
 **Summary**: Clear the overridden value of a service variable on a device  
 **Access**: public  
@@ -2904,9 +2787,9 @@ balena.models.device.serviceVar.remove(999999, 123, 'VAR').then(function() {
 
 * * *
 
-<a name="balena.models.device.serviceVar.set"></a>
+### set
+balena.models.device.serviceVar.set(uuidOrId, serviceNameOrId, key, value) ⇒ <code>Promise</code>
 
-#### serviceVar.set(uuidOrId, serviceNameOrId, key, value) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>serviceVar</code>](#balena.models.device.serviceVar)  
 **Summary**: Set the overriden value of a service variable on a device  
 **Access**: public  
@@ -2953,23 +2836,16 @@ balena.models.device.serviceVar.set(999999, 123, 'VAR', 'override').then(functio
 
 * * *
 
-<a name="balena.models.device.tags"></a>
+## tags
+balena.models.device.tags : <code>object</code>
 
-### device.tags : <code>object</code>
 **Kind**: static namespace of [<code>device</code>](#balena.models.device)  
-
-* [.tags](#balena.models.device.tags) : <code>object</code>
-    * [.getAllByApplication(slugOrUuidOrId, [options])](#balena.models.device.tags.getAllByApplication) ⇒ <code>Promise</code>
-    * [.getAllByDevice(uuidOrId, [options])](#balena.models.device.tags.getAllByDevice) ⇒ <code>Promise</code>
-    * [.remove(uuidOrId, tagKey)](#balena.models.device.tags.remove) ⇒ <code>Promise</code>
-    * [.set(uuidOrId, tagKey, value)](#balena.models.device.tags.set) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.device.tags.getAllByApplication"></a>
+### getAllByApplication
+balena.models.device.tags.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 
-#### tags.getAllByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>tags</code>](#balena.models.device.tags)  
 **Summary**: Get all device tags for an application  
 **Access**: public  
@@ -3005,9 +2881,9 @@ balena.models.device.tags.getAllByApplication(999999).then(function(tags) {
 
 * * *
 
-<a name="balena.models.device.tags.getAllByDevice"></a>
+### getAllByDevice
+balena.models.device.tags.getAllByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
 
-#### tags.getAllByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>tags</code>](#balena.models.device.tags)  
 **Summary**: Get all device tags for a device  
 **Access**: public  
@@ -3043,9 +2919,9 @@ balena.models.device.tags.getAllByDevice(123).then(function(tags) {
 
 * * *
 
-<a name="balena.models.device.tags.remove"></a>
+### remove
+balena.models.device.tags.remove(uuidOrId, tagKey) ⇒ <code>Promise</code>
 
-#### tags.remove(uuidOrId, tagKey) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>tags</code>](#balena.models.device.tags)  
 **Summary**: Remove a device tag  
 **Access**: public  
@@ -3072,9 +2948,9 @@ balena.models.device.tags.remove('7cf02a69e4d34c9da573914963cf54fd', 'EDITOR');
 
 * * *
 
-<a name="balena.models.device.tags.set"></a>
+### set
+balena.models.device.tags.set(uuidOrId, tagKey, value) ⇒ <code>Promise</code>
 
-#### tags.set(uuidOrId, tagKey, value) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>tags</code>](#balena.models.device.tags)  
 **Summary**: Set a device tag  
 **Access**: public  

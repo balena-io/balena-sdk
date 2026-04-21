@@ -1,18 +1,13 @@
-<a name="balena.models.image"></a>
+# image
+balena.models.image : <code>object</code>
 
-## .image : <code>object</code>
 **Kind**: static namespace  
-
-* [.image](#balena.models.image) : <code>object</code>
-    * [.get(id, [options])](#balena.models.image.get) ⇒ <code>Promise</code>
-    * [.getLogs(id)](#balena.models.image.getLogs) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.image.get"></a>
+## get
+balena.models.image.get(id, [options]) ⇒ <code>Promise</code>
 
-### image.get(id, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>image</code>](#balena.models.image)  
 **Summary**: Get a specific image  
 **Access**: public  
@@ -42,9 +37,9 @@ balena.models.image.get(123).then(function(image) {
 
 * * *
 
-<a name="balena.models.image.getLogs"></a>
+## getLogs
+balena.models.image.getLogs(id) ⇒ <code>Promise</code>
 
-### image.getLogs(id) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>image</code>](#balena.models.image)  
 **Summary**: Get the logs for an image  
 **Access**: public  

@@ -1,18 +1,13 @@
-<a name="balena.settings"></a>
+# settings
+balena.settings : <code>object</code>
 
-## .settings : <code>object</code>
 **Kind**: static namespace  
-
-* [.settings](#balena.settings) : <code>object</code>
-    * [.get([key])](#balena.settings.get) ⇒ <code>Promise</code>
-    * [.getAll()](#balena.settings.getAll) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.settings.get"></a>
+## get
+balena.settings.get([key]) ⇒ <code>Promise</code>
 
-### settings.get([key]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>settings</code>](#balena.settings)  
 **Summary**: Get a single setting. **Only implemented in Node.js**  
 **Access**: public  
@@ -39,9 +34,9 @@ balena.settings.get('apiUrl').then(function(apiUrl) {
 
 * * *
 
-<a name="balena.settings.getAll"></a>
+## getAll
+balena.settings.getAll() ⇒ <code>Promise</code>
 
-### settings.getAll() ⇒ <code>Promise</code>
 **Kind**: static method of [<code>settings</code>](#balena.settings)  
 **Summary**: Get all settings **Only implemented in Node.js**  
 **Access**: public  

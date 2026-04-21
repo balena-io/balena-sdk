@@ -1,23 +1,13 @@
-<a name="balena.models.apiKey"></a>
+# apiKey
+balena.models.apiKey : <code>object</code>
 
-## .apiKey : <code>object</code>
 **Kind**: static namespace  
-
-* [.apiKey](#balena.models.apiKey) : <code>object</code>
-    * [.create(createApiKeyParams)](#balena.models.apiKey.create) ⇒ <code>Promise</code>
-    * [.getAll([options])](#balena.models.apiKey.getAll) ⇒ <code>Promise</code>
-    * [.getAllNamedUserApiKeys([options])](#balena.models.apiKey.getAllNamedUserApiKeys) ⇒ <code>Promise</code>
-    * [.getDeviceApiKeysByDevice(uuidOrId, [options])](#balena.models.apiKey.getDeviceApiKeysByDevice) ⇒ <code>Promise</code>
-    * [.getProvisioningApiKeysByApplication(slugOrUuidOrId, [options])](#balena.models.apiKey.getProvisioningApiKeysByApplication) ⇒ <code>Promise</code>
-    * [.revoke(id)](#balena.models.apiKey.revoke) ⇒ <code>Promise</code>
-    * [.update(id, apiKeyInfo)](#balena.models.apiKey.update) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.apiKey.create"></a>
+## create
+balena.models.apiKey.create(createApiKeyParams) ⇒ <code>Promise</code>
 
-### apiKey.create(createApiKeyParams) ⇒ <code>Promise</code>
 This method registers a new api key for the current user with the name given.
 
 **Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
@@ -61,9 +51,9 @@ balena.models.apiKey.create({name: apiKeyName, expiryDate: 2030-10-12, descripti
 
 * * *
 
-<a name="balena.models.apiKey.getAll"></a>
+## getAll
+balena.models.apiKey.getAll([options]) ⇒ <code>Promise</code>
 
-### apiKey.getAll([options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
 **Summary**: Get all accessible API keys  
 **Access**: public  
@@ -90,9 +80,9 @@ balena.models.apiKey.getAll().then(function(apiKeys) {
 
 * * *
 
-<a name="balena.models.apiKey.getAllNamedUserApiKeys"></a>
+## getAllNamedUserApiKeys
+balena.models.apiKey.getAllNamedUserApiKeys([options]) ⇒ <code>Promise</code>
 
-### apiKey.getAllNamedUserApiKeys([options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
 **Summary**: Get all named user API keys of the current user  
 **Access**: public  
@@ -119,9 +109,9 @@ balena.models.apiKey.getAllNamedUserApiKeys().then(function(apiKeys) {
 
 * * *
 
-<a name="balena.models.apiKey.getDeviceApiKeysByDevice"></a>
+## getDeviceApiKeysByDevice
+balena.models.apiKey.getDeviceApiKeysByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
 
-### apiKey.getDeviceApiKeysByDevice(uuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
 **Summary**: Get all API keys for a device  
 **Access**: public  
@@ -151,9 +141,9 @@ balena.models.apiKey.getDeviceApiKeysByDevice('7cf02a69e4d34c9da573914963cf54fd'
 
 * * *
 
-<a name="balena.models.apiKey.getProvisioningApiKeysByApplication"></a>
+## getProvisioningApiKeysByApplication
+balena.models.apiKey.getProvisioningApiKeysByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 
-### apiKey.getProvisioningApiKeysByApplication(slugOrUuidOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
 **Summary**: Get all provisioning API keys for an application  
 **Access**: public  
@@ -183,9 +173,9 @@ balena.models.apiKey.getProvisioningApiKeysByApplication('myorganization/myapp')
 
 * * *
 
-<a name="balena.models.apiKey.revoke"></a>
+## revoke
+balena.models.apiKey.revoke(id) ⇒ <code>Promise</code>
 
-### apiKey.revoke(id) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
 **Summary**: Revoke an API key  
 **Access**: public  
@@ -209,9 +199,9 @@ balena.models.apiKey.revoke(123);
 
 * * *
 
-<a name="balena.models.apiKey.update"></a>
+## update
+balena.models.apiKey.update(id, apiKeyInfo) ⇒ <code>Promise</code>
 
-### apiKey.update(id, apiKeyInfo) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>apiKey</code>](#balena.models.apiKey)  
 **Summary**: Update the details of an API key  
 **Access**: public  

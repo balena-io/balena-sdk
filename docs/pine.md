@@ -1,6 +1,6 @@
-<a name="balena.pine"></a>
+# pine
+balena.pine : <code>Object</code>
 
-## .pine : <code>Object</code>
 The pinejs-client instance used internally. This should not be necessary
 in normal usage, but can be useful if you want to directly make pine
 queries to the api for some resource that isn't directly supported

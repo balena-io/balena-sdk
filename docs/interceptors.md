@@ -1,6 +1,6 @@
-<a name="balena.interceptors"></a>
+# interceptors
+balena.interceptors : <code>Array.&lt;Interceptor&gt;</code>
 
-## .interceptors : <code>Array.&lt;Interceptor&gt;</code>
 The current array of interceptors to use. Interceptors intercept requests made
 internally and are executed in the order they appear in this array for requests,
 and in the reverse order for responses.
@@ -20,9 +20,9 @@ balena.interceptors.push({
 
 * * *
 
-<a name="balena.interceptors.Interceptor"></a>
+## Interceptor
+balena.interceptors.Interceptor : <code>object</code>
 
-### interceptors.Interceptor : <code>object</code>
 An interceptor implements some set of the four interception hook callbacks.
 To continue processing, each function should return a value or a promise that
 successfully resolves to a value.

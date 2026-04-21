@@ -1,20 +1,13 @@
-<a name="balena.models.key"></a>
+# key
+balena.models.key : <code>object</code>
 
-## .key : <code>object</code>
 **Kind**: static namespace  
-
-* [.key](#balena.models.key) : <code>object</code>
-    * [.create(title, key)](#balena.models.key.create) ⇒ <code>Promise</code>
-    * [.get(id)](#balena.models.key.get) ⇒ <code>Promise</code>
-    * [.getAll([options])](#balena.models.key.getAll) ⇒ <code>Promise</code>
-    * [.remove(id)](#balena.models.key.remove) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.key.create"></a>
+## create
+balena.models.key.create(title, key) ⇒ <code>Promise</code>
 
-### key.create(title, key) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>key</code>](#balena.models.key)  
 **Summary**: Create a ssh key  
 **Access**: public  
@@ -44,9 +37,9 @@ balena.models.key.create('Main', 'ssh-rsa AAAAB....').then(function(key) {
 
 * * *
 
-<a name="balena.models.key.get"></a>
+## get
+balena.models.key.get(id) ⇒ <code>Promise</code>
 
-### key.get(id) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>key</code>](#balena.models.key)  
 **Summary**: Get a single ssh key  
 **Access**: public  
@@ -73,9 +66,9 @@ balena.models.key.get(51).then(function(key) {
 
 * * *
 
-<a name="balena.models.key.getAll"></a>
+## getAll
+balena.models.key.getAll([options]) ⇒ <code>Promise</code>
 
-### key.getAll([options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>key</code>](#balena.models.key)  
 **Summary**: Get all ssh keys  
 **Access**: public  
@@ -102,9 +95,9 @@ balena.models.key.getAll().then(function(keys) {
 
 * * *
 
-<a name="balena.models.key.remove"></a>
+## remove
+balena.models.key.remove(id) ⇒ <code>Promise</code>
 
-### key.remove(id) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>key</code>](#balena.models.key)  
 **Summary**: Remove ssh key  
 **Access**: public  

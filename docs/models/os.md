@@ -1,27 +1,13 @@
-<a name="balena.models.os"></a>
+# os
+balena.models.os : <code>object</code>
 
-## .os : <code>object</code>
 **Kind**: static namespace  
-
-* [.os](#balena.models.os) : <code>object</code>
-    * [.download(options)](#balena.models.os.download) ⇒ <code>Promise</code>
-    * [.getAllOsVersions(deviceTypes, [options])](#balena.models.os.getAllOsVersions) ⇒ <code>Promise</code>
-    * [.getAvailableOsVersions(deviceTypes, [pineOptions], [extraOptions])](#balena.models.os.getAvailableOsVersions) ⇒ <code>Promise</code>
-    * [.getConfig(slugOrUuidOrId, options)](#balena.models.os.getConfig) ⇒ <code>Promise</code>
-    * [.getDownloadSize(deviceType, [version])](#balena.models.os.getDownloadSize) ⇒ <code>Promise</code>
-    * [.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType])](#balena.models.os.getMaxSatisfyingVersion) ⇒ <code>Promise</code>
-    * [.getOsUpdateType(deviceType, currentVersion, targetVersion)](#balena.models.os.getOsUpdateType) ⇒ <code>Promise</code>
-    * [.getSupervisorReleasesForCpuArchitecture(cpuArchitectureSlugOrId, [options])](#balena.models.os.getSupervisorReleasesForCpuArchitecture) ⇒ <code>Promise.&lt;String&gt;</code>
-    * [.getSupportedOsUpdateVersions(deviceType, currentVersion, [options])](#balena.models.os.getSupportedOsUpdateVersions) ⇒ <code>Promise</code>
-    * [.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture)](#balena.models.os.isArchitectureCompatibleWith) ⇒ <code>Boolean</code>
-    * [.isSupportedOsUpdate(deviceType, currentVersion, targetVersion)](#balena.models.os.isSupportedOsUpdate) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.os.download"></a>
+## download
+balena.models.os.download(options) ⇒ <code>Promise</code>
 
-### os.download(options) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Download an OS image  
 **Access**: public  
@@ -80,9 +66,9 @@ balena.models.os.download({deviceType: 'raspberry-pi'}).then(function(stream) {
 
 * * *
 
-<a name="balena.models.os.getAllOsVersions"></a>
+## getAllOsVersions
+balena.models.os.getAllOsVersions(deviceTypes, [options]) ⇒ <code>Promise</code>
 
-### os.getAllOsVersions(deviceTypes, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Get all OS versions for the provided device type(s), inlcuding invalidated ones  
 **Access**: public  
@@ -119,9 +105,9 @@ balena.models.os.getAllOsVersions(['fincm3', 'raspberrypi3'], { $filter: { is_in
 
 * * *
 
-<a name="balena.models.os.getAvailableOsVersions"></a>
+## getAvailableOsVersions
+balena.models.os.getAvailableOsVersions(deviceTypes, [pineOptions], [extraOptions]) ⇒ <code>Promise</code>
 
-### os.getAvailableOsVersions(deviceTypes, [pineOptions], [extraOptions]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Get the supported OS versions for the provided device type(s)  
 **Access**: public  
@@ -160,9 +146,9 @@ balena.models.os.getAvailableOsVersions(['fincm3', 'raspberrypi3']);
 
 * * *
 
-<a name="balena.models.os.getConfig"></a>
+## getConfig
+balena.models.os.getConfig(slugOrUuidOrId, options) ⇒ <code>Promise</code>
 
-### os.getConfig(slugOrUuidOrId, options) ⇒ <code>Promise</code>
 Builds the config.json for a device in the given application, with the given
 options.
 
@@ -239,9 +225,9 @@ balena.models.os.getConfig(123, { version: '2.12.7+rev1.prod' }).then(function(c
 
 * * *
 
-<a name="balena.models.os.getDownloadSize"></a>
+## getDownloadSize
+balena.models.os.getDownloadSize(deviceType, [version]) ⇒ <code>Promise</code>
 
-### os.getDownloadSize(deviceType, [version]) ⇒ <code>Promise</code>
 **Note!** Currently only the raw (uncompressed) size is reported.
 
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
@@ -274,9 +260,9 @@ balena.models.os.getDownloadSize('raspberry-pi').then(function(size) {
 
 * * *
 
-<a name="balena.models.os.getMaxSatisfyingVersion"></a>
+## getMaxSatisfyingVersion
+balena.models.os.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType]) ⇒ <code>Promise</code>
 
-### os.getMaxSatisfyingVersion(deviceType, versionOrRange, [osType]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Get the max OS version satisfying the given range  
 **Access**: public  
@@ -319,9 +305,9 @@ balena.models.os.getMaxSatisfyingVersion('raspberry-pi', '^2.11.0').then(functio
 
 * * *
 
-<a name="balena.models.os.getOsUpdateType"></a>
+## getOsUpdateType
+balena.models.os.getOsUpdateType(deviceType, currentVersion, targetVersion) ⇒ <code>Promise</code>
 
-### os.getOsUpdateType(deviceType, currentVersion, targetVersion) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Returns the OS update type based on device type, current and target balenaOS versions  
 **Access**: public  
@@ -364,9 +350,9 @@ balena.models.os.getOsUpdateType('raspberry-pi', '2.9.6+rev2.prod', '2.29.2+rev1
 
 * * *
 
-<a name="balena.models.os.getSupervisorReleasesForCpuArchitecture"></a>
+## getSupervisorReleasesForCpuArchitecture
+balena.models.os.getSupervisorReleasesForCpuArchitecture(cpuArchitectureSlugOrId, [options]) ⇒ <code>Promise.&lt;String&gt;</code>
 
-### os.getSupervisorReleasesForCpuArchitecture(cpuArchitectureSlugOrId, [options]) ⇒ <code>Promise.&lt;String&gt;</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Returns the Releases of the supervisor for the CPU Architecture  
 **Returns**: <code>Promise.&lt;String&gt;</code> - - An array of Release objects that can be used to manage a device as supervisors.  
@@ -417,9 +403,9 @@ const [result] = balena.models.os.getSupervisorReleasesForCpuArchitecture(
 
 * * *
 
-<a name="balena.models.os.getSupportedOsUpdateVersions"></a>
+## getSupportedOsUpdateVersions
+balena.models.os.getSupportedOsUpdateVersions(deviceType, currentVersion, [options]) ⇒ <code>Promise</code>
 
-### os.getSupportedOsUpdateVersions(deviceType, currentVersion, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Returns the supported OS update targets for the provided device type  
 **Access**: public  
@@ -465,9 +451,9 @@ balena.models.os.getSupportedOsUpdateVersions('raspberry-pi', '2.9.6+rev2.prod')
 
 * * *
 
-<a name="balena.models.os.isArchitectureCompatibleWith"></a>
+## isArchitectureCompatibleWith
+balena.models.os.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture) ⇒ <code>Boolean</code>
 
-### os.isArchitectureCompatibleWith(osArchitecture, applicationArchitecture) ⇒ <code>Boolean</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Returns whether the specified OS architecture is compatible with the target architecture  
 **Returns**: <code>Boolean</code> - - Whether the specified OS architecture is capable of running
@@ -500,9 +486,9 @@ console.log(result2);
 
 * * *
 
-<a name="balena.models.os.isSupportedOsUpdate"></a>
+## isSupportedOsUpdate
+balena.models.os.isSupportedOsUpdate(deviceType, currentVersion, targetVersion) ⇒ <code>Promise</code>
 
-### os.isSupportedOsUpdate(deviceType, currentVersion, targetVersion) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>os</code>](#balena.models.os)  
 **Summary**: Returns whether the provided device type supports OS updates between the provided balenaOS versions  
 **Access**: public  

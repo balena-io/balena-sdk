@@ -1,32 +1,13 @@
-<a name="balena.models.organization"></a>
+# organization
+balena.models.organization : <code>object</code>
 
-## .organization : <code>object</code>
 **Kind**: static namespace  
-
-* [.organization](#balena.models.organization) : <code>object</code>
-    * [.create(options)](#balena.models.organization.create) ⇒ <code>Promise</code>
-    * [.get(handleOrId, [options])](#balena.models.organization.get) ⇒ <code>Promise</code>
-    * [.getAll([options])](#balena.models.organization.getAll) ⇒ <code>Promise</code>
-    * [.remove(handleOrId)](#balena.models.organization.remove) ⇒ <code>Promise</code>
-    * [.invite](#balena.models.organization.invite) : <code>object</code>
-        * [.accept(invitationToken)](#balena.models.organization.invite.accept) ⇒ <code>Promise</code>
-        * [.create(handleOrId, options, [message])](#balena.models.organization.invite.create) ⇒ <code>Promise</code>
-        * [.getAll([options])](#balena.models.organization.invite.getAll) ⇒ <code>Promise</code>
-        * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.invite.getAllByOrganization) ⇒ <code>Promise</code>
-        * [.revoke(id)](#balena.models.organization.invite.revoke) ⇒ <code>Promise</code>
-    * [.membership](#balena.models.organization.membership) : <code>object</code>
-        * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
-        * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
-        * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
-        * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
-        * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.organization.create"></a>
+## create
+balena.models.organization.create(options) ⇒ <code>Promise</code>
 
-### organization.create(options) ⇒ <code>Promise</code>
 This method creates a new organization with the current user as an administrator.
 
 **Kind**: static method of [<code>organization</code>](#balena.models.organization)  
@@ -74,9 +55,9 @@ balena.models.organization.create({
 
 * * *
 
-<a name="balena.models.organization.get"></a>
+## get
+balena.models.organization.get(handleOrId, [options]) ⇒ <code>Promise</code>
 
-### organization.get(handleOrId, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>organization</code>](#balena.models.organization)  
 **Summary**: Get a single organization  
 **Access**: public  
@@ -112,9 +93,9 @@ balena.models.organization.get(123).then(function(organization) {
 
 * * *
 
-<a name="balena.models.organization.getAll"></a>
+## getAll
+balena.models.organization.getAll([options]) ⇒ <code>Promise</code>
 
-### organization.getAll([options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>organization</code>](#balena.models.organization)  
 **Summary**: Get all Organizations  
 **Access**: public  
@@ -141,9 +122,9 @@ balena.models.organization.getAll().then(function(organizations) {
 
 * * *
 
-<a name="balena.models.organization.remove"></a>
+## remove
+balena.models.organization.remove(handleOrId) ⇒ <code>Promise</code>
 
-### organization.remove(handleOrId) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>organization</code>](#balena.models.organization)  
 **Summary**: Remove an Organization  
 **Access**: public  
@@ -167,24 +148,16 @@ balena.models.organization.remove(123);
 
 * * *
 
-<a name="balena.models.organization.invite"></a>
+## invite
+balena.models.organization.invite : <code>object</code>
 
-### organization.invite : <code>object</code>
 **Kind**: static namespace of [<code>organization</code>](#balena.models.organization)  
-
-* [.invite](#balena.models.organization.invite) : <code>object</code>
-    * [.accept(invitationToken)](#balena.models.organization.invite.accept) ⇒ <code>Promise</code>
-    * [.create(handleOrId, options, [message])](#balena.models.organization.invite.create) ⇒ <code>Promise</code>
-    * [.getAll([options])](#balena.models.organization.invite.getAll) ⇒ <code>Promise</code>
-    * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.invite.getAllByOrganization) ⇒ <code>Promise</code>
-    * [.revoke(id)](#balena.models.organization.invite.revoke) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.organization.invite.accept"></a>
+### accept
+balena.models.organization.invite.accept(invitationToken) ⇒ <code>Promise</code>
 
-#### invite.accept(invitationToken) ⇒ <code>Promise</code>
 This method adds the calling user to the organization.
 
 **Kind**: static method of [<code>invite</code>](#balena.models.organization.invite)  
@@ -210,9 +183,9 @@ balena.models.organization.invite.accept("qwerty-invitation-token");
 
 * * *
 
-<a name="balena.models.organization.invite.create"></a>
+### create
+balena.models.organization.invite.create(handleOrId, options, [message]) ⇒ <code>Promise</code>
 
-#### invite.create(handleOrId, options, [message]) ⇒ <code>Promise</code>
 This method invites a user by their email to an organization.
 
 **Kind**: static method of [<code>invite</code>](#balena.models.organization.invite)  
@@ -253,9 +226,9 @@ balena.models.organization.invite.create('MyOrg', { invitee: "invitee@example.or
 
 * * *
 
-<a name="balena.models.organization.invite.getAll"></a>
+### getAll
+balena.models.organization.invite.getAll([options]) ⇒ <code>Promise</code>
 
-#### invite.getAll([options]) ⇒ <code>Promise</code>
 This method returns all invites.
 
 **Kind**: static method of [<code>invite</code>](#balena.models.organization.invite)  
@@ -284,9 +257,9 @@ balena.models.organization.invite.getAll().then(function(invites) {
 
 * * *
 
-<a name="balena.models.organization.invite.getAllByOrganization"></a>
+### getAllByOrganization
+balena.models.organization.invite.getAllByOrganization(handleOrId, [options]) ⇒ <code>Promise</code>
 
-#### invite.getAllByOrganization(handleOrId, [options]) ⇒ <code>Promise</code>
 This method returns all invites for a specific organization.
 
 **Kind**: static method of [<code>invite</code>](#balena.models.organization.invite)  
@@ -324,9 +297,9 @@ balena.models.organization.invite.getAllByOrganization(123).then(function(invite
 
 * * *
 
-<a name="balena.models.organization.invite.revoke"></a>
+### revoke
+balena.models.organization.invite.revoke(id) ⇒ <code>Promise</code>
 
-#### invite.revoke(id) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>invite</code>](#balena.models.organization.invite)  
 **Summary**: Revoke an invite  
 **Access**: public  
@@ -350,24 +323,16 @@ balena.models.organization.invite.revoke(123);
 
 * * *
 
-<a name="balena.models.organization.membership"></a>
+## membership
+balena.models.organization.membership : <code>object</code>
 
-### organization.membership : <code>object</code>
 **Kind**: static namespace of [<code>organization</code>](#balena.models.organization)  
-
-* [.membership](#balena.models.organization.membership) : <code>object</code>
-    * [.changeRole(idOrUniqueKey, roleName)](#balena.models.organization.membership.changeRole) ⇒ <code>Promise</code>
-    * [.get(membershipId, [options])](#balena.models.organization.membership.get) ⇒ <code>Promise</code>
-    * [.getAllByOrganization(handleOrId, [options])](#balena.models.organization.membership.getAllByOrganization) ⇒ <code>Promise</code>
-    * [.getAllByUser(usernameOrId, [options])](#balena.models.organization.membership.getAllByUser) ⇒ <code>Promise</code>
-    * [.remove(id)](#balena.models.organization.membership.remove) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.organization.membership.changeRole"></a>
+### changeRole
+balena.models.organization.membership.changeRole(idOrUniqueKey, roleName) ⇒ <code>Promise</code>
 
-#### membership.changeRole(idOrUniqueKey, roleName) ⇒ <code>Promise</code>
 This method changes the role of an organization member.
 
 **Kind**: static method of [<code>membership</code>](#balena.models.organization.membership)  
@@ -407,9 +372,9 @@ balena.models.organization.membership.changeRole({
 
 * * *
 
-<a name="balena.models.organization.membership.get"></a>
+### get
+balena.models.organization.membership.get(membershipId, [options]) ⇒ <code>Promise</code>
 
-#### membership.get(membershipId, [options]) ⇒ <code>Promise</code>
 This method returns a single organization membership.
 
 **Kind**: static method of [<code>membership</code>](#balena.models.organization.membership)  
@@ -441,9 +406,9 @@ balena.models.organization.membership.get(5).then(function(memberships) {
 
 * * *
 
-<a name="balena.models.organization.membership.getAllByOrganization"></a>
+### getAllByOrganization
+balena.models.organization.membership.getAllByOrganization(handleOrId, [options]) ⇒ <code>Promise</code>
 
-#### membership.getAllByOrganization(handleOrId, [options]) ⇒ <code>Promise</code>
 This method returns all organization memberships for a specific organization.
 
 **Kind**: static method of [<code>membership</code>](#balena.models.organization.membership)  
@@ -481,9 +446,9 @@ balena.models.organization.membership.getAllByOrganization(123).then(function(me
 
 * * *
 
-<a name="balena.models.organization.membership.getAllByUser"></a>
+### getAllByUser
+balena.models.organization.membership.getAllByUser(usernameOrId, [options]) ⇒ <code>Promise</code>
 
-#### membership.getAllByUser(usernameOrId, [options]) ⇒ <code>Promise</code>
 This method returns all organization memberships for a specific user.
 
 **Kind**: static method of [<code>membership</code>](#balena.models.organization.membership)  
@@ -521,9 +486,9 @@ balena.models.organization.membership.getAllByUser(123).then(function(membership
 
 * * *
 
-<a name="balena.models.organization.membership.remove"></a>
+### remove
+balena.models.organization.membership.remove(id) ⇒ <code>Promise</code>
 
-#### membership.remove(id) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>membership</code>](#balena.models.organization.membership)  
 **Summary**: Remove a membership  
 **Access**: public  

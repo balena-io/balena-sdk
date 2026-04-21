@@ -1,6 +1,6 @@
-<a name="balena.utils"></a>
+# utils
+balena.utils : <code>Object</code>
 
-## .utils : <code>Object</code>
 The utils instance offers some convenient features for clients.
 
 **Kind**: static member  

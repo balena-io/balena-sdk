@@ -1,22 +1,13 @@
-<a name="balena.logs"></a>
+# logs
+balena.logs : <code>object</code>
 
-## .logs : <code>object</code>
 **Kind**: static namespace  
-
-* [.logs](#balena.logs) : <code>object</code>
-    * [.history(uuidOrId, [options])](#balena.logs.history) ⇒ <code>Promise</code>
-    * [.subscribe(uuidOrId, [options])](#balena.logs.subscribe) ⇒ <code>Promise.&lt;LogSubscription&gt;</code>
-    * [.LogSubscription](#balena.logs.LogSubscription) : <code>EventEmitter</code>
-        * [.unsubscribe()](#balena.logs.LogSubscription.unsubscribe)
-        * ["error"](#balena.logs.LogSubscription.event_error)
-        * ["line"](#balena.logs.LogSubscription.event_line)
-
 
 * * *
 
-<a name="balena.logs.history"></a>
+## history
+balena.logs.history(uuidOrId, [options]) ⇒ <code>Promise</code>
 
-### logs.history(uuidOrId, [options]) ⇒ <code>Promise</code>
 Get an array of the latest log messages for a given device.
 
 **Kind**: static method of [<code>logs</code>](#balena.logs)  
@@ -82,9 +73,9 @@ balena.logs.history('7cf02a69e4d34c9da573914963cf54fd', { start: oneDayAgoIsoDat
 
 * * *
 
-<a name="balena.logs.subscribe"></a>
+## subscribe
+balena.logs.subscribe(uuidOrId, [options]) ⇒ <code>Promise.&lt;LogSubscription&gt;</code>
 
-### logs.subscribe(uuidOrId, [options]) ⇒ <code>Promise.&lt;LogSubscription&gt;</code>
 Connects to the stream of devices logs, returning a LogSubscription, which
 can be used to listen for logs as they appear, line by line.
 
@@ -133,25 +124,19 @@ balena.logs.subscribe(123).then(function(logs) {
 
 * * *
 
-<a name="balena.logs.LogSubscription"></a>
+## LogSubscription
+balena.logs.LogSubscription : <code>EventEmitter</code>
 
-### logs.LogSubscription : <code>EventEmitter</code>
 The log subscription emits events as log data arrives.
 You can get a LogSubscription for a given device by calling `balena.logs.subscribe(deviceId)`
 
 **Kind**: static typedef of [<code>logs</code>](#balena.logs)  
 
-* [.LogSubscription](#balena.logs.LogSubscription) : <code>EventEmitter</code>
-    * [.unsubscribe()](#balena.logs.LogSubscription.unsubscribe)
-    * ["error"](#balena.logs.LogSubscription.event_error)
-    * ["line"](#balena.logs.LogSubscription.event_line)
-
-
 * * *
 
-<a name="balena.logs.LogSubscription.unsubscribe"></a>
+### unsubscribe
+balena.logs.LogSubscription.unsubscribe()
 
-#### LogSubscription.unsubscribe()
 Disconnect from the logs feed and stop receiving any future events on this emitter.
 
 **Kind**: static method of [<code>LogSubscription</code>](#balena.logs.LogSubscription)  
@@ -164,9 +149,9 @@ logs.unsubscribe();
 
 * * *
 
-<a name="balena.logs.LogSubscription.event_error"></a>
+### error
+balena.logs.LogSubscription.event:error 
 
-#### "error"
 **Kind**: event emitted by [<code>LogSubscription</code>](#balena.logs.LogSubscription)  
 **Summary**: Event fired when an error has occured reading the device logs  
 **Example**  
@@ -178,9 +163,9 @@ logs.on('error', function(error) {
 
 * * *
 
-<a name="balena.logs.LogSubscription.event_line"></a>
+### line
+balena.logs.LogSubscription.event:line 
 
-#### "line"
 **Kind**: event emitted by [<code>LogSubscription</code>](#balena.logs.LogSubscription)  
 **Summary**: Event fired when a new line of log output is available  
 **Example**  

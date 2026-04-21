@@ -1,18 +1,13 @@
-<a name="balena.models.creditBundle"></a>
+# creditBundle
+balena.models.creditBundle : <code>object</code>
 
-## .creditBundle : <code>object</code>
 **Kind**: static namespace  
-
-* [.creditBundle](#balena.models.creditBundle) : <code>object</code>
-    * [.create(organization, featureId, creditsToPurchase)](#balena.models.creditBundle.create) ⇒ <code>Promise</code>
-    * [.getAllByOrg(organization, [options])](#balena.models.creditBundle.getAllByOrg) ⇒ <code>Promise</code>
-
 
 * * *
 
-<a name="balena.models.creditBundle.create"></a>
+## create
+balena.models.creditBundle.create(organization, featureId, creditsToPurchase) ⇒ <code>Promise</code>
 
-### creditBundle.create(organization, featureId, creditsToPurchase) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>creditBundle</code>](#balena.models.creditBundle)  
 **Summary**: Purchase a credit bundle for the given feature and org of the given quantity  
 **Access**: public  
@@ -45,9 +40,9 @@ balena.models.creditBundle.create(orgId, featureId, creditsToPurchase).then(func
 
 * * *
 
-<a name="balena.models.creditBundle.getAllByOrg"></a>
+## getAllByOrg
+balena.models.creditBundle.getAllByOrg(organization, [options]) ⇒ <code>Promise</code>
 
-### creditBundle.getAllByOrg(organization, [options]) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>creditBundle</code>](#balena.models.creditBundle)  
 **Summary**: Get all of the credit bundles purchased by the given org  
 **Access**: public  

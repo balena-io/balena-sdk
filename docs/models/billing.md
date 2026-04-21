@@ -1,28 +1,15 @@
-<a name="balena.models.billing"></a>
+# billing
+balena.models.billing : <code>object</code>
 
-## .billing : <code>object</code>
 **Note!** The billing methods are available on Balena.io exclusively.
 
 **Kind**: static namespace  
 
-* [.billing](#balena.models.billing) : <code>object</code>
-    * [.changePlan(organization, planChangeOptions)](#balena.models.billing.changePlan) ⇒ <code>Promise</code>
-    * [.createSetupIntent(setupIntentParams)](#balena.models.billing.createSetupIntent) ⇒ <code>Promise</code>
-    * [.downloadInvoice(organization)](#balena.models.billing.downloadInvoice) ⇒ <code>Promise</code>
-    * [.getAccount(organization)](#balena.models.billing.getAccount) ⇒ <code>Promise</code>
-    * [.getBillingInfo(organization)](#balena.models.billing.getBillingInfo) ⇒ <code>Promise</code>
-    * [.getInvoices(organization)](#balena.models.billing.getInvoices) ⇒ <code>Promise</code>
-    * [.getPlan(organization)](#balena.models.billing.getPlan) ⇒ <code>Promise</code>
-    * [.removeBillingInfo(organization)](#balena.models.billing.removeBillingInfo) ⇒ <code>Promise</code>
-    * [.updateAccountInfo(organization, accountInfo)](#balena.models.billing.updateAccountInfo)
-    * [.updateBillingInfo(organization, billingInfo)](#balena.models.billing.updateBillingInfo) ⇒ <code>Promise</code>
-
-
 * * *
 
-<a name="balena.models.billing.changePlan"></a>
+## changePlan
+balena.models.billing.changePlan(organization, planChangeOptions) ⇒ <code>Promise</code>
 
-### billing.changePlan(organization, planChangeOptions) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Change the current billing plan  
 **Access**: public  
@@ -60,9 +47,9 @@ balena.models.billing.changePlan(orgId, { billingCode: 'prototype-v2', cycle: 'a
 
 * * *
 
-<a name="balena.models.billing.createSetupIntent"></a>
+## createSetupIntent
+balena.models.billing.createSetupIntent(setupIntentParams) ⇒ <code>Promise</code>
 
-### billing.createSetupIntent(setupIntentParams) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Create a Stripe setup intent required for setting billing information  
 **Access**: public  
@@ -95,9 +82,9 @@ balena.models.billing.createSetupIntent(orgId).then(function(setupIntent) {
 
 * * *
 
-<a name="balena.models.billing.downloadInvoice"></a>
+## downloadInvoice
+balena.models.billing.downloadInvoice(organization) ⇒ <code>Promise</code>
 
-### billing.downloadInvoice(organization) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Download a specific invoice  
 **Access**: public  
@@ -132,9 +119,9 @@ balena.models.billing.downloadInvoice(orgId, '0000').then(function(stream) {
 
 * * *
 
-<a name="balena.models.billing.getAccount"></a>
+## getAccount
+balena.models.billing.getAccount(organization) ⇒ <code>Promise</code>
 
-### billing.getAccount(organization) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Get the user's billing account  
 **Access**: public  
@@ -161,9 +148,9 @@ balena.models.billing.getAccount(orgId).then(function(billingAccount) {
 
 * * *
 
-<a name="balena.models.billing.getBillingInfo"></a>
+## getBillingInfo
+balena.models.billing.getBillingInfo(organization) ⇒ <code>Promise</code>
 
-### billing.getBillingInfo(organization) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Get the current billing information  
 **Access**: public  
@@ -190,9 +177,9 @@ balena.models.billing.getBillingInfo(orgId).then(function(billingInfo) {
 
 * * *
 
-<a name="balena.models.billing.getInvoices"></a>
+## getInvoices
+balena.models.billing.getInvoices(organization) ⇒ <code>Promise</code>
 
-### billing.getInvoices(organization) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Get the available invoices  
 **Access**: public  
@@ -219,9 +206,9 @@ balena.models.billing.getInvoices(orgId).then(function(invoices) {
 
 * * *
 
-<a name="balena.models.billing.getPlan"></a>
+## getPlan
+balena.models.billing.getPlan(organization) ⇒ <code>Promise</code>
 
-### billing.getPlan(organization) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Get the current billing plan  
 **Access**: public  
@@ -248,9 +235,9 @@ balena.models.billing.getPlan(orgId).then(function(billingPlan) {
 
 * * *
 
-<a name="balena.models.billing.removeBillingInfo"></a>
+## removeBillingInfo
+balena.models.billing.removeBillingInfo(organization) ⇒ <code>Promise</code>
 
-### billing.removeBillingInfo(organization) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Remove an organization's billing information  
 **Access**: public  
@@ -276,9 +263,9 @@ balena.models.billing.removeBillingInfo(orgId).then(function() {
 
 * * *
 
-<a name="balena.models.billing.updateAccountInfo"></a>
+## updateAccountInfo
+balena.models.billing.updateAccountInfo(organization, accountInfo)
 
-### billing.updateAccountInfo(organization, accountInfo)
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Update the current billing account information  
 **Access**: public  
@@ -309,9 +296,9 @@ balena.models.billing.updateAccountInfo(orgId, { email: 'hello@balena.io' })
 
 * * *
 
-<a name="balena.models.billing.updateBillingInfo"></a>
+## updateBillingInfo
+balena.models.billing.updateBillingInfo(organization, billingInfo) ⇒ <code>Promise</code>
 
-### billing.updateBillingInfo(organization, billingInfo) ⇒ <code>Promise</code>
 **Kind**: static method of [<code>billing</code>](#balena.models.billing)  
 **Summary**: Update the current billing information  
 **Access**: public  
