@@ -91,7 +91,7 @@ Where the factory method accepts the following options:
 * `isBrowser`, boolean, *optional*, is the flag to tell if the module works in the browser. If not set will be computed based on the presence of the global `window` value,
 * `debug`, boolean, *optional*, when set will print some extra debug information.
 
-See the JSDoc markdown documentation for the returned `balena` object in [DOCUMENTATION.md](https://github.com/balena-io/balena-sdk/blob/master/DOCUMENTATION.md).
+See the JSDoc markdown documentation for the returned `balena` object in [the wiki](TODO).
 
 ## Support
 
