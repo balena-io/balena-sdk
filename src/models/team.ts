@@ -30,6 +30,10 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 		require('./team-application-access') as typeof import('./team-application-access')
 	).default(deps);
 
+	const membershipModel = (
+		require('./team-membership') as typeof import('./team-membership')
+	).default(deps);
+
 	/**
 	 * @summary Creates a new Team
 	 * @name create
@@ -256,6 +260,12 @@ const getTeamModel = function (deps: InjectedDependenciesParam) {
 		 * @memberof balena.models.team
 		 */
 		applicationAccess: applicationAccessModel,
+
+		/**
+		 * @namespace balena.models.team.membership
+		 * @memberof balena.models.team
+		 */
+		membership: membershipModel,
 	};
 };
 
