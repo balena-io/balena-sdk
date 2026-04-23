@@ -177,8 +177,7 @@ describe('Device Type model', function () {
 					return;
 				}
 				const instructions = await balena.models.deviceType.getInstructions(
-					// @ts-expect-error - parsed contract will be a Contract
-					dt.contract as Contract,
+					dt.contract,
 				);
 				if (instructions == null) {
 					return;

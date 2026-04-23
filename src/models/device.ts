@@ -663,13 +663,17 @@ const getDeviceModel = function (
 				>;
 			}
 		> {
-			const device = await exports.get(
+			const device = (await exports.get(
 				uuidOrId,
 				mergePineOptions(
 					{ $expand: getCurrentServiceDetailsPineExpand },
 					options,
-				) as { $expand: typeof getCurrentServiceDetailsPineExpand },
-			);
+				),
+			)) as OptionsToResponse<
+				Device['Read'],
+				{ $expand: typeof getCurrentServiceDetailsPineExpand },
+				undefined
+			>[number];
 
 			return generateCurrentServiceDetails(device) as unknown as NonNullable<
 				OptionsToResponse<
