@@ -370,14 +370,14 @@ const getApplicationModel = function (
 				| OptionsToResponse<Application['Read'], T, undefined>[number]
 				| undefined;
 			if (isId(slugOrUuidOrId)) {
-				application = (await pine.get({
+				application = await pine.get({
 					resource: 'application',
 					id: slugOrUuidOrId,
 					options: mergePineOptions(
 						accessFilter != null ? { $filter: accessFilter } : {},
 						options,
 					) as T,
-				})) as OptionsToResponse<Application['Read'], T, undefined>[number];
+				});
 			} else if (typeof slugOrUuidOrId === 'string') {
 				const lowerCaseSlugOrUuid = slugOrUuidOrId.toLowerCase();
 				const applications = (await pine.get({
