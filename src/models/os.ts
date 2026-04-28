@@ -26,6 +26,7 @@ import type {
 } from '../../typings/utils';
 import type {
 	ApplicationTag,
+	Device,
 	DeviceTag,
 	OrganizationMembershipTag,
 	Release,
@@ -856,7 +857,7 @@ const getOsModel = function (
 	 * @memberof balena.models.os
 	 *
 	 * @param {String} deviceType - device type slug
-	 * @param {String} currentVersion - semver-compatible version for the starting OS version
+	 * @param {String|Object} currentVersion - semver-compatible version for the starting OS version or an object with os_version & os_variant properties.
 	 * @param {String} targetVersion - semver-compatible version for the target OS version
 	 * @fulfil {String} - Currently available types are:
 	 *   - resinhup11
@@ -875,13 +876,33 @@ const getOsModel = function (
 	 * balena.models.os.getOsUpdateType('raspberry-pi', '2.9.6+rev2.prod', '2.29.2+rev1.prod').then(function(osUpdateType) {
 	 * 	console.log(osUpdateType);
 	 * });
+	 * 
+	 * @example
+	 * balena.models.os.getOsUpdateType('raspberrypi4-64', { os_version: 'balenaOS 2.51.1+rev1', os_variant: 'dev' }, '2.29.2+rev1.prod').then(function(osUpdateType) {
+	 * 	console.log(osUpdateType);
+	 * });
 	 */
 	const getOsUpdateType = async (
 		deviceType: string,
-		currentVersion: string,
+		currentVersionOrDevice: string | Pick<Device['Read'], 'os_version' | 'os_variant'>,
 		targetVersion: string,
 	): Promise<string> => {
 		deviceType = await _getNormalizedDeviceTypeSlug(deviceType);
+		let currentVersion : string;
+		if (typeof currentVersionOrDevice === 'string') {
+			currentVersion = currentVersionOrDevice;
+		} else {
+			const device = currentVersionOrDevice;
+			currentVersion = device.os_version;
+			const targetOsHasVariant = /\.(dev|prod)$/.test(targetVersion);
+			if (targetOsHasVariant && device.os_variant && bSemver.lte(device.os_version, targetVersion)) {
+				const [semverCore, semverBuild] = device.os_version.split('+', 1);
+				const semverBuildWithVariant = semverBuild
+					? `${semverBuild}.${device.os_variant}`
+					: device.os_variant;
+				currentVersion = `${semverCore}+${semverBuildWithVariant}`;
+			}
+		}
 		return hupActionHelper().getHUPActionType(
 			deviceType,
 			currentVersion,
