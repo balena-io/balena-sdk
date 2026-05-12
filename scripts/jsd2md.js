@@ -128,6 +128,8 @@ async function generateDocs() {
 		});
 	} while (runAgain);
 
+	let sidebarContent = '# Navigation\n\n';
+	sidebarContent += '* [[Introduction|introduction]]\n';
 	for (const page of pages.get('balena')) {
 		if (page === 'balena') {
 			continue;
@@ -143,6 +145,7 @@ async function generateDocs() {
 		);
 		if (page === 'balena.models') {
 			mkdirSync(resolve(outputDir, 'models'), { recursive: true });
+			sidebarContent += '* [[Models|models]]\n';
 			const models = pages.get('balena.models') ?? [];
 			for (const model of models) {
 				const modelItem = templateData.find((it) => it.id === model);
@@ -164,19 +167,15 @@ async function generateDocs() {
 						recursive: true,
 					},
 				);
+				sidebarContent += `  * [[${modelItem.name.charAt(0).toUpperCase() + modelItem.name.slice(1)}|models/${modelItem.name}]]\n`;
 			}
 			continue;
 		}
-		writeFileSync(
-			resolve(
-				outputDir,
-				`${templateData.find((it) => it.id === page).name}.md`,
-			),
-			pageContents,
-			{
-				recursive: true,
-			},
-		);
+		const pageName = templateData.find((it) => it.id === page).name;
+		writeFileSync(resolve(outputDir, `${pageName}.md`), pageContents, {
+			recursive: true,
+		});
+		sidebarContent += `* [[${pageName.charAt(0).toUpperCase() + pageName.slice(1)}|${pageName}]]\n`;
 	}
 
 	const miscellaneousContents = await jsdoc2md.render({
@@ -198,6 +197,9 @@ async function generateDocs() {
 			recursive: true,
 		},
 	);
+	sidebarContent += '* [[Miscellaneous|miscellaneous]]';
+
+	writeFileSync(resolve(outputDir, '_Sidebar.md'), sidebarContent);
 
 	console.log('✓ DOCUMENTATION.md generated successfully.');
 }
