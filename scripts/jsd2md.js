@@ -167,7 +167,8 @@ async function generateDocs() {
 						recursive: true,
 					},
 				);
-				sidebarContent += `  * [[${modelItem.name.charAt(0).toUpperCase() + modelItem.name.slice(1)}|models/${modelItem.name}]]\n`;
+				// GitHub wikis don't support nested folders and should flatten paths to use a `-` instead of a `/`
+				sidebarContent += `  * [[${modelItem.name.charAt(0).toUpperCase() + modelItem.name.slice(1)}|models-${modelItem.name}]]\n`;
 			}
 			continue;
 		}
