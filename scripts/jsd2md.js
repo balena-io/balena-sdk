@@ -83,7 +83,6 @@ async function generateDocs() {
 	writeFileSync(
 		introductionPath,
 		readFileSync(resolve(__dirname, '../doc/DOCUMENTATION.hbs'), 'utf8'),
-		{ recursive: true },
 	);
 
 	const pages = new Map();
@@ -163,9 +162,6 @@ async function generateDocs() {
 				writeFileSync(
 					resolve(outputDir, `models/${modelItem.name}.md`),
 					modelContent,
-					{
-						recursive: true,
-					},
 				);
 				// GitHub wikis don't support nested folders and should flatten paths to use a `-` instead of a `/`
 				sidebarContent += `  * [[${modelItem.name.charAt(0).toUpperCase() + modelItem.name.slice(1)}|models-${modelItem.name}]]\n`;
@@ -173,9 +169,7 @@ async function generateDocs() {
 			continue;
 		}
 		const pageName = templateData.find((it) => it.id === page).name;
-		writeFileSync(resolve(outputDir, `${pageName}.md`), pageContents, {
-			recursive: true,
-		});
+		writeFileSync(resolve(outputDir, `${pageName}.md`), pageContents);
 		sidebarContent += `* [[${pageName.charAt(0).toUpperCase() + pageName.slice(1)}|${pageName}]]\n`;
 	}
 
@@ -194,9 +188,6 @@ async function generateDocs() {
 	writeFileSync(
 		resolve(outputDir, 'miscellaneous.md'),
 		'# Miscellaneous\n\n' + miscellaneousContents,
-		{
-			recursive: true,
-		},
 	);
 	sidebarContent += '* [[Miscellaneous|miscellaneous]]';
 
