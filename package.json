@@ -122,7 +122,7 @@
     "@types/json-schema": "^7.0.9",
     "@types/node": "^22.19.7",
     "balena-auth": "^6.0.1",
-    "balena-errors": "^4.9.0",
+    "balena-errors": "^5.0.0",
     "balena-hup-action-utils": "~7.0.0",
     "balena-register-device": "^9.0.4",
     "balena-request": "^14.1.6",
