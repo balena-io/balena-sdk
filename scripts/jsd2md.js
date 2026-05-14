@@ -13,7 +13,7 @@ const { resolve } = require('path');
 
 /* input and output paths */
 const inputFiles = 'es2017/**/!(balena-browser*.js)';
-const outputDir = resolve(__dirname, '../wiki');
+const outputDir = resolve(__dirname, '../docs');
 const introductionPath = resolve(outputDir, 'introduction.md');
 
 const getRenderOpts = (data) => ({
@@ -127,8 +127,9 @@ async function generateDocs() {
 		});
 	} while (runAgain);
 
-	let sidebarContent = '# Navigation\n\n';
-	sidebarContent += '* [[Introduction|introduction]]\n';
+	// TODO: SUMMARY.md
+	// let sidebarContent = '# Navigation\n\n';
+	// sidebarContent += '* [[Introduction|introduction]]\n';
 	for (const page of pages.get('balena')) {
 		if (page === 'balena') {
 			continue;
@@ -144,7 +145,7 @@ async function generateDocs() {
 		);
 		if (page === 'balena.models') {
 			mkdirSync(resolve(outputDir, 'models'), { recursive: true });
-			sidebarContent += '* [[Models|models]]\n';
+			// sidebarContent += '* [[Models|models]]\n';
 			const models = pages.get('balena.models') ?? [];
 			for (const model of models) {
 				const modelItem = templateData.find((it) => it.id === model);
@@ -164,13 +165,13 @@ async function generateDocs() {
 					modelContent,
 				);
 				// GitHub wikis don't support nested folders and should flatten paths to use a `-` instead of a `/`
-				sidebarContent += `  * [[${modelItem.name.charAt(0).toUpperCase() + modelItem.name.slice(1)}|models-${modelItem.name}]]\n`;
+				// sidebarContent += `  * [[${modelItem.name.charAt(0).toUpperCase() + modelItem.name.slice(1)}|models-${modelItem.name}]]\n`;
 			}
 			continue;
 		}
 		const pageName = templateData.find((it) => it.id === page).name;
 		writeFileSync(resolve(outputDir, `${pageName}.md`), pageContents);
-		sidebarContent += `* [[${pageName.charAt(0).toUpperCase() + pageName.slice(1)}|${pageName}]]\n`;
+		// sidebarContent += `* [[${pageName.charAt(0).toUpperCase() + pageName.slice(1)}|${pageName}]]\n`;
 	}
 
 	const miscellaneousContents = await jsdoc2md.render({
@@ -189,9 +190,9 @@ async function generateDocs() {
 		resolve(outputDir, 'miscellaneous.md'),
 		'# Miscellaneous\n\n' + miscellaneousContents,
 	);
-	sidebarContent += '* [[Miscellaneous|miscellaneous]]';
+	// sidebarContent += '* [[Miscellaneous|miscellaneous]]';
 
-	writeFileSync(resolve(outputDir, '_Sidebar.md'), sidebarContent);
+	// writeFileSync(resolve(outputDir, '_Sidebar.md'), sidebarContent);
 
 	console.log('✓ DOCUMENTATION.md generated successfully.');
 }
