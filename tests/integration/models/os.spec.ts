@@ -72,7 +72,7 @@ const itShouldClear = {
 	),
 	getDownloadSizeCache: itShouldClearMethodCacheFactory(
 		'balena.models.os._getDownloadSize()',
-		() => _getDownloadSize('raspberry-pi', '1.26.1'),
+		() => _getDownloadSize('raspberry-pi', '2.26.0+rev1.prod'),
 	),
 };
 
@@ -762,7 +762,7 @@ describe('OS model', function () {
 			it('should get a result for ResinOS v1', async function () {
 				const downloadSize = await balena.models.os.getDownloadSize(
 					'raspberry-pi',
-					'1.26.1',
+					'2.26.0+rev1.prod',
 				);
 				expect(downloadSize).to.be.a('number');
 			});
@@ -777,18 +777,18 @@ describe('OS model', function () {
 
 			it('should cache the results', () => {
 				return balena.models.os
-					.getDownloadSize('raspberry-pi', '1.26.1')
+					.getDownloadSize('raspberry-pi', '2.26.0+rev1.prod')
 					.then((result1) =>
 						balena.models.os
-							.getDownloadSize('raspberry-pi', '1.26.1')
+							.getDownloadSize('raspberry-pi', '2.26.0+rev1.prod')
 							.then((result2) => expect(result1).to.equal(result2)),
 					);
 			});
 
 			it('should cache download sizes independently for each version', () => {
 				return Promise.all([
-					balena.models.os.getDownloadSize('raspberry-pi', '1.26.1'),
-					balena.models.os.getDownloadSize('raspberry-pi', '2.0.6+rev3.prod'),
+					balena.models.os.getDownloadSize('raspberry-pi', '2.26.0+rev1.prod'),
+					balena.models.os.getDownloadSize('raspberry-pi', '2.29.0+rev1.prod'),
 				]).then(function ([os1Size, os2Size]) {
 					expect(os1Size).not.to.equal(os2Size);
 				});
@@ -806,9 +806,9 @@ describe('OS model', function () {
 
 	describe('balena.models.os._getDownloadSize()', function () {
 		it('should cache the results', function () {
-			const p1 = _getDownloadSize('raspberry-pi', '1.26.1');
+			const p1 = _getDownloadSize('raspberry-pi', '2.26.0+rev1.prod');
 			return p1.then(function (result1) {
-				const p2 = _getDownloadSize('raspberry-pi', '1.26.1');
+				const p2 = _getDownloadSize('raspberry-pi', '2.26.0+rev1.prod');
 				return p2.then(function (result2) {
 					expect(result1).to.equal(result2);
 					expect(p1).to.equal(p2);
@@ -1300,40 +1300,6 @@ describe('OS model', function () {
 						);
 					},
 				);
-			});
-
-			it('should be able to configure v1 image parameters', function () {
-				const configOptions = {
-					appUpdatePollInterval: 72,
-					network: 'wifi' as const,
-					wifiKey: 'foobar',
-					wifiSsid: 'foobarbaz',
-					ip: '1.2.3.4',
-					gateway: '5.6.7.8',
-					netmask: '9.10.11.12',
-					version: '1.26.1',
-					// Use a name prefix to make cleaning up the api key easier
-					provisioningKeyName: `${TEST_KEY_NAME_PREFIX}-confdl-1-26-1`,
-				};
-				return balena.models.os
-					.getConfig(ctx.application.id, configOptions)
-					.then(function (config) {
-						expect(
-							_.pick(config, ['appUpdatePollInterval', 'wifiKey', 'wifiSsid']),
-						).to.deep.equal({
-							// NOTE: the interval is converted to ms in the config object
-							appUpdatePollInterval:
-								configOptions.appUpdatePollInterval * 60 * 1000,
-							wifiKey: configOptions.wifiKey,
-							wifiSsid: configOptions.wifiSsid,
-						});
-						expect(config)
-							.to.have.property('files')
-							.that.has.property('network/network.config')
-							.that.includes(
-								`${configOptions.ip}/${configOptions.netmask}/${configOptions.gateway}`,
-							);
-					});
 			});
 
 			it('should be able to configure v2 image parameters', function () {

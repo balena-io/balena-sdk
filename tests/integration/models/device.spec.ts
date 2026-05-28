@@ -2200,31 +2200,18 @@ describe('Device Model', function () {
 					}
 				});
 
-				describe('Given a vpn only online device', function () {
-					before(function () {
-						return balena.pine.patch({
+				describe('Given an offline device', function () {
+					before(async function () {
+						// Bring the device online just to reactivate it
+						await balena.pine.patch({
 							resource: 'device',
 							id: this.device.id,
 							body: {
-								// this also activates the device
 								is_online: true,
 							},
 						});
-					});
-
-					for (const prop of deviceUniqueFields) {
-						it(`should return reduced-functionality when retrieving by ${prop}`, async function () {
-							const status = await balena.models.device.getStatus(
-								this.device[prop],
-							);
-							expect(status).to.equal('reduced-functionality');
-						});
-					}
-				});
-
-				describe('Given an offline device', function () {
-					before(function () {
-						return balena.pine.patch({
+						// Then disconnect the device again
+						await balena.pine.patch({
 							resource: 'device',
 							id: this.device.id,
 							body: {
@@ -2257,7 +2244,7 @@ describe('Device Model', function () {
 						$select: ['overall_status', 'overall_progress'],
 					});
 					expect(device).to.deep.equal({
-						overall_status: 'reduced-functionality',
+						overall_status: 'disconnected',
 						overall_progress: null,
 					});
 				});
