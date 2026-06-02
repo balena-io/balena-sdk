@@ -1,4 +1,26 @@
 - commits:
+    - subject: Fix failing tests per recent API changes
+      hash: a18147a02c795062e04c46f9d129b2e4157e7c99
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Relates-to: https://github.com/balena-io/open-balena-api/pull/1607
+        relates-to: https://github.com/balena-io/open-balena-api/pull/1607
+      author: Matthew Yarmolinsky
+      nested: []
+    - subject: Remove deprecation policy in favor of moving it to the product docs
+      hash: 213c52189becb473075460362ba249fc77a93e11
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 23.2.1
+  title: ""
+  date: 2026-06-02T16:58:04.507Z
+- commits:
     - subject: Remove unnecessary type assertions
       hash: 9871c5fc03fe519b180bae8905d1d4f2a69d33aa
       body: ""
