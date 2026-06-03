@@ -1,4 +1,16 @@
 - commits:
+    - subject: Generate documentation as separate pages for the docs
+      hash: 7638c4b2fa7d98e9bcc35fb689cef2c2eed1a3fa
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 23.2.2
+  title: ""
+  date: 2026-06-03T20:25:40.462Z
+- commits:
     - subject: Fix failing tests per recent API changes
       hash: a18147a02c795062e04c46f9d129b2e4157e7c99
       body: ""
