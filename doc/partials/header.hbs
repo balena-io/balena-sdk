@@ -1,0 +1,11 @@
+{{>heading-indent}}{{name}}
+{{#sig~}}
+{{{@depOpen}~}}
+<code>{{longname}}{{#if (isEvent)}} {{@methodSign}}{{else}}{{@methodSign}}{{/if}}</code>
+{{~#if @returnSymbol}} {{@returnSymbol}}{{/if~}}
+{{#if @returnTypes}} {{>linked-type-list types=@returnTypes delimiter=" \| " }}{{/if~}}
+{{#if @suffix}} {{@suffix}}{{/if~}}
+{{{@depClose}~}}
+{{~/sig}}
+
+

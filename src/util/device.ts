@@ -17,6 +17,7 @@ export const isProvisioned = (
  *
  * @param targetState
  * @returns array containing all images for all services for all releases for all apps for the device
+ * @private
  */
 export const listImagesFromTargetState = (
 	targetState: DeviceState.DeviceStateV3,
