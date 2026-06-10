@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency balena-errors to v5
+      hash: 64a094faafd97b905735a253d9b2b462b8afb7da
+      body: |
+        Update balena-errors from 4.9.0 to 5.0.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.2.4
+  title: ""
+  date: 2026-06-10T01:56:15.303Z
+- commits:
     - subject: Update GitHub Actions to 48b55a0
       hash: 0f04cc3e1f54492023b73f958f8531832b57c4e2
       body: |
