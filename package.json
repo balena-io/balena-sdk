@@ -81,7 +81,7 @@
     "balena-config-karma": "^4.0.2",
     "buffer": "^6.0.3",
     "catch-uncommitted": "^2.0.0",
-    "chai": "^4.5.0",
+    "chai": "^6.0.0",
     "crypto-browserify": "^3.12.1",
     "domain-browser": "^5.0.0",
     "dotenv": "^17.0.0",
