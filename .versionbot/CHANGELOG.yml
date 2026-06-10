@@ -1,4 +1,143 @@
 - commits:
+    - subject: Update balena-auth to deduplicate balena-errors
+      hash: ff9c7adbc610dc3c0ff3b3ec775b752b6b1fcb32
+      body: |
+        Update balena-auth from 6.0.1 to 6.1.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested:
+        - commits:
+            - subject: Update devDependencies
+              hash: 4fcd80d74fe32566ef9749d04ca811595d318355
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+            - subject: Update balena-settings-storage from 8.1.0 to 9.0.0
+              hash: c0c40c48aed7040d413aec1d39b4dbc1928751f5
+              body: |
+                Update balena-settings-storage from 8.1.0 to 9.0.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested:
+                - commits:
+                    - subject: Update balena-errors to v5.0.0
+                      hash: 9d26eca1199fe7d2c545c909259a0a585ed4053e
+                      body: ""
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Thodoris Greasidis
+                    - subject: Move the sources from lib to src
+                      hash: eae2777ab5498d0e7d86e3207e6c64d09ef464e9
+                      body: ""
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Thodoris Greasidis
+                    - subject: Drop appveyor config
+                      hash: 204fe26c56d96b9f46b256020bd9620fbd756449
+                      body: ""
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Thodoris Greasidis
+                    - subject: Target es2019 runtimes
+                      hash: cb8a1450010f40852e0acb82087fccfb22722623
+                      body: ""
+                      footer:
+                        Change-type: major
+                        change-type: major
+                      author: Thodoris Greasidis
+                    - subject: Drop support for node < 18
+                      hash: 8cf8e71621becc2fce6877b32e9e1971ad8ca677
+                      body: ""
+                      footer:
+                        Change-type: major
+                        change-type: major
+                      author: Thodoris Greasidis
+                  version: balena-settings-storage-9.0.0
+                  title: ""
+                  date: 2026-06-10T08:00:45.024Z
+                - commits:
+                    - subject: Export error types for users to be able to use `instanceof` with
+                      hash: 88a0de48cd1c7d24e4dee443e8c2f756b1083b82
+                      body: ""
+                      footer:
+                        Change-type: minor
+                        change-type: minor
+                      author: Pagan Gazzard
+                  version: balena-settings-storage-8.2.0
+                  title: ""
+                  date: 2026-03-24T18:12:32.564Z
+                - commits:
+                    - subject: Update jsdoc-to-markdown to 9.x
+                      hash: dcdd0453912e0593b9d6831cbd9d4e887c3b28eb
+                      body: ""
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                    - subject: Update @balena/lint to 9.x
+                      hash: d545cc7c93552a15c2b0f901370d59fc0ece2a0a
+                      body: ""
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                    - subject: "Add id-token: write permission for NPM OIDC publishing"
+                      hash: d21373321d996de37171b4e49f30afd1032afeba
+                      body: ""
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                        Signed-off-by: Kyle Harding <kyle@balena.io>
+                        signed-off-by: Kyle Harding <kyle@balena.io>
+                      author: Kyle Harding
+                  version: balena-settings-storage-8.1.1
+                  title: ""
+                  date: 2026-03-12T20:52:36.676Z
+            - subject: Update balena-errors to v5.0.0
+              hash: b087be233731444aaa1cc19b99e3676764ba4f7e
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Thodoris Greasidis
+              nested: []
+          version: balena-auth-6.1.1
+          title: ""
+          date: 2026-06-10T08:14:04.771Z
+        - commits:
+            - subject: "Add id-token: write permission for NPM OIDC publishing"
+              hash: 5a41fa48281c4f623902d5ddcbb9b7db06af80e6
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Export error types for users to be able to use `instanceof` with
+              hash: 5b54ef6cb012087f8e84a23f9dbc70a34aae5c1a
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Pagan Gazzard
+              nested: []
+          version: balena-auth-6.1.0
+          title: ""
+          date: 2026-03-24T23:02:28.390Z
+  version: 23.2.7
+  title: ""
+  date: 2026-06-10T09:04:56.873Z
+- commits:
     - subject: Rename .linstagedrc to .lintstagedrc.json
       hash: 7bb797e0d3eb3957a83181269a6883cad6a97fd7
       body: |
