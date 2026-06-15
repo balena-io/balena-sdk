@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency sinon to v22
+      hash: aed3e81aad9411da254f71a46a31430537ab75bb
+      body: |
+        Update sinon from 21.1.2 to 22.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.2.9
+  title: ""
+  date: 2026-06-15T02:51:10.662Z
+- commits:
     - subject: Update dependency lint-staged to v17
       hash: 1803178c9b002275d4480cca94d32bcb4f778abe
       body: |
