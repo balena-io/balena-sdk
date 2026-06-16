@@ -1,19 +1,17 @@
-import type { Dictionary } from '../../typings/utils';
-
 export interface ServiceInfo {
 	imageId: number;
 	serviceName: string;
 	image: string;
 	running: boolean;
-	environment: Dictionary<string>;
-	labels: Dictionary<string>;
+	environment: Record<string, string>;
+	labels: Record<string, string>;
 }
 
 export interface AppInfo {
 	name: string;
 	commit?: string;
 	releaseId?: number;
-	services: Dictionary<ServiceInfo>;
+	services: Record<string, ServiceInfo>;
 	volumes: any;
 	networks: any;
 }
@@ -21,7 +19,7 @@ export interface AppInfo {
 export interface DependentAppInfo {
 	name: string;
 	parentApp: number;
-	config: Dictionary<string>;
+	config: Record<string, string>;
 	commit?: string;
 	releaseId?: number;
 	imageId?: number;
@@ -31,25 +29,31 @@ export interface DependentAppInfo {
 export interface DeviceState {
 	local: {
 		name: string;
-		config: Dictionary<string>;
-		apps: Dictionary<AppInfo>;
+		config: Record<string, string>;
+		apps: Record<string, AppInfo>;
 	};
 	dependent: {
-		apps: Dictionary<DependentAppInfo>;
-		devices: Dictionary<{
-			name: string;
-			apps: Dictionary<{
-				config: Dictionary<string>;
-				environment: Dictionary<string>;
-			}>;
-		}>;
+		apps: Record<string, DependentAppInfo>;
+		devices: Record<
+			string,
+			{
+				name: string;
+				apps: Record<
+					string,
+					{
+						config: Record<string, string>;
+						environment: Record<string, string>;
+					}
+				>;
+			}
+		>;
 	};
 }
 
 export interface DeviceStateV3 {
 	[deviceUuid: string]: {
 		name?: string;
-		config: Dictionary<string>;
+		config: Record<string, string>;
 		apps: {
 			[appUuid: string]: {
 				release_uuid?: string;

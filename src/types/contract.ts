@@ -1,6 +1,7 @@
-import type { AnyObject, Dictionary } from '../../typings/utils';
+import type { AnyObject } from '../../typings/utils';
 
-export type Partials = Dictionary<string[] | Partials>;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/no-empty-object-type -- This interface is intentionally empty to allow recursive type definitions
+export interface Partials extends Record<string, string[] | Partials> {}
 
 export interface Contract {
 	slug: string;

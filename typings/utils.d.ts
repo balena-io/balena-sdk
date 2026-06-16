@@ -13,15 +13,7 @@ export type PropsAssignableWithType<T, P> = {
 // backwards compatible alternative for: Extract<keyof T, string>
 export type StringKeyof<T> = keyof T & string;
 
-export interface Dictionary<T> {
-	[key: string]: T;
-}
-
-export type TypeOrDictionary<T> =
-	| T
-	| {
-			[key: string]: T;
-	  };
+export type TypeOrRecord<K extends keyof any, T> = T | Record<K, T>;
 
 export type IfDefined<T, P> = undefined extends T ? object : P;
 

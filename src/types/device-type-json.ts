@@ -1,5 +1,3 @@
-import type { Dictionary } from '../../typings/utils';
-
 /* types for the /device-types/v1 endppoints */
 
 export interface DeviceType {
@@ -79,7 +77,7 @@ export interface DeviceTypeOptionsGroup {
 	min?: number;
 	max?: number;
 	hidden?: boolean;
-	when?: Dictionary<number | string | boolean>;
+	when?: Record<string, number | string | boolean>;
 	choices?: string[] | number[];
-	choicesLabels?: Dictionary<string>;
+	choicesLabels?: Record<string, string>;
 }

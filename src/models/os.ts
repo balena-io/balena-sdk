@@ -19,11 +19,7 @@ import * as errors from 'balena-errors';
 
 import { isNotFoundResponse, onlyIf, mergePineOptions, once } from '../util';
 import type { BalenaRequestStreamResult } from 'balena-request';
-import type {
-	Dictionary,
-	ResolvableReturnType,
-	TypeOrDictionary,
-} from '../../typings/utils';
+import type { ResolvableReturnType, TypeOrRecord } from '../../typings/utils';
 import type {
 	ApplicationTag,
 	DeviceTag,
@@ -144,15 +140,15 @@ const sortVersions = (a: OsVersion, b: OsVersion) => {
  * run app containers compiled for the architectures in the values
  * @private
  */
-const archCompatibilityMap: Partial<Dictionary<string[]>> = {
+const archCompatibilityMap: Partial<Record<string, string[]>> = {
 	aarch64: ['armv7hf', 'rpi'],
 	armv7hf: ['rpi'],
 };
 
 const tagsToDictionary = (
 	tags: Array<Pick<ResourceTagBase, 'tag_key' | 'value'>>,
-): Partial<Dictionary<string>> => {
-	const result: Dictionary<string> = Object.create(null);
+): Partial<Record<string, string>> => {
+	const result: Record<string, string> = Object.create(null);
 	for (const { tag_key, value } of tags) {
 		result[tag_key] = value;
 	}
@@ -333,7 +329,7 @@ const getOsModel = function (
 	};
 
 	const _transformHostApps = (apps: HostAppInfo[]) => {
-		const osVersionsByDeviceType: Dictionary<OsVersion[]> = {};
+		const osVersionsByDeviceType: Record<string, OsVersion[]> = {};
 		for (const hostApp of apps) {
 			const hostAppDeviceType = hostApp.is_for__device_type[0]?.slug;
 			if (!hostAppDeviceType) {
@@ -360,7 +356,7 @@ const getOsModel = function (
 		deviceTypes: string[],
 		options: ODataOptionsWithoutCount<Release['Read']> | undefined,
 		convenienceFilter: 'supported' | 'include_draft' | 'all',
-	): Promise<Dictionary<OsVersion[]>> => {
+	): Promise<Record<string, OsVersion[]>> => {
 		const extraFilterOptions = {
 			...((convenienceFilter === 'supported' ||
 				convenienceFilter === 'include_draft') && {
@@ -396,7 +392,7 @@ const getOsModel = function (
 		deviceType: DT,
 		pineOptions?: undefined,
 		extraOptions?: { includeDraft?: boolean },
-	): Promise<DT extends string ? OsVersion[] : Dictionary<OsVersion[]>>;
+	): Promise<DT extends string ? OsVersion[] : Record<string, OsVersion[]>>;
 	async function getAvailableOsVersions<
 		DT extends string | string[],
 		TP extends ODataOptionsWithoutCount<Release['Read']>,
@@ -407,7 +403,7 @@ const getOsModel = function (
 	): Promise<
 		DT extends string
 			? OsVersionResponse<TP>
-			: Dictionary<OsVersionResponse<TP>>
+			: Record<string, OsVersionResponse<TP>>
 	>;
 	/**
 	 * @summary Get the supported OS versions for the provided device type(s)
@@ -437,7 +433,7 @@ const getOsModel = function (
 		pineOptions?: TP,
 		extraOptions?: { includeDraft?: boolean },
 	): Promise<
-		TypeOrDictionary<OsVersion[] | OsVersionResponse<NonNullable<TP>>>
+		TypeOrRecord<string, OsVersion[] | OsVersionResponse<NonNullable<TP>>>
 	> {
 		const singleDeviceTypeArg =
 			typeof deviceTypes === 'string' ? deviceTypes : false;
@@ -465,7 +461,7 @@ const getOsModel = function (
 	async function getAllOsVersions(
 		deviceType: string[],
 		options?: undefined,
-	): Promise<Dictionary<OsVersion[]>>;
+	): Promise<Record<string, OsVersion[]>>;
 
 	async function getAllOsVersions<
 		TP extends ODataOptionsWithoutCount<Release['Read']>,
@@ -478,7 +474,7 @@ const getOsModel = function (
 	>(
 		deviceTypes: string[],
 		options?: TP,
-	): Promise<Dictionary<OsVersionResponse<NonNullable<TP>>>>;
+	): Promise<Record<string, OsVersionResponse<NonNullable<TP>>>>;
 	/**
 	 * @summary Get all OS versions for the provided device type(s), inlcuding invalidated ones
 	 * @name getAllOsVersions
@@ -507,7 +503,7 @@ const getOsModel = function (
 		deviceTypes: string[] | string,
 		options?: TP,
 	): Promise<
-		TypeOrDictionary<OsVersionResponse<NonNullable<TP>> | OsVersion[]>
+		TypeOrRecord<string, OsVersionResponse<NonNullable<TP>> | OsVersion[]>
 	> {
 		const singleDeviceTypeArg =
 			typeof deviceTypes === 'string' ? deviceTypes : false;

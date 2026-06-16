@@ -22,7 +22,6 @@ import {
 	itShouldGetAllTagsByResource,
 } from './tags';
 import type * as tagsHelper from './tags';
-import type { Dictionary } from '../../../typings/utils';
 import type { PickDeferred } from '@balena/abstract-sql-to-typescript';
 
 const uniquePropertyNames = [
@@ -295,7 +294,8 @@ describe('Release Model', function () {
 		});
 
 		describe(`given ${uniquePropertyNames.length} draft releases`, function () {
-			const testReleaseByField: Dictionary<
+			const testReleaseByField: Record<
+				string,
 				PickDeferred<
 					BalenaSdk.Release['Read'],
 					'id' | 'commit' | 'raw_version' | 'belongs_to__application'
