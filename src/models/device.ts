@@ -66,11 +66,7 @@ import {
 	MIN_SUPERVISOR_MC_API,
 } from './device.supervisor-api.partial';
 
-import type {
-	AtLeast,
-	Dictionary,
-	ResolvableReturnType,
-} from '../../typings/utils';
+import type { AtLeast, ResolvableReturnType } from '../../typings/utils';
 import type { DeviceType } from '../types/models';
 import type {
 	FilterObj,
@@ -314,12 +310,12 @@ const getDeviceModel = function (
 		uuidOrUuids: string[],
 		targetOsVersion: string,
 		options?: { runDetached?: boolean },
-	): Promise<Dictionary<OsUpdateActionResult>>;
+	): Promise<Record<string, OsUpdateActionResult>>;
 	async function startOsUpdate(
 		uuidOrUuids: string | string[],
 		targetOsVersion: string,
 		options: { runDetached?: boolean } = { runDetached: true },
-	): Promise<OsUpdateActionResult | Dictionary<OsUpdateActionResult>> {
+	): Promise<OsUpdateActionResult | Record<string, OsUpdateActionResult>> {
 		if (!targetOsVersion) {
 			throw new errors.BalenaInvalidParameterError(
 				'targetOsVersion',
@@ -347,7 +343,8 @@ const getDeviceModel = function (
 
 		const osUpdateHelper = await getOsUpdateHelper();
 
-		const results: Dictionary<
+		const results: Record<
+			string,
 			ResolvableReturnType<typeof osUpdateHelper.startOsUpdate>
 		> = {};
 

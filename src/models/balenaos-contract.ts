@@ -1,4 +1,3 @@
-import type { Dictionary } from '../../typings/utils';
 import type { Contract } from '../types/contract';
 
 // Hardcoded host OS contract, this should be moved to the Yocto build process with meta-balena.
@@ -43,7 +42,7 @@ export const BalenaOS: Contract = {
 			`To provision {{deviceType.name}}, follow the instructions using our [Jetson Flash tool](https://github.com/balena-os/jetson-flash/blob/master/docs/{{deviceType.slug}}.md) to make the process more streamlined.`,
 		],
 		usbMassStorage: [
-			`{{#each deviceType.partials.instructions}}{{{this}}} 
+			`{{#each deviceType.partials.instructions}}{{{this}}}
 			{{/each}}`,
 		],
 		edisonFlash: {
@@ -75,7 +74,7 @@ export const BalenaOS: Contract = {
 	},
 };
 
-export const aliases: Dictionary<string> = {
+export const aliases: Record<string, string> = {
 	sdcard: 'SD card',
 	usb_mass_storage: 'USB key',
 };

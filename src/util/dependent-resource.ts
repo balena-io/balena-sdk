@@ -21,7 +21,7 @@ key-value resources directly attached to a parent (e.g. tags, config variables).
 
 import { isId, isUnauthorizedResponse, mergePineOptions } from '../util';
 import type { BalenaModel, PineClient } from '..';
-import type { Dictionary, StringKeyof } from '../../typings/utils';
+import type { StringKeyof } from '../../typings/utils';
 import type {
 	ExpandableStringKeyOf,
 	Filter,
@@ -53,7 +53,7 @@ export function buildDependentResource<T extends DependentResourceName>(
 		resourceKeyField: StringKeyof<BalenaModel[T]['Read']>; // e.g. tag_key
 		parentResourceName: ExpandableStringKeyOf<BalenaModel[T]['Read']>; // e.g. device
 		getResourceId: (
-			uuidOrIdOrDict: string | number | Dictionary<unknown>,
+			uuidOrIdOrDict: string | number | Record<string, unknown>,
 		) => Promise<number>; // e.g. getId(uuidOrIdOrDict)
 	},
 ) {
@@ -76,7 +76,7 @@ export function buildDependentResource<T extends DependentResourceName>(
 		async getAllByParent<
 			O extends ODataOptionsWithoutCount<BalenaModel[T]['Read']>,
 		>(
-			parentParam: string | number | Dictionary<unknown>,
+			parentParam: string | number | Record<string, unknown>,
 			options?: O,
 		): Promise<OptionsToResponse<BalenaModel[T]['Read'], O, undefined>> {
 			const id = await getResourceId(parentParam);
@@ -96,7 +96,7 @@ export function buildDependentResource<T extends DependentResourceName>(
 		},
 
 		async get(
-			parentParam: string | number | Dictionary<unknown>,
+			parentParam: string | number | Record<string, unknown>,
 			key: string,
 		): Promise<string | undefined> {
 			const id = await getResourceId(parentParam);
@@ -117,7 +117,7 @@ export function buildDependentResource<T extends DependentResourceName>(
 		},
 
 		async set(
-			parentParam: string | number | Dictionary<unknown>,
+			parentParam: string | number | Record<string, unknown>,
 			key: string,
 			value: string,
 		): Promise<void> {
@@ -155,7 +155,7 @@ export function buildDependentResource<T extends DependentResourceName>(
 		},
 
 		async remove(
-			parentParam: string | number | Dictionary<unknown>,
+			parentParam: string | number | Record<string, unknown>,
 			key: string,
 		): Promise<void> {
 			const parentId = await getResourceId(parentParam);

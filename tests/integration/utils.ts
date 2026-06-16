@@ -1,6 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
 import * as _ from 'lodash';
-import type { Dictionary } from '../../typings/utils';
 import { balena } from './setup';
 
 export const getInitialOrganization = async () => {
@@ -41,7 +40,7 @@ export const getParam = <T>(
 				param[propertyEntry[1]] = param[propertyEntry[1]].__id;
 			}
 		}
-		return param as Dictionary<unknown>;
+		return param as Record<string, unknown>;
 	}
 
 	return resource[field];

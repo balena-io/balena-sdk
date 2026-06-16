@@ -2,7 +2,6 @@
 import * as _ from 'lodash';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
-import type { Dictionary } from '../../../typings/utils';
 import { getFieldLabel, getParam } from '../utils';
 import { expectError } from '../../util';
 import type { ODataOptionsWithoutCount } from 'pinejs-client-core';
@@ -22,7 +21,7 @@ const getAllByResourceFactory = function (
 ) {
 	const propName = getAllByResourcePropNameProvider(resourceName);
 	return function (
-		idOrUniqueParam: number | string | Dictionary<unknown>,
+		idOrUniqueParam: number | string | Record<string, unknown>,
 		options?: ODataOptionsWithoutCount<ResourceTagBase>,
 	) {
 		return (model as any)[propName](idOrUniqueParam, options) as Promise<
@@ -36,12 +35,12 @@ const getTagKey = (key: string | { [key: string]: string }) =>
 
 export interface TagModelBase {
 	set(
-		uuidOrIdOrDict: string | number | Dictionary<unknown>,
+		uuidOrIdOrDict: string | number | Record<string, unknown>,
 		tagKey: string,
 		value: string,
 	): Promise<void>;
 	remove(
-		uuidOrIdOrDict: string | number | Dictionary<unknown>,
+		uuidOrIdOrDict: string | number | Record<string, unknown>,
 		tagKey: string,
 	): Promise<void>;
 }
