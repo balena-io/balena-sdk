@@ -71,13 +71,35 @@ export function buildDependentResource<T extends DependentResourceName>(
 		const parentId = isId(parentParam)
 			? parentParam
 			: await getResourceId(parentParam);
+		const altKey = {
+			[parentResourceName]: parentId,
+			[resourceKeyField]: key,
+		};
+		const existingTag = await pine.get({
+			resource: resourceName satisfies DependentResourceName,
+			id: altKey,
+			options: {
+				$select: 'id',
+			},
+		});
 		try {
-			await pine.upsert({
+			if (existingTag == null) {
+				// We use upsert() instead of post() to automatically handle concurrent POSTs.
+				// In that which case the last POST will get a Conflict error, and the upsert()
+				// will automatically do a PATCH, so that the latest request persists the value.
+				await pine.upsert({
+					resource: resourceName satisfies DependentResourceName,
+					id: altKey,
+					body: {
+						value,
+					},
+				});
+				return;
+			}
+
+			await pine.patch({
 				resource: resourceName satisfies DependentResourceName,
-				id: {
-					[parentResourceName]: parentId,
-					[resourceKeyField]: key,
-				},
+				id: altKey,
 				body: {
 					value,
 				},
