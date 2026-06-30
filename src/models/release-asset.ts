@@ -147,8 +147,7 @@ const getReleaseAssetModel = function (
 		uploadParams: Required<Pick<UploadParams, 'chunkSize' | 'parallelUploads'>>,
 		totalSize: number,
 		onUploadProgress:
-			| ((progress: UploadProgressInfo) => void | Promise<void>)
-			| undefined,
+			((progress: UploadProgressInfo) => void | Promise<void>) | undefined,
 	) => {
 		let totalUploaded = 0;
 		return await limitedMap(
@@ -173,8 +172,7 @@ const getReleaseAssetModel = function (
 		asset: File | string,
 		uploadParams: Required<Pick<UploadParams, 'chunkSize' | 'parallelUploads'>>,
 		onUploadProgress:
-			| ((progress: UploadProgressInfo) => void | Promise<void>)
-			| undefined,
+			((progress: UploadProgressInfo) => void | Promise<void>) | undefined,
 	) => {
 		let metadata;
 		if (typeof asset === 'string') {
@@ -227,8 +225,7 @@ const getReleaseAssetModel = function (
 		{ asset, asset_key, release }: WriteReleaseAssetParams,
 		uploadParams: Required<Pick<UploadParams, 'chunkSize' | 'parallelUploads'>>,
 		onUploadProgress:
-			| ((progress: UploadProgressInfo) => void | Promise<void>)
-			| undefined,
+			((progress: UploadProgressInfo) => void | Promise<void>) | undefined,
 	) => {
 		const releaseAsset = await pine.post({
 			resource: 'release_asset',
@@ -272,9 +269,7 @@ const getReleaseAssetModel = function (
 			T extends ODataOptionsWithoutCount<ReleaseAsset['Read']>,
 		>(
 			commitOrIdOrRawVersion:
-				| string
-				| number
-				| ReleaseRawVersionApplicationPair,
+				string | number | ReleaseRawVersionApplicationPair,
 			options?: T,
 		): Promise<OptionsToResponse<ReleaseAsset['Read'], T, undefined>> {
 			const release = await getRelease(commitOrIdOrRawVersion, {

@@ -25,7 +25,4 @@ export interface PineDeferred {
 export type NavigationResource<T extends Resource['Read']> = [T] | PineDeferred;
 
 export type OptionalNavigationResource<T extends Resource['Read']> =
-	| []
-	| [T]
-	| PineDeferred
-	| null;
+	[] | [T] | PineDeferred | null;
