@@ -6,12 +6,7 @@ const OS_UPDATE_ACTION_NAME = 'resinhup';
 // See: https://github.com/balena-io/resin-proxy/issues/51#issuecomment-274251469
 export interface OsUpdateActionResult {
 	status:
-		| 'idle'
-		| 'in_progress'
-		| 'done'
-		| 'error'
-		| 'configuring'
-		| 'triggered';
+		'idle' | 'in_progress' | 'done' | 'error' | 'configuring' | 'triggered';
 	parameters?: {
 		target_version: string;
 	};
