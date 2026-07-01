@@ -165,8 +165,7 @@ describe('Organization Invite Model', function () {
 
 				describe('[mutating operations]', function () {
 					let membership:
-						| BalenaSdk.InviteeIsInvitedToOrganization['Read']
-						| undefined;
+						BalenaSdk.InviteeIsInvitedToOrganization['Read'] | undefined;
 					before(async function () {
 						const roles = await balena.pine.get({
 							resource: 'organization_membership_role',

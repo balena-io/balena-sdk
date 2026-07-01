@@ -20,10 +20,7 @@ export interface User {
 		actor: { __id: Actor['Read']['id'] } | [Actor['Read']];
 		username: Types['Short Text']['Read'];
 		has_legacy_link_to__organization:
-			| { __id: Organization['Read']['id'] }
-			| [Organization['Read']]
-			| []
-			| null;
+			{ __id: Organization['Read']['id'] } | [Organization['Read']] | [] | null;
 		user__has__public_key?: Array<UserHasPublicKey['Read']>;
 		user_public_key?: Array<UserHasPublicKey['Read']>;
 		user__is_member_of__organization?: Array<OrganizationMembership['Read']>;
@@ -152,15 +149,11 @@ export interface DeviceType {
 		slug: Types['Short Text']['Read'];
 		name: Types['Short Text']['Read'];
 		is_of__cpu_architecture:
-			| { __id: CpuArchitecture['Read']['id'] }
-			| [CpuArchitecture['Read']];
+			{ __id: CpuArchitecture['Read']['id'] } | [CpuArchitecture['Read']];
 		logo: Types['Text']['Read'] | null;
 		contract: Types['JSON']['Read'] | null;
 		belongs_to__device_family:
-			| { __id: DeviceFamily['Read']['id'] }
-			| [DeviceFamily['Read']]
-			| []
-			| null;
+			{ __id: DeviceFamily['Read']['id'] } | [DeviceFamily['Read']] | [] | null;
 		is_private: Types['Boolean']['Read'];
 		is_default_for__application?: Array<Application['Read']>;
 		device?: Array<Device['Read']>;
@@ -169,8 +162,7 @@ export interface DeviceType {
 		device_type__is_referenced_by__alias?: Array<DeviceTypeAlias['Read']>;
 		device_type_alias?: Array<DeviceTypeAlias['Read']>;
 		supports__cpu_architecture:
-			| { __id: CpuArchitecture['Read']['id'] }
-			| [CpuArchitecture['Read']];
+			{ __id: CpuArchitecture['Read']['id'] } | [CpuArchitecture['Read']];
 		is_referenced_by__alias?: Array<DeviceTypeAlias['Read']>;
 		is_accessible_privately_by__organization?: Array<
 			OrganizationHasPrivateAccessToDeviceType['Read']
@@ -204,8 +196,7 @@ export interface Image {
 		image__is_part_of__release?: Array<ImageIsPartOfRelease['Read']>;
 		release_image?: Array<ImageIsPartOfRelease['Read']>;
 		is_a_build_of__application__has__service_name:
-			| { __id: Service['Read']['id'] }
-			| [Service['Read']];
+			{ __id: Service['Read']['id'] } | [Service['Read']];
 		is__origin__of__delta?: Array<Delta['Read']>;
 		is_produced_by__delta?: Array<Delta['Read']>;
 	};
@@ -325,16 +316,11 @@ export interface Application {
 		app_name: Types['Text']['Read'];
 		slug: Types['Short Text']['Read'];
 		is_for__device_type:
-			| { __id: DeviceType['Read']['id'] }
-			| [DeviceType['Read']];
+			{ __id: DeviceType['Read']['id'] } | [DeviceType['Read']];
 		should_be_running__release:
-			| { __id: Release['Read']['id'] }
-			| [Release['Read']]
-			| []
-			| null;
+			{ __id: Release['Read']['id'] } | [Release['Read']] | [] | null;
 		application_type:
-			| { __id: ApplicationType['Read']['id'] }
-			| [ApplicationType['Read']];
+			{ __id: ApplicationType['Read']['id'] } | [ApplicationType['Read']];
 		is_host: Types['Boolean']['Read'];
 		is_archived: Types['Boolean']['Read'];
 		uuid: Types['Text']['Read'];
@@ -470,8 +456,7 @@ export interface ServiceLabel {
 		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 		application__has__service_name:
-			| { __id: Service['Read']['id'] }
-			| [Service['Read']];
+			{ __id: Service['Read']['id'] } | [Service['Read']];
 	};
 	Write: {
 		service: Types['Integer']['Write'];
@@ -488,8 +473,7 @@ export interface ServiceEnvironmentVariable {
 		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 		application__has__service_name:
-			| { __id: Service['Read']['id'] }
-			| [Service['Read']];
+			{ __id: Service['Read']['id'] } | [Service['Read']];
 	};
 	Write: {
 		service: Types['Integer']['Write'];
@@ -525,13 +509,9 @@ export interface Device {
 		device_name: Types['Short Text']['Read'];
 		note: Types['Text']['Read'] | null;
 		is_of__device_type:
-			| { __id: DeviceType['Read']['id'] }
-			| [DeviceType['Read']];
+			{ __id: DeviceType['Read']['id'] } | [DeviceType['Read']];
 		belongs_to__application:
-			| { __id: Application['Read']['id'] }
-			| [Application['Read']]
-			| []
-			| null;
+			{ __id: Application['Read']['id'] } | [Application['Read']] | [] | null;
 		is_online: Types['Boolean']['Read'];
 		last_connectivity_event: Types['Date Time']['Read'] | null;
 		is_connected_to_vpn: Types['Boolean']['Read'];
@@ -551,10 +531,7 @@ export interface Device {
 		is_undervolted: Types['Boolean']['Read'];
 		cpu_id: Types['Short Text']['Read'] | null;
 		is_running__release:
-			| { __id: Release['Read']['id'] }
-			| [Release['Read']]
-			| []
-			| null;
+			{ __id: Release['Read']['id'] } | [Release['Read']] | [] | null;
 		download_progress: Types['Integer']['Read'] | null;
 		status: Types['Short Text']['Read'] | null;
 		os_version: Types['Short Text']['Read'] | null;
@@ -570,25 +547,13 @@ export interface Device {
 			| []
 			| null;
 		is_pinned_on__release:
-			| { __id: Release['Read']['id'] }
-			| [Release['Read']]
-			| []
-			| null;
+			{ __id: Release['Read']['id'] } | [Release['Read']] | [] | null;
 		should_be_running__release:
-			| { __id: Release['Read']['id'] }
-			| [Release['Read']]
-			| []
-			| null;
+			{ __id: Release['Read']['id'] } | [Release['Read']] | [] | null;
 		should_be_operated_by__release:
-			| { __id: Release['Read']['id'] }
-			| [Release['Read']]
-			| []
-			| null;
+			{ __id: Release['Read']['id'] } | [Release['Read']] | [] | null;
 		should_be_managed_by__release:
-			| { __id: Release['Read']['id'] }
-			| [Release['Read']]
-			| []
-			| null;
+			{ __id: Release['Read']['id'] } | [Release['Read']] | [] | null;
 		update_status:
 			| 'rejected'
 			| 'downloading'
@@ -716,8 +681,7 @@ export interface ImageInstall {
 		download_progress: Types['Integer']['Read'] | null;
 		status: Types['Short Text']['Read'];
 		is_provided_by__release:
-			| { __id: Release['Read']['id'] }
-			| [Release['Read']];
+			{ __id: Release['Read']['id'] } | [Release['Read']];
 		image: { __id: Image['Read']['id'] } | [Image['Read']];
 	};
 	Write: {
@@ -752,12 +716,10 @@ export interface ServiceInstall {
 			DeviceServiceEnvironmentVariable['Read']
 		>;
 		application__has__service_name:
-			| { __id: Service['Read']['id'] }
-			| [Service['Read']];
+			{ __id: Service['Read']['id'] } | [Service['Read']];
 		service: { __id: Service['Read']['id'] } | [Service['Read']];
 		installs__application__has__service_name:
-			| { __id: Service['Read']['id'] }
-			| [Service['Read']];
+			{ __id: Service['Read']['id'] } | [Service['Read']];
 	};
 	Write: {
 		device: Types['Integer']['Write'];
@@ -769,17 +731,14 @@ export interface DeviceServiceEnvironmentVariable {
 	Read: {
 		created_at: Types['Date Time']['Read'];
 		service_install:
-			| { __id: ServiceInstall['Read']['id'] }
-			| [ServiceInstall['Read']];
+			{ __id: ServiceInstall['Read']['id'] } | [ServiceInstall['Read']];
 		name: Types['Short Text']['Read'];
 		id: Types['Integer']['Read'];
 		value: Types['Text']['Read'];
 		device__installs__application__has__service_name:
-			| { __id: ServiceInstall['Read']['id'] }
-			| [ServiceInstall['Read']];
+			{ __id: ServiceInstall['Read']['id'] } | [ServiceInstall['Read']];
 		device__installs__service:
-			| { __id: ServiceInstall['Read']['id'] }
-			| [ServiceInstall['Read']];
+			{ __id: ServiceInstall['Read']['id'] } | [ServiceInstall['Read']];
 	};
 	Write: {
 		service_install: Types['Integer']['Write'];
@@ -807,8 +766,7 @@ export interface Release {
 		created_at: Types['Date Time']['Read'];
 		id: Types['Integer']['Read'];
 		belongs_to__application:
-			| { __id: Application['Read']['id'] }
-			| [Application['Read']];
+			{ __id: Application['Read']['id'] } | [Application['Read']];
 		commit: Types['Short Text']['Read'];
 		composition: Types['JSON']['Read'];
 		status: Types['Short Text']['Read'];
@@ -838,10 +796,7 @@ export interface Release {
 		note: Types['Text']['Read'] | null;
 		invalidation_reason: Types['Text']['Read'] | null;
 		is_created_by__user:
-			| { __id: User['Read']['id'] }
-			| [User['Read']]
-			| []
-			| null;
+			{ __id: User['Read']['id'] } | [User['Read']] | [] | null;
 		release__has__tag_key?: Array<ReleaseTag['Read']>;
 		release_tag?: Array<ReleaseTag['Read']>;
 		release__has__asset_key?: Array<ReleaseAsset['Read']>;
@@ -970,8 +925,7 @@ export interface OrganizationMembership {
 		created_at: Types['Date Time']['Read'];
 		user: { __id: User['Read']['id'] } | [User['Read']];
 		is_member_of__organization:
-			| { __id: Organization['Read']['id'] }
-			| [Organization['Read']];
+			{ __id: Organization['Read']['id'] } | [Organization['Read']];
 		id: Types['Integer']['Read'];
 		organization_membership_role:
 			| { __id: OrganizationMembershipRole['Read']['id'] }
@@ -1123,8 +1077,7 @@ export interface ApplicationMembershipRole {
 		can_modify_release_assets: boolean;
 		/** @experimental This field is not part of the v7 model, should not be used and breaking changes may occur without notice. */
 		belongs_to__organization:
-			| { __id: Organization['Read']['id'] }
-			| [Organization['Read']];
+			{ __id: Organization['Read']['id'] } | [Organization['Read']];
 	};
 	Write: Record<string, never>;
 }
@@ -1145,8 +1098,7 @@ export interface CreditBundle {
 		is_created_by__user: { __id: User['Read']['id'] } | [User['Read']];
 		is_for__feature: { __id: Feature['Read']['id'] } | [Feature['Read']];
 		belongs_to__organization:
-			| { __id: Organization['Read']['id'] }
-			| [Organization['Read']];
+			{ __id: Organization['Read']['id'] } | [Organization['Read']];
 		unit_cost: Types['Integer']['Read'];
 		original_quantity: Types['Integer']['Read'];
 		available_balance: Types['Integer']['Read'];
@@ -1168,10 +1120,7 @@ export interface Delta {
 		created_at: Types['Date Time']['Read'];
 		id: Types['Integer']['Read'];
 		originates_from__image:
-			| { __id: Image['Read']['id'] }
-			| [Image['Read']]
-			| []
-			| null;
+			{ __id: Image['Read']['id'] } | [Image['Read']] | [] | null;
 		produces__image: { __id: Image['Read']['id'] } | [Image['Read']];
 		version: Types['Integer']['Read'];
 		status: Types['Short Text']['Read'];
@@ -1236,8 +1185,7 @@ export interface OauthApplicationAuthorization {
 		id: Types['Integer']['Read'];
 		belongs_to__user: { __id: User['Read']['id'] } | [User['Read']];
 		is_for__oauth_application:
-			| { __id: OauthApplication['Read']['id'] }
-			| [OauthApplication['Read']];
+			{ __id: OauthApplication['Read']['id'] } | [OauthApplication['Read']];
 	};
 	Write: {
 		id: Types['Integer']['Write'];
@@ -1312,8 +1260,7 @@ export interface Subscription {
 		id: Types['Integer']['Read'];
 		is_for__plan: { __id: Plan['Read']['id'] } | [Plan['Read']];
 		is_for__organization:
-			| { __id: Organization['Read']['id'] }
-			| [Organization['Read']];
+			{ __id: Organization['Read']['id'] } | [Organization['Read']];
 		billing_cycle: Types['Short Text']['Read'];
 		starts_on__date: Types['Date Time']['Read'];
 		ends_on__date: Types['Date Time']['Read'] | null;
@@ -1348,16 +1295,14 @@ export interface SubscriptionPrepaidAddon {
 	Read: {
 		id: Types['Integer']['Read'];
 		is_for__subscription:
-			| { __id: Subscription['Read']['id'] }
-			| [Subscription['Read']];
+			{ __id: Subscription['Read']['id'] } | [Subscription['Read']];
 		is_for__plan_addon: { __id: PlanAddon['Read']['id'] } | [PlanAddon['Read']];
 		discount_percentage: Types['Real']['Read'];
 		quantity: Types['Integer']['Read'];
 		starts_on__date: Types['Date Time']['Read'];
 		expires_on__date: Types['Date Time']['Read'] | null;
 		is_for__plan__offers__feature:
-			| { __id: PlanAddon['Read']['id'] }
-			| [PlanAddon['Read']];
+			{ __id: PlanAddon['Read']['id'] } | [PlanAddon['Read']];
 	};
 	Write: Record<string, never>;
 }
@@ -1379,8 +1324,7 @@ export interface Team {
 		created_at: Types['Date Time']['Read'];
 		id: Types['Integer']['Read'];
 		belongs_to__organization:
-			| { __id: Organization['Read']['id'] }
-			| [Organization['Read']];
+			{ __id: Organization['Read']['id'] } | [Organization['Read']];
 		name: Types['Short Text']['Read'];
 		description: Types['Text']['Read'] | null;
 		team__grants_access_to__application?: Array<TeamApplicationAccess['Read']>;
@@ -1449,8 +1393,7 @@ export interface TeamApplicationAccess {
 		created_at: Types['Date Time']['Read'];
 		team: { __id: Team['Read']['id'] } | [Team['Read']];
 		grants_access_to__application:
-			| { __id: Application['Read']['id'] }
-			| [Application['Read']];
+			{ __id: Application['Read']['id'] } | [Application['Read']];
 		id: Types['Integer']['Read'];
 		application_membership_role:
 			| { __id: ApplicationMembershipRole['Read']['id'] }
@@ -1484,8 +1427,7 @@ export interface UserIsMemberOfApplication {
 	Read: {
 		user: { __id: User['Read']['id'] } | [User['Read']];
 		is_member_of__application:
-			| { __id: Application['Read']['id'] }
-			| [Application['Read']];
+			{ __id: Application['Read']['id'] } | [Application['Read']];
 		id: Types['Integer']['Read'];
 		application_membership_role:
 			| { __id: ApplicationMembershipRole['Read']['id'] }
@@ -1504,18 +1446,14 @@ export interface InviteeIsInvitedToApplication {
 	Read: {
 		invitee: { __id: Invitee['Read']['id'] } | [Invitee['Read']];
 		is_invited_to__application:
-			| { __id: Application['Read']['id'] }
-			| [Application['Read']];
+			{ __id: Application['Read']['id'] } | [Application['Read']];
 		id: Types['Integer']['Read'];
 		application_membership_role:
 			| { __id: ApplicationMembershipRole['Read']['id'] }
 			| [ApplicationMembershipRole['Read']];
 		message: Types['Text']['Read'] | null;
 		is_created_by__user:
-			| { __id: User['Read']['id'] }
-			| [User['Read']]
-			| []
-			| null;
+			{ __id: User['Read']['id'] } | [User['Read']] | [] | null;
 		application: { __id: Application['Read']['id'] } | [Application['Read']];
 	};
 	Write: {
@@ -1530,18 +1468,14 @@ export interface InviteeIsInvitedToOrganization {
 	Read: {
 		invitee: { __id: Invitee['Read']['id'] } | [Invitee['Read']];
 		is_invited_to__organization:
-			| { __id: Organization['Read']['id'] }
-			| [Organization['Read']];
+			{ __id: Organization['Read']['id'] } | [Organization['Read']];
 		id: Types['Integer']['Read'];
 		organization_membership_role:
 			| { __id: OrganizationMembershipRole['Read']['id'] }
 			| [OrganizationMembershipRole['Read']];
 		message: Types['Text']['Read'] | null;
 		is_created_by__user:
-			| { __id: User['Read']['id'] }
-			| [User['Read']]
-			| []
-			| null;
+			{ __id: User['Read']['id'] } | [User['Read']] | [] | null;
 		organization: { __id: Organization['Read']['id'] } | [Organization['Read']];
 	};
 	Write: {
@@ -1597,13 +1531,11 @@ export interface OrganizationHasPrivateAccessToDeviceType {
 	Read: {
 		organization: { __id: Organization['Read']['id'] } | [Organization['Read']];
 		has_private_access_to__device_type:
-			| { __id: DeviceType['Read']['id'] }
-			| [DeviceType['Read']];
+			{ __id: DeviceType['Read']['id'] } | [DeviceType['Read']];
 		id: Types['Integer']['Read'];
 		device_type: { __id: DeviceType['Read']['id'] } | [DeviceType['Read']];
 		is_accessible_privately_by__organization:
-			| { __id: Organization['Read']['id'] }
-			| [Organization['Read']];
+			{ __id: Organization['Read']['id'] } | [Organization['Read']];
 	};
 	Write: Record<string, never>;
 }
@@ -1632,8 +1564,7 @@ export interface OrganizationCreditNotification {
 		created_at: Types['Date Time']['Read'];
 		organization: { __id: Organization['Read']['id'] } | [Organization['Read']];
 		owns_credit_notification_for__feature:
-			| { __id: Feature['Read']['id'] }
-			| [Feature['Read']];
+			{ __id: Feature['Read']['id'] } | [Feature['Read']];
 		id: Types['Integer']['Read'];
 		is_sent_when_below__threshold: Types['Integer']['Read'];
 		feature: { __id: Feature['Read']['id'] } | [Feature['Read']];
@@ -1690,17 +1621,14 @@ export interface SubscriptionDiscountsPlanAddon {
 	Read: {
 		subscription: { __id: Subscription['Read']['id'] } | [Subscription['Read']];
 		discounts__plan_addon:
-			| { __id: PlanAddon['Read']['id'] }
-			| [PlanAddon['Read']];
+			{ __id: PlanAddon['Read']['id'] } | [PlanAddon['Read']];
 		id: Types['Integer']['Read'];
 		discount_percentage: Types['Real']['Read'];
 		plan__offers__feature:
-			| { __id: PlanAddon['Read']['id'] }
-			| [PlanAddon['Read']];
+			{ __id: PlanAddon['Read']['id'] } | [PlanAddon['Read']];
 		plan_addon: { __id: PlanAddon['Read']['id'] } | [PlanAddon['Read']];
 		discounts__plan__offers__feature:
-			| { __id: PlanAddon['Read']['id'] }
-			| [PlanAddon['Read']];
+			{ __id: PlanAddon['Read']['id'] } | [PlanAddon['Read']];
 	};
 	Write: Record<string, never>;
 }
@@ -1708,13 +1636,9 @@ export interface SubscriptionDiscountsPlanAddon {
 export interface PublicDevice {
 	Read: {
 		is_of__device_type:
-			| { __id: DeviceType['Read']['id'] }
-			| [DeviceType['Read']];
+			{ __id: DeviceType['Read']['id'] } | [DeviceType['Read']];
 		belongs_to__application:
-			| { __id: Application['Read']['id'] }
-			| [Application['Read']]
-			| []
-			| null;
+			{ __id: Application['Read']['id'] } | [Application['Read']] | [] | null;
 		latitude: Types['Short Text']['Read'] | null;
 		longitude: Types['Short Text']['Read'] | null;
 		was_recently_online: Types['Boolean']['Read'];
@@ -1756,8 +1680,7 @@ export interface SamlAccount {
 		id: Types['Integer']['Read'];
 		belongs_to__user: { __id: User['Read']['id'] } | [User['Read']];
 		was_generated_by__identity_provider:
-			| { __id: IdentityProvider['Read']['id'] }
-			| [IdentityProvider['Read']];
+			{ __id: IdentityProvider['Read']['id'] } | [IdentityProvider['Read']];
 		remote_id: Types['Short Text']['Read'];
 		display_name: Types['Short Text']['Read'] | null;
 	};
@@ -1768,20 +1691,14 @@ export interface IdentityProviderMembership {
 	Read: {
 		organization: { __id: Organization['Read']['id'] } | [Organization['Read']];
 		is_authorized_by__identity_provider:
-			| { __id: IdentityProvider['Read']['id'] }
-			| [IdentityProvider['Read']];
+			{ __id: IdentityProvider['Read']['id'] } | [IdentityProvider['Read']];
 		id: Types['Integer']['Read'];
 		grants_access_to__team:
-			| { __id: Team['Read']['id'] }
-			| [Team['Read']]
-			| []
-			| null;
+			{ __id: Team['Read']['id'] } | [Team['Read']] | [] | null;
 		identity_provider:
-			| { __id: IdentityProvider['Read']['id'] }
-			| [IdentityProvider['Read']];
+			{ __id: IdentityProvider['Read']['id'] } | [IdentityProvider['Read']];
 		authorizes__organization:
-			| { __id: Organization['Read']['id'] }
-			| [Organization['Read']];
+			{ __id: Organization['Read']['id'] } | [Organization['Read']];
 	};
 	Write: {
 		organization: Types['Integer']['Write'];
@@ -1796,38 +1713,20 @@ export interface DeviceHistory {
 		id: Types['Integer']['Read'];
 		end_timestamp: Types['Date Time']['Read'] | null;
 		is_created_by__actor:
-			| { __id: Actor['Read']['id'] }
-			| [Actor['Read']]
-			| []
-			| null;
+			{ __id: Actor['Read']['id'] } | [Actor['Read']] | [] | null;
 		is_ended_by__actor:
-			| { __id: Actor['Read']['id'] }
-			| [Actor['Read']]
-			| []
-			| null;
+			{ __id: Actor['Read']['id'] } | [Actor['Read']] | [] | null;
 		tracks__device:
-			| { __id: Device['Read']['id'] }
-			| [Device['Read']]
-			| []
-			| null;
+			{ __id: Device['Read']['id'] } | [Device['Read']] | [] | null;
 		tracks__actor: { __id: Actor['Read']['id'] } | [Actor['Read']] | [] | null;
 		uuid: Types['Text']['Read'] | null;
 		belongs_to__application:
-			| { __id: Application['Read']['id'] }
-			| [Application['Read']]
-			| []
-			| null;
+			{ __id: Application['Read']['id'] } | [Application['Read']] | [] | null;
 		is_active: Types['Boolean']['Read'];
 		is_running__release:
-			| { __id: Release['Read']['id'] }
-			| [Release['Read']]
-			| []
-			| null;
+			{ __id: Release['Read']['id'] } | [Release['Read']] | [] | null;
 		is_pinned_on__release:
-			| { __id: Release['Read']['id'] }
-			| [Release['Read']]
-			| []
-			| null;
+			{ __id: Release['Read']['id'] } | [Release['Read']] | [] | null;
 		is_managed_by__service_instance:
 			| { __id: ServiceInstance['Read']['id'] }
 			| [ServiceInstance['Read']]
@@ -1837,16 +1736,10 @@ export interface DeviceHistory {
 		os_variant: Types['Short Text']['Read'] | null;
 		supervisor_version: Types['Short Text']['Read'] | null;
 		is_of__device_type:
-			| { __id: DeviceType['Read']['id'] }
-			| [DeviceType['Read']]
-			| []
-			| null;
+			{ __id: DeviceType['Read']['id'] } | [DeviceType['Read']] | [] | null;
 		cpu_id: Types['Short Text']['Read'] | null;
 		should_be_managed_by__release:
-			| { __id: Release['Read']['id'] }
-			| [Release['Read']]
-			| []
-			| null;
+			{ __id: Release['Read']['id'] } | [Release['Read']] | [] | null;
 	};
 	Write: Record<string, never>;
 }
@@ -1855,12 +1748,10 @@ export interface UserHasDirectAccessToApplication {
 	Read: {
 		user: { __id: User['Read']['id'] } | [User['Read']];
 		has_direct_access_to__application:
-			| { __id: Application['Read']['id'] }
-			| [Application['Read']];
+			{ __id: Application['Read']['id'] } | [Application['Read']];
 		application: { __id: Application['Read']['id'] } | [Application['Read']];
 		is_directly_accessible_by__user:
-			| { __id: User['Read']['id'] }
-			| [User['Read']];
+			{ __id: User['Read']['id'] } | [User['Read']];
 	};
 	Write: Record<string, never>;
 }
@@ -1869,8 +1760,7 @@ export interface ApplicationCanUseApplicationAsHost {
 	Read: {
 		application: { __id: Application['Read']['id'] } | [Application['Read']];
 		can_use__application_as_host:
-			| { __id: Application['Read']['id'] }
-			| [Application['Read']];
+			{ __id: Application['Read']['id'] } | [Application['Read']];
 	};
 	Write: Record<string, never>;
 }

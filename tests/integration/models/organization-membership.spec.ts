@@ -204,8 +204,7 @@ describe('Organization Membership Model', function () {
 		// TODO: re-add this test in the future, we need a way to accept email invites in order to add and remove a user during testing
 		describe.skip('given a member organization membership [contained scenario]', function () {
 			let membership:
-				| PickDeferred<BalenaSdk.OrganizationMembership['Read']>
-				| undefined;
+				PickDeferred<BalenaSdk.OrganizationMembership['Read']> | undefined;
 
 			describe('balena.models.organization.membership.remove()', function () {
 				for (const [title, keyGetter] of keyAlternatives) {
@@ -223,8 +222,7 @@ describe('Organization Membership Model', function () {
 
 		describe('given an organization with two organization memberships [contained scenario]', function () {
 			let memberMembership:
-				| BalenaSdk.OrganizationMembership['Read']
-				| undefined;
+				BalenaSdk.OrganizationMembership['Read'] | undefined;
 
 			before(async function () {
 				memberMembership = (

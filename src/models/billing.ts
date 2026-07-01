@@ -147,11 +147,7 @@ type BillingV1InvoiceState =
 	| 'voided'
 	| 'processing';
 type BillingV2InvoiceState =
-	| 'draft'
-	| 'open'
-	| 'paid'
-	| 'uncollectible'
-	| 'void';
+	'draft' | 'open' | 'paid' | 'uncollectible' | 'void';
 
 export interface InvoiceInfo {
 	closed_at: string;

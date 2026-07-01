@@ -17,8 +17,7 @@ interface BuilderBuildFromUrlErrorResponse {
 }
 
 type BuilderBuildFromUrlResponse =
-	| BuilderBuildFromUrlSuccessResponse
-	| BuilderBuildFromUrlErrorResponse;
+	BuilderBuildFromUrlSuccessResponse | BuilderBuildFromUrlErrorResponse;
 
 const isBuilderError = (error: any): error is BalenaBuilderRequestError =>
 	error.code === 'BalenaRequestError' &&

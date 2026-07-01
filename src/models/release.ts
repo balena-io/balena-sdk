@@ -74,9 +74,7 @@ const getReleaseModel = function (
 			async getResourceId(commitOrIdOrRawVersion) {
 				const { id } = await get(
 					commitOrIdOrRawVersion as
-						| string
-						| number
-						| ReleaseRawVersionApplicationPair,
+						string | number | ReleaseRawVersionApplicationPair,
 					{ $select: 'id' },
 				);
 				return id;
@@ -672,9 +670,7 @@ const getReleaseModel = function (
 			T extends ODataOptionsWithoutCount<ReleaseTag['Read']>,
 		>(
 			commitOrIdOrRawVersion:
-				| string
-				| number
-				| ReleaseRawVersionApplicationPair,
+				string | number | ReleaseRawVersionApplicationPair,
 			options?: T,
 		): Promise<OptionsToResponse<ReleaseTag['Read'], T, undefined>> {
 			const release = await get(commitOrIdOrRawVersion, {
