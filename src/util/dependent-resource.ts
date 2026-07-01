@@ -57,6 +57,44 @@ export function buildDependentResource<T extends DependentResourceName>(
 		) => Promise<number>; // e.g. getId(uuidOrIdOrDict)
 	},
 ) {
+	async function set(
+		parentParam: string | number | Record<string, unknown>,
+		key: string,
+		value: string,
+	): Promise<void> {
+		value = String(value);
+
+		// Trying to avoid an extra HTTP request
+		// when the provided parameter looks like an id.
+		// Note that this throws an exception for missing names/uuids,
+		// but not for missing ids
+		const parentId = isId(parentParam)
+			? parentParam
+			: await getResourceId(parentParam);
+		try {
+			await pine.upsert({
+				resource: resourceName satisfies DependentResourceName,
+				id: {
+					[parentResourceName]: parentId,
+					[resourceKeyField]: key,
+				},
+				body: {
+					value,
+				},
+			});
+		} catch (err) {
+			// Since Pine 7, when the post throws a 401
+			// then the associated parent resource might not exist.
+			// If we never checked that the resource actually exists
+			// then we should reject an appropriate error.
+			if (!isUnauthorizedResponse(err) || !isId(parentParam)) {
+				throw err;
+			}
+			await getResourceId(parentParam);
+			throw err;
+		}
+	}
+
 	const exports = {
 		getAll<O extends ODataOptionsWithoutCount<BalenaModel[T]['Read']>>(
 			options?: O,
@@ -116,43 +154,7 @@ export function buildDependentResource<T extends DependentResourceName>(
 			}
 		},
 
-		async set(
-			parentParam: string | number | Record<string, unknown>,
-			key: string,
-			value: string,
-		): Promise<void> {
-			value = String(value);
-
-			// Trying to avoid an extra HTTP request
-			// when the provided parameter looks like an id.
-			// Note that this throws an exception for missing names/uuids,
-			// but not for missing ids
-			const parentId = isId(parentParam)
-				? parentParam
-				: await getResourceId(parentParam);
-			try {
-				await pine.upsert({
-					resource: resourceName satisfies DependentResourceName,
-					id: {
-						[parentResourceName]: parentId,
-						[resourceKeyField]: key,
-					},
-					body: {
-						value,
-					},
-				});
-			} catch (err) {
-				// Since Pine 7, when the post throws a 401
-				// then the associated parent resource might not exist.
-				// If we never checked that the resource actually exists
-				// then we should reject an appropriate error.
-				if (!isUnauthorizedResponse(err) || !isId(parentParam)) {
-					throw err;
-				}
-				await getResourceId(parentParam);
-				throw err;
-			}
-		},
+		set,
 
 		async remove(
 			parentParam: string | number | Record<string, unknown>,
