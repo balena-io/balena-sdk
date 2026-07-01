@@ -1266,7 +1266,6 @@ describe('Device Model', function () {
 
 			describe('Given a device with a production image', function () {
 				givenADevice(before, {
-					is_online: true,
 					...testDeviceOsInfo,
 					os_variant: 'prod',
 					last_connectivity_event: '2019-05-13T16:14',
@@ -1317,7 +1316,6 @@ describe('Device Model', function () {
 
 			describe('Given a device with a development image', function () {
 				givenADevice(before, {
-					is_online: true,
 					...testDeviceOsInfo,
 					os_variant: 'dev',
 					last_connectivity_event: '2019-05-13T16:14',
@@ -2199,72 +2197,6 @@ describe('Device Model', function () {
 						});
 					}
 				});
-
-				describe('Given an offline device', function () {
-					before(async function () {
-						// Bring the device online just to reactivate it
-						await balena.pine.patch({
-							resource: 'device',
-							id: this.device.id,
-							body: {
-								is_online: true,
-							},
-						});
-						// Then disconnect the device again
-						await balena.pine.patch({
-							resource: 'device',
-							id: this.device.id,
-							body: {
-								is_online: false,
-							},
-						});
-					});
-
-					for (const prop of deviceUniqueFields) {
-						it(`should return disconnected when retrieving by ${prop}`, async function () {
-							const status = await balena.models.device.getStatus(
-								this.device[prop],
-							);
-							expect(status).to.equal('disconnected');
-						});
-					}
-				});
-			});
-		});
-
-		describe('given a vpn only online device', function () {
-			givenADevice(before, {
-				is_online: true,
-				...testDeviceOsInfo,
-			});
-
-			describe('balena.models.device.get()', function () {
-				it('should be able to retrieve computed terms', async function () {
-					const device = await balena.models.device.get(this.device.uuid, {
-						$select: ['overall_status', 'overall_progress'],
-					});
-					expect(device).to.deep.equal({
-						overall_status: 'disconnected',
-						overall_progress: null,
-					});
-				});
-			});
-
-			describe('balena.models.device.deactivate()', function () {
-				it('should be rejected if the device is online with statusCode 400', async function () {
-					await expectError(
-						async () => {
-							await balena.models.device.deactivate(this.device.uuid);
-						},
-						(error) => {
-							expect(error).to.have.property('statusCode', 400);
-							expect(error).to.have.property(
-								'message',
-								'Request error: Devices must be offline in order to be deactivated.',
-							);
-						},
-					);
-				});
 			});
 		});
 
@@ -2820,9 +2752,8 @@ describe('Device Model', function () {
 			});
 		});
 
-		describe('given a single online device on the downloading state', function () {
+		describe('given a single device on the downloading state', function () {
 			givenADevice(before, {
-				is_online: true,
 				...testDeviceOsInfo,
 				last_connectivity_event: '2019-05-13T16:14',
 				api_heartbeat_state: 'online',
