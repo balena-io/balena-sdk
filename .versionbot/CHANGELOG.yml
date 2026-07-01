@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update tests after API's switch from is_online to is_connected_to_vpn
+      hash: 1cad40aaafb636f758949f7ff733648593fef49f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://github.com/balena-io/balena-api/pull/6502
+        see: https://github.com/balena-io/balena-api/pull/6502
+      author: Thodoris Greasidis
+      nested: []
+  version: 23.2.11
+  title: ""
+  date: 2026-07-01T14:06:54.809Z
+- commits:
     - subject: Switch from custom `Dictionary` type to built in `Record` typing
       hash: b0b5cfcfda316993248df1b659451f06e1b850f0
       body: |
