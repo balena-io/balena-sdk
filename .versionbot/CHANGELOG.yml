@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency webpack-cli to v7
+      hash: d92cc3dd4e913fbc3ef14826becb417b43850401
+      body: |
+        Update webpack-cli from 6.0.1 to 7.1.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.2.12
+  title: ""
+  date: 2026-07-01T18:33:50.409Z
+- commits:
     - subject: Update tests after API's switch from is_online to is_connected_to_vpn
       hash: 1cad40aaafb636f758949f7ff733648593fef49f
       body: ""
