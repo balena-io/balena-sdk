@@ -84,12 +84,7 @@ export type OverrideProp<D, E, K> = K extends keyof E
 		: undefined;
 
 export type ExtraKeys =
-	| '$select'
-	| '$orderby'
-	| '$skip'
-	| '$top'
-	| '$filter'
-	| '$expand';
+	'$select' | '$orderby' | '$skip' | '$top' | '$filter' | '$expand';
 export type MergeSelect<
 	R extends Resource['Read'],
 	TDefault extends Readonly<ODataOptionsWithoutCount<R>>,
@@ -163,8 +158,7 @@ export type MergeExpandedOptions<
 	DExpand extends ToResourceExpand<R, _DExpand> = ToResourceExpand<R, _DExpand>,
 	EExpand extends ToResourceExpand<R, _EExpand> = ToResourceExpand<R, _EExpand>,
 	AllKeys extends StringKeyof<DExpand> | StringKeyof<EExpand> =
-		| StringKeyof<DExpand>
-		| StringKeyof<EExpand>,
+		StringKeyof<DExpand> | StringKeyof<EExpand>,
 > = {
 	[K in AllKeys]: K extends StringKeyof<DExpand>
 		? K extends StringKeyof<EExpand>

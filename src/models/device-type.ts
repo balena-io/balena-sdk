@@ -120,9 +120,7 @@ function getInstructionsFromContract(contract: Contract) {
 	});
 
 	return interpolatedHostOS.partials?.[installMethod] as
-		| Record<'Linux' | 'MacOS' | 'Windows', string[]>
-		| string[]
-		| undefined;
+		Record<'Linux' | 'MacOS' | 'Windows', string[]> | string[] | undefined;
 }
 
 const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
@@ -163,8 +161,7 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 			}
 
 			let deviceType:
-				| OptionsToResponse<DeviceType['Read'], T, undefined>[number]
-				| undefined;
+				OptionsToResponse<DeviceType['Read'], T, undefined>[number] | undefined;
 			if (typeof idOrSlug === 'string') {
 				deviceType = (
 					(await exports.getAll(
@@ -444,9 +441,7 @@ const getDeviceTypeModel = function (deps: InjectedDependenciesParam) {
 		 */
 		getInstructions: async (
 			deviceTypeSlugOrContract:
-				| string
-				| Contract
-				| NonNullable<DeviceType['Read']['contract']>,
+				string | Contract | NonNullable<DeviceType['Read']['contract']>,
 		): Promise<Record<'Linux' | 'MacOS' | 'Windows', string[]> | string[]> => {
 			if (Array.isArray(deviceTypeSlugOrContract)) {
 				throw new errors.BalenaInvalidParameterError(
