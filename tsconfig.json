@@ -15,7 +15,6 @@
             "dom",
             "es2019"
         ],
-        "esModuleInterop": true,
         "allowJs": true,
         "importHelpers": true
     },
