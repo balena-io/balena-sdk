@@ -1,4 +1,17 @@
 - commits:
+    - subject: Pin dependencies
+      hash: ff8e485597b37bbb4c12aa3adcecee2c297a46dc
+      body: |
+        Update @types/chai
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.2.13
+  title: ""
+  date: 2026-07-22T07:08:01.225Z
+- commits:
     - subject: Update dependency webpack-cli to v7
       hash: d92cc3dd4e913fbc3ef14826becb417b43850401
       body: |
