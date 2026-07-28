@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency rindle to v2
+      hash: 01e8122b989bbfaca4af4f1feacd4fca9bb9b06c
+      body: |
+        Update rindle from 1.3.6 to 2.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.2.14
+  title: ""
+  date: 2026-07-28T12:36:44.807Z
+- commits:
     - subject: Pin dependencies
       hash: ff8e485597b37bbb4c12aa3adcecee2c297a46dc
       body: |
