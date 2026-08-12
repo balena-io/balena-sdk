@@ -133,8 +133,11 @@
     "mime": "^3.0.0",
     "ndjson": "^2.0.0",
     "p-throttle": "^4.1.1",
-    "pinejs-client-core": "^8.4.0",
+    "pinejs-client-core": "8.5.29-build-reduce-parenthesis-for-or-and-84d63fb7dd545e18ac43051f685ab9adbe430273-1",
     "tslib": "^2.1.0"
+  },
+  "overrides": {
+    "pinejs-client-core": "8.5.29-build-reduce-parenthesis-for-or-and-84d63fb7dd545e18ac43051f685ab9adbe430273-1"
   },
   "versionist": {
     "publishedAt": "2026-08-12T22:30:46.523Z"
