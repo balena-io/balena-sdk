@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/setup-node action to v7
+      hash: 2c3efa94906c0474e44fcb4fec4d41f4928df1a5
+      body: |
+        Update actions/setup-node from 6.5.0 to 7.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.2.15
+  title: ""
+  date: 2026-08-12T22:30:46.005Z
+- commits:
     - subject: Update dependency rindle to v2
       hash: 01e8122b989bbfaca4af4f1feacd4fca9bb9b06c
       body: |
