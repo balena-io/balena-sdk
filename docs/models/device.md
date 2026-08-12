@@ -2949,7 +2949,7 @@ balena.models.device.tags.remove('7cf02a69e4d34c9da573914963cf54fd', 'EDITOR');
 * * *
 
 ### set
-<code>balena.models.device.tags.set(uuidOrId, tagKey, value)</code> ⇒ <code>Promise</code>
+<code>balena.models.device.tags.set(uuidOrId, tagKeyOrTags, [value])</code> ⇒ <code>Promise</code>
 
 **Kind**: static method of [<code>tags</code>](#balena.models.device.tags)  
 **Summary**: Set a device tag  
@@ -2965,10 +2965,10 @@ balena.models.device.tags.remove('7cf02a69e4d34c9da573914963cf54fd', 'EDITOR');
     <td>uuidOrId</td><td><code>String</code> | <code>Number</code></td><td><p>device uuid (string) or id (number)</p>
 </td>
     </tr><tr>
-    <td>tagKey</td><td><code>String</code></td><td><p>tag key</p>
+    <td>tagKeyOrTags</td><td><code>String</code> | <code>Object</code></td><td><p>Tag key (string) OR an object containing tag key-value pairs</p>
 </td>
     </tr><tr>
-    <td>value</td><td><code>String</code> | <code>undefined</code></td><td><p>tag value</p>
+    <td>[value]</td><td><code>String</code></td><td><p>Tag value (omit if providing an object for the second parameter)</p>
 </td>
     </tr>  </tbody>
 </table>
@@ -2976,6 +2976,10 @@ balena.models.device.tags.remove('7cf02a69e4d34c9da573914963cf54fd', 'EDITOR');
 **Example**  
 ```js
 balena.models.device.tags.set('7cf02a69e4d34c9da573914963cf54fd', 'EDITOR', 'vim');
+```
+**Example**  
+```js
+balena.models.device.tags.set('7cf02a69e4d34c9da573914963cf54fd', { EDITOR: 'vim', THEME: 'dark' });
 ```
 **Example**  
 ```js

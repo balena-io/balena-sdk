@@ -698,8 +698,8 @@ const getReleaseModel = function (
 		 * @memberof balena.models.release.tags
 		 *
 		 * @param {String|Number|Object} commitOrIdOrRawVersion - release commit (string) or id (number) or an object with the unique `application` (number or string) & `rawVersion` (string) pair of the release
-		 * @param {String} tagKey - tag key
-		 * @param {String|undefined} value - tag value
+		 * @param {String|Object} tagKeyOrTags - Tag key (string) OR an object containing tag key-value pairs
+		 * @param {String} [value] - Tag value (omit if providing an object for the second parameter)
 		 *
 		 * @returns {Promise}
 		 *
@@ -708,6 +708,9 @@ const getReleaseModel = function (
 		 *
 		 * @example
 		 * balena.models.release.tags.set('7cf02a69e4d34c9da573914963cf54fd', 'EDITOR', 'vim');
+		 *
+		 * @example
+		 * balena.models.release.tags.set('7cf02a69e4d34c9da573914963cf54fd', { EDITOR: 'vim', THEME: 'dark' });
 		 *
 		 * @example
 		 * balena.models.release.tags.set({application: 456, rawVersion: '0.0.0'}, 'EDITOR', 'vim');

@@ -812,7 +812,7 @@ balena.models.release.tags.remove({application: 456, rawVersion: '0.0.0'}, 'EDIT
 * * *
 
 ### set
-<code>balena.models.release.tags.set(commitOrIdOrRawVersion, tagKey, value)</code> ⇒ <code>Promise</code>
+<code>balena.models.release.tags.set(commitOrIdOrRawVersion, tagKeyOrTags, [value])</code> ⇒ <code>Promise</code>
 
 **Kind**: static method of [<code>tags</code>](#balena.models.release.tags)  
 **Summary**: Set a release tag  
@@ -828,10 +828,10 @@ balena.models.release.tags.remove({application: 456, rawVersion: '0.0.0'}, 'EDIT
     <td>commitOrIdOrRawVersion</td><td><code>String</code> | <code>Number</code> | <code>Object</code></td><td><p>release commit (string) or id (number) or an object with the unique <code>application</code> (number or string) &amp; <code>rawVersion</code> (string) pair of the release</p>
 </td>
     </tr><tr>
-    <td>tagKey</td><td><code>String</code></td><td><p>tag key</p>
+    <td>tagKeyOrTags</td><td><code>String</code> | <code>Object</code></td><td><p>Tag key (string) OR an object containing tag key-value pairs</p>
 </td>
     </tr><tr>
-    <td>value</td><td><code>String</code> | <code>undefined</code></td><td><p>tag value</p>
+    <td>[value]</td><td><code>String</code></td><td><p>Tag value (omit if providing an object for the second parameter)</p>
 </td>
     </tr>  </tbody>
 </table>
@@ -843,6 +843,10 @@ balena.models.release.tags.set(123, 'EDITOR', 'vim');
 **Example**  
 ```js
 balena.models.release.tags.set('7cf02a69e4d34c9da573914963cf54fd', 'EDITOR', 'vim');
+```
+**Example**  
+```js
+balena.models.release.tags.set('7cf02a69e4d34c9da573914963cf54fd', { EDITOR: 'vim', THEME: 'dark' });
 ```
 **Example**  
 ```js
