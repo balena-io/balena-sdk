@@ -113,7 +113,7 @@
     "util": "0.12.5",
     "watch": "1.0.2",
     "webpack": "5.108.4",
-    "webpack-bundle-analyzer": "4.10.2",
+    "webpack-bundle-analyzer": "5.3.2",
     "webpack-cli": "7.2.1"
   },
   "dependencies": {
