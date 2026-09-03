@@ -94,7 +94,7 @@
     "mjs-mocha": "3.0.0",
     "mocha": "11.7.6",
     "mocha.parallel": "0.15.6",
-    "mockttp": "3.17.1",
+    "mockttp": "4.6.2",
     "os-browserify": "0.3.0",
     "otplib": "12.0.1",
     "process": "0.11.10",
