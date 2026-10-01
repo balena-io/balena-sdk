@@ -1792,6 +1792,7 @@ export interface UserProfile {
 		account_type: Types['Text']['Read'] | null;
 		has_password_set: Types['Boolean']['Read'];
 		company: Types['Text']['Read'] | null;
+		has_responded_to_profile: Types['Boolean']['Read'];
 	};
 	Write: Record<string, never>;
 }
