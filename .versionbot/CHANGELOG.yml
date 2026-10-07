@@ -1,4 +1,26 @@
 - commits:
+    - subject: Update the release asset tests for unknown ids to a higher value
+      hash: d250e16434896188511e13359cdcc1a4beb9c6f9
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+      nested: []
+    - subject: "typings: Add the user_profile.has_responded_to_profile field"
+      hash: 24d17405f4b340e80e68def34b4ca96bab8d67b2
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://balena.fibery.io/Work/Project/3004
+        see: https://balena.fibery.io/Work/Project/3004
+      author: Thodoris Greasidis
+      nested: []
+  version: 23.2.16
+  title: ""
+  date: 2026-10-07T11:01:40.191Z
+- commits:
     - subject: Update actions/setup-node action to v7
       hash: 2c3efa94906c0474e44fcb4fec4d41f4928df1a5
       body: |
