@@ -52,7 +52,7 @@ describe('Release Asset Model', function () {
 		describe('balena.models.release.asset.get()', function () {
 			it('should be rejected if the release asset does not exist by id', async () => {
 				await expectError(async () => {
-					await balena.models.release.asset.get(999999);
+					await balena.models.release.asset.get(2 ** 31 - 1);
 				}, 'Release asset not found');
 			});
 
@@ -665,7 +665,7 @@ describe('Release Asset Model', function () {
 
 			it('should be rejected if the release asset does not exist by id', async function () {
 				await expectError(async () => {
-					await balena.models.release.asset.download(999999);
+					await balena.models.release.asset.download(2 ** 31 - 1);
 				}, 'Release asset not found');
 			});
 
@@ -748,7 +748,7 @@ describe('Release Asset Model', function () {
 				await expectError(
 					async () => {
 						await balena.models.release.asset.upload({
-							release: 999999,
+							release: 2 ** 31 - 1,
 							asset_key: 'invalid-release.txt',
 							asset: file,
 						});
