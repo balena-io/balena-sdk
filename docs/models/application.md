@@ -1919,7 +1919,7 @@ balena.models.application.tags.remove('myorganization/myapp', 'EDITOR');
 * * *
 
 ### set
-<code>balena.models.application.tags.set(slugOrUuidOrId, tagKey, value)</code> ⇒ <code>Promise</code>
+<code>balena.models.application.tags.set(slugOrUuidOrId, tagKeyOrTags, [value])</code> ⇒ <code>Promise</code>
 
 **Kind**: static method of [<code>tags</code>](#balena.models.application.tags)  
 **Summary**: Set an application tag  
@@ -1935,10 +1935,10 @@ balena.models.application.tags.remove('myorganization/myapp', 'EDITOR');
     <td>slugOrUuidOrId</td><td><code>String</code> | <code>Number</code></td><td><p>application slug (string), uuid (string) or id (number)</p>
 </td>
     </tr><tr>
-    <td>tagKey</td><td><code>String</code></td><td><p>tag key</p>
+    <td>tagKeyOrTags</td><td><code>String</code> | <code>Object</code></td><td><p>Tag key (string) OR an object containing tag key-value pairs</p>
 </td>
     </tr><tr>
-    <td>value</td><td><code>String</code> | <code>undefined</code></td><td><p>tag value</p>
+    <td>[value]</td><td><code>String</code></td><td><p>Tag value (omit if providing an object for the second parameter)</p>
 </td>
     </tr>  </tbody>
 </table>
@@ -1946,6 +1946,10 @@ balena.models.application.tags.remove('myorganization/myapp', 'EDITOR');
 **Example**  
 ```js
 balena.models.application.tags.set('myorganization/myapp', 'EDITOR', 'vim');
+```
+**Example**  
+```js
+balena.models.application.tags.set('myorganization/myapp', { EDITOR: 'vim', THEME: 'dark' });
 ```
 **Example**  
 ```js

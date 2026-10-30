@@ -404,13 +404,16 @@ const getOrganizationMembershipModel = function (
 			 * @memberof balena.models.organization.memberships.tags
 			 *
 			 * @param {Number} handleOrId - organization handle (string) or id (number).
-			 * @param {String} tagKey - tag key
-			 * @param {String|undefined} value - tag value
+			 * @param {String|Object} tagKeyOrTags - Tag key (string) OR an object containing tag key-value pairs
+			 * @param {String} [value] - Tag value (omit if providing an object for the second parameter)
 			 *
 			 * @returns {Promise}
 			 *
 			 * @example
 			 * balena.models.organization.memberships.tags.set(5, 'EDITOR', 'vim');
+			 *
+			 * @example
+			 * balena.models.organization.memberships.tags.set(5, { EDITOR: 'vim', THEME: 'dark' });
 			 */
 			set: tagsModel.set,
 
