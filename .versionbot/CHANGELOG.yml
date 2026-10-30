@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix lint breaking change
+      hash: 0aa4aa463ec9247c1031d6f9be8030405b0555fe
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 23.2.17
+  title: ""
+  date: 2026-10-30T18:00:25.195Z
+- commits:
     - subject: Update the release asset tests for unknown ids to a higher value
       hash: d250e16434896188511e13359cdcc1a4beb9c6f9
       body: ""
