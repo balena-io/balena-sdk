@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix SBOM generation
+      hash: baca51172fa1b9267a25be5771628637bb29d3a1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 23.2.18
+  title: ""
+  date: 2026-11-03T12:50:48.355Z
+- commits:
     - subject: Fix lint breaking change
       hash: 0aa4aa463ec9247c1031d6f9be8030405b0555fe
       body: ""
