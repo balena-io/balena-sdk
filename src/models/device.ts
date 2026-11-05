@@ -2234,7 +2234,6 @@ const getDeviceModel = function (
 			}
 		},
 
-		// TODO: At some point add => @deprecated Use models.device.pinToOsRelease
 		/**
 		 * @summary Start an OS update on a device
 		 * @name startOsUpdate
@@ -2242,6 +2241,7 @@ const getDeviceModel = function (
 		 * @function
 		 * @memberof balena.models.device
 		 *
+		 * @deprecated Use models.device.pinToOsRelease
 		 * @param {String|String[]} uuidOrUuids - full device uuid or array of full uuids
 		 * @param {String} targetOsVersion - semver-compatible version for the target device
 		 * Unsupported (unpublished) version will result in rejection.
@@ -2259,11 +2259,9 @@ const getDeviceModel = function (
 		 */
 		startOsUpdate,
 
-		// TODO: At some point remove the @experimental
 		/**
 		 * @summary Mark a specific device to be updated to a particular OS release
 		 * @name pinToOsRelease
-		 * @experimental
 		 * @public
 		 * @function
 		 * @memberof balena.models.device
