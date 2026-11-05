@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency rindle to v3
+      hash: 58d25547a0f212c1a078998751276df088d63269
+      body: |
+        Update rindle from 2.0.0 to 3.0.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.2.20
+  title: ""
+  date: 2026-11-05T20:44:56.079Z
+- commits:
     - subject: Update dependency webpack-bundle-analyzer to v5
       hash: f00836c81fa0c83226520cf7e79421bbb98d52ea
       body: |
