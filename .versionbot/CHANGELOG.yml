@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency webpack-bundle-analyzer to v5
+      hash: f00836c81fa0c83226520cf7e79421bbb98d52ea
+      body: |
+        Update webpack-bundle-analyzer from 4.10.2 to 5.4.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.2.19
+  title: ""
+  date: 2026-11-05T16:16:19.127Z
+- commits:
     - subject: Fix SBOM generation
       hash: baca51172fa1b9267a25be5771628637bb29d3a1
       body: ""
