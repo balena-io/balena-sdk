@@ -1367,13 +1367,16 @@ const getApplicationModel = function (
 			 * @memberof balena.models.application.tags
 			 *
 			 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
-			 * @param {String} tagKey - tag key
-			 * @param {String|undefined} value - tag value
+			 * @param {String|Object} tagKeyOrTags - Tag key (string) OR an object containing tag key-value pairs
+			 * @param {String} [value] - Tag value (omit if providing an object for the second parameter)
 			 *
 			 * @returns {Promise}
 			 *
 			 * @example
 			 * balena.models.application.tags.set('myorganization/myapp', 'EDITOR', 'vim');
+			 *
+			 * @example
+			 * balena.models.application.tags.set('myorganization/myapp', { EDITOR: 'vim', THEME: 'dark' });
 			 *
 			 * @example
 			 * balena.models.application.tags.set(123, 'EDITOR', 'vim');
