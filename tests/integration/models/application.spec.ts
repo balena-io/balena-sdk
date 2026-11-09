@@ -1,5 +1,11 @@
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
+import {
+	differenceWith,
+	isEqual,
+	isString,
+	omit,
+	pick,
+	startCase,
+} from 'es-toolkit';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import type * as BalenaSdk from '../../..';
@@ -190,7 +196,7 @@ describe('Application Model', function () {
 				for (const prop of organizationRetrievalFields) {
 					it(`should be able to create an application using the user's initial organization ${prop}`, async function () {
 						await balena.models.application.create({
-							name: `${TEST_APPLICATION_NAME_PREFIX}_FooBarByOrg${_.startCase(prop)}`,
+							name: `${TEST_APPLICATION_NAME_PREFIX}_FooBarByOrg${startCase(prop)}`,
 							deviceType: 'raspberrypi',
 							organization: this.initialOrg[prop],
 						});
@@ -611,7 +617,7 @@ describe('Application Model', function () {
 								).toISOString(),
 							})
 							.then(function (key) {
-								expect(_.isString(key)).to.be.true;
+								expect(isString(key)).to.be.true;
 								return expect(key).to.have.length(32);
 							});
 					});
@@ -639,10 +645,10 @@ describe('Application Model', function () {
 							this.application[prop],
 						);
 
-						const provisionKeys = _.differenceWith(
+						const provisionKeys = differenceWith(
 							updatedProvisioningKeys,
 							provisioningKeys,
-							_.isEqual,
+							isEqual,
 						);
 
 						expect(provisionKeys).to.have.lengthOf(1);
@@ -674,10 +680,10 @@ describe('Application Model', function () {
 							this.application[prop],
 						);
 
-						const provisionKeys = _.differenceWith(
+						const provisionKeys = differenceWith(
 							updatedProvisioningKeys,
 							provisioningKeys,
-							_.isEqual,
+							isEqual,
 						);
 
 						expect(provisionKeys).to.have.lengthOf(1);
@@ -710,10 +716,10 @@ describe('Application Model', function () {
 							this.application[prop],
 						);
 
-						const provisionKeys = _.differenceWith(
+						const provisionKeys = differenceWith(
 							updatedProvisioningKeys,
 							provisioningKeys,
-							_.isEqual,
+							isEqual,
 						);
 
 						expect(provisionKeys).to.have.lengthOf(1);
@@ -1448,10 +1454,13 @@ describe('Application Model', function () {
 			expectCommit = false,
 		) {
 			// Commit is empty on newly created application, so ignoring it
-			const omittedFields = ['owns__device', 'should_be_running__release'];
+			const omittedFields = [
+				'owns__device',
+				'should_be_running__release',
+			] as const;
 
-			expect(_.omit(application, omittedFields)).to.deep.equal(
-				_.omit(this.application, omittedFields),
+			expect(omit(application, omittedFields)).to.deep.equal(
+				omit(this.application, omittedFields),
 			);
 
 			// Check the app's target release after the release got created
@@ -1505,14 +1514,19 @@ describe('Application Model', function () {
 			expect(application.owns__device).to.have.lengthOf(1);
 			const [deviceDetails] = application.owns__device;
 			expect({
-				..._.pick(deviceDetails, Object.keys(deviceExpectation)),
+				...pick(
+					deviceDetails,
+					Object.keys(deviceExpectation) as Array<
+						keyof typeof deviceExpectation
+					>,
+				),
 				...pickCurrentServicesByAppDetails(deviceDetails, [
 					'id',
 					'service_id',
 					'image_id',
 					'status',
 					'download_progress',
-					...(expectCommit ? ['commit'] : []),
+					...(expectCommit ? (['commit'] as const) : []),
 				]),
 			}).to.deep.equal(deviceExpectation);
 

@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
+import { pick } from 'es-toolkit';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import {
@@ -91,7 +90,7 @@ describe('API Key model', function () {
 				});
 				expect(apiKeys).to.be.an('array');
 				expect(
-					apiKeys.map((apiKey) => _.pick(apiKey, ['name', 'description'])),
+					apiKeys.map((apiKey) => pick(apiKey, ['name', 'description'])),
 				).to.deep.equal([
 					{
 						name: `${TEST_KEY_NAME_PREFIX}_apiKey1`,
@@ -140,7 +139,7 @@ describe('API Key model', function () {
 				const apiKeys = await balena.models.apiKey.getAllNamedUserApiKeys();
 				expect(apiKeys).to.be.an('array');
 				expect(
-					apiKeys.map((apiKey) => _.pick(apiKey, ['name', 'description'])),
+					apiKeys.map((apiKey) => pick(apiKey, ['name', 'description'])),
 				).to.deep.equal([
 					{
 						name: `${TEST_KEY_NAME_PREFIX}_apiKey1`,

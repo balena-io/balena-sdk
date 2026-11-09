@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
+import { keyBy, mapValues, pick } from 'es-toolkit';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 import {
@@ -16,9 +15,14 @@ const keyAlternatives = [
 	['id', (member: BalenaSdk.UserIsMemberOfApplication['Read']) => member.id],
 	[
 		'alternate key',
-		(member: BalenaSdk.UserIsMemberOfApplication['Read']) =>
-			_.mapValues(
-				_.pick(member, ['user', 'is_member_of__application']),
+		(
+			member: Pick<
+				BalenaSdk.UserIsMemberOfApplication['Read'],
+				'user' | 'is_member_of__application'
+			>,
+		) =>
+			mapValues(
+				pick(member, ['user', 'is_member_of__application']),
 				(obj: BalenaSdk.PineDeferred | [{ id: number }]): number =>
 					'__id' in obj ? obj.__id : obj[0].id,
 			),
@@ -37,7 +41,7 @@ describe('Application Membership Model', function () {
 			resource: 'application_membership_role',
 			options: { $select: ['id', 'name'] },
 		});
-		this.applicationRoleMap = _.keyBy(roles, 'name');
+		this.applicationRoleMap = keyBy(roles, (role) => role.name);
 		for (const role of roles) {
 			expect(role).to.be.an('object');
 			expect(role).to.have.property('id').that.is.a('number');
