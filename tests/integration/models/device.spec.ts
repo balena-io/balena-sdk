@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
+import { differenceWith, isEqual, pick } from 'es-toolkit';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
 
@@ -927,10 +926,10 @@ describe('Device Model', function () {
 								this.device.id,
 							);
 
-						const deviceKeys = _.differenceWith(
+						const deviceKeys = differenceWith(
 							updatedDeviceKeys,
 							deviceApiKey,
-							_.isEqual,
+							isEqual,
 						);
 
 						expect(deviceKeys).to.have.lengthOf(1);
@@ -962,10 +961,10 @@ describe('Device Model', function () {
 								this.device.id,
 							);
 
-						const deviceKeys = _.differenceWith(
+						const deviceKeys = differenceWith(
 							updatedDeviceKeys,
 							deviceApiKey,
-							_.isEqual,
+							isEqual,
 						);
 
 						expect(deviceKeys).to.have.lengthOf(1);
@@ -2336,7 +2335,7 @@ describe('Device Model', function () {
 					};
 
 					expect({
-						..._.pick(deviceDetails, [
+						...pick(deviceDetails, [
 							'device_name',
 							'uuid',
 							'is_running__release',
@@ -2886,9 +2885,12 @@ describe('Device Model', function () {
 				for (let i = 0; i < BATCH_DEVICE_COUNT; i += REGISTRATION_CHUNK_SIZE) {
 					this.devices.push(
 						...(await Promise.all(
-							_.times(
-								Math.min(BATCH_DEVICE_COUNT - i, REGISTRATION_CHUNK_SIZE),
-							).map(async () => {
+							Array.from({
+								length: Math.min(
+									BATCH_DEVICE_COUNT - i,
+									REGISTRATION_CHUNK_SIZE,
+								),
+							}).map(async () => {
 								const uuid = balena.models.device.generateUniqueKey();
 								const deviceInfo = await balena.models.device.register(
 									this.application.id,
@@ -3075,7 +3077,7 @@ describe('Device Model', function () {
 						const deviceDetails =
 							await balena.models.device.getWithServiceDetails(this.device.id);
 						expect(
-							_.pick(deviceDetails, [
+							pick(deviceDetails, [
 								'device_name',
 								'uuid',
 								'is_running__release',
@@ -3317,7 +3319,9 @@ describe('Device Model', function () {
 				options: {
 					$filter: {
 						id: {
-							$in: _.map(this.apps, 'id'),
+							$in: Object.values<BalenaSdk.Application['Read']>(this.apps).map(
+								(app) => app.id,
+							),
 						},
 					},
 				},

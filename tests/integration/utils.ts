@@ -1,5 +1,5 @@
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
+import { pick } from 'es-toolkit';
+import type * as BalenaSdk from '../..';
 import { balena } from './setup';
 
 export const getInitialOrganization = async () => {
@@ -50,7 +50,7 @@ export const pickCurrentServicesByAppDetails = (
 	device: Awaited<
 		ReturnType<typeof balena.models.device.getWithServiceDetails>
 	>,
-	pickProps = [
+	pickProps: Array<keyof BalenaSdk.CurrentService> = [
 		'id',
 		'service_id',
 		'image_id',
@@ -67,7 +67,7 @@ export const pickCurrentServicesByAppDetails = (
 					Object.entries(detailsByService).map(
 						([serviceName, serviceInfos]) => [
 							serviceName,
-							serviceInfos.map((s) => _.pick(s, pickProps)),
+							serviceInfos.map((s) => pick(s, pickProps)),
 						],
 					),
 				),

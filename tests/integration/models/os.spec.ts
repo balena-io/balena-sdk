@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
+import { pick } from 'es-toolkit';
 import * as bSemver from 'balena-semver';
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
@@ -1319,7 +1318,12 @@ describe('OS model', function () {
 					.getConfig(ctx.application.id, configOptions)
 					.then(function (config) {
 						expect(
-							_.pick(config, ['appUpdatePollInterval', 'wifiKey', 'wifiSsid']),
+							// getConfig() is typed as returning `object`
+							pick(config as Record<string, unknown>, [
+								'appUpdatePollInterval',
+								'wifiKey',
+								'wifiSsid',
+							]),
 						).to.deep.equal({
 							// NOTE: the interval is converted to ms in the config object
 							appUpdatePollInterval:

@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import parallel from 'mocha.parallel';
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
+import { pick, sortBy } from 'es-toolkit';
 import type * as BalenaSdk from '../../..';
 import { delay, expectError, timeSuite } from '../../util';
 import { getFieldLabel, getParam } from '../utils';
@@ -275,7 +274,7 @@ describe('Release Model', function () {
 
 						const release = await balena.models.release.get(releaseId);
 						expect(
-							_.pick(release, [
+							pick(release, [
 								'id',
 								'status',
 								'source',
@@ -356,7 +355,7 @@ describe('Release Model', function () {
 							},
 						);
 						expect(
-							_.pick(freshRelease, ['id', 'commit', 'raw_version', 'is_final']),
+							pick(freshRelease, ['id', 'commit', 'raw_version', 'is_final']),
 						).to.deep.equal({
 							id: draftRelease.id,
 							commit: draftRelease.commit,
@@ -419,7 +418,7 @@ describe('Release Model', function () {
 			it('should get the requested release by id', async () => {
 				const release = await balena.models.release.get(ctx.currentRelease.id);
 				expect(
-					_.pick(release, [
+					pick(release, [
 						'status',
 						'source',
 						'commit',
@@ -440,7 +439,7 @@ describe('Release Model', function () {
 					ctx.currentRelease.commit,
 				);
 				expect(
-					_.pick(release, [
+					pick(release, [
 						'status',
 						'source',
 						'commit',
@@ -479,7 +478,7 @@ describe('Release Model', function () {
 					rawVersion: ctx.currentRelease.raw_version,
 				});
 				expect(
-					_.pick(release, [
+					pick(release, [
 						'status',
 						'source',
 						'commit',
@@ -505,10 +504,9 @@ describe('Release Model', function () {
 
 						// Need to sort explicitly because releases were both created
 						// at almost exactly the same time (just now, in test setup)
-						const sortedReleases = _.sortBy(
-							releases,
+						const sortedReleases = sortBy(releases, [
 							(release) => release.start_timestamp,
-						).map((r) => _.pick(r, ['status', 'source', 'commit']));
+						]).map((r) => pick(r, ['status', 'source', 'commit']));
 						expect(sortedReleases).to.deep.equal([
 							{
 								status: 'success',
@@ -531,7 +529,7 @@ describe('Release Model', function () {
 					ctx.currentRelease.id,
 				);
 				expect(
-					_.pick(release, ['commit', 'status', 'source', 'user']),
+					pick(release, ['commit', 'status', 'source', 'user']),
 				).to.deep.equal({
 					commit: 'new-release-commit',
 					status: 'success',
@@ -542,9 +540,9 @@ describe('Release Model', function () {
 					},
 				});
 				expect(
-					_.sortBy(
+					sortBy(
 						release.images.map(({ id, ...restImage }) => restImage),
-						(i) => i.service_name,
+						[(i) => i.service_name],
 					),
 				).to.deep.equal(
 					// Should not inlcude a build_log
@@ -557,7 +555,7 @@ describe('Release Model', function () {
 					ctx.currentRelease.commit,
 				);
 				expect(
-					_.pick(release, ['commit', 'status', 'source', 'user']),
+					pick(release, ['commit', 'status', 'source', 'user']),
 				).to.deep.equal({
 					commit: 'new-release-commit',
 					status: 'success',
@@ -568,9 +566,9 @@ describe('Release Model', function () {
 					},
 				});
 				expect(
-					_.sortBy(
+					sortBy(
 						release.images.map(({ id, ...restImage }) => restImage),
-						(i) => i.service_name,
+						[(i) => i.service_name],
 					),
 				).to.deep.equal(
 					// Should not inlcude a build_log
@@ -595,7 +593,7 @@ describe('Release Model', function () {
 					rawVersion: ctx.currentRelease.raw_version,
 				});
 				expect(
-					_.pick(release, ['commit', 'status', 'source', 'user']),
+					pick(release, ['commit', 'status', 'source', 'user']),
 				).to.deep.equal({
 					commit: 'new-release-commit',
 					status: 'success',
@@ -606,9 +604,9 @@ describe('Release Model', function () {
 					},
 				});
 				expect(
-					_.sortBy(
+					sortBy(
 						release.images.map(({ id, ...restImage }) => restImage),
-						(i) => i.service_name,
+						[(i) => i.service_name],
 					),
 				).to.deep.equal(
 					// Should not inlcude a build_log
@@ -625,9 +623,15 @@ describe('Release Model', function () {
 				);
 				expect(release).to.have.property('images').that.is.an('array');
 				expect(
-					_.sortBy(
-						release.images.map((i) => _.pick(i, ['service_name', 'build_log'])),
-						(i) => i.service_name,
+					sortBy(
+						// The return type doesn't reflect the extra $select
+						release.images.map((i) =>
+							pick(i as typeof i & { build_log: string | null }, [
+								'service_name',
+								'build_log',
+							]),
+						),
+						[(i) => i.service_name],
 					),
 				).to.deep.equal([
 					{
@@ -847,13 +851,11 @@ describe('Release Model', function () {
 					const release = await balena.models.release.getWithImageDetails(
 						'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
 					);
-					expect(_.pick(release, ['commit', 'status', 'source'])).to.deep.equal(
-						{
-							commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
-							status: 'success',
-							source: 'cloud',
-						},
-					);
+					expect(pick(release, ['commit', 'status', 'source'])).to.deep.equal({
+						commit: 'feb2361230dc40dba6dca9a18f2c19dc8f2c19dc',
+						status: 'success',
+						source: 'cloud',
+					});
 				});
 			});
 		});

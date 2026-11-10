@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
-import * as _ from 'lodash';
+import { pick } from 'es-toolkit';
 import type * as _fs from 'fs';
 import { expect } from 'chai';
 import {
@@ -39,7 +38,8 @@ describe('Billing Model', function () {
 			it('should return a free tier billing plan object', async function () {
 				const plan = await balena.models.billing.getPlan(this.initialOrg.id);
 				expect(
-					_.pick(plan, [
+					// BillingPlanInfo doesn't declare the top-level addOns the API returns
+					pick(plan as typeof plan & { addOns: unknown[] }, [
 						'title',
 						'name',
 						'code',
@@ -340,7 +340,8 @@ describe('Billing Model', function () {
 						.getPlan(this.initialOrg.id)
 						.then(function (plan) {
 							expect(
-								_.pick(plan, [
+								// BillingPlanInfo doesn't declare the top-level addOns the API returns
+								pick(plan as typeof plan & { addOns: unknown[] }, [
 									'title',
 									'name',
 									'code',
