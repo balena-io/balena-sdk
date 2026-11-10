@@ -2259,11 +2259,9 @@ const getDeviceModel = function (
 		 */
 		startOsUpdate,
 
-		// TODO: At some point remove the @experimental
 		/**
 		 * @summary Mark a specific device to be updated to a particular OS release
 		 * @name pinToOsRelease
-		 * @experimental
 		 * @public
 		 * @function
 		 * @memberof balena.models.device

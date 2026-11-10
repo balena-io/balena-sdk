@@ -1385,7 +1385,6 @@ balena.models.device.ping(123);
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Mark a specific device to be updated to a particular OS release  
 **Access**: public  
-**Experimental**:   
 <table>
   <thead>
     <tr>
