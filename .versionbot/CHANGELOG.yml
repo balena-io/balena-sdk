@@ -1,4 +1,16 @@
 - commits:
+    - subject: Replace lodash with es-toolkit
+      hash: 4e6966aefa2400737215f8ae48b449833e5177d5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 23.2.21
+  title: ""
+  date: 2026-11-10T08:49:29.859Z
+- commits:
     - subject: Update dependency rindle to v3
       hash: 58d25547a0f212c1a078998751276df088d63269
       body: |
