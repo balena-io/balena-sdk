@@ -1,11 +1,11 @@
 {
 	"*.js": [
-		"balena-lint --fix"
+		"balena-lint -t tsconfig.dev.json --fix"
 	],
 	"*.mjs": [
-		"balena-lint --fix"
+		"balena-lint -t tsconfig.dev.json --fix"
 	],
 	"*.ts": [
-		"balena-lint --fix"
+		"balena-lint -t tsconfig.dev.json --fix"
 	]
 }
