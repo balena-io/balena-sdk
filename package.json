@@ -56,8 +56,8 @@
     "build": "npm run clean && npm run build-es2017 && npm run lint && npm run build-es2018 && npm run docs",
     "docs": "node scripts/jsd2md.js",
     "ci": "npm test && catch-uncommitted",
-    "lint": "balena-lint -e js -e ts typing_tests typings src tests mjs_tests scripts/inject-version.js webpack.config.js webpack.bundle-analyzer-config.js",
-    "lint-fix": "balena-lint -e js -e ts --fix typing_tests typings src tests mjs_tests scripts/inject-version.js webpack.config.js webpack.bundle-analyzer-config.js",
+    "lint": "balena-lint -e js -e ts -t tsconfig.dev.json typing_tests typings src tests mjs_tests scripts/inject-version.js webpack.config.js webpack.bundle-analyzer-config.js",
+    "lint-fix": "balena-lint -e js -e ts -t tsconfig.dev.json --fix typing_tests typings src tests mjs_tests scripts/inject-version.js webpack.config.js webpack.bundle-analyzer-config.js",
     "prepack": "npm run build",
     "watch": "npm run build && watch \"npm run lint\" \"src\" \"tests\"",
     "prepare": "husky"
