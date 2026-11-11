@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add explicit dev-dependency for es-toolkit
+      hash: 52f56c114da2e189a516fa68c85c56179ac8a35d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 23.2.22
+  title: ""
+  date: 2026-11-11T15:31:01.146Z
+- commits:
     - subject: Replace lodash with es-toolkit
       hash: 4e6966aefa2400737215f8ae48b449833e5177d5
       body: ""
