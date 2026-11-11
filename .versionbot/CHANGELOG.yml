@@ -1,4 +1,16 @@
 - commits:
+    - subject: Remove eslint.config.js in favor of @balena/lint's default
+      hash: 2520d2d9ce48acfe6157bdf5b805365f3d1d6dfb
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 23.2.23
+  title: ""
+  date: 2026-11-11T16:56:46.552Z
+- commits:
     - subject: Add explicit dev-dependency for es-toolkit
       hash: 52f56c114da2e189a516fa68c85c56179ac8a35d
       body: ""
