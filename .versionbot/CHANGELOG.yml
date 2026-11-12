@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update @balena/lint to v11
+      hash: dd3701974b4386a980ad5b0c32535efac98a0045
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 23.2.24
+  title: ""
+  date: 2026-11-12T00:37:56.491Z
+- commits:
     - subject: Remove eslint.config.js in favor of @balena/lint's default
       hash: 2520d2d9ce48acfe6157bdf5b805365f3d1d6dfb
       body: ""
