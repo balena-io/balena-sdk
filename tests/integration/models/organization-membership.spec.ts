@@ -202,6 +202,7 @@ describe('Organization Membership Model', function () {
 
 		// TODO: re-add this test in the future, we need a way to accept email invites in order to add and remove a user during testing
 		describe.skip('given a member organization membership [contained scenario]', function () {
+			// eslint-disable-next-line no-unassigned-vars -- TODO: look into this when this test is re-added
 			let membership:
 				PickDeferred<BalenaSdk.OrganizationMembership['Read']> | undefined;
 

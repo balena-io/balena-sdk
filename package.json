@@ -69,7 +69,7 @@
   },
   "devDependencies": {
     "@balena/env-parsing": "^1.2.6",
-    "@balena/lint": "^9.3.12",
+    "@balena/lint": "^11.1.0",
     "@types/chai": "4.3.20",
     "@types/memoizee": "0.4.12",
     "@types/mime": "3.0.4",
