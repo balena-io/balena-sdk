@@ -147,17 +147,16 @@ describe('Team Application Access Model', function () {
 					newRoleName,
 				);
 
-				const roleId = (
-					await balena.pine.get({
-						resource: 'application_membership_role',
-						id: {
+				const [{ id: roleId }] = await balena.pine.get({
+					resource: 'application_membership_role',
+					options: {
+						$select: 'id',
+						$filter: {
 							name: newRoleName,
+							belongs_to__organization: null,
 						},
-						options: {
-							$select: 'id',
-						},
-					})
-				)?.id;
+					},
+				});
 
 				const updatedAccess = await balena.models.team.applicationAccess.get(
 					ctx.teamApplicationAccessWrite.id,
