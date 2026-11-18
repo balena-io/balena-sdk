@@ -154,14 +154,15 @@ describe('Device Model', function () {
 						});
 					});
 
-					applicationRetrievalFields.forEach((prop, i) => {
+					applicationRetrievalFields.forEach((prop) => {
 						it(`should be able to register a device to a valid application ${prop}`, async function () {
 							const uuid = balena.models.device.generateUniqueKey();
 							await balena.models.device.register(this.application[prop], uuid);
-							const apps = await balena.models.device.getAllByApplication(
+							const devices = await balena.models.device.getAllByApplication(
 								this.application.slug,
+								{ $select: 'uuid' },
 							);
-							expect(apps).to.have.length(i + 1);
+							expect(devices.map((d) => d.uuid)).to.include(uuid);
 						});
 					});
 
@@ -2881,7 +2882,7 @@ describe('Device Model', function () {
 		describe(`given ${BATCH_DEVICE_COUNT} registered offline device`, function () {
 			before(async function () {
 				this.devices = [];
-				const REGISTRATION_CHUNK_SIZE = 10;
+				const REGISTRATION_CHUNK_SIZE = 2;
 				for (let i = 0; i < BATCH_DEVICE_COUNT; i += REGISTRATION_CHUNK_SIZE) {
 					this.devices.push(
 						...(await Promise.all(
