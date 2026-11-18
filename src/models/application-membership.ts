@@ -55,13 +55,14 @@ const getApplicationMembershipModel = function (
 	const getRoleId = async (
 		roleName: ApplicationMembershipRole['Read']['name'],
 	) => {
-		const role = await pine.get({
+		const [role] = await pine.get({
 			resource: 'application_membership_role',
-			id: {
-				name: roleName,
-			},
 			options: {
 				$select: 'id',
+				$filter: {
+					name: roleName,
+					belongs_to__organization: null,
+				},
 			},
 		});
 		// Throw if the user provided a roleName, but we didn't find that role
