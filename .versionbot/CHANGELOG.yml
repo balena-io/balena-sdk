@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix membership role lookup to only match default roles
+      hash: a74aeb2e3e312ac95a0c4abcf05de058b1d10204
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Andrea Rosci
+      nested: []
+  version: 23.2.25
+  title: ""
+  date: 2026-11-18T11:39:38.521Z
+- commits:
     - subject: Update @balena/lint to v11
       hash: dd3701974b4386a980ad5b0c32535efac98a0045
       body: ""
