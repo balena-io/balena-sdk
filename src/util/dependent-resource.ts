@@ -28,6 +28,7 @@ import type {
 	ODataOptionsWithoutCount,
 	OptionsToResponse,
 } from 'pinejs-client-core';
+import { BalenaInvalidParameterError } from '../errors';
 
 type DependentResourceName = {
 	[K in StringKeyof<BalenaModel>]: BalenaModel[K] extends {
@@ -57,6 +58,124 @@ export function buildDependentResource<T extends DependentResourceName>(
 		) => Promise<number>; // e.g. getId(uuidOrIdOrDict)
 	},
 ) {
+	async function set(
+		parentParam: string | number | Record<string, unknown>,
+		key: string,
+		value: string,
+	): Promise<void>;
+	async function set(
+		parentParam: string | number | Record<string, unknown>,
+		tags: Record<string, string>,
+	): Promise<void>;
+	async function set(
+		parentParam: string | number | Record<string, unknown>,
+		keyOrTags: string | Record<string, string>,
+		value?: string,
+	): Promise<void> {
+		let tags: Record<string, string>;
+		if (keyOrTags == null) {
+			throw new BalenaInvalidParameterError('keyOrTags', keyOrTags);
+		}
+		if (typeof keyOrTags === 'object') {
+			if (arguments.length > 2) {
+				throw new BalenaInvalidParameterError('value', value);
+			}
+			const values = Object.values(keyOrTags);
+			if (values.length === 0) {
+				throw new BalenaInvalidParameterError('value', value);
+			}
+			for (const v of values) {
+				if (typeof v !== 'string') {
+					throw new BalenaInvalidParameterError('value', value);
+				}
+			}
+			tags = keyOrTags;
+		} else {
+			tags = { [keyOrTags]: String(value) };
+		}
+
+		// Trying to avoid an extra HTTP request
+		// when the provided parameter looks like an id.
+		// Note that this throws an exception for missing names/uuids,
+		// but not for missing ids
+		const parentId = isId(parentParam)
+			? parentParam
+			: await getResourceId(parentParam);
+		const existingTags = await pine.get({
+			resource: resourceName satisfies DependentResourceName,
+			options: {
+				$select: [
+					// @ts-expect-error -- The resourceKeyField can be 'tag_key' for tags or 'name' for vars
+					// so this can't be narrowed to a common field for all resources that the get()
+					// can infer a fully typed result from.
+					resourceKeyField,
+					'value',
+				],
+				$filter: {
+					[parentResourceName]: parentId,
+					[resourceKeyField]: { $in: Object.keys(tags) },
+				},
+			},
+		});
+		if (!Array.isArray(existingTags)) {
+			// manually narrowing down the result type b/c we had to use @ts-expect-error for the resourceKeyField
+			throw new Error('Unexpected dependent resource response format');
+		}
+		const existingTagByKey = Object.fromEntries(
+			existingTags.map((tag) => [
+				// @ts-expect-error -- The resourceKeyField can be tag_key for tags or name for vars
+				tag[resourceKeyField] as string,
+				tag,
+			]),
+		);
+		await Promise.all(
+			Object.entries(tags).map(async ([key, newValue]) => {
+				const existingTag = existingTagByKey[key];
+				if (existingTag?.value === newValue) {
+					return;
+				}
+
+				const altKey = {
+					[parentResourceName]: parentId,
+					[resourceKeyField]: key,
+				};
+				try {
+					if (existingTag == null) {
+						// We use upsert() instead of post() to automatically handle concurrent POSTs.
+						// In that which case the last POST will get a Conflict error, and the upsert()
+						// will automatically do a PATCH, so that the latest request persists the value.
+						await pine.upsert({
+							resource: resourceName satisfies DependentResourceName,
+							id: altKey,
+							body: {
+								value: newValue,
+							},
+						});
+						return;
+					}
+
+					await pine.patch({
+						resource: resourceName satisfies DependentResourceName,
+						id: altKey,
+						body: {
+							value: newValue,
+						},
+					});
+				} catch (err) {
+					// Since Pine 7, when the post throws a 401
+					// then the associated parent resource might not exist.
+					// If we never checked that the resource actually exists
+					// then we should reject an appropriate error.
+					if (!isUnauthorizedResponse(err) || !isId(parentParam)) {
+						throw err;
+					}
+					await getResourceId(parentParam);
+					throw err;
+				}
+			}),
+		);
+	}
+
 	const exports = {
 		getAll<O extends ODataOptionsWithoutCount<BalenaModel[T]['Read']>>(
 			options?: O,
@@ -116,43 +235,7 @@ export function buildDependentResource<T extends DependentResourceName>(
 			}
 		},
 
-		async set(
-			parentParam: string | number | Record<string, unknown>,
-			key: string,
-			value: string,
-		): Promise<void> {
-			value = String(value);
-
-			// Trying to avoid an extra HTTP request
-			// when the provided parameter looks like an id.
-			// Note that this throws an exception for missing names/uuids,
-			// but not for missing ids
-			const parentId = isId(parentParam)
-				? parentParam
-				: await getResourceId(parentParam);
-			try {
-				await pine.upsert({
-					resource: resourceName satisfies DependentResourceName,
-					id: {
-						[parentResourceName]: parentId,
-						[resourceKeyField]: key,
-					},
-					body: {
-						value,
-					},
-				});
-			} catch (err) {
-				// Since Pine 7, when the post throws a 401
-				// then the associated parent resource might not exist.
-				// If we never checked that the resource actually exists
-				// then we should reject an appropriate error.
-				if (!isUnauthorizedResponse(err) || !isId(parentParam)) {
-					throw err;
-				}
-				await getResourceId(parentParam);
-				throw err;
-			}
-		},
+		set,
 
 		async remove(
 			parentParam: string | number | Record<string, unknown>,

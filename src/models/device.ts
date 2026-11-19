@@ -2448,13 +2448,16 @@ const getDeviceModel = function (
 			 * @memberof balena.models.device.tags
 			 *
 			 * @param {String|Number} uuidOrId - device uuid (string) or id (number)
-			 * @param {String} tagKey - tag key
-			 * @param {String|undefined} value - tag value
+			 * @param {String|Object} tagKeyOrTags - Tag key (string) OR an object containing tag key-value pairs
+			 * @param {String} [value] - Tag value (omit if providing an object for the second parameter)
 			 *
 			 * @returns {Promise}
 			 *
 			 * @example
 			 * balena.models.device.tags.set('7cf02a69e4d34c9da573914963cf54fd', 'EDITOR', 'vim');
+			 *
+			 * @example
+			 * balena.models.device.tags.set('7cf02a69e4d34c9da573914963cf54fd', { EDITOR: 'vim', THEME: 'dark' });
 			 *
 			 * @example
 			 * balena.models.device.tags.set(123, 'EDITOR', 'vim');
