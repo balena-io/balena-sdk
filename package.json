@@ -91,7 +91,7 @@
     "karma": "6.4.4",
     "lint-staged": "17.1.1",
     "mjs-mocha": "3.0.0",
-    "mocha": "11.7.6",
+    "mocha": "12.0.3",
     "mocha.parallel": "0.15.6",
     "mockttp": "3.17.1",
     "os-browserify": "0.3.0",
