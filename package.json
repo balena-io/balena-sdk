@@ -70,7 +70,7 @@
   "devDependencies": {
     "@balena/env-parsing": "^1.2.6",
     "@balena/lint": "^11.1.0",
-    "@types/chai": "4.3.20",
+    "@types/chai": "5.2.3",
     "@types/memoizee": "0.4.12",
     "@types/mime": "3.0.4",
     "@types/mocha": "10.0.10",
@@ -80,7 +80,7 @@
     "balena-config-karma": "4.0.3",
     "buffer": "6.0.3",
     "catch-uncommitted": "2.0.0",
-    "chai": "4.5.0",
+    "chai": "5.3.3",
     "crypto-browserify": "3.12.1",
     "domain-browser": "5.7.0",
     "dotenv": "17.4.2",
