@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency @types/sinon to v22
+      hash: 682c7a644c0404924a40f283404f085ab7080c42
+      body: |
+        Update @types/sinon from 21.0.1 to 22.0.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.2.27
+  title: ""
+  date: 2026-11-19T22:34:16.194Z
+- commits:
     - subject: Update v7 model
       hash: b7b6fac444855b1cb0cf808970457030efd639d1
       body: ""
