@@ -256,7 +256,12 @@ export const getSdk = function ($opts?: SdkOptions) {
 	const auth = new BalenaAuth(opts);
 	const request = getRequest({ ...opts, auth });
 	if (opts.requestLimit != null && opts.requestLimit > 0) {
-		const pThrottle = require('p-throttle') as typeof import('p-throttle');
+		const { default: pThrottle } = require('p-throttle') as typeof import(
+			'p-throttle',
+			{
+				with: { 'resolution-mode': 'import' },
+			}
+		);
 		request.send = pThrottle({
 			limit: opts.requestLimit,
 			interval: opts.requestLimitInterval ?? 60 * 1000,
