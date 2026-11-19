@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update v7 model
+      hash: b7b6fac444855b1cb0cf808970457030efd639d1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Andrea Rosci
+      nested: []
+  version: 23.2.26
+  title: ""
+  date: 2026-11-19T16:56:09.690Z
+- commits:
     - subject: Fix membership role lookup to only match default roles
       hash: a74aeb2e3e312ac95a0c4abcf05de058b1d10204
       body: ""
