@@ -1875,7 +1875,9 @@ balena.models.device.shutdown(123);
 * * *
 
 ## startOsUpdate
-<code>balena.models.device.startOsUpdate(uuidOrUuids, targetOsVersion, [options])</code> ⇒ <code>Promise</code>
+<del><code>balena.models.device.startOsUpdate(uuidOrUuids, targetOsVersion, [options])</code> ⇒ <code>Promise</code></del>
+
+***Use balena.models.device.pinToOsRelease***
 
 **Kind**: static method of [<code>device</code>](#balena.models.device)  
 **Summary**: Start an OS update on a device  
