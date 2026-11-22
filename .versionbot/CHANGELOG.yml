@@ -1,4 +1,28 @@
 - commits:
+    - subject: Deprecate device.startOsUpdate() in favor of pinToOsRelease()
+      hash: 0194aa2d80e04eb187177c565b36ce91a6a1137d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ken Bannister <kb2ma@runbox.com>
+        signed-off-by: Ken Bannister <kb2ma@runbox.com>
+      author: Ken Bannister
+      nested: []
+    - subject: Mark device.pinToOsRelease() as the preferred way for an OS update
+      hash: 026abe897485505aeec92756cbd45e6669efe729
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ken Bannister <kb2ma@runbox.com>
+        signed-off-by: Ken Bannister <kb2ma@runbox.com>
+      author: Ken Bannister
+      nested: []
+  version: 23.2.28
+  title: ""
+  date: 2026-11-22T14:13:37.261Z
+- commits:
     - subject: Update dependency @types/sinon to v22
       hash: 682c7a644c0404924a40f283404f085ab7080c42
       body: |
