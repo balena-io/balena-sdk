@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency flowzonify to v0.4.23
+      hash: 84a1d48e3411551bc78d93eb0d053458dd06a7ce
+      body: |
+        Update flowzonify from 0.0.0 to 0.4.23
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.2.29
+  title: ""
+  date: 2026-11-24T20:59:47.233Z
+- commits:
     - subject: Deprecate device.startOsUpdate() in favor of pinToOsRelease()
       hash: 0194aa2d80e04eb187177c565b36ce91a6a1137d
       body: ""
