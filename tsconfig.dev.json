@@ -1,6 +1,7 @@
 {
     "extends": "./tsconfig.js.json",
     "compilerOptions": {
+        "module": "node20",
         "resolveJsonModule": true,
         "noImplicitThis": false,
         "skipLibCheck": true,
