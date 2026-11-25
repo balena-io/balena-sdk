@@ -22,6 +22,7 @@ import type {
 	ApplicationMembershipRole,
 } from '..';
 import { mergePineOptions } from '../util';
+import { getApplicationMembershipRoleId } from '../util/application-membership-role';
 import type {
 	ODataOptionsWithoutCount,
 	OptionsToResponse,
@@ -51,26 +52,6 @@ const getApplicationMembershipModel = function (
 	) => Promise<OptionsToResponse<Application['Read'], T, undefined>[number]>,
 ) {
 	const { pine } = deps;
-
-	const getRoleId = async (
-		roleName: ApplicationMembershipRole['Read']['name'],
-	) => {
-		const [role] = await pine.get({
-			resource: 'application_membership_role',
-			options: {
-				$select: 'id',
-				$filter: {
-					name: roleName,
-					belongs_to__organization: null,
-				},
-			},
-		});
-		// Throw if the user provided a roleName, but we didn't find that role
-		if (!role) {
-			throw new errors.BalenaApplicationMembershipRoleNotFound(roleName);
-		}
-		return role.id;
-	};
 
 	const exports = {
 		/**
@@ -244,7 +225,7 @@ const getApplicationMembershipModel = function (
 		 * @param {Object} options - membership creation parameters
 		 * @param {String|Number} options.application - application handle (string), or id (number)
 		 * @param {String} options.username - the username of the balena user that will become a member
-		 * @param {String} [options.roleName="member"] - the role name to be granted to the membership
+		 * @param {String} [options.roleName="member"] - the role name to be granted to the membership (a default role or a custom role of the application's organization)
 		 *
 		 * @fulfil {Object} - application membership
 		 * @returns {Promise}
@@ -283,10 +264,10 @@ const getApplicationMembershipModel = function (
 				},
 			} as const;
 
-			const [{ id, organization }, roleId] = await Promise.all([
-				getApplication(application, appOptions),
-				roleName ? getRoleId(roleName) : undefined,
-			]);
+			const { id, organization } = await getApplication(
+				application,
+				appOptions,
+			);
 
 			// If the user does not have an organization membership, they cannot be added to an application
 			if (organization[0].organization_membership.length === 0) {
@@ -306,7 +287,11 @@ const getApplicationMembershipModel = function (
 				is_member_of__application: id,
 			};
 			if (roleName) {
-				body.application_membership_role = roleId;
+				body.application_membership_role = await getApplicationMembershipRoleId(
+					deps,
+					roleName,
+					organization[0].id,
+				);
 			}
 			return await pine.post({
 				resource: RESOURCE,
@@ -324,7 +309,7 @@ const getApplicationMembershipModel = function (
 		 * @description This method changes the role of an application member.
 		 *
 		 * @param {Number|Object} idOrUniqueKey - the id or an object with the unique `user` & `is_member_of__application` numeric pair of the membership that will be changed
-		 * @param {String} roleName - the role name to be granted to the membership
+		 * @param {String} roleName - the role name to be granted to the membership (a default role or a custom role of the application's organization)
 		 *
 		 * @returns {Promise}
 		 *
@@ -345,12 +330,31 @@ const getApplicationMembershipModel = function (
 			idOrUniqueKey: ResourceKey,
 			roleName: ApplicationMembershipRole['Read']['name'],
 		): Promise<void> {
-			const roleId = await getRoleId(roleName);
+			const membership = await pine.get({
+				resource: RESOURCE,
+				id: idOrUniqueKey,
+				options: {
+					$select: 'id',
+					$expand: {
+						is_member_of__application: {
+							$select: 'id',
+							$expand: { organization: { $select: 'id' } },
+						},
+					},
+				},
+			});
+			if (membership == null) {
+				return;
+			}
 			await pine.patch({
 				resource: RESOURCE,
 				id: idOrUniqueKey,
 				body: {
-					application_membership_role: roleId,
+					application_membership_role: await getApplicationMembershipRoleId(
+						deps,
+						roleName,
+						membership.is_member_of__application[0].organization[0].id,
+					),
 				},
 			});
 		},

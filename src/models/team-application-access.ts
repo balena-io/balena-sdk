@@ -19,8 +19,8 @@ import type {
 	InjectedDependenciesParam,
 	TeamApplicationAccess,
 } from '..';
-import * as errors from 'balena-errors';
 import { mergePineOptions } from '../util';
+import { getApplicationMembershipRoleId } from '../util/application-membership-role';
 import type {
 	ODataOptionsWithoutCount,
 	OptionsToResponse,
@@ -30,25 +30,6 @@ const getTeamApplicationAccessModel = function (
 	deps: InjectedDependenciesParam,
 ) {
 	const { pine, sdkInstance } = deps;
-
-	const getRoleId = async (
-		roleName: ApplicationMembershipRole['Read']['name'],
-	) => {
-		const [role] = await pine.get({
-			resource: 'application_membership_role',
-			options: {
-				$select: 'id',
-				$filter: {
-					name: roleName,
-					belongs_to__organization: null,
-				},
-			},
-		});
-		if (!role) {
-			throw new errors.BalenaApplicationMembershipRoleNotFound(roleName);
-		}
-		return role.id;
-	};
 
 	/**
 	 * @summary Get all team applications access
@@ -141,7 +122,7 @@ const getTeamApplicationAccessModel = function (
 	 *
 	 * @param {Number} teamId - Required: the team id the application access will be granted for.
 	 * @param {Number|String} applicationIdOrSlug - Required: application id or slug
-	 * @param {String} RoleName - Required: application membership role name (ApplicationMembershipRoles)
+	 * @param {String} roleName - Required: application membership role name, either a default role or a custom role of the application's organization
 	 *
 	 * @fulfil {Object} - TeamApplicationAccess
 	 * @returns {Promise}
@@ -161,13 +142,17 @@ const getTeamApplicationAccessModel = function (
 		applicationIdOrSlug: number | string,
 		roleName: ApplicationMembershipRole['Read']['name'],
 	) {
-		const appId = (
+		const { id: appId, organization } =
 			await sdkInstance.models.application.get(applicationIdOrSlug, {
 				$select: 'id',
-			})
-		).id;
+				$expand: { organization: { $select: 'id' } },
+			});
 
-		const roleId = await getRoleId(roleName);
+		const roleId = await getApplicationMembershipRoleId(
+			deps,
+			roleName,
+			organization[0].id,
+		);
 
 		return sdkInstance.pine.post({
 			resource: 'team_application_access',
@@ -189,7 +174,7 @@ const getTeamApplicationAccessModel = function (
 	 * @description This method update a team application access role.
 	 *
 	 * @param {Number} teamApplicationAccessId - Required: the team application access id.
-	 * @param {String} roleName - Required: The new role to assing (ApplicationMembershipRoles).
+	 * @param {String} roleName - Required: The new role name to assign, either a default role or a custom role of the application's organization.
 	 *
 	 * @fulfil {Object} - TeamApplicationAccess
 	 * @returns {Promise}
@@ -203,13 +188,32 @@ const getTeamApplicationAccessModel = function (
 		teamApplicationAccessId: number,
 		roleName: ApplicationMembershipRole['Read']['name'],
 	) {
-		const roleId = await getRoleId(roleName);
+		const access = await pine.get({
+			resource: 'team_application_access',
+			id: teamApplicationAccessId,
+			options: {
+				$select: 'id',
+				$expand: {
+					grants_access_to__application: {
+						$select: 'id',
+						$expand: { organization: { $select: 'id' } },
+					},
+				},
+			},
+		});
+		if (access == null) {
+			return;
+		}
 
 		await pine.patch({
 			resource: 'team_application_access',
 			id: teamApplicationAccessId,
 			body: {
-				application_membership_role: roleId,
+				application_membership_role: await getApplicationMembershipRoleId(
+					deps,
+					roleName,
+					access.grants_access_to__application[0].organization[0].id,
+				),
 			},
 		});
 	};

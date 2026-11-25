@@ -22,6 +22,7 @@ import type {
 	BalenaModel,
 } from '..';
 import { mergePineOptions } from '../util';
+import { getApplicationMembershipRoleId } from '../util/application-membership-role';
 import type {
 	ODataOptionsWithoutCount,
 	OptionsToResponse,
@@ -39,10 +40,10 @@ type ApplicationInvite = BalenaModel[typeof RESOURCE];
 const getApplicationInviteModel = function (
 	deps: InjectedDependenciesParam,
 	opts: InjectedOptionsParam,
-	getApplication: (
+	getApplication: <T extends ODataOptionsWithoutCount<Application['Read']>>(
 		slugOrUuidOrId: string | number,
-		options?: ODataOptionsWithoutCount<Application['Read']>,
-	) => Promise<Application['Read']>,
+		options?: T,
+	) => Promise<OptionsToResponse<Application['Read'], T, undefined>[number]>,
 ) {
 	const { request, pine } = deps;
 	const { apiUrl } = opts;
@@ -130,7 +131,7 @@ const getApplicationInviteModel = function (
 		 * @param {String|Number} slugOrUuidOrId - application slug (string), uuid (string) or id (number)
 		 * @param {Object} options - invite creation parameters
 		 * @param {String} options.invitee - the email of the invitee
-		 * @param {String} [options.roleName="developer"] - the role name to be granted to the invitee
+		 * @param {String} [options.roleName="developer"] - the role name to be granted to the invitee (a default role or a custom role of the application's organization)
 		 * @param {String} [message=null] - the message to send along with the invite
 		 *
 		 * @fulfil {String} - application invite
@@ -145,21 +146,10 @@ const getApplicationInviteModel = function (
 			slugOrUuidOrId: string | number,
 			{ invitee, roleName, message }: ApplicationInviteOptions,
 		) {
-			const [{ id }, roles] = await Promise.all([
-				getApplication(slugOrUuidOrId, { $select: 'id' }),
-				roleName
-					? pine.get({
-							resource: 'application_membership_role',
-							options: {
-								$top: 1,
-								$select: 'id',
-								$filter: {
-									name: roleName,
-								},
-							},
-						})
-					: undefined,
-			]);
+			const { id, organization } = await getApplication(slugOrUuidOrId, {
+				$select: 'id',
+				$expand: { organization: { $select: 'id' } },
+			});
 
 			const body: Partial<ApplicationInvite['Write']> = {
 				is_invited_to__application: id,
@@ -167,13 +157,12 @@ const getApplicationInviteModel = function (
 				invitee,
 				message,
 			};
-			if (roles) {
-				const roleId = roles[0]?.id;
-				// Throw if the user provided a roleName, but we didn't find that role
-				if (!roleId && roleName) {
-					throw new errors.BalenaApplicationMembershipRoleNotFound(roleName);
-				}
-				body.application_membership_role = roleId;
+			if (roleName) {
+				body.application_membership_role = await getApplicationMembershipRoleId(
+					deps,
+					roleName,
+					organization[0].id,
+				);
 			}
 			return await pine.post({
 				resource: RESOURCE,
