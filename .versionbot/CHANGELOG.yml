@@ -1,4 +1,41 @@
 - commits:
+    - subject: Address chai change to pure ESM
+      hash: 327b243b89772b591ec99104c60546f6305509b8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Matthew Yarmolinsky
+      nested: []
+    - subject: Remove mjs from lintstagedrc
+      hash: c3fbe49e4632b7320013a83a4982a02cb84f2da4
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Matthew Yarmolinsky
+      nested: []
+    - subject: "tsconfig.dev: Switch `module` to `node20`"
+      hash: 1f329549906e5947bd0868b783a41e6469b47fc2
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Matthew Yarmolinsky
+      nested: []
+    - subject: Update dependency chai to v5
+      hash: 84bf9061cca863c1292461ab8089ef8a446cca2a
+      body: |
+        Update chai from 4.5.0 to 5.3.3
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.2.31
+  title: ""
+  date: 2026-11-26T09:12:43.511Z
+- commits:
     - subject: Update dependency dotenv to v18
       hash: f82193b2dd68c67c5cccc825b2bdf828d532fccb
       body: |
