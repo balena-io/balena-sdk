@@ -30,6 +30,9 @@ This method creates a new organization with the current user as an administrator
     </tr><tr>
     <td>[options.handle]</td><td><code>String</code></td><td><p>The handle of the organization that will be created.</p>
 </td>
+    </tr><tr>
+    <td>[options.accepted_current__service_agreement]</td><td><code>String</code></td><td><p>The id of the current service_agreement. Required when a service_agreement exists on the backend.</p>
+</td>
     </tr>  </tbody>
 </table>
 

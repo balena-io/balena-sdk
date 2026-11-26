@@ -51,10 +51,13 @@ const getOrganizationModel = function (
 	 * @memberof balena.models.organization
 	 *
 	 * @description This method creates a new organization with the current user as an administrator.
+	 * When the backend has service_agreements defined, providing the accepted_current__service_agreement property
+	 * is required, and organization creation requires using a user session token.
 	 *
 	 * @param {Object} options - Organization parameters to use.
 	 * @param {String} options.name - Required: the name of the organization that will be created.
 	 * @param {String} [options.handle] - The handle of the organization that will be created.
+	 * @param {String} [options.accepted_current__service_agreement] - The id of the current service_agreement. Required when a service_agreement exists on the backend.
 	 *
 	 * @fulfil {String} - Organization
 	 * @returns {Promise}
