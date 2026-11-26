@@ -1,6 +1,5 @@
 import 'mjs-mocha';
-import chai from 'chai';
-const { expect } = chai;
+import { expect } from 'chai';
 
 const IGNORED_EXPORT_KEYS = new Set([
 	'default',
