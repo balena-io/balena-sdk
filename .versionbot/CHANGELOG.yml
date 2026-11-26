@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency chai to v6
+      hash: e971fcb10a87fe8ad3b94f4f22f6400e2097ce34
+      body: |
+        Update chai from 5.3.3 to 6.3.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 23.2.32
+  title: ""
+  date: 2026-11-26T10:42:29.635Z
+- commits:
     - subject: Address chai change to pure ESM
       hash: 327b243b89772b591ec99104c60546f6305509b8
       body: ""
